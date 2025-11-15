@@ -8,31 +8,45 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.mustafakoceerr.justrelax.core.navigation.AppNavigator
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
+import com.mustafakoceerr.justrelax.di.coreModule
+import com.mustafakoceerr.justrelax.di.platformModule
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.koin.compose.KoinApplication
+import org.koin.compose.koinInject
 
-// TODO: Koin ile sağlandığında bu satırı sileceğiz.
-private val appNavigator = AppNavigator()
-@OptIn(InternalVoyagerApi::class)
 @Composable
 fun App(){
-    MaterialTheme {
-        // TODO: Buraya ilk ekranımızı (örneğin HomeScreen) vereceğiz.
-        // Şimdilik boş bir ekranla başlıyoruz.
+    // KoinApplication, Koin'i başlatır ve tüm alt composable'ların
+    // koinInject() gibi fonksiyonları kullanmasını sağlar.
+    KoinApplication(
+        application = {
+            // Koin'e kullanacağı modülleri (tarif defterlerini) veriyoruz.
+        modules(coreModule, platformModule)
+        }
+    ){
+        // Koin başlatıldıktan sonra ana uygulamamızı yüklüyoruz.
+        MainAppContent()
 
-        Navigator(screen = EmptyScreen()){navigator->
-            // AppNavigator'dan gelen navigasyon olaylarını dinle
+    }
+}
+
+@OptIn(InternalVoyagerApi::class)
+@Composable
+private fun MainAppContent() {
+    // AppNavigator'ı Koin'den enjekte ediyoruz.
+    val appNavigator: AppNavigator = koinInject()
+
+    MaterialTheme {
+        Navigator(screen = EmptyScreen()) {navigator ->
             LaunchedEffect(navigator.key){
                 appNavigator.navigationEvents
                     .onEach { event-> event(navigator) }
                     .launchIn(this)
             }
-
-            // Ekranlar arası geçiş animasyonunu burada belirliyoruz
             SlideTransition(navigator)
-
         }
-     }
+    }
 }
 
 // Geçiçi boş ekran
