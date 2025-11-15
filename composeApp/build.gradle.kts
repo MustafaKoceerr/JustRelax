@@ -69,6 +69,7 @@ kotlin {
 
             // Multiplatform Settings
             implementation(libs.multiplatform.settings.no.arg)
+            implementation(libs.multiplatform.settings.coroutines)
 
             // SQLDelight
             implementation(libs.sqldelight.runtime)
