@@ -8,6 +8,6 @@ import platform.Foundation.NSUserDefaults
 
 actual val platformModule = module {
     // Multiplatform-Settings'in iOS implementasyonunu sağlıyoruz.
-    single<Settings> { NSUserDefaultsSettings(NSUserDefaults.standardUserDefaults) }
-    single<ObservableSettings> { get<Settings>() as ObservableSettings }
+    single<ObservableSettings> { NSUserDefaultsSettings(NSUserDefaults.standardUserDefaults) }
+
 }

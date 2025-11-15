@@ -47,10 +47,13 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
-
             // Koin
+            // Koin core
             implementation(libs.koin.core)
+            implementation(libs.koin.core.coroutines)
+            // Compose Multiplatform Koin API
             implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
 
             // Voyager
             implementation(libs.voyager.navigator)
