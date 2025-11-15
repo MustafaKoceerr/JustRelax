@@ -10,6 +10,8 @@ plugins {
     // Gerekli plugin'leri toml'dan alıyoruz
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.sqldelight)
+
+    kotlin("native.cocoapods")
 }
 
 kotlin {
@@ -18,12 +20,20 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
+    // iOS target'ları tanımla
+    iosArm64()
+    iosSimulatorArm64()
 
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
+    // CocoaPods entegrasyonu
+    cocoapods {
+        summary = "Shared module for JustRelax app"
+        homepage = "https://example.com/justrelax"
+        version = "1.0.0"
+
+        ios.deploymentTarget = "16.0"
+
+        framework {
+            // iOS tarafında oluşacak framework adı
             baseName = "ComposeApp"
             isStatic = true
         }
