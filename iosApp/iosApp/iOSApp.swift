@@ -1,5 +1,5 @@
 import SwiftUI
-import composeApp // İŞTE SİHİRLİ SATIR BU!
+import ComposeApp // İŞTE SİHİRLİ SATIR BU!
 
 @main
 struct iOSApp: App {
