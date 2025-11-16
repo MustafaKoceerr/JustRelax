@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 class SettingsRepositoryImpl (
     private val settings: ObservableSettings
-): SettingsRepository{
+): SettingsRepository {
     companion object {
         private const val KEY_THEME = "app_theme"
         private const val KEY_LANGUAGE = "app_language"

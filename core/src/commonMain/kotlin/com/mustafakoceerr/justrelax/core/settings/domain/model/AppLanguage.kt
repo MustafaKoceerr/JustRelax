@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.core.settings.domain.model
 
-import justrelax.composeapp.generated.resources.Res
 
 /**
  * Uygulamada desteklenen dilleri temsil eder.

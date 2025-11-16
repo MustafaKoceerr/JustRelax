@@ -4,7 +4,6 @@ import com.mustafakoceerr.justrelax.core.navigation.AppNavigator
 import com.mustafakoceerr.justrelax.core.settings.data.repository.SettingsRepositoryImpl
 import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
 import com.mustafakoceerr.justrelax.feature.settings.SettingsViewModel
-import com.russhwolf.settings.ObservableSettings
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
