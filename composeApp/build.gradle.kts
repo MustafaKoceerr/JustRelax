@@ -1,4 +1,4 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import dev.icerock.gradle.MRVisibility
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -10,6 +10,7 @@ plugins {
     // Gerekli plugin'leri toml'dan alıyoruz
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.moko.resources)
 
     kotlin("native.cocoapods")
 }
@@ -21,8 +22,16 @@ kotlin {
         }
     }
     // iOS target'ları tanımla
-    iosArm64()
-    iosSimulatorArm64()
+    listOf(
+        iosX64(), // Intel Mac'ler için simülatör
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+    }
 
     // CocoaPods entegrasyonu
     cocoapods {
@@ -31,12 +40,6 @@ kotlin {
         version = "1.0.0"
 
         ios.deploymentTarget = "16.0"
-
-        framework {
-            // iOS tarafında oluşacak framework adı
-            baseName = "ComposeApp"
-            isStatic = true
-        }
     }
 
     sourceSets {
@@ -86,6 +89,10 @@ kotlin {
             // SQLDelight
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines.extensions)
+
+            // Moko
+            implementation(libs.moko.resources)
+            implementation(libs.moko.resources.compose)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -93,9 +100,12 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.moko.resources.test)
         }
     }
+
 }
+
 
 android {
     namespace = "com.mustafakoceerr.justrelax"
@@ -124,6 +134,7 @@ android {
     }
 }
 
+
 dependencies {
     debugImplementation(compose.uiTooling)
 }
@@ -134,4 +145,18 @@ sqldelight {
             packageName.set("com.mustafakoceerr.justrelax.database")
         }
     }
+}
+
+multiplatformResources {
+    // MR sınıfının paketi – projene göre düzenle
+    resourcesPackage.set("com.mustafakoceerr.justrelax.shared.resources")
+
+    // İsteğe bağlı – MR yerine daha anlamlı bir isim istiyorsan:
+    // resourcesClassName.set("SharedRes")
+
+    // İsteğe bağlı – public/internal ayarı
+    resourcesVisibility.set(MRVisibility.Public)
+
+    // iOS tarafında zaten 16.0 kullanıyorsun, istersen hizalayabilirsin
+    iosMinimalDeploymentTarget.set("16.0")
 }
