@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="go_to_settings">Go to Settings</string>
+
+    <!-- Theme -->
+    <string name="current_theme">Current Theme: %1$s</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System</string>
+
+    <!-- Language -->
+    <string name="current_language">Current Language: %1$s</string>
+    <string name="language_english">English</string>
+    <string name="language_turkish">Turkish</string>
+</resources>

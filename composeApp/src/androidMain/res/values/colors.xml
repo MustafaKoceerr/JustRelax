@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Compose yüklenene kadar görünecek zemin renkleri -->
+    <color name="window_background_light">#FFFFFF</color>
+    <color name="window_background_dark">#121212</color> <!-- Standart Dark Mode Siyahı -->
+</resources>

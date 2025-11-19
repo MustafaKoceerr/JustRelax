@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.settings.domain.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.settings.domain.model.AppTheme
 import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
+import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 class SettingsViewModel(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val languageSwitcher: LanguageSwitcher // Eklendi
 ) : ViewModel() {
 
     val currentTheme = settingsRepository.getTheme()
@@ -28,6 +30,11 @@ class SettingsViewModel(
     fun updateLanguage(language: AppLanguage) {
         viewModelScope.launch {
             settingsRepository.saveLanguage(language)
+            languageSwitcher.updateLanguage(language) // Platformu tetikle
         }
+    }
+
+    fun openSettings(){
+        languageSwitcher.openSystemSettings()
     }
 }

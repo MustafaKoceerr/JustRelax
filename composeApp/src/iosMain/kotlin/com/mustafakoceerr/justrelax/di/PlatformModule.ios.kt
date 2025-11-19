@@ -1,13 +1,19 @@
 package com.mustafakoceerr.justrelax.di
 
+import com.mustafakoceerr.justrelax.core.ui.localization.IosLanguageSwitcher
+import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 import com.russhwolf.settings.NSUserDefaultsSettings
 import com.russhwolf.settings.ObservableSettings
-import com.russhwolf.settings.Settings
+import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import platform.Foundation.NSUserDefaults
 
-actual val platformModule = module {
-    // Multiplatform-Settings'in iOS implementasyonunu sağlıyoruz.
+actual val platformModule: Module = module {
+    // 1. Settings Bağımlılıkları
     single<ObservableSettings> { NSUserDefaultsSettings(NSUserDefaults.standardUserDefaults) }
 
+    // 2. Language Switcher Bağımlılığı (Buraya taşıdık)
+    singleOf(::IosLanguageSwitcher) bind LanguageSwitcher::class
 }
