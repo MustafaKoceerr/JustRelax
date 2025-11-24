@@ -103,10 +103,12 @@ fun JustRelaxTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = rememberPlatformColorScheme(darkTheme, dynamicColor)
+    // Tipografiyi buradan alıyoruz
+    val typography = getAppTypography()
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = typography, // <-- BURAYA EKLE
         content = content
     )
 }

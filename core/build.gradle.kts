@@ -6,6 +6,7 @@ plugins {
     // Core modülümüzün de Compose'u kullanabilmesi için bu plugin'leri ekliyoruz.
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+
 }
 
 kotlin {
@@ -81,6 +82,8 @@ kotlin {
 
                 // Koin'in çekirdeği de burada olmalı ki DI yapabilelim.
                 implementation(libs.koin.core)
+
+                implementation(compose.components.resources)
             }
         }
 
