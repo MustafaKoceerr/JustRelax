@@ -48,6 +48,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.ktor.client.android)
             implementation(libs.sqldelight.android.driver)
+
         }
         commonMain.dependencies {
             implementation(project(":core"))
@@ -88,6 +89,9 @@ kotlin {
             // SQLDelight
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines.extensions)
+
+            // Extended icons
+            implementation(compose.materialIconsExtended)
 
         }
         iosMain.dependencies {
