@@ -93,6 +93,7 @@ kotlin {
             // Extended icons
             implementation(compose.materialIconsExtended)
 
+            // Wheel picker
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
