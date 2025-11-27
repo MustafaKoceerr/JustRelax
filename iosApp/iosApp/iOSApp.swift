@@ -5,7 +5,7 @@ import ComposeApp // İŞTE SİHİRLİ SATIR BU!
 struct iOSApp: App {
     // Koin'i başlatmak için init() metodunu kullanıyoruz.
     init() {
-        KoinInitializer_iosKt.doInitKoin()
+        KoinInitializerKt.doInitKoin()
     }
 
     var body: some Scene {

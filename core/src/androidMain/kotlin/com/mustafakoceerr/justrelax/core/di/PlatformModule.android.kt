@@ -1,8 +1,10 @@
-package com.mustafakoceerr.justrelax.di
+package com.mustafakoceerr.justrelax.core.di
 
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import com.mustafakoceerr.justrelax.core.sound.data.player.AndroidSoundPlayer
+import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
 import com.mustafakoceerr.justrelax.core.ui.localization.AndroidLanguageSwitcher
 import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 import com.russhwolf.settings.ObservableSettings
@@ -22,4 +24,8 @@ actual val platformModule = module {
 
     // 2. Language Switcher Bağımlılığı (Buraya taşıdık)
     singleOf(::AndroidLanguageSwitcher) bind LanguageSwitcher::class
+
+    // --- EKLENEN KISIM ---
+    // SoundPlayer'ı bağlıyoruz. AndroidSoundPlayer context istediği için 'get()' veriyoruz.
+    single<SoundPlayer> { AndroidSoundPlayer(get()) }
 }
