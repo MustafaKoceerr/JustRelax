@@ -12,4 +12,21 @@
     <string name="current_language">Current Language: %1$s</string>
     <string name="language_english">English</string>
     <string name="language_turkish">Turkish</string>
+
+    <!-- Kategoriler -->
+    <string name="category_water">Water &amp; Rain</string>
+    <string name="category_nature">Nature &amp; Forest</string>
+    <string name="category_air">Wind &amp; Atmosphere</string>
+    <string name="category_city">City &amp; Indoor</string>
+    <string name="category_noise">White Noise &amp; Mechanical</string>
+
+    <!-- Ses İsimleri -->
+    <string name="sound_rain_light">Light Rain</string>
+    <string name="sound_rain_thunder">Rain &amp; Thunder</string>
+    <string name="sound_ocean">Ocean Waves</string>
+    <string name="sound_forest_birds">Forest Birds</string>
+    <string name="sound_campfire">Campfire</string>
+    <string name="sound_wind">Wind Ambience</string>
+    <string name="sound_cafe">Cafe Ambience</string>
+    <string name="sound_fan">Fan Noise</string>
 </resources>

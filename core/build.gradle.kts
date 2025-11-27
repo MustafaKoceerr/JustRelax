@@ -83,7 +83,11 @@ kotlin {
                 // Koin'in çekirdeği de burada olmalı ki DI yapabilelim.
                 implementation(libs.koin.core)
 
+                // Resources'a erişmek için
                 implementation(compose.components.resources)
+
+                // Extended icons
+                implementation(compose.materialIconsExtended)
             }
         }
 
@@ -96,6 +100,11 @@ kotlin {
         androidMain {
             dependencies {
                 // Multiplatform-Settings'in Android sürücüsü burada olmalı.
+                // Android için en modern ses motoru: Media3 (ExoPlayer)
+                implementation("androidx.media3:media3-exoplayer:1.8.0")
+                implementation("androidx.media3:media3-common:1.8.0")
+                implementation(libs.core)
+                implementation(libs.androidx.appcompat)
             }
         }
 

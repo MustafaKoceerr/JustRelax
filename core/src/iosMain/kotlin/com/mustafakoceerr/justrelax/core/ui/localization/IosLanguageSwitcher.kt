@@ -15,14 +15,14 @@ class IosLanguageSwitcher : LanguageSwitcher {
         val urlString = UIApplicationOpenSettingsURLString
 
         // 2. String'den NSURL oluşturuyoruz
-        val settingsUrl = NSURL.URLWithString(urlString)
+        val settingsUrl = NSURL.Companion.URLWithString(urlString)
 
         // 3. URL geçerli mi ve açılabilir mi?
-        if (settingsUrl != null && UIApplication.sharedApplication.canOpenURL(settingsUrl)) {
+        if (settingsUrl != null && UIApplication.Companion.sharedApplication.canOpenURL(settingsUrl)) {
 
             // 4. Modern açma yöntemi (iOS 10+)
             // Kotlin Native'de 'open' fonksiyonu bazen parametre isimleriyle çağrılmak ister.
-            UIApplication.sharedApplication.openURL(
+            UIApplication.Companion.sharedApplication.openURL(
                 settingsUrl,
                 mapOf<Any?, Any?>(),
                 null

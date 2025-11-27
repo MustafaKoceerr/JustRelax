@@ -1,8 +1,5 @@
 package com.mustafakoceerr.justrelax.core.ui.localization
 
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import com.mustafakoceerr.justrelax.core.settings.domain.model.AppLanguage
@@ -23,7 +20,7 @@ class AndroidLanguageSwitcher : LanguageSwitcher{
     }
 
     override fun openSystemSettings() {
-
+    // androidde system settings açmıyoruz.
     }
 
 

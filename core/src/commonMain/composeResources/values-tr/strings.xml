@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="go_to_settings">Ayarlara Git</string>
-
-    <!-- Tema -->
-    <string name="current_theme">Mevcut Tema: %1$s</string>
-    <string name="theme_light">Açık</string>
-    <string name="theme_dark">Koyu</string>
-    <string name="theme_system">Sistem</string>
-
-    <!-- Dil -->
-    <string name="current_language">Mevcut Dil: %1$s</string>
-    <string name="language_english">İngilizce</string>
-    <string name="language_turkish">Türkçe</string>
 
     <!-- Kategoriler -->
     <string name="category_water">Water &amp; Rain</string>
