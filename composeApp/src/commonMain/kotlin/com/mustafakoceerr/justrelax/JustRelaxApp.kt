@@ -7,7 +7,6 @@ import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.FadeTransition
-import cafe.adriel.voyager.transitions.SlideTransition
 import com.mustafakoceerr.justrelax.core.navigation.AppNavigator
 import com.mustafakoceerr.justrelax.core.settings.domain.model.AppTheme
 import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
@@ -19,7 +18,7 @@ import org.koin.compose.koinInject
 
 @OptIn(InternalVoyagerApi::class)
 @Composable
-fun App() {
+fun JustRelaxApp() {
     // ProvideLanguage SİLİNDİ.
 
     val settingsRepository: SettingsRepository = koinInject()

@@ -331,10 +331,10 @@ fun MixerScreen(){
                     items(generatedMix.size){
                         // SENİN HAZIR SOUND CARD'IN
                         // isPlaying = true gönderiyoruz çünkü mix oluştuğunda çalmaya başlar.
-                        SoundCard(
-                            isPlaying = true,
-                            modifier = Modifier.animateItem() // Animasyonlu giriş.
-                        )
+//                        SoundCard(
+//                            isPlaying = true,
+//                            modifier = Modifier.animateItem() // Animasyonlu giriş.
+//                        )
                     }
 
                     // B) Kaydet butonu (Grid'in en sonuna eklenir.

@@ -19,17 +19,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.VolumeUp
-import androidx.compose.material.icons.outlined.Audiotrack
-import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Headphones
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,25 +39,24 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.lifecycle.rememberScreenLifecycleOwner
+import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
+import com.mustafakoceerr.justrelax.core.sound.domain.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
+// --- 1. Top Bar (Stateless) ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopBar() {
+fun HomeTopBar(
+    onSettingsClick: () -> Unit
+) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -75,7 +69,7 @@ fun HomeTopBar() {
             )
         },
         actions = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = onSettingsClick) {
                 Icon(
                     imageVector = Icons.Outlined.Settings,
                     contentDescription = "Settings"
@@ -85,74 +79,44 @@ fun HomeTopBar() {
     )
 }
 
-//@Composable
-//fun LeadingIconTab(
-//    selected: Boolean,
-//    onClick: () -> Unit,
-//    text: @Composable () -> Unit,
-//    icon: @Composable () -> Unit,
-//    modifier: Modifier = Modifier,
-//    enabled: Boolean = true,
-//    selectedContentColor: Color = LocalContentColor.current,
-//    unselectedContentColor: Color = selectedContentColor,
-//    interactionSource: MutableInteractionSource? = null
-//): Unit
+
+
 
 @Composable
 fun HomeTabRow(
+    categories: List<SoundCategory>,
+    selectedCategory: SoundCategory,
+    onCategorySelected: (SoundCategory) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Hangi tab'ın seçili olduğunu tutan hafıza
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-
-    // Başlıklar ve İkonlar Listesi
-    val tabTitles = listOf(
-        "Video",
-        "Photos",
-        "Audio",
-        "Tab",
-        "Other",
-        "Video",
-        "Photos",
-        "Audio",
-        "Tab",
-        "Other"
-    )
-    val tabIcons = listOf(
-        Icons.Outlined.Videocam,
-        Icons.Outlined.Image,
-        Icons.Outlined.Audiotrack,
-        Icons.Outlined.Star,
-        Icons.Outlined.Settings, Icons.Outlined.Videocam,
-        Icons.Outlined.Image,
-        Icons.Outlined.Audiotrack,
-        Icons.Outlined.Star,
-        Icons.Outlined.Settings
-    )
     PrimaryScrollableTabRow(
-        selectedTabIndex = selectedTabIndex,
+        selectedTabIndex = categories.indexOf(selectedCategory),
         modifier = modifier,
         edgePadding = 16.dp,
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.primary,
+        divider = {} // Çizgiyi kaldırdım daha temiz görünüm için
     ) {
-        tabTitles.forEachIndexed { index, title ->
+        categories.forEach { category->
+            val isSelected = category == selectedCategory
             Tab(
-                selected = selectedTabIndex == index,
-                onClick = { selectedTabIndex == index },
+                selected = isSelected,
+                onClick = { onCategorySelected(category) },
                 text = {
                     Text(
-                        text = title,
+                        text = stringResource(category.titleRes), // Resource'dan çekiyoruz
                         style = MaterialTheme.typography.labelLarge,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                 },
                 icon = {
-                    Icon(
-                        imageVector = tabIcons[index],
-                        contentDescription = title
-                    )
+                    /*
+                       Icon(
+                           imageVector = if(isSelected) Icons.Rounded.Star else Icons.Outlined.StarBorder,
+                           contentDescription = null
+                       )
+                        */
                 },
                 selectedContentColor = MaterialTheme.colorScheme.primary,
                 unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -165,29 +129,38 @@ fun HomeTabRow(
 
 @Composable
 fun SoundCard(
+    sound: Sound,
     isPlaying: Boolean,
+    volume: Float,
+    onCardClick:()-> Unit,
+    onVolumeChange:(Float)-> Unit,
     modifier: Modifier = Modifier // Dışarıdan müdahale için
 ) {
+    // Animasyon ekleyelim: Slider açılırken yumuşak geçiş olsun
+    // val animateShape by animateDpAsState(...) yapılabilir ama şimdilik simple.
+
     Column(
-        modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Surface(
             modifier = Modifier.aspectRatio(1f),
             shape = MaterialTheme.shapes.medium,
-            color = MaterialTheme.colorScheme.surfaceContainerHigh
+            color = if (isPlaying) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh
         ) {
             Box(contentAlignment = Alignment.Center) {
                 // Ikon sabit kalır 32 dp. ortada şık görünür. ikonlar sabit dp verilirler.
                 Surface(
                     modifier = Modifier.size(48.dp),// İkonun kapsayıcısı SABİT
                     shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = if (isPlaying) MaterialTheme.colorScheme.primary else
+                        MaterialTheme.colorScheme.surfaceContainer,
+                    contentColor = if (isPlaying) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
-                            imageVector = Icons.Outlined.Videocam,
+                            imageVector = sound.icon,
                             modifier = Modifier.size(24.dp), // İkon boyutu standart 24dp
                             contentDescription = null
                         )
@@ -199,15 +172,15 @@ fun SoundCard(
 
         if (isPlaying){
             VolumeSlider(
-                value = 0.5f, // Şimdilik sabit, sonra viewModel'den gelecek
-                onValueChange = { /* Logic gelince dolacak */ },
+                value = volume,
+                onValueChange = onVolumeChange,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp) // Kartın kenarlarına yapışmasın
             )
         }else{
             Text(
-                text = "Video",
+                text = stringResource(sound.nameRes), // Modelden gelen isim
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
@@ -221,43 +194,39 @@ fun SoundCard(
 
 
 @Composable
-fun SoundCardContent(){
-    val soundStates = listOf(
-        // Satır 1: True, True, False
-        true, true, false,
-
-        // Satır 2: False, True, True
-        false, true, true,
-
-        // Satır 3: False, False, False
-        false, false, false,
-
-        // Satır 4: True, True, True
-        true, true, true,
-
-        // Satır 5: True, False, False
-        true, false, false,
-
-        // Satır 6: Karışık
-        false, true, false
-    )
+fun SoundCardGrid(
+    sounds: List<Sound>,
+    activeSounds: Map<String, Float>,
+    onSoundClick: (Sound) -> Unit,
+    onVolumeChange: (String,Float) -> Unit,
+    contentPadding: PaddingValues
+){
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 110.dp),
-        contentPadding = PaddingValues(16.dp),
+        contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
-
-        items(soundStates) { isPlaying ->
+        items(
+            items= sounds,
+            key = {it.id}
+        ){
+            sound->
+            val isPlaying = activeSounds.containsKey(sound.id)
+            val volume = activeSounds[sound.id] ?: 0.5f
 
             SoundCard(
-                isPlaying = isPlaying, // LİSTEDEN GELEN DEĞER (true/false)
+                sound = sound,
+                isPlaying = isPlaying,
+                volume = volume,
+                onCardClick = {onSoundClick(sound)},
+                onVolumeChange= {newVol -> onVolumeChange(sound.id, newVol)}
             )
         }
+
     }
 }
-
 @Composable
 fun ActiveSoundsBar(
     activeIcons: List<ImageVector>,
@@ -403,45 +372,7 @@ fun SliderPreview() {
         VolumeSlider(0.3f, {})
     }
     }
-@Composable
-@Preview
-fun SoundCardContentPreview() {
-    JustRelaxTheme {
-        SoundCardContent()
-    }
-}
 
-@Composable
-@Preview
-fun SoundCardPreview() {
-    JustRelaxTheme {
-        SoundCard(false)
-    }
-}
 
-@Composable
-@Preview
-fun HomeTabRowPreview() {
-    JustRelaxTheme {
-        HomeTabRow()
-    }
-}
-
-@Preview
-@Composable
-fun HomeTopBarPreview() {
-    JustRelaxTheme {
-        HomeTopBar()
-    }
-}
-
-@Composable
-fun FullHomeScreen() {
-    Scaffold(
-        topBar = {
-            HomeTopBar()
-        }
-    ) { }
-}
 
 

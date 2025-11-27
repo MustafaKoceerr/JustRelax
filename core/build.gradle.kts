@@ -84,7 +84,7 @@ kotlin {
                 implementation(libs.koin.core)
 
                 // Resources'a erişmek için
-                implementation(compose.components.resources)
+                api(compose.components.resources)
 
                 // Extended icons
                 implementation(compose.materialIconsExtended)
@@ -122,5 +122,16 @@ kotlin {
             }
         }
     }
+}
 
+// BU KISMI KONTROL ET VE GÜNCELLE:
+compose.resources {
+    // Kaynakların paket adı (Senin importlarınla uyuşmalı)
+    packageOfResClass = "justrelax.core.generated.resources"
+
+    // KRİTİK AYAR: Kaynakları diğer modüllerin (composeApp) görmesi için public yap.
+    publicResClass = true
+
+    // Eğer generateResClass sorunu varsa bunu da ekle:
+    generateResClass = always
 }

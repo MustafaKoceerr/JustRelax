@@ -147,3 +147,13 @@ sqldelight {
     }
 }
 
+// --- KRİTİK NOKTA ---
+compose.resources {
+    // Core modülünde: "justrelax.core.generated.resources" demiştik.
+    // Burada FARKLI bir isim olmalı. Genellikle şöyledir:
+    packageOfResClass = "justrelax.composeapp.generated.resources"
+
+    // Uygulamanın ana modülü olduğu için public yapmana gerek yok (default false kalabilir)
+    // generateResClass = always
+}
+
