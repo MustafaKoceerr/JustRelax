@@ -11,6 +11,7 @@ import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import androidx.core.net.toUri
 
 class AndroidSoundPlayer(
     private val context: Context
@@ -37,7 +38,7 @@ class AndroidSoundPlayer(
                 if (activePlayers.containsKey(sound.id)) return@withContext
 
                 val player = ExoPlayer.Builder(context).build().apply {
-                    val mediaItem = MediaItem.fromUri(Uri.parse(uriString))
+                    val mediaItem = MediaItem.fromUri(uriString.toUri())
                     setMediaItem(mediaItem)
 
                     // Loop (Sonsuz Döngü) Ayarı
@@ -87,6 +88,22 @@ class AndroidSoundPlayer(
     override fun release() {
         // Uygulama kapanırken temizlik
         stopAll()
+    }
+
+    override fun pause(soundId: String) {
+        activePlayers[soundId]?.pause()
+    }
+
+    override fun resume(soundId: String) {
+        activePlayers[soundId]?.play()
+    }
+
+    override fun pauseAll() {
+        activePlayers.values.forEach { it.pause() }
+    }
+
+    override fun resumeAll() {
+        activePlayers.values.forEach { it.play() }
     }
 }
 

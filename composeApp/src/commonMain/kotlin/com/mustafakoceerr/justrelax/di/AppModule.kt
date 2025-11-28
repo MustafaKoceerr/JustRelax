@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.di
 
+import com.mustafakoceerr.justrelax.feature.home.HomeViewModel
+import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
 import com.mustafakoceerr.justrelax.feature.settings.SettingsViewModel
 // import com.mustafakoceerr.justrelax.feature.home.HomeViewModel (İleride eklenecek)
 import org.koin.core.module.dsl.viewModelOf
@@ -12,6 +14,12 @@ val appModule = module {
 
     viewModelOf(::SettingsViewModel)
 
-    // İleride HomeViewModel'i de buraya ekleyeceğiz:
-    // viewModelOf(::HomeViewModel)
+    // YENİ: PlayerViewModel Singleton olarak burada
+    single { PlayerViewModel(get()) }
+}
+
+
+val homeModule = module {
+    // get() sayısı azaldı (Navigator gitti)
+    factory { HomeViewModel(get()) }
 }

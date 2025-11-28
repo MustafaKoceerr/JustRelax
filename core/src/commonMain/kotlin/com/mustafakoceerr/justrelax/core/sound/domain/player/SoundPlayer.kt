@@ -36,4 +36,10 @@ interface SoundPlayer{
      * Memory Leak'i önler.
      */
     fun release()
+
+
+    fun pause(soundId: String)
+    fun resume(soundId: String)
+    fun pauseAll()
+    fun resumeAll()
 }

@@ -87,5 +87,20 @@ class IosSoundPlayer : SoundPlayer {
         stopAll()
     }
 
+    override fun pause(soundId: String) {
+        activePlayers[soundId]?.pause()
+    }
+
+    override fun resume(soundId: String) {
+        activePlayers[soundId]?.play()
+    }
+
+    override fun pauseAll() {
+        activePlayers.values.forEach { it.pause() }
+    }
+
+    override fun resumeAll() {
+        activePlayers.values.forEach { it.play() }
+    }
 
 }
