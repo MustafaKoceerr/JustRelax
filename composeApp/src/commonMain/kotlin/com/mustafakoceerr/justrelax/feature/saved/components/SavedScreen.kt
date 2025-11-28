@@ -1,24 +1,11 @@
-package com.mustafakoceerr.justrelax.feature.mixer.components
+package com.mustafakoceerr.justrelax.feature.saved.components
 
 import androidx.compose.runtime.Composable
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 
-data object MixerScreen : AppScreen {
+data object SavedScreen : AppScreen {
     @Composable
     override fun Content() {
 
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }

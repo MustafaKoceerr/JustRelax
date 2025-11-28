@@ -111,12 +111,10 @@ fun HomeTabRow(
                     )
                 },
                 icon = {
-                    /*
-                       Icon(
-                           imageVector = if(isSelected) Icons.Rounded.Star else Icons.Outlined.StarBorder,
-                           contentDescription = null
-                       )
-                        */
+                    Icon(
+                        imageVector = category.icon,
+                        contentDescription = null
+                    )
                 },
                 selectedContentColor = MaterialTheme.colorScheme.primary,
                 unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -145,6 +143,7 @@ fun SoundCard(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Surface(
+            onClick = onCardClick,
             modifier = Modifier.aspectRatio(1f),
             shape = MaterialTheme.shapes.medium,
             color = if (isPlaying) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh

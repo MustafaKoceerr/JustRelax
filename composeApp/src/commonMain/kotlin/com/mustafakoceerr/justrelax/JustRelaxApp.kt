@@ -12,6 +12,7 @@ import com.mustafakoceerr.justrelax.core.settings.domain.model.AppTheme
 import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.feature.home.HomeScreen
+import com.mustafakoceerr.justrelax.feature.main.MainScreen
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.compose.koinInject
@@ -33,7 +34,7 @@ fun JustRelaxApp() {
     JustRelaxTheme(darkTheme = useDarkTheme) {
         val appNavigator: AppNavigator = koinInject()
 
-        Navigator(screen = HomeScreen){ navigator ->
+        Navigator(screen = MainScreen){ navigator ->
             LaunchedEffect(navigator.key){
                 appNavigator.navigationEvents
                     .onEach { event-> event(navigator) }

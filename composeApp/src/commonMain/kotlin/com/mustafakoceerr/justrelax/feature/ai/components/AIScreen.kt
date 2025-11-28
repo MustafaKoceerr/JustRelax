@@ -27,9 +27,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+
+data object AiScreen : AppScreen {
+    @Composable
+    override fun Content() {
+
+    }
+    }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AIScreen() {

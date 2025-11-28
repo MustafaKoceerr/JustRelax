@@ -5,11 +5,34 @@ import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
 import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.AVFAudio.AVAudioPlayer
+import platform.AVFAudio.AVAudioSession
+import platform.AVFAudio.AVAudioSessionCategory
+import platform.AVFAudio.AVAudioSessionCategoryPlayback
+import platform.AVFAudio.setActive
 import platform.Foundation.NSURL
 
 class IosSoundPlayer : SoundPlayer {
     // Aktif çalan playerları tutuyoruz.
     private var activePlayers = mutableMapOf<String, AVAudioPlayer>()
+
+    init {
+        // --- KRİTİK AYAR ---
+        // Uygulama açıldığında AudioSession'ı "Playback" moduna alıyoruz.
+        // Bu sayede telefon sessizdeyken bile ses çalar.
+        configureAudioSession()
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private fun  configureAudioSession(){
+        try {
+            val session = AVAudioSession.sharedInstance()
+            session.setCategory(AVAudioSessionCategoryPlayback, error=null)
+            session.setActive(true,null)
+        }catch (e: Exception){
+            println("iOS AudioSession Error: ${e.message}")
+        }
+    }
+
 
     @OptIn(ExperimentalForeignApi::class)
     override suspend fun play(
@@ -25,7 +48,12 @@ class IosSoundPlayer : SoundPlayer {
             val uriString = Res.getUri("files/${sound.audioFileName}")
 
             // 2. string yolu NSURL'e çevir
-            val url = NSURL.fileURLWithPath(uriString)
+            val url = NSURL.URLWithString(uriString)
+
+            if (url==null){
+                println("iOS Sound Error: URL oluşturulamadı -> $uriString")
+                return
+            }
 
             // 3. Player oluştur.
             val player = AVAudioPlayer(contentsOfURL = url, error = null).apply {
@@ -43,11 +71,7 @@ class IosSoundPlayer : SoundPlayer {
     }
 
     override fun stop(soundId: String) {
-        activePlayers.remove(soundId)?.let { player ->
-            player.stop()
-            // AVAudioPlayer'da explicit release yoktur, ARC (Automatic Reference Counting) halleder.
-            // Map'ten silmek yeterlidir.
-        }
+        activePlayers.remove(soundId)?.stop()
     }
 
     override fun setVolume(soundId: String, volume: Float) {
