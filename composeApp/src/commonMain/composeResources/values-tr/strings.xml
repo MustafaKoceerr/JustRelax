@@ -29,4 +29,9 @@
     <string name="sound_wind">Wind Ambience</string>
     <string name="sound_cafe">Cafe Ambience</string>
     <string name="sound_fan">Fan Noise</string>
+
+    <!-- Süre birimleri kısaltmaları -->
+    <string name="duration_hour_short">sa</string>   <!-- saat -->
+    <string name="duration_minute_short">dk</string> <!-- dakika -->
+    <string name="duration_second_short">sn</string> <!-- saniye -->
 </resources>

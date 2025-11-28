@@ -27,18 +27,27 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.feature.timer.domain.model.TimerStatus
+import com.mustafakoceerr.justrelax.utils.calculateEndTime
+import com.mustafakoceerr.justrelax.utils.formatDurationVerbose
+import com.mustafakoceerr.justrelax.utils.formatTime
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun TimerPortraitLayout(
     totalTimeSeconds: Long,
     timeLeftSeconds: Long,
-    onPauseClick: () -> Unit,
+    status: TimerStatus,
+    onToggleClick: () -> Unit,
     onCancelClick: () -> Unit
-){
-    val animatedColor = if (timeLeftSeconds <= 5) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+) {
+    // Renk Mantığı (Son 5 saniye kırmızı)
+    val animatedColor =
+        if (timeLeftSeconds <= 5) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
 
-    val progress = timeLeftSeconds.toFloat() / totalTimeSeconds.toFloat()
+    // İlerleme Oranı (0'a bölünme hatasını önlemek için kontrol ekledik)
+    val progress =
+        if (totalTimeSeconds > 0) timeLeftSeconds.toFloat() / totalTimeSeconds.toFloat() else 0f
 
     Column(
         modifier = Modifier
@@ -49,112 +58,82 @@ fun TimerPortraitLayout(
         // Üstten biraz boşluk bırakalım ki daire tepeye yapışmasın
         Spacer(modifier = Modifier.height(48.dp))
 
-    Box(contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .aspectRatio(1f)
-            .widthIn(max = 350.dp) // 3. kural: Tablet boyutu için 350 dp'yi geçme.
-    ){
-        //  Gri Halka
-        CircularProgressIndicator(
-            progress = {1f},
-            modifier = Modifier.fillMaxSize(), // Kutuya yayıl.
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            strokeWidth = 12.dp,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant,
-        )
-        // Renkli halka
-        CircularProgressIndicator(
-            progress = {progress},
-            modifier = Modifier.fillMaxSize(),
-            color = animatedColor,
-            strokeWidth = 12.dp,
-            trackColor = Color.Transparent,// arkası şeffaf,
-            strokeCap = StrokeCap.Round
-        )
-
-        // C) DAİRENİN İÇİNDEKİ METİNLER
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        // --- 1. DAİRESEL SAYAÇ (HERO COMPONENT) ---
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .aspectRatio(1f)
+                .widthIn(max = 350.dp) // Tablet koruması
         ) {
-            Text(
-                text = "16 dk 18 sn", // Burası dinamik olacak
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+            // A) Gri Halka (Pist)
+            CircularProgressIndicator(
+                progress = { 1f },
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                strokeWidth = 12.dp,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            )
+            // B) Renkli Halka (Progress)
+            CircularProgressIndicator(
+                progress = { progress },
+                modifier = Modifier.fillMaxSize(),
+                color = animatedColor,
+                strokeWidth = 12.dp,
+                trackColor = Color.Transparent,
+                strokeCap = StrokeCap.Round
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = formatTime(timeLeftSeconds),
-                style = MaterialTheme.typography.displayLarge.copy(fontSize = 48.sp),
-                color = MaterialTheme.colorScheme.onSurface
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 3. Bitiş saati zel ikonu + saat
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Rounded.Notifications,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.width(4.dp))
+            // C) DAİRENİN İÇİNDEKİ METİNLER
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                // 1. Detaylı Toplam Süre (DİNAMİK)
                 Text(
-                    text = "20:40", // Burası hesaplanacak
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = formatDurationVerbose(totalTimeSeconds), // Örn: 16 dk 18 sn
+                    style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // 2. Ana Sayaç (DİNAMİK)
+                Text(
+                    text = formatTime(timeLeftSeconds), // Örn: 00 : 16 : 15
+                    style = MaterialTheme.typography.displayLarge.copy(fontSize = 48.sp),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // 3. Bitiş Saati (DİNAMİK)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Rounded.Notifications,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = calculateEndTime(timeLeftSeconds), // Örn: 20:40
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
-    }
 
         // --- 2. BOŞLUK VE BUTONLAR ---
-
-        // Spacer(weight(1f)) kullanarak butonları en alta itiyoruz.
-        // Bu sayede daire yukarıda, butonlar aşağıda kalır.
         Spacer(modifier = Modifier.weight(1f))
-        // Daha önce yazdığımız buton grubunu burada tekrar kullanıyoruz!
+
         TimerButtonsRow(
-            onPauseClick = onPauseClick,
+            status = status,
+            onToggleClick = onToggleClick,
             onCancelClick = onCancelClick,
-            modifier = Modifier.padding(bottom = 32.dp) // Alttan biraz pay
+            modifier = Modifier.padding(bottom = 32.dp)
         )
     }
 }
 
-
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
-@Composable
-fun TimerPortraitLayoutPreview() {
-    JustRelaxTheme {
-        TimerPortraitLayout(
-            123012,
-            213,
-            {},
-            {}
-        )
-    }
-}
-
-fun formatTime(totalSeconds: Long): String {
-    // 1. Matematiği yapalım
-    val hours = totalSeconds / 3600
-    val minutes = (totalSeconds % 3600) / 60
-    val seconds = totalSeconds % 60
-
-    // 2. Formatlama (Saf Kotlin - KMM Uyumlu)
-    // padStart(2, '0') -> Sayı tek haneliyle başına 0 koyar (5 -> 05)
-    val hh = hours.toString().padStart(2, '0')
-    val mm = minutes.toString().padStart(2, '0')
-    val ss = seconds.toString().padStart(2, '0')
-
-    // 3. Görseldeki gibi aralıklı dönüş
-    return "$hh : $mm : $ss"
-}

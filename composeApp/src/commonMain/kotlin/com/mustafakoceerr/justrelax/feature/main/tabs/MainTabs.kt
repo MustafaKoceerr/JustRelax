@@ -16,7 +16,7 @@ import com.mustafakoceerr.justrelax.feature.ai.components.AiScreen
 import com.mustafakoceerr.justrelax.feature.home.HomeScreen
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixerScreen
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedScreen
-import com.mustafakoceerr.justrelax.feature.timer.components.TimerScreen
+import com.mustafakoceerr.justrelax.feature.timer.TimerScreen
 
 // 1. HOME TAB
 object HomeTab : Tab {

@@ -11,52 +11,50 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Pause
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
-import com.mustafakoceerr.justrelax.feature.timer.TimerViewModel
-import io.ktor.utils.io.ioDispatcher
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
+import com.mustafakoceerr.justrelax.feature.timer.domain.model.TimerStatus
+import com.mustafakoceerr.justrelax.utils.calculateEndTime
+import com.mustafakoceerr.justrelax.utils.formatDurationVerbose
+import com.mustafakoceerr.justrelax.utils.formatTime
 
 
 @Composable
 fun TimerTextDisplay(
+    totalTimeSeconds: Long,
+    timeLeftSeconds: Long,
     modifier: Modifier = Modifier
-){
+) {
     Column(
-        modifier = modifier, // dışarıdan weight alacak.
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // 1. Satır: Toplam Ayarlanan Süre (Örn: 3 sa 6 dk 13 sn)
         Text(
-            text = "3 sa 6 dk 13 sn",
+            text = formatDurationVerbose(totalTimeSeconds),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 2. Satır: Kocaman sayaç
+        // 2. Satır: Kocaman Sayaç (Örn: 03 : 06 : 08)
         Text(
-            text = "03 : 06 : 08",
+            text = formatTime(timeLeftSeconds),
             // Yatay modda ekran geniş olduğu için fontu iyice büyütebiliriz
             style = MaterialTheme.typography.displayLarge.copy(fontSize = 80.sp),
             color = MaterialTheme.colorScheme.onSurface
@@ -64,7 +62,7 @@ fun TimerTextDisplay(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 3. Satır: Zil ikonu ve bitiş saati
+        // 3. Satır: Zil ikonu ve Bitiş Saati (Dinamik)
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = Icons.Rounded.Notifications,
@@ -73,8 +71,10 @@ fun TimerTextDisplay(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.width(4.dp))
+
+            // DİNAMİK BİTİŞ SAATİ
             Text(
-                text = "00:18",
+                text = calculateEndTime(timeLeftSeconds),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -84,50 +84,64 @@ fun TimerTextDisplay(
 
 @Composable
 fun TimerButtonsRow(
-    onPauseClick: () -> Unit,
+    status: TimerStatus,
+    onToggleClick: () -> Unit,
     onCancelClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 24.dp), // En alttan biraz boşluk bırakalım.
-        horizontalArrangement = Arrangement.Center, // Ortaya topla
+            .padding(bottom = 24.dp),
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Sol button: Sil (İkincil aksiyon -> Tonal)
+        // Sol button: Sil
         FilledTonalButton(
             onClick = onCancelClick,
             modifier = Modifier
                 .height(50.dp)
-                .width(110.dp) // Genişlik verelim ki şık dursun.
-        ){
+                .width(110.dp)
+        ) {
             Icon(Icons.Rounded.Close, null, Modifier.size(20.dp))
             Spacer(Modifier.width(8.dp))
             Text("Sil", style = MaterialTheme.typography.labelLarge)
         }
 
-        Spacer(modifier = Modifier.width(32.dp)) // İki buton arası boşluk
+        Spacer(modifier = Modifier.width(32.dp))
 
+        // Sağ button: Duraklat
+        val isRunning = status == TimerStatus.RUNNING
         Button(
-            onClick = onPauseClick,
+            onClick = onToggleClick,
             modifier = Modifier
                 .height(50.dp)
-                .width(130.dp), // Ana button bir tık daha geniş olabilir.
+                .width(140.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.error
+                containerColor = if (isRunning) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
             )
-        ){
-            Icon(Icons.Rounded.Pause,null, Modifier.size(20.dp))
+        ) {
+            Icon(
+                imageVector = if (isRunning) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
+                null, Modifier.size(20.dp)
+            )
             Spacer(Modifier.width(8.dp))
-            Text("Duraklat", style = MaterialTheme.typography.labelLarge)
+            Text(
+                text = if (isRunning) "Duraklat" else "Devam Et",
+                style = MaterialTheme.typography.labelLarge
+            )
         }
     }
 }
 
 @Composable
-fun TimerLandscapeLayout(){
-
+fun TimerLandscapeLayout(
+    totalTimeSeconds: Long,
+    timeLeftSeconds: Long,
+    status: TimerStatus,
+    onToggleClick: () -> Unit,
+    onCancelClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -135,43 +149,17 @@ fun TimerLandscapeLayout(){
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // 1. METİN KISMI
-        // weight(1f) diyerek "Ekranın boş kalan TÜM alanını sen kapla" diyoruz.
-        // Böylece yazılar ekranın ortasına gelir, butonları aşağı iter.
         TimerTextDisplay(
+            totalTimeSeconds = totalTimeSeconds,
+            timeLeftSeconds = timeLeftSeconds, // Parametre ismi düzeltildi
             modifier = Modifier.weight(1f)
         )
 
         // 2. BUTON KISMI
-        // Buna weight vermiyoruz, sadece ihtiyacı kadar yer kaplıyor.
         TimerButtonsRow(
-            onPauseClick = {},
-            onCancelClick = {}
+            status = status,
+            onToggleClick = onToggleClick,
+            onCancelClick = onCancelClick
         )
-    }
-}
-
-@Preview
-@Composable
-fun TimerLandscapeLayoutPreview(){
-    JustRelaxTheme {
-        TimerLandscapeLayout()
-    }
-}
-
-@Preview
-@Composable
-fun TimerButtonsRowPreview(){
-    JustRelaxTheme {
-        TimerButtonsRow(
-            {},
-            {}
-        )
-    }
-}
-@Preview
-@Composable
-fun TimerTextDisplayPreview(){
-    JustRelaxTheme {
-        TimerTextDisplay()
     }
 }

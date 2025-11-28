@@ -29,4 +29,9 @@
     <string name="sound_wind">Wind Ambience</string>
     <string name="sound_cafe">Cafe Ambience</string>
     <string name="sound_fan">Fan Noise</string>
+
+    <!-- Duration unit abbreviations -->
+    <string name="duration_hour_short">h</string>    <!-- hour -->
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">sec</string>
 </resources>
