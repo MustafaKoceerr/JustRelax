@@ -93,7 +93,6 @@ kotlin {
             // Extended icons
             implementation(compose.materialIconsExtended)
 
-            // Wheel picker
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -151,7 +150,7 @@ sqldelight {
 compose.resources {
     // Core modülünde: "justrelax.core.generated.resources" demiştik.
     // Burada FARKLI bir isim olmalı. Genellikle şöyledir:
-    packageOfResClass = "justrelax.composeapp.generated.resources"
+    packageOfResClass = "com.mustafakoceerr.justrelax.composeapp.generated.resources"
 
     // Uygulamanın ana modülü olduğu için public yapmana gerek yok (default false kalabilir)
     // generateResClass = always

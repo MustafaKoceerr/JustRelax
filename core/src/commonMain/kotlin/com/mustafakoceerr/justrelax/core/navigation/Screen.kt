@@ -1,8 +1,6 @@
 package com.mustafakoceerr.justrelax.core.navigation
 
-import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
-import kotlinx.serialization.Serializable
 
 /**
  * Uygulamamızdaki tüm ekranların implemente edeceği temel arayüz.

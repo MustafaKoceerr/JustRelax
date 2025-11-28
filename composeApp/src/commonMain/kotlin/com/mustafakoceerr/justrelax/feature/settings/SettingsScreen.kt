@@ -11,14 +11,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.Res
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.*
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
-import com.mustafakoceerr.justrelax.core.settings.domain.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.settings.domain.model.AppTheme
 import com.mustafakoceerr.justrelax.feature.settings.components.LanguageSelectionSection
-import justrelax.composeapp.generated.resources.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable

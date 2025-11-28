@@ -1,11 +1,12 @@
 package com.mustafakoceerr.justrelax.core.sound.domain.model
 
-import justrelax.core.generated.resources.Res
-import justrelax.core.generated.resources.category_air
-import justrelax.core.generated.resources.category_city
-import justrelax.core.generated.resources.category_nature
-import justrelax.core.generated.resources.category_noise
-import justrelax.core.generated.resources.category_water
+
+import com.mustafakoceerr.justrelax.core.generated.resources.Res
+import com.mustafakoceerr.justrelax.core.generated.resources.category_air
+import com.mustafakoceerr.justrelax.core.generated.resources.category_city
+import com.mustafakoceerr.justrelax.core.generated.resources.category_nature
+import com.mustafakoceerr.justrelax.core.generated.resources.category_noise
+import com.mustafakoceerr.justrelax.core.generated.resources.category_water
 import org.jetbrains.compose.resources.StringResource
 
 enum class SoundCategory(val id: String, val titleRes: StringResource) {

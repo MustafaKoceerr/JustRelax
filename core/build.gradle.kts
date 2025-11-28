@@ -11,6 +11,10 @@ plugins {
 
 kotlin {
 
+    androidLibrary {
+        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
+    }
+
     // Target declarations - add or remove as needed below. These define
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
@@ -124,10 +128,12 @@ kotlin {
     }
 }
 
+
+
 // BU KISMI KONTROL ET VE GÜNCELLE:
 compose.resources {
     // Kaynakların paket adı (Senin importlarınla uyuşmalı)
-    packageOfResClass = "justrelax.core.generated.resources"
+    packageOfResClass = "com.mustafakoceerr.justrelax.core.generated.resources"
 
     // KRİTİK AYAR: Kaynakları diğer modüllerin (composeApp) görmesi için public yap.
     publicResClass = true
@@ -135,3 +141,4 @@ compose.resources {
     // Eğer generateResClass sorunu varsa bunu da ekle:
     generateResClass = always
 }
+

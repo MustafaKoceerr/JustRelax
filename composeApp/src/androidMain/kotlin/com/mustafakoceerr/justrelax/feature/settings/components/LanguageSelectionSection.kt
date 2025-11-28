@@ -6,11 +6,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.Res
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.language_english
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.language_turkish
 import com.mustafakoceerr.justrelax.core.settings.domain.model.AppLanguage
 import com.mustafakoceerr.justrelax.feature.settings.SettingsViewModel
-import justrelax.composeapp.generated.resources.Res
-import justrelax.composeapp.generated.resources.language_english
-import justrelax.composeapp.generated.resources.language_turkish
+
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

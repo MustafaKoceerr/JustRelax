@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.core.sound.domain.player
 
 import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
-import justrelax.core.generated.resources.Res
 
 interface SoundPlayer{
 

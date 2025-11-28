@@ -1,8 +1,8 @@
 package com.mustafakoceerr.justrelax.core.sound.data.player
 
+import com.mustafakoceerr.justrelax.core.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
 import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
-import justrelax.core.generated.resources.Res
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.AVFAudio.AVAudioPlayer
 import platform.Foundation.NSURL

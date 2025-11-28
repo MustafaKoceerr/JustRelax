@@ -37,9 +37,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.Res
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.saved_empty_vector
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
-import justrelax.composeapp.generated.resources.Res
-import justrelax.composeapp.generated.resources.saved_empty_vector
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

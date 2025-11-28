@@ -4,11 +4,12 @@ import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import justrelax.core.generated.resources.Res
-import justrelax.core.generated.resources.nunito_bold
-import justrelax.core.generated.resources.nunito_medium
-import justrelax.core.generated.resources.nunito_regular
-import justrelax.core.generated.resources.nunito_semibold
+import com.mustafakoceerr.justrelax.core.generated.resources.Res
+import com.mustafakoceerr.justrelax.core.generated.resources.nunito_bold
+import com.mustafakoceerr.justrelax.core.generated.resources.nunito_medium
+import com.mustafakoceerr.justrelax.core.generated.resources.nunito_regular
+import com.mustafakoceerr.justrelax.core.generated.resources.nunito_semibold
+
 import org.jetbrains.compose.resources.Font
 
 // 1. Font Ailesini Tanımla

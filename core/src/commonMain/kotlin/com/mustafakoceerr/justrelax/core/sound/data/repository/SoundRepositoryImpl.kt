@@ -9,18 +9,19 @@ import androidx.compose.material.icons.rounded.ModeFanOff
 import androidx.compose.material.icons.rounded.Thunderstorm
 import androidx.compose.material.icons.rounded.WaterDrop
 import androidx.compose.material.icons.rounded.Waves
+import com.mustafakoceerr.justrelax.core.generated.resources.Res
+import com.mustafakoceerr.justrelax.core.generated.resources.sound_cafe
+import com.mustafakoceerr.justrelax.core.generated.resources.sound_campfire
+import com.mustafakoceerr.justrelax.core.generated.resources.sound_fan
+import com.mustafakoceerr.justrelax.core.generated.resources.sound_forest_birds
+import com.mustafakoceerr.justrelax.core.generated.resources.sound_ocean
+import com.mustafakoceerr.justrelax.core.generated.resources.sound_rain_light
+import com.mustafakoceerr.justrelax.core.generated.resources.sound_rain_thunder
+import com.mustafakoceerr.justrelax.core.generated.resources.sound_wind
 import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
 import com.mustafakoceerr.justrelax.core.sound.domain.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
-import justrelax.core.generated.resources.Res
-import justrelax.core.generated.resources.sound_cafe
-import justrelax.core.generated.resources.sound_campfire
-import justrelax.core.generated.resources.sound_fan
-import justrelax.core.generated.resources.sound_forest_birds
-import justrelax.core.generated.resources.sound_ocean
-import justrelax.core.generated.resources.sound_rain_light
-import justrelax.core.generated.resources.sound_rain_thunder
-import justrelax.core.generated.resources.sound_wind
+
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -46,7 +47,7 @@ class SoundRepositoryImpl : SoundRepository {
             id = "water_3",
             nameRes = Res.string.sound_ocean,
             icon = Icons.Rounded.Waves, // Hazır ikon
-            audioFileName = "water_ocean.mp3",
+            audioFileName = "water_ocean_light.mp3",
             category = SoundCategory.WATER
         ),
 
