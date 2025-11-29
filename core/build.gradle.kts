@@ -105,6 +105,9 @@ kotlin {
                 // Android için en modern ses motoru: Media3 (ExoPlayer)
                 implementation("androidx.media3:media3-exoplayer:1.8.0")
                 implementation("androidx.media3:media3-common:1.8.0")
+                implementation("androidx.media3:media3-session:1.8.0")
+                
+                implementation(libs.koin.android)
                 implementation(libs.core)
                 implementation(libs.androidx.appcompat)
             }
