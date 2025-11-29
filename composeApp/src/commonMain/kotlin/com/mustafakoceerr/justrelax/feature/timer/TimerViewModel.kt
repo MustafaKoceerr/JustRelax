@@ -2,6 +2,7 @@ package com.mustafakoceerr.justrelax.feature.timer
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundManager
 import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerIntent
 import com.mustafakoceerr.justrelax.feature.timer.domain.model.TimerStatus
@@ -17,9 +18,18 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/**
+ * Senkronizasyon Sorunu Çözüldü:
+ * Timer durdurunca Player'ın haberi olmama riski ortadan kalktı.
+ * Çünkü ikisi de aynı SoundManager state'ine bakıyor.
+ *
+ * Anti-Pattern Gitti: ViewModel içinde ViewModel tutma ayıbından kurtulduk.
+ * Test Edilebilirlik: SoundManager'ı UI olmadan, sadece Unit Test ile test edebilirsin.
+ *
+ */
 class TimerViewModel(
     // bu bir antipattern'dir.
-    private val playerViewModel: PlayerViewModel // Sesleri durdurmak için buna ihtiyacımız var
+    private val soundManager: SoundManager // DEĞİŞİKLİK: PlayerViewModel -> SoundManager
 ) : ScreenModel {
     // State: UI'ın dinlediği veri kaynağı
     private val _state = MutableStateFlow(TimerState())
@@ -108,7 +118,7 @@ class TimerViewModel(
         cancelTimer()
 
         // 2. PlayerViewModel'e "Stop All" emri gönder.
-        playerViewModel.processIntent(PlayerIntent.StopAll)
+        soundManager.stopAll()
 
         // UI'a haber ver (opsiyonel)
         screenModelScope.launch {

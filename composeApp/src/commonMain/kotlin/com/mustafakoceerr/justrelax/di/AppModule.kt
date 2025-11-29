@@ -17,8 +17,6 @@ val appModule = module {
 
     // YENİ: PlayerViewModel Singleton olarak burada
     single { PlayerViewModel(get()) }
-    // TimerViewModel'i de Singleton yapmalıyız. Çünkü kullanıcı Timer sekmesinden
-    // Home sekmesine geçtiğinde geri sayım arka planda devam etmeli ve TimerViewModel ölmemeli.
     single { TimerViewModel(get()) }
 }
 
