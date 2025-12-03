@@ -3,75 +3,149 @@ package com.mustafakoceerr.justrelax.core.sound.data.player
 import com.mustafakoceerr.justrelax.core.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
 import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.usePinned
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import platform.AVFAudio.AVAudioPlayer
 import platform.AVFAudio.AVAudioSession
-import platform.AVFAudio.AVAudioSessionCategory
 import platform.AVFAudio.AVAudioSessionCategoryPlayback
 import platform.AVFAudio.setActive
-import platform.Foundation.NSURL
+import platform.Foundation.NSData
+import platform.Foundation.dataWithBytes
+import platform.MediaPlayer.MPMediaItemPropertyArtist
+import platform.MediaPlayer.MPMediaItemPropertyTitle
+import platform.MediaPlayer.MPNowPlayingInfoCenter
+import platform.MediaPlayer.MPNowPlayingInfoPropertyElapsedPlaybackTime
+import platform.MediaPlayer.MPNowPlayingInfoPropertyPlaybackRate
+import platform.MediaPlayer.MPRemoteCommandCenter
+import platform.MediaPlayer.MPRemoteCommandHandlerStatus
+import platform.MediaPlayer.MPRemoteCommandHandlerStatusSuccess
+import platform.UIKit.UIApplication
+import platform.UIKit.beginReceivingRemoteControlEvents
 
+
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 class IosSoundPlayer : SoundPlayer {
-    // Aktif çalan playerları tutuyoruz.
-    private var activePlayers = mutableMapOf<String, AVAudioPlayer>()
+
+    // AKTİF OYUNCULAR (Sahne)
+    private val activePlayers = mutableMapOf<String, AVAudioPlayer>()
+
+    private val playerPool = mutableMapOf<String, AVAudioPlayer>()
+    private val POOL_LIMIT = 4
+    private var isMasterPlaying = false
 
     init {
-        // --- KRİTİK AYAR ---
-        // Uygulama açıldığında AudioSession'ı "Playback" moduna alıyoruz.
-        // Bu sayede telefon sessizdeyken bile ses çalar.
         configureAudioSession()
+        configureRemoteCommands()
     }
 
-    @OptIn(ExperimentalForeignApi::class)
-    private fun  configureAudioSession(){
+    private fun configureAudioSession() {
         try {
             val session = AVAudioSession.sharedInstance()
-            session.setCategory(AVAudioSessionCategoryPlayback, error=null)
-            session.setActive(true,null)
-        }catch (e: Exception){
+            session.setCategory(AVAudioSessionCategoryPlayback, error = null)
+            session.setActive(true, error = null)
+
+            // --- EKLENEN: Garanti olsun diye Remote Control'ü açıyoruz ---
+            UIApplication.sharedApplication.beginReceivingRemoteControlEvents()
+        } catch (e: Exception) {
             println("iOS AudioSession Error: ${e.message}")
         }
     }
 
+    private fun configureRemoteCommands() {
+        val commandCenter = MPRemoteCommandCenter.sharedCommandCenter()
 
-    @OptIn(ExperimentalForeignApi::class)
-    override suspend fun play(
-        sound: Sound,
-        volume: Float
-    ) {
-        // Zaten çalıyorsa işlem yapma.
+        commandCenter.playCommand.addTargetWithHandler { _ ->
+            resumeAll()
+            MPRemoteCommandHandlerStatusSuccess
+        }
+        commandCenter.pauseCommand.addTargetWithHandler { _ ->
+            pauseAll()
+            MPRemoteCommandHandlerStatusSuccess
+        }
+        commandCenter.nextTrackCommand.setEnabled(false)
+        commandCenter.previousTrackCommand.setEnabled(false)
+    }
+
+    @OptIn(ExperimentalResourceApi::class)
+    override suspend fun play(sound: Sound, volume: Float) {
+        // Zaten aktifse çık
         if (activePlayers.containsKey(sound.id)) return
 
-        try {
-            // 1. Dosya yolunu al (Compose Resources)
-            // iOS'te bu bize dosyanın Bundle içindeki tam yolunu (String) verir.
-            val uriString = Res.getUri("files/${sound.audioFileName}")
+        val player: AVAudioPlayer?
 
-            // 2. string yolu NSURL'e çevir
-            val url = NSURL.URLWithString(uriString)
+        // 1. Önce Havuza Bak (Cache Check)
+        if (playerPool.containsKey(sound.id)) {
+            // Havuzda var! Dosya okumayla uğraşma, direkt al.
+            player = playerPool.remove(sound.id)
+            player?.currentTime = 0.0 // Başa sar
+        } else {
+            // 2. Havuzda yok, sıfırdan oluştur (Maliyetli işlem)
+            player = createNewPlayer(sound)
+        }
 
-            if (url==null){
-                println("iOS Sound Error: URL oluşturulamadı -> $uriString")
-                return
-            }
+        if (player != null) {
+            player.volume = volume
+            player.prepareToPlay()
+            player.play()
 
-            // 3. Player oluştur.
-            val player = AVAudioPlayer(contentsOfURL = url, error = null).apply {
-                numberOfLoops = -1 // sonsuz döngü (loop)
-                this.volume = volume
-                prepareToPlay()
-                play()
-            }
-
-            // 4. Listeye ekle
             activePlayers[sound.id] = player
+
+            if (!isMasterPlaying) {
+                isMasterPlaying = true
+                updateLockScreenInfo()
+            }
+        }
+    }
+
+    // Yardımcı: Yeni Player Oluşturma
+    @OptIn(ExperimentalResourceApi::class)
+    private suspend fun createNewPlayer(sound: Sound): AVAudioPlayer? {
+        return try {
+            val bytes = Res.readBytes("files/${sound.audioFileName}")
+            val nsData = bytes.usePinned { pinned ->
+                NSData.dataWithBytes(pinned.addressOf(0), bytes.size.toULong())
+            }
+            AVAudioPlayer(data = nsData, error = null).apply {
+                numberOfLoops = -1
+                // Default volume
+                volume = 0.5f
+            }
         } catch (e: Exception) {
             println("iOS Sound Error: ${e.message}")
+            null
         }
     }
 
     override fun stop(soundId: String) {
-        activePlayers.remove(soundId)?.stop()
+        activePlayers.remove(soundId)?.let { player ->
+            // Durdur
+            player.stop()
+            // HAVUZA GÖNDER (Recycle)
+            addToPool(soundId, player)
+        }
+
+        if (activePlayers.isEmpty()) {
+            isMasterPlaying = false
+            updateLockScreenInfo()
+        }
+    }
+
+    // Havuza Ekleme Mantığı (FIFO / Limitli)
+    private fun addToPool(id: String, player: AVAudioPlayer) {
+        if (playerPool.size >= POOL_LIMIT) {
+            // Havuz doluysa, rastgele birini (veya ilkini) at.
+            // Map olduğu için iterator ile ilk key'i bulup siliyoruz.
+            val keyToRemove = playerPool.keys.first()
+            playerPool.remove(keyToRemove)
+            // iOS'ta 'release' yok, referans gidince ARC temizler.
+        }
+        playerPool[id] = player
     }
 
     override fun setVolume(soundId: String, volume: Float) {
@@ -79,12 +153,15 @@ class IosSoundPlayer : SoundPlayer {
     }
 
     override fun stopAll() {
-        activePlayers.values.forEach { it.stop()}
+        // Aktif olanları durdur ve havuza taşı
+        activePlayers.forEach { (id, player) ->
+            player.stop()
+            addToPool(id, player)
+        }
         activePlayers.clear()
-    }
 
-    override fun release() {
-        stopAll()
+        isMasterPlaying = false
+        updateLockScreenInfo()
     }
 
     override fun pause(soundId: String) {
@@ -96,11 +173,51 @@ class IosSoundPlayer : SoundPlayer {
     }
 
     override fun pauseAll() {
+        isMasterPlaying = false
         activePlayers.values.forEach { it.pause() }
+        updateLockScreenInfo()
     }
 
     override fun resumeAll() {
+        isMasterPlaying = true
         activePlayers.values.forEach { it.play() }
+        updateLockScreenInfo()
     }
 
+    override fun release() {
+        // Uygulama kapanırken her şeyi temizle
+        activePlayers.values.forEach { it.stop() }
+        activePlayers.clear()
+        playerPool.clear()
+    }
+
+    // --- KRİTİK DÜZELTME: MAIN THREAD ---
+    private fun updateLockScreenInfo() {
+        // iOS UI güncellemeleri MUTLAKA Main Thread'de olmalıdır.
+        // KMP coroutines arka planda çalışabilir, bu yüzden Main'e zorluyoruz.
+        CoroutineScope(Dispatchers.Main).launch {
+            val infoCenter = MPNowPlayingInfoCenter.defaultCenter()
+
+            if (activePlayers.isEmpty()) {
+                infoCenter.nowPlayingInfo = null
+                return@launch
+            }
+
+            val title = "Just Relax"
+            val artist = "${activePlayers.size} Active Sounds"
+
+            val nowPlayingInfo = mutableMapOf<Any?, Any?>()
+            nowPlayingInfo[MPMediaItemPropertyTitle] = title
+            nowPlayingInfo[MPMediaItemPropertyArtist] = artist
+
+            // 1.0 = Çalıyor, 0.0 = Durdu
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = if (isMasterPlaying) 1.0 else 0.0
+
+            // Süreyi sıfırda tut
+            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = 0.0
+
+            // Bilgiyi sisteme bas
+            infoCenter.nowPlayingInfo = nowPlayingInfo
+        }
+    }
 }
