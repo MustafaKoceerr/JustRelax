@@ -4,6 +4,7 @@ import com.mustafakoceerr.justrelax.feature.home.HomeViewModel
 import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
 import com.mustafakoceerr.justrelax.feature.settings.SettingsViewModel
 import com.mustafakoceerr.justrelax.feature.timer.TimerViewModel
+import org.koin.core.module.dsl.factoryOf
 // import com.mustafakoceerr.justrelax.feature.home.HomeViewModel (İleride eklenecek)
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -16,13 +17,13 @@ val appModule = module {
     viewModelOf(::SettingsViewModel)
 
     // YENİ: PlayerViewModel Singleton olarak burada
-    single { PlayerViewModel(get()) }
-    single { TimerViewModel(get()) }
+    factoryOf(::PlayerViewModel)
+    factoryOf(::TimerViewModel)
 }
 
 
 val homeModule = module {
     // get() sayısı azaldı (Navigator gitti)
-    factory { HomeViewModel(get()) }
-}
+    factoryOf(::HomeViewModel)
+    }
 

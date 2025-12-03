@@ -23,7 +23,7 @@ data class SoundManagerState(
 
 class SoundManager(
     private val soundPlayer: SoundPlayer
-) {
+):SoundController {
     // Singleton olduğu için kendi scope'u olmalı.
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -76,7 +76,7 @@ class SoundManager(
         }
     }
 
-    fun stopAll() {
+    override fun stopAll() {
         soundPlayer.stopAll()
         _state.update {
             it.copy(

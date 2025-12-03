@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.timer.mvi
 
-import com.mustafakoceerr.justrelax.feature.timer.domain.model.TimerStatus
+import com.mustafakoceerr.justrelax.core.timer.domain.model.TimerStatus
 
 data class TimerState(
     val status: TimerStatus = TimerStatus.IDLE,
@@ -13,8 +13,4 @@ sealed interface TimerIntent {
     data object PauseTimer : TimerIntent
     data object ResumeTimer : TimerIntent
     data object CancelTimer : TimerIntent
-}
-
-sealed interface TimerEffect {
-    data object TimerFinished : TimerEffect
 }

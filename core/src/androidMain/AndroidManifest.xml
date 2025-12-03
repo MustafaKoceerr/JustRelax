@@ -1,29 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Foreground Service izni şart -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission
-        android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
 
     <application>
-        <!-- 2. SERVİS TANIMI -->
-        <!-- android:name -> Yazdığımız sınıfın tam yolu (Paket ismini kontrol et!) -->
-        <!-- android:exported="true" -> Sistemin bu servise ulaşmasına izin verir -->
-        <!-- android:foregroundServiceType="mediaPlayback" -> Android'e bu servisin ses çalacağını söyler -->
+        <!-- Servis Tanımı: Media3 Session Service -->
         <service
-            android:name="com.mustafakoceerr.justrelax.core.service.JustRelaxService"
-            android:exported="true"
+            android:name=".sound.service.JustRelaxService"
+            android:exported="false"
             android:foregroundServiceType="mediaPlayback"
-            android:stopWithTask="false"
-            tools:ignore="ExportedService">
-            <!-- Bu Intent Filter sayesinde Android sistemi (Media Controller)
-                            bizim servisimizi bulup iletişime geçebilir. -->
-            <intent-filter>
-                <action android:name="androidx.media3.session.MediaSessionService" />
-             </intent-filter>
+            android:stopWithTask="false">
+            <!-- Intent filter'a gerek yok, direkt class ile bağlanıyoruz -->
         </service>
     </application>
 </manifest>

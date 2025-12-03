@@ -1,110 +1,91 @@
 package com.mustafakoceerr.justrelax.core.sound.data.player
 
+import android.content.ComponentName
 import android.content.Context
-import android.net.Uri
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
-import androidx.media3.exoplayer.ExoPlayer
-import com.mustafakoceerr.justrelax.core.generated.resources.Res
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
 import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import androidx.core.net.toUri
+import com.mustafakoceerr.justrelax.core.sound.service.JustRelaxService
 
 class AndroidSoundPlayer(
-    private val context: Context
+    context: Context
 ) : SoundPlayer {
 
-    // Aktif çalan her ses için ayrı bir ExoPlayer tutuyoruz.
-    // Key: Sound ID, Value: ExoPlayer instance
-    private val activePlayers = mutableMapOf<String, ExoPlayer>()
+    private var service: JustRelaxService? = null
 
-    @OptIn(ExperimentalResourceApi::class)
-    override suspend fun play(sound: Sound, volume: Float) {
-        // 1. Race Condition Önlemi: Zaten çalıyorsa tekrar başlatma.
-        if (activePlayers.containsKey(sound.id)) return
+    // KRİTİK 1: Activity Context yerine Application Context kullanıyoruz.
+    // Activity ölse (Swipe) bile bağlantı güvenli kalır. Voyager hatasını bu çözer.
+    private val appContext = context.applicationContext
 
-        try {
-            // 2. Dosya yolunu al (IO işlemi olduğu için suspend)
-            // Compose Resources, dosyaları "files" klasörü altında tutar.
-            val uriString = Res.getUri("files/${sound.audioFileName}")
-
-            // 3. Player Oluşturma (Main Thread Zorunluluğu)
-            withContext(Dispatchers.Main) {
-                // Çift kontrol (Double check locking benzeri):
-                // IO işlemi sırasında başka bir yerden play tetiklendiyse tekrar kontrol et.
-                if (activePlayers.containsKey(sound.id)) return@withContext
-
-                val player = ExoPlayer.Builder(context).build().apply {
-                    val mediaItem = MediaItem.fromUri(uriString.toUri())
-                    setMediaItem(mediaItem)
-
-                    // Loop (Sonsuz Döngü) Ayarı
-                    repeatMode = Player.REPEAT_MODE_ONE
-
-                    // Ses Seviyesi
-                    this.volume = volume
-
-                    prepare()
-                    play()
-                }
-
-                // Player'ı haritaya ekle
-                activePlayers[sound.id] = player
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            // Loglama yapılabilir: "Ses dosyası bulunamadı veya bozuk: ${sound.audioFileName}"
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, binder: IBinder) {
+            val localBinder = binder as JustRelaxService.LocalBinder
+            service = localBinder.getService()
         }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            service = null
+        }
+    }
+
+    init {
+        // KRİTİK 2: Burada startService YAPMIYORUZ.
+        // Sadece bind ediyoruz ki servis hazır olsun ama bildirim göstermek zorunda kalmasın.
+        val intent = Intent(appContext, JustRelaxService::class.java)
+        appContext.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+    }
+
+    override suspend fun play(sound: Sound, volume: Float) {
+        // KRİTİK 3: Kullanıcı "Play" dediği an servisi Foreground moduna geçiriyoruz.
+        // Artık müzik çalacağı için bildirim göstermek yasal ve zorunlu.
+        startServiceForPlayback()
+
+        service?.playSound(sound, volume)
+    }
+
+    private fun startServiceForPlayback() {
+        val intent = Intent(appContext, JustRelaxService::class.java)
+        intent.action = JustRelaxService.ACTION_PLAY
+
+        appContext.startForegroundService(intent)
     }
 
     override fun stop(soundId: String) {
-        // Player'ı map'ten al ve varsa durdur
-        activePlayers.remove(soundId)?.let { player ->
-            // ExoPlayer işlemleri Main thread'de olmalı ama stop/release hafiftir,
-            // genellikle sorun çıkarmaz. Yine de garanti olsun diye runOnMainThread yapılabilir
-            // ama burada basitlik adına direkt çağırıyoruz, ExoPlayer bunu handle eder.
-            player.stop()
-            player.release() // Memory Leak önlemi: Kaynağı serbest bırak!
-        }
+        service?.stopSound(soundId)
     }
 
     override fun setVolume(soundId: String, volume: Float) {
-        // Anlık ses değişimi (Suspend değil, UI takılmaz)
-        activePlayers[soundId]?.volume = volume
+        service?.setVolume(soundId, volume)
     }
 
     override fun stopAll() {
-        // Tüm playerları gez, durdur ve serbest bırak
-        activePlayers.values.forEach { player ->
-            player.stop()
-            player.release()
-        }
-        activePlayers.clear()
-    }
-
-    override fun release() {
-        // Uygulama kapanırken temizlik
-        stopAll()
-    }
-
-    override fun pause(soundId: String) {
-        activePlayers[soundId]?.pause()
-    }
-
-    override fun resume(soundId: String) {
-        activePlayers[soundId]?.play()
+        service?.stopAll()
     }
 
     override fun pauseAll() {
-        activePlayers.values.forEach { it.pause() }
+        service?.pauseAll()
     }
 
     override fun resumeAll() {
-        activePlayers.values.forEach { it.play() }
+        service?.resumeAll()
+    }
+
+    override fun pause(soundId: String) {
+        service?.stopSound(soundId)
+    }
+
+    override fun resume(soundId: String) {
+        // Tekil resume mantığı yoksa boş bırakılabilir veya play çağrılabilir
+    }
+
+    override fun release() {
+        try {
+            appContext.unbindService(connection)
+        } catch (e: Exception) {
+            // Zaten kopmuşsa hata vermesin
+        }
+        service = null
     }
 }
-
-

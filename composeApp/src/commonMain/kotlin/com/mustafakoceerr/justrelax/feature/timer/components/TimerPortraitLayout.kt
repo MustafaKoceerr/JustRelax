@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
-import com.mustafakoceerr.justrelax.feature.timer.domain.model.TimerStatus
+import com.mustafakoceerr.justrelax.core.timer.domain.model.TimerStatus
 import com.mustafakoceerr.justrelax.utils.calculateEndTime
 import com.mustafakoceerr.justrelax.utils.formatDurationVerbose
 import com.mustafakoceerr.justrelax.utils.formatTime

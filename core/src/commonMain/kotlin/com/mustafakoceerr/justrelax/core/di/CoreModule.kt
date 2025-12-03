@@ -4,8 +4,10 @@ import com.mustafakoceerr.justrelax.core.navigation.AppNavigator
 import com.mustafakoceerr.justrelax.core.settings.data.repository.SettingsRepositoryImpl
 import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
 import com.mustafakoceerr.justrelax.core.sound.data.repository.SoundRepositoryImpl
+import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundController
 import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundManager
 import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.timer.domain.manager.TimerManager
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -16,8 +18,10 @@ val coreModule = module {
     singleOf(::SettingsRepositoryImpl) bind SettingsRepository::class
     singleOf(::SoundRepositoryImpl) bind SoundRepository::class
 
-    single { SoundManager(get()) } // SoundManager Singleton
+    // sound manager'da timer manager'da singleton
+    single { SoundManager(get()) } bind SoundController::class
 
+    single { TimerManager(get()) }
 }
 
 // Bu beklenti, yukarıda güncellediğimiz PlatformModule dosyaları tarafından karşılanacak.

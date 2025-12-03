@@ -9,36 +9,32 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import cafe.adriel.voyager.koin.getScreenModel
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
+import com.mustafakoceerr.justrelax.core.timer.domain.model.TimerStatus
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerLandscapeLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerPortraitLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerSetupScreen
-import com.mustafakoceerr.justrelax.feature.timer.domain.model.TimerStatus
 import com.mustafakoceerr.justrelax.feature.timer.mvi.TimerIntent
-import org.koin.compose.koinInject
 
 data object TimerScreen : AppScreen {
     @Composable
     override fun Content() {
-        // Singleton TimerViewModel (Service entegrasyonu için singleton olması önemli)
-        val viewModel = koinInject<TimerViewModel>()
+        // YENİSİ: Lifecycle uyumlu
+        val viewModel = getScreenModel<TimerViewModel>()
         val state by viewModel.state.collectAsState()
-
         Scaffold(
             containerColor = Color.Transparent
-        ) {paddingValues ->
+        ) { paddingValues ->
             JustRelaxBackground {
-                // Ekranın durumuna göre içerik değişiyor.
                 if (state.status == TimerStatus.IDLE){
-                    // 1. Kurulum Ekranı
                     TimerSetupScreen(
                         onStartClick = { totalSeconds ->
                             viewModel.processIntent(TimerIntent.StartTimer(totalSeconds))
                         }
                     )
-                }else{
-                    // 2. Sayaç ekranı (Running veya Paused)
+                } else {
                     BoxWithConstraints(
                         modifier = Modifier
                             .fillMaxSize()
@@ -54,7 +50,7 @@ data object TimerScreen : AppScreen {
                                 onToggleClick = {
                                     if (state.status == TimerStatus.RUNNING){
                                         viewModel.processIntent(TimerIntent.PauseTimer)
-                                    }else{
+                                    } else {
                                         viewModel.processIntent(TimerIntent.ResumeTimer)
                                     }
                                 },
@@ -62,15 +58,15 @@ data object TimerScreen : AppScreen {
                                     viewModel.processIntent(TimerIntent.CancelTimer)
                                 }
                             )
-                        }else{
+                        } else {
                             TimerPortraitLayout(
                                 totalTimeSeconds = state.totalTimeSeconds,
                                 timeLeftSeconds = state.timeLeftSeconds,
                                 status = state.status,
                                 onToggleClick = {
-                                    if (state.status== TimerStatus.RUNNING){
+                                    if (state.status == TimerStatus.RUNNING){
                                         viewModel.processIntent(TimerIntent.PauseTimer)
-                                    }else{
+                                    } else {
                                         viewModel.processIntent(TimerIntent.ResumeTimer)
                                     }
                                 },
@@ -83,6 +79,5 @@ data object TimerScreen : AppScreen {
                 }
             }
         }
-
     }
-    }
+}

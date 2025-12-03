@@ -17,13 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.getScreenModel
-import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
-import com.mustafakoceerr.justrelax.feature.home.HomeViewModel
 import com.mustafakoceerr.justrelax.feature.home.components.ActiveSoundsBar
 import com.mustafakoceerr.justrelax.feature.main.tabs.AiTab
 import com.mustafakoceerr.justrelax.feature.main.tabs.HomeTab
@@ -32,28 +30,20 @@ import com.mustafakoceerr.justrelax.feature.main.tabs.SavedTab
 import com.mustafakoceerr.justrelax.feature.main.tabs.TimerTab
 import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerIntent
-import com.mustafakoceerr.justrelax.feature.settings.SettingsScreen
 import kotlinx.serialization.Serializable
-import org.koin.compose.koinInject
 
 @Serializable
 object MainScreen: AppScreen{
     @Composable
     override fun Content() {
-        // ViewModel'i burada çağırıyoruz bu viewModel Singleton
-        val playerViewModel = koinInject<PlayerViewModel>() // KoinInject veya getScreenModel
+        // YENİSİ: Voyager Lifecycle uyumlu injection
+        val playerViewModel = getScreenModel<PlayerViewModel>()
         val playerState by playerViewModel.state.collectAsState()
 
-        // 2. TAB NAVIGATOR
         TabNavigator(HomeTab) { tabNavigator ->
-            // Hangi Tab'dayız?
             val currentTab = tabNavigator.current
-
-            // Bar Görünürlük Mantığı:
-            // - Aktif ses varsa GÖSTER
-            // - VE Şu anki tab AI değilse GÖSTER (AI ekranında bar istemiyoruz)
-            // - İstersen Settings ekranını da buraya hariç tutma mantığıyla ekleyebilirsin.
-            val showActiveSoundsBar = playerState.activeSounds.isNotEmpty() && (currentTab == MixerTab || currentTab == HomeTab || currentTab == SavedTab)
+            val showActiveSoundsBar = playerState.activeSounds.isNotEmpty() &&
+                    (currentTab == MixerTab || currentTab == HomeTab || currentTab == SavedTab)
 
             Scaffold(
                 bottomBar = {
@@ -68,21 +58,14 @@ object MainScreen: AppScreen{
                         TabNavigationItem(MixerTab)
                     }
                 }
-            ) { innerPadding->
-                // Scaffold padding'ini Box'a veriyoruz ki içerik BottomBar'ın altında kalmasın.,
+            ) { innerPadding ->
                 Box(modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding())){
-                    // A. Tab içeriği (Home, timer, vs.)
                     CurrentTab()
 
-                    // B. Active Sounds Bar(Yüzen Bar)
                     if (showActiveSoundsBar){
                         ActiveSoundsBar(
-                            // PlayerState içinde 'activeSoundDetails' listesi tuttuğumuz için
-                            // artık ikonları kolayca mapleyebiliyoruz.
-                            activeIcons = playerState.activeSoundDetails.map { it.icon},
+                            activeIcons = playerState.activeSoundDetails.map { it.icon },
                             isPlaying = playerState.isMasterPlaying,
-
-                            // MVI Intent'leri
                             onPlayPauseClick = {
                                 playerViewModel.processIntent(PlayerIntent.ToggleMasterPlayPause)
                             },
@@ -90,12 +73,11 @@ object MainScreen: AppScreen{
                                 playerViewModel.processIntent(PlayerIntent.StopAll)
                             },
                             modifier = Modifier
-                                .padding(16.dp)// Kenarlardan boşluk
-                                .align(Alignment.BottomCenter) // En alta sabitle.
+                                .padding(16.dp)
+                                .align(Alignment.BottomCenter)
                         )
                     }
                 }
-
             }
         }
     }
@@ -107,18 +89,13 @@ private fun RowScope.TabNavigationItem(tab: Tab){
 
     NavigationBarItem(
         selected = tabNavigator.current == tab,
-        onClick = {tabNavigator.current = tab},
+        onClick = { tabNavigator.current = tab },
         icon = {
             tab.options.icon?.let {
-                Icon(
-                    painter = it,
-                    contentDescription = tab.options.title
-                )
+                Icon(painter = it, contentDescription = tab.options.title)
             }
         },
-        label = {
-            Text(text = tab.options.title)
-        },
+        label = { Text(text = tab.options.title) },
         colors = NavigationBarItemDefaults.colors(
             selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
             selectedTextColor = MaterialTheme.colorScheme.primary,

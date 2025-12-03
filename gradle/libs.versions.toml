@@ -1,27 +1,38 @@
 [versions]
-agp = "8.13.1"
+kotlin = "2.2.21"
+agp = "8.11.0"
+
 android-compileSdk = "36"
 android-minSdk = "29"
 android-targetSdk = "36"
+# Kotlin & Compose
+composeMultiplatform = "1.9.3"
+
+# AndroidX
 androidx-activity = "1.11.0"
 androidx-appcompat = "1.7.1"
 androidx-core = "1.17.0"
+androidx-lifecycle = "2.8.4"      # <-- 2.9.6'dan bilinçli downgrade
+androidx-media = "1.7.0"
 androidx-espresso = "3.7.0"
-androidx-lifecycle = "2.9.6"
 androidx-testExt = "1.3.0"
-composeMultiplatform = "1.9.3"
-junit = "4.13.2"
-kotlin = "2.2.21"
+# Voyager
+voyager = "1.1.0-beta03"          # KMP için oturmuş beta
+
+# DI / Network vs.
 koin = "4.1.1"
-voyager = "1.0.1"
 ktor = "3.3.2"
-kotlinx-serialization = "1.9.0" # Senin verdiğin versiyon
+kotlinx-serialization = "1.9.0"
 multiplatform-settings = "1.3.0"
 sqldelight = "2.2.1"
-kotlinStdlib = "2.2.21"
+
+# Kotlin ekleri
+kotlinx-coroutines = "1.10.2"
+
+# Test / core (senin var olan değerlerin)
+junit = "4.13.2"
 runner = "1.5.2"
 core = "1.5.0"
-kotlinx-coroutines = "1.10.2"
 coreVersion = "1.17.0"
 
 [libraries]
@@ -72,7 +83,6 @@ sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sq
 sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 
@@ -80,8 +90,9 @@ androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 # Extended icons
-compose-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended"}
 core = { group = "androidx.core", name = "core", version.ref = "coreVersion" }
+
+androidx-media = { module = "androidx.media:media", version.ref = "androidx-media" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
