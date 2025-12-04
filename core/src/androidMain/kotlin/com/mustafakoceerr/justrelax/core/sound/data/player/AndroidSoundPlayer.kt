@@ -72,6 +72,11 @@ class AndroidSoundPlayer(
         service?.resumeAll()
     }
 
+    override suspend fun playMix(sounds: List<Pair<Sound, Float>>) {
+        startServiceForPlayback()
+        service?.playMix(sounds)
+    }
+
     override fun pause(soundId: String) {
         service?.stopSound(soundId)
     }

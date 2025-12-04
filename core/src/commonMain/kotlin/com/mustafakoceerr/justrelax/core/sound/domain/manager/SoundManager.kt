@@ -29,12 +29,12 @@ class SoundManager(
 
     private val _state = MutableStateFlow(SoundManagerState())
     val state = _state.asStateFlow()
-
-    fun toggleSound(sound: Sound) {
+    fun toggleSound(sound: Sound, initialVolume: Float = 0.5f) {
         val currentActive = _state.value.activeSounds
         val currentDetails = _state.value.activeSoundDetails
 
         if (currentActive.containsKey(sound.id)) {
+            // Zaten çalıyorsa durdur
             soundPlayer.stop(sound.id)
             _state.update {
                 it.copy(
@@ -44,11 +44,15 @@ class SoundManager(
                 )
             }
         } else {
+            // Çalmıyorsa, verilen ses seviyesi ile başlat
             scope.launch {
-                soundPlayer.play(sound, 0.5f)
+                // Hardcoded 0.5f yerine parametreden gelen değeri kullanıyoruz
+                soundPlayer.play(sound, initialVolume)
+
                 _state.update {
                     it.copy(
-                        activeSounds = currentActive + (sound.id to 0.5f),
+                        // State'e de bu özel ses seviyesini kaydediyoruz
+                        activeSounds = currentActive + (sound.id to initialVolume),
                         activeSoundDetails = currentDetails + sound,
                         isMasterPlaying = true
                     )
@@ -89,5 +93,23 @@ class SoundManager(
 
     fun release() {
         soundPlayer.release()
+    }
+
+    fun setMix(mixMap: Map<Sound, Float>){
+        scope.launch {
+            // 1. Player'a tek bir emir veriyoruz: "Bu listeyi çal"
+            // Map'i List<Pair>'e çevirip gönderiyoruz
+            soundPlayer.playMix(mixMap.toList())
+
+            // 2. State'i TEK SEFERDE güncelliyoruz (UI 5 kere titremeyecek)
+            _state.update {
+                it.copy(
+                    // State sadece ID ve Volume tutar.
+                    activeSounds = mixMap.entries.associate { (sound, volume) -> sound.id to volume },
+                    activeSoundDetails = mixMap.keys.toList(),
+                    isMasterPlaying = true
+                )
+            }
+        }
     }
 }

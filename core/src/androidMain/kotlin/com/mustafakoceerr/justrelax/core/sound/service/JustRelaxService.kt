@@ -35,10 +35,8 @@ class JustRelaxService : Service() {
 
     // Player Havuzu (Yedekler)
     private val playerPool = ArrayDeque<ExoPlayer>()
-    private val POOL_LIMIT = 4
-
+    private val POOL_LIMIT = 8
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
     // Master Durum
     private var isMasterPlaying = false
 
@@ -256,5 +254,45 @@ class JustRelaxService : Service() {
 
     inner class LocalBinder : Binder() {
         fun getService(): JustRelaxService = this@JustRelaxService
+    }
+
+
+    fun playMix(sounds: List<Pair<Sound,Float>>){
+        // 1. TEMİZLİK: Şu an çalan her şeyi durdur ve havuza geri gönder.
+        // stopAll() mantığının aynısı ama servisi öldürmüyoruz (demoteService yok).
+        activePlayers.values.forEach { player ->
+            player.pause() // Önce durdur
+            player.clearMediaItems() // İçini boşalt
+            releasePlayerToPool(player) // Havuza at
+        }
+
+        activePlayers.clear()
+
+        // 2. KURULUM: Yeni listeyi tek seferde hazırla
+        serviceScope.launch {
+            sounds.forEach { (sound,volume)->
+                // Havuzdan temiz bir player al
+                val player = acquirePlayer()
+                player.volume = volume
+
+                // Dosya yolunu Sound nesnesinden alıyoruz
+                val uriString = Res.getUri("files/${sound.audioFileName}")
+                player.setMediaItem(MediaItem.fromUri(uriString.toUri()))
+                player.prepare()
+
+                // Hepsini hazırla ve başlat
+                player.play()
+
+                // Map'e ID ile kaydet (Yönetim ID üzerinden döner)
+                activePlayers[sound.id] = player
+            }
+
+            // 3. FİNAL: Master Play durumunu aç ve bildirimi güncelle
+            isMasterPlaying = true
+
+            // Bildirimi SADECE 1 KERE güncelliyoruz.
+            // Kullanıcı 5 bildirim titremesi değil, tek bir geçiş hisseder.
+            updateNotification()
+        }
     }
 }

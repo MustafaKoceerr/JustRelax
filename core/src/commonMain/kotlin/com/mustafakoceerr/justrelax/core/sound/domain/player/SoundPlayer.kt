@@ -42,4 +42,8 @@ interface SoundPlayer{
     fun resume(soundId: String)
     fun pauseAll()
     fun resumeAll()
+
+    // YENİ METOD: Toplu çalma işlemi (Mix için)
+    // Sound ve Volume çiftlerini alır.
+    suspend fun playMix(sounds: List<Pair<Sound, Float>>)
 }

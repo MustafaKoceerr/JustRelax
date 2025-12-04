@@ -1,6 +1,8 @@
 package com.mustafakoceerr.justrelax.di
 
 import com.mustafakoceerr.justrelax.feature.home.HomeViewModel
+import com.mustafakoceerr.justrelax.feature.mixer.MixerViewModel
+import com.mustafakoceerr.justrelax.feature.mixer.domain.usecase.GenerateRandomMixUseCase
 import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
 import com.mustafakoceerr.justrelax.feature.settings.SettingsViewModel
 import com.mustafakoceerr.justrelax.feature.timer.TimerViewModel
@@ -19,6 +21,9 @@ val appModule = module {
     // YENİ: PlayerViewModel Singleton olarak burada
     factoryOf(::PlayerViewModel)
     factoryOf(::TimerViewModel)
+
+    factoryOf(::GenerateRandomMixUseCase)
+    factoryOf(::MixerViewModel)
 }
 
 

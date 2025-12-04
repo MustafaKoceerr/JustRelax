@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
@@ -69,13 +70,7 @@ fun MixerTopBar() {
     )
 }
 
-@Preview
-@Composable
-fun MixerTopBarPreview() {
-    JustRelaxTheme {
-        MixerTopBar()
-    }
-}
+
 
 @Composable
 fun MixNumberChip(
@@ -123,21 +118,7 @@ fun MixNumberChip(
 
 }
 
-@Preview
-@Composable
-fun MixNumberChipPreview() {
-    JustRelaxTheme {
-        Column {
-            MixNumberChip(
-                5, true, {}
-            )
 
-            MixNumberChip(
-                5, false, {}
-            )
-        }
-    }
-}
 
 
 @Composable
@@ -155,6 +136,8 @@ fun MixCountSelector(
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
         )
 
+        val soundCounts = (2..8).toList() // [2, 3, 4, 5, 6, 7, 8]
+
         // Liste
         LazyRow(
             // içerik kenarlara yapışmasın diyee padding
@@ -163,9 +146,7 @@ fun MixCountSelector(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // 2'den 82e kadar olan sayılar.
-            items(7) { index ->
-                val number = index + 2
-
+            items(soundCounts) { number ->
                 MixNumberChip(
                     number = number,
                     isSelected = number == selectedCount,
@@ -176,16 +157,7 @@ fun MixCountSelector(
     }
 }
 
-@Preview
-@Composable
-fun MixCountSelectorPreview() {
-    JustRelaxTheme {
-        MixCountSelector(
-            6,
-            {}
-        )
-    }
-}
+
 
 @Composable
 fun CreateMixButton(
@@ -226,13 +198,6 @@ fun CreateMixButton(
     }
 }
 
-@Preview
-@Composable
-fun CreateMixButtonPreview(){
-    JustRelaxTheme {
-        CreateMixButton({})
-    }
-}
 
 
 
@@ -270,13 +235,7 @@ fun SaveMixButton(
 
 
 
-@Preview
-@Composable
-fun SaveMixButtonPreview(){
-    JustRelaxTheme {
-        SaveMixButton({})
-    }
-}
+
 
 
 @Composable
@@ -373,10 +332,6 @@ fun MixerScreen(){
     }
 }
 
-
-
-
-
 @Preview
 @Composable
 fun MixerScreenPreview(){
@@ -385,5 +340,54 @@ fun MixerScreenPreview(){
     }
 }
 
+@Preview
+@Composable
+fun MixerTopBarPreview() {
+    JustRelaxTheme {
+        MixerTopBar()
+    }
+}
 
+@Preview
+@Composable
+fun MixNumberChipPreview() {
+    JustRelaxTheme {
+        Column {
+            MixNumberChip(
+                5, true, {}
+            )
+
+            MixNumberChip(
+                5, false, {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun MixCountSelectorPreview() {
+    JustRelaxTheme {
+        MixCountSelector(
+            6,
+            {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CreateMixButtonPreview(){
+    JustRelaxTheme {
+        CreateMixButton({})
+    }
+}
+
+@Preview
+@Composable
+fun SaveMixButtonPreview(){
+    JustRelaxTheme {
+        SaveMixButton({})
+    }
+}
 

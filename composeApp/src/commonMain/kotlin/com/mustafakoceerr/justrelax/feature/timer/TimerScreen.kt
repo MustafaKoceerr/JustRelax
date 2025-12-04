@@ -9,7 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.timer.domain.model.TimerStatus
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
@@ -22,7 +22,7 @@ data object TimerScreen : AppScreen {
     @Composable
     override fun Content() {
         // YENİSİ: Lifecycle uyumlu
-        val viewModel = getScreenModel<TimerViewModel>()
+        val viewModel = koinScreenModel<TimerViewModel>()
         val state by viewModel.state.collectAsState()
         Scaffold(
             containerColor = Color.Transparent

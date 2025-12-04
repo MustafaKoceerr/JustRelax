@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
@@ -38,11 +39,10 @@ data object HomeScreen : AppScreen {
 
         // 2. ViewModels
         // HomeViewModel: Ekran verisi için (Factory)
-        val homeViewModel = getScreenModel<HomeViewModel>()
+        val homeViewModel = koinScreenModel<HomeViewModel>()
         val homeState by homeViewModel.state.collectAsState()
 
-        // PlayerViewModel: Ses çalma işlemleri için (Singleton)
-        val playerViewModel = koinInject<PlayerViewModel>()
+        val playerViewModel = koinScreenModel<PlayerViewModel>()
         val playerState by playerViewModel.state.collectAsState()
 
         // 3. Effect handling (Side Effects)
