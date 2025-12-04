@@ -70,7 +70,8 @@ data object MixerScreen : AppScreen {
                     CreateMixButton(
                         onClick = {
                             mixerViewModel.processIntent(MixerIntent.CreateMix)
-                        }
+                        },
+                        isLoading = mixerState.isLoading
                     )
                 }
 
@@ -88,7 +89,14 @@ data object MixerScreen : AppScreen {
                 else if (mixerState.mixedSounds.isNotEmpty()) {
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(minSize = 110.dp),
-                        contentPadding = PaddingValues(16.dp),
+                        contentPadding = PaddingValues(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 16.dp,
+                            // PlayerBar (~64dp) + BottomNav (~80dp) + Boşluk (~16dp) ≈ 140-150dp
+                            // Kullanıcı en aşağı kaydırdığında butonun barın üstünde kalmasını sağlar.
+                            bottom = 60.dp
+                        ),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         modifier = Modifier.weight(1f)
@@ -108,7 +116,12 @@ data object MixerScreen : AppScreen {
                                     playerViewModel.processIntent(PlayerIntent.ToggleSound(sound))
                                 },
                                 onVolumeChange = { newVol ->
-                                    playerViewModel.processIntent(PlayerIntent.ChangeVolume(sound.id, newVol))
+                                    playerViewModel.processIntent(
+                                        PlayerIntent.ChangeVolume(
+                                            sound.id,
+                                            newVol
+                                        )
+                                    )
                                 }
                             )
                         }

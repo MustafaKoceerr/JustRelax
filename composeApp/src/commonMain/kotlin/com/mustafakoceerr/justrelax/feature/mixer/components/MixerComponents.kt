@@ -24,6 +24,7 @@ import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
@@ -45,13 +46,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.anims.LoadingDots
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.feature.home.components.SoundCard
 import com.mustafakoceerr.justrelax.feature.mixer.MixerViewModel
 import kotlinx.coroutines.selects.select
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.collections.emptyList
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,8 +70,6 @@ fun MixerTopBar() {
         }
     )
 }
-
-
 
 @Composable
 fun MixNumberChip(
@@ -117,10 +116,6 @@ fun MixNumberChip(
     )
 
 }
-
-
-
-
 @Composable
 fun MixCountSelector(
     selectedCount: Int,
@@ -156,51 +151,55 @@ fun MixCountSelector(
         }
     }
 }
-
-
-
 @Composable
 fun CreateMixButton(
     onClick: () -> Unit,
+    isLoading: Boolean, // YENİ PARAMETRE
     modifier: Modifier = Modifier
 ) {
     //  M3 filled button ( en yüksek vurgu)
     Button(
         onClick = onClick,
+        enabled = !isLoading,
         modifier = modifier
             .fillMaxWidth() // Genişliği doldursun ( padding'i dışarıdan vereceğiz.)
             .height(50.dp), // Timer butonlarıyla tutarlı yükseklik ( kibar ama basılabilir.)
 
-        // Renkler: Tema varsayılanı zaten primary'dir ama emin olmak için:
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            // Disabled olduğunda çok silik görünmemesi için container rengini ayarlayabiliriz
+            disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
+            disabledContentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        // Şekil: Hafif yuvarlatılmış (Varsayılan Stadium/Tam yuvarlak yerine)
-        // Timer butonlarına benzesin diye RoundedCornerShape(12.dp) veya varsayılan bırakabilirsin.
-        // M3 varsayılanı (Stadium) genelde ana aksiyonlar için iyidir.
         shape = MaterialTheme.shapes.extraLarge
     ){
-        Icon(
-            imageVector = Icons.Rounded.Refresh,
-            contentDescription = null,
-            modifier = Modifier.size(20.dp)
-        )
+        if (isLoading){
+            LoadingDots(
+                color = MaterialTheme.colorScheme.onPrimary, // Beyaz/Kontrast renk
+                dotSize = 8.dp,
+                travelDistance = 6.dp
+            )
 
-        // Araya boşluk
-        Spacer(modifier = Modifier.width(8.dp))
+        }else{
+            Icon(
+                imageVector = Icons.Rounded.Refresh,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
 
-        // Metin
-        Text(
-            text = "Mix oluştur", // veya "Create Mix"
-            style = MaterialTheme.typography.titleMedium // Okunaklı, kalın font
-        )
+            // Araya boşluk
+            Spacer(modifier = Modifier.width(8.dp))
+
+            // Metin
+            Text(
+                text = "Mix oluştur", // veya "Create Mix"
+                style = MaterialTheme.typography.titleMedium // Okunaklı, kalın font
+            )
+        }
+
     }
 }
-
-
-
-
 @Composable
 fun SaveMixButton(
     onClick: () -> Unit,
@@ -230,113 +229,6 @@ fun SaveMixButton(
             text = "Mix'i Kaydet", // Save Mix
             style = MaterialTheme.typography.titleMedium
         )
-    }
-}
-
-
-
-
-
-
-@Composable
-fun MixerScreen(){
-    // --- STATE (Durumlar) ---
-    var selectedCount by remember { mutableIntStateOf(4) } // Seçilen sayı (chip)
-
-    // Oluşturulan Mix Listesi (Şimdilik Boolean listesi ile simüle ediyoruz)
-    // Boş liste = Henüz mix yok.
-    // Dolu liste = Mix var, kartlar gösterilecek.
-    var generatedMix by remember { mutableStateOf<List<Boolean>>(emptyList()) }
-
-    Scaffold(
-        topBar = {MixerTopBar()}
-    ) {paddingValues ->
-
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-        ) {
-            // 1. Üst Kısım (Sabit)
-
-            // A) Sayı seçici
-            MixCountSelector(
-                selectedCount = selectedCount,
-                onCountSelected = {selectedCount =it},
-                modifier = Modifier.padding(vertical = 16.dp)
-            )
-
-            // B) oluştur butonu
-            Box(modifier = Modifier.padding(horizontal = 16.dp)){
-                CreateMixButton(
-                    onClick = {
-                        // MOCK LOGIC: Seçilen sayı kadar "true" (aktif) kart oluştur
-                        generatedMix = List(selectedCount) { true }
-                    }
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // -- 2. Alt kısım (GRID) --
-            if (generatedMix.isNotEmpty()){
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 110.dp),
-                    contentPadding = PaddingValues(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.weight(1f) // Kalan tüm alanı kapla
-                ){
-                    // A) Kartlar
-                    items(generatedMix.size){
-                        // SENİN HAZIR SOUND CARD'IN
-                        // isPlaying = true gönderiyoruz çünkü mix oluştuğunda çalmaya başlar.
-//                        SoundCard(
-//                            isPlaying = true,
-//                            modifier = Modifier.animateItem() // Animasyonlu giriş.
-//                        )
-                    }
-
-                    // B) Kaydet butonu (Grid'in en sonuna eklenir.
-                    // span parametresi ile tüm satırı kapla diyoruz.
-                    item(span = { GridItemSpan(maxLineSpan)}){
-                        Box(
-                            modifier = Modifier
-                                .padding(top = 24.dp, bottom = 32.dp)
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ){
-                            // Butonu çok geniş yapmayalım, %60 genişlik yeterli
-                            SaveMixButton(
-                                onClick = {/* Kaydetme işlemi */},
-                                modifier = Modifier.fillMaxWidth(0.6f)
-                            )
-                        }
-                    }
-                }
-            }else{
-                // --- BOŞ DURUM (EMPTY STATE) ---
-                // Henüz mix oluşturulmadıysa
-                Box(
-                    modifier = Modifier.weight(1f).fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ){
-                    Text(
-                        text = "Bir sayı seç ve karıştır!",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-fun MixerScreenPreview(){
-    JustRelaxTheme {
-        MixerScreen()
     }
 }
 
@@ -379,7 +271,7 @@ fun MixCountSelectorPreview() {
 @Composable
 fun CreateMixButtonPreview(){
     JustRelaxTheme {
-        CreateMixButton({})
+        CreateMixButton({}, false)
     }
 }
 

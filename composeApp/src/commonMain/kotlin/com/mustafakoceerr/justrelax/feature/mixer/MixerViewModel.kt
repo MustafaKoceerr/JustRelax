@@ -8,6 +8,7 @@ import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerEffect
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerIntent
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerState
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -35,19 +36,23 @@ class MixerViewModel(
         }
     }
 
-    private fun createMix(){
+    private fun createMix() {
+        // Eğer zaten yükleniyorsa tekrar basılmasını engelle (Double-click protection)
+        if (_state.value.isLoading) return
+
         screenModelScope.launch {
+            // 1. UI KİLİTLE (Loading Başlat)
             _state.update { it.copy(isLoading = true) }
 
-            // 1. Önceki sesleri tamamen durdur (Temiz başlangıç)
-            soundManager.stopAll()
-
-            // 2. UseCase'den rastgele sesleri ve volumelerini al
+            // 2. İŞLEMİ YAP (Atomic)
+            // UseCase veritabanından okur, Manager servise iletir.
             val mixMap = generateRandomMixUseCase(_state.value.selectedCount)
-
             soundManager.setMix(mixMap)
 
-            // 4. UI State güncelle (Sadece hangi seslerin seçildiğini göstermek için listeyi alıyoruz)
+            // 3. UX BEKLEMESİ (Debounce)
+            // İşlem 10ms sürse bile en az 500ms bekletiyoruz ki animasyon görünsün.
+            delay(500)
+
             _state.update {
                 it.copy(
                     mixedSounds = mixMap.keys.toList(),
