@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
@@ -37,7 +38,7 @@ object MainScreen: AppScreen{
     @Composable
     override fun Content() {
         // YENİSİ: Voyager Lifecycle uyumlu injection
-        val playerViewModel = getScreenModel<PlayerViewModel>()
+        val playerViewModel = koinScreenModel<PlayerViewModel>()
         val playerState by playerViewModel.state.collectAsState()
 
         TabNavigator(HomeTab) { tabNavigator ->

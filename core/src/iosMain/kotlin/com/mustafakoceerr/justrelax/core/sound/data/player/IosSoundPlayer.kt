@@ -23,20 +23,16 @@ import platform.MediaPlayer.MPNowPlayingInfoCenter
 import platform.MediaPlayer.MPNowPlayingInfoPropertyElapsedPlaybackTime
 import platform.MediaPlayer.MPNowPlayingInfoPropertyPlaybackRate
 import platform.MediaPlayer.MPRemoteCommandCenter
-import platform.MediaPlayer.MPRemoteCommandHandlerStatus
 import platform.MediaPlayer.MPRemoteCommandHandlerStatusSuccess
 import platform.UIKit.UIApplication
 import platform.UIKit.beginReceivingRemoteControlEvents
 
-
 @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 class IosSoundPlayer : SoundPlayer {
 
-    // AKTİF OYUNCULAR (Sahne)
+    // Sadece aktif çalanları tutuyoruz. Havuz (Pool) yok.
     private val activePlayers = mutableMapOf<String, AVAudioPlayer>()
 
-    private val playerPool = mutableMapOf<String, AVAudioPlayer>()
-    private val POOL_LIMIT = 4
     private var isMasterPlaying = false
 
     init {
@@ -49,8 +45,6 @@ class IosSoundPlayer : SoundPlayer {
             val session = AVAudioSession.sharedInstance()
             session.setCategory(AVAudioSessionCategoryPlayback, error = null)
             session.setActive(true, error = null)
-
-            // --- EKLENEN: Garanti olsun diye Remote Control'ü açıyoruz ---
             UIApplication.sharedApplication.beginReceivingRemoteControlEvents()
         } catch (e: Exception) {
             println("iOS AudioSession Error: ${e.message}")
@@ -59,7 +53,6 @@ class IosSoundPlayer : SoundPlayer {
 
     private fun configureRemoteCommands() {
         val commandCenter = MPRemoteCommandCenter.sharedCommandCenter()
-
         commandCenter.playCommand.addTargetWithHandler { _ ->
             resumeAll()
             MPRemoteCommandHandlerStatusSuccess
@@ -72,22 +65,36 @@ class IosSoundPlayer : SoundPlayer {
         commandCenter.previousTrackCommand.setEnabled(false)
     }
 
+    // --- ATOMIC MIX (Sadeleştirilmiş) ---
+    @OptIn(ExperimentalResourceApi::class)
+    override suspend fun playMix(sounds: List<Pair<Sound, Float>>) {
+        // 1. TEMİZLİK: Aktif olan her şeyi durdur ve sil.
+        stopAllInternal()
+
+        // 2. KURULUM: Yeni listeyi oluştur ve başlat.
+        // Havuz kontrolü yok, direkt oluşturuyoruz.
+        sounds.forEach { (sound, volume) ->
+            val player = createNewPlayer(sound)
+            if (player != null) {
+                player.volume = volume
+                player.prepareToPlay()
+                player.play()
+                activePlayers[sound.id] = player
+            }
+        }
+
+        // 3. FİNAL
+        isMasterPlaying = true
+        updateLockScreenInfo()
+    }
+
     @OptIn(ExperimentalResourceApi::class)
     override suspend fun play(sound: Sound, volume: Float) {
-        // Zaten aktifse çık
+        // Zaten çalıyorsa işlem yapma
         if (activePlayers.containsKey(sound.id)) return
 
-        val player: AVAudioPlayer?
-
-        // 1. Önce Havuza Bak (Cache Check)
-        if (playerPool.containsKey(sound.id)) {
-            // Havuzda var! Dosya okumayla uğraşma, direkt al.
-            player = playerPool.remove(sound.id)
-            player?.currentTime = 0.0 // Başa sar
-        } else {
-            // 2. Havuzda yok, sıfırdan oluştur (Maliyetli işlem)
-            player = createNewPlayer(sound)
-        }
+        // Yeni oluştur
+        val player = createNewPlayer(sound)
 
         if (player != null) {
             player.volume = volume
@@ -103,7 +110,6 @@ class IosSoundPlayer : SoundPlayer {
         }
     }
 
-    // Yardımcı: Yeni Player Oluşturma
     @OptIn(ExperimentalResourceApi::class)
     private suspend fun createNewPlayer(sound: Sound): AVAudioPlayer? {
         return try {
@@ -112,9 +118,8 @@ class IosSoundPlayer : SoundPlayer {
                 NSData.dataWithBytes(pinned.addressOf(0), bytes.size.toULong())
             }
             AVAudioPlayer(data = nsData, error = null).apply {
-                numberOfLoops = -1
-                // Default volume
-                volume = 0.5f
+                numberOfLoops = -1 // Sonsuz döngü
+                volume = 0.5f // Varsayılan, sonra override ediliyor
             }
         } catch (e: Exception) {
             println("iOS Sound Error: ${e.message}")
@@ -124,10 +129,8 @@ class IosSoundPlayer : SoundPlayer {
 
     override fun stop(soundId: String) {
         activePlayers.remove(soundId)?.let { player ->
-            // Durdur
             player.stop()
-            // HAVUZA GÖNDER (Recycle)
-            addToPool(soundId, player)
+            // player değişkeni scope dışına çıkınca ARC tarafından temizlenir.
         }
 
         if (activePlayers.isEmpty()) {
@@ -136,32 +139,20 @@ class IosSoundPlayer : SoundPlayer {
         }
     }
 
-    // Havuza Ekleme Mantığı (FIFO / Limitli)
-    private fun addToPool(id: String, player: AVAudioPlayer) {
-        if (playerPool.size >= POOL_LIMIT) {
-            // Havuz doluysa, rastgele birini (veya ilkini) at.
-            // Map olduğu için iterator ile ilk key'i bulup siliyoruz.
-            val keyToRemove = playerPool.keys.first()
-            playerPool.remove(keyToRemove)
-            // iOS'ta 'release' yok, referans gidince ARC temizler.
-        }
-        playerPool[id] = player
-    }
-
     override fun setVolume(soundId: String, volume: Float) {
         activePlayers[soundId]?.volume = volume
     }
 
     override fun stopAll() {
-        // Aktif olanları durdur ve havuza taşı
-        activePlayers.forEach { (id, player) ->
-            player.stop()
-            addToPool(id, player)
-        }
-        activePlayers.clear()
-
+        stopAllInternal()
         isMasterPlaying = false
         updateLockScreenInfo()
+    }
+
+    // Yardımcı metod: StopAll mantığını hem mix hem stopAll kullanıyor
+    private fun stopAllInternal() {
+        activePlayers.values.forEach { it.stop() }
+        activePlayers.clear()
     }
 
     override fun pause(soundId: String) {
@@ -185,16 +176,10 @@ class IosSoundPlayer : SoundPlayer {
     }
 
     override fun release() {
-        // Uygulama kapanırken her şeyi temizle
-        activePlayers.values.forEach { it.stop() }
-        activePlayers.clear()
-        playerPool.clear()
+        stopAllInternal()
     }
 
-    // --- KRİTİK DÜZELTME: MAIN THREAD ---
     private fun updateLockScreenInfo() {
-        // iOS UI güncellemeleri MUTLAKA Main Thread'de olmalıdır.
-        // KMP coroutines arka planda çalışabilir, bu yüzden Main'e zorluyoruz.
         CoroutineScope(Dispatchers.Main).launch {
             val infoCenter = MPNowPlayingInfoCenter.defaultCenter()
 
@@ -209,14 +194,9 @@ class IosSoundPlayer : SoundPlayer {
             val nowPlayingInfo = mutableMapOf<Any?, Any?>()
             nowPlayingInfo[MPMediaItemPropertyTitle] = title
             nowPlayingInfo[MPMediaItemPropertyArtist] = artist
-
-            // 1.0 = Çalıyor, 0.0 = Durdu
             nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = if (isMasterPlaying) 1.0 else 0.0
-
-            // Süreyi sıfırda tut
             nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = 0.0
 
-            // Bilgiyi sisteme bas
             infoCenter.nowPlayingInfo = nowPlayingInfo
         }
     }
