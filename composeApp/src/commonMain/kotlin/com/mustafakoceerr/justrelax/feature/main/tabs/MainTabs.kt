@@ -11,11 +11,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.mustafakoceerr.justrelax.feature.ai.components.AIScreen
 import com.mustafakoceerr.justrelax.feature.ai.components.AiScreen
 import com.mustafakoceerr.justrelax.feature.home.HomeScreen
 import com.mustafakoceerr.justrelax.feature.mixer.MixerScreen
-import com.mustafakoceerr.justrelax.feature.saved.components.SavedScreen
+import com.mustafakoceerr.justrelax.feature.saved.SavedScreen
 import com.mustafakoceerr.justrelax.feature.timer.TimerScreen
 
 // 1. HOME TAB

@@ -8,7 +8,6 @@ plugins {
 
     // Gerekli plugin'leri toml'dan alıyoruz
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.sqldelight)
 
     kotlin("native.cocoapods")
 }
@@ -31,12 +30,22 @@ kotlin {
         version = "1.0.0"
 
         ios.deploymentTarget = "16.0"
+        // --- ÇÖZÜM BURASI ---
+        // Bu satır, oluşturulan .podspec dosyasına
+        // "spec.libraries = 'sqlite3'" satırını ekler.
+        // Böylece 'pod install' dediğinde Xcode otomatik olarak sqlite3'ü bağlar.
+        extraSpecAttributes["libraries"] = "'sqlite3'"
 
         framework {
             baseName = "ComposeApp"
             isStatic = true // Compose için statik olması önerilir
 
             // Eğer export ettiğin kütüphaneler varsa buraya eklersin
+            // --- ÇÖZÜM BURASI ---
+            // iOS sistemindeki SQLite3 kütüphanesini linkle
+//            linkerOpts.add("-lsqlite3")
+             export(projects.core)
+
             // export(libs.someLibrary)
         }
     }
@@ -51,7 +60,7 @@ kotlin {
 
         }
         commonMain.dependencies {
-            implementation(project(":core"))
+            api(project(":core"))
 
             implementation(compose.ui)
             implementation(compose.components.resources)
@@ -92,6 +101,9 @@ kotlin {
 
             // Extended icons
             implementation(compose.materialIconsExtended)
+
+            // RepositoryImpl içinde tarih (Clock.System.now) kullanmak için:
+            implementation(libs.kotlinx.datetime)
 
         }
         iosMain.dependencies {
@@ -136,14 +148,6 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
-}
-
-sqldelight {
-    databases {
-        create("JustRelaxDatabase") {
-            packageName.set("com.mustafakoceerr.justrelax.database")
-        }
-    }
 }
 
 // --- KRİTİK NOKTA ---

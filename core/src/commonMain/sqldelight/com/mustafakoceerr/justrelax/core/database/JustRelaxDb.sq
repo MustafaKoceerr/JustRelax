@@ -1,0 +1,43 @@
+-- 1. Tablolar
+CREATE TABLE mixEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    createdAt INTEGER NOT NULL
+);
+
+CREATE TABLE mixSoundEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    mixId INTEGER NOT NULL,
+    soundId TEXT NOT NULL,
+    volume REAL NOT NULL,
+    FOREIGN KEY (mixId) REFERENCES mixEntity(id) ON DELETE CASCADE
+);
+
+-- 2. Sorgular
+
+getAllMixes:
+SELECT * FROM mixEntity ORDER BY createdAt DESC;
+
+getSoundsForMix:
+SELECT * FROM mixSoundEntity WHERE mixId = ?;
+
+-- ID'yi NULL geçiyoruz ki parametre olarak istemesin, otomatik üretsin.
+insertMix:
+INSERT INTO mixEntity (id, name, createdAt) VALUES (NULL, ?, ?);
+
+selectLastInsertId:
+SELECT last_insert_rowid();
+
+-- ID'yi NULL geçiyoruz. Parametreler: mixId (Long), soundId (String), volume (Double)
+insertMixSound:
+INSERT INTO mixSoundEntity (id, mixId, soundId, volume) VALUES (NULL, ?, ?, ?);
+
+deleteMixById:
+DELETE FROM mixEntity WHERE id = ?;
+
+updateMixName:
+UPDATE mixEntity SET name = ? WHERE id = ?;
+
+-- İsim kontrolü (Varsa 1, yoksa 0 döner)
+countMixesByName:
+SELECT COUNT(*) FROM mixEntity WHERE name = ?;

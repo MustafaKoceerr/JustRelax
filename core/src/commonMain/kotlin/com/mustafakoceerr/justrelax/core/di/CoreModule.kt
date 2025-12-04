@@ -1,5 +1,9 @@
 package com.mustafakoceerr.justrelax.core.di
 
+import com.mustafakoceerr.justrelax.core.database.DatabaseDriverFactory
+import com.mustafakoceerr.justrelax.core.database.JustRelaxDb
+import com.mustafakoceerr.justrelax.core.database.domain.repository.SavedMixRepository
+import com.mustafakoceerr.justrelax.core.database.repository.SavedMixRepositoryImpl
 import com.mustafakoceerr.justrelax.core.navigation.AppNavigator
 import com.mustafakoceerr.justrelax.core.settings.data.repository.SettingsRepositoryImpl
 import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
@@ -22,6 +26,15 @@ val coreModule = module {
     single { SoundManager(get()) } bind SoundController::class
 
     single { TimerManager(get()) }
+
+    // Database Instance (Singleton)
+    single {
+        val driver = get<DatabaseDriverFactory>().createDriver()
+        JustRelaxDb(driver)
+    }
+
+    singleOf(::SavedMixRepositoryImpl) bind SavedMixRepository::class
+
 }
 
 // Bu beklenti, yukarıda güncellediğimiz PlatformModule dosyaları tarafından karşılanacak.

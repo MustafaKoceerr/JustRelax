@@ -34,4 +34,10 @@
     <string name="duration_hour_short">sa</string>   <!-- saat -->
     <string name="duration_minute_short">dk</string> <!-- dakika -->
     <string name="duration_second_short">sn</string> <!-- saniye -->
+
+    <string name="msg_mix_saved_success">%1$s başarıyla kaydedildi!</string>
+    <string name="error_mix_name_exists">Bu isimde bir mix zaten var.</string>
+    <string name="error_mix_name_empty">İsim boş olamaz.</string>
+    <string name="error_no_sounds">Kaydedilecek ses yok.</string>
+
 </resources>

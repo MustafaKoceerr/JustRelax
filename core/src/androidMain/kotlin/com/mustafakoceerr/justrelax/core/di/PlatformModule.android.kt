@@ -3,6 +3,7 @@ package com.mustafakoceerr.justrelax.core.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import com.mustafakoceerr.justrelax.core.database.DatabaseDriverFactory
 import com.mustafakoceerr.justrelax.core.sound.data.player.AndroidSoundPlayer
 import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
 import com.mustafakoceerr.justrelax.core.ui.localization.AndroidLanguageSwitcher
@@ -28,4 +29,7 @@ actual val platformModule = module {
     // --- EKLENEN KISIM ---
     // SoundPlayer'ı bağlıyoruz. AndroidSoundPlayer context istediği için 'get()' veriyoruz.
     single<SoundPlayer> { AndroidSoundPlayer(get()) }
+
+    single { DatabaseDriverFactory(get()) } // Context otomatik gelir
+
 }

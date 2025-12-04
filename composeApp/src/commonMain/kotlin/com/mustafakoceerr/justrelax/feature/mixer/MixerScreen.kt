@@ -16,36 +16,79 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
+import com.mustafakoceerr.justrelax.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.feature.home.components.SoundCard
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixCountSelector
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixerTopBar
 import com.mustafakoceerr.justrelax.feature.mixer.components.SaveMixButton
+import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerEffect
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerIntent
 import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerIntent
+import com.mustafakoceerr.justrelax.utils.asString
+import com.mustafakoceerr.justrelax.utils.asStringSuspend
 
 data object MixerScreen : AppScreen {
     @Composable
     override fun Content() {
-        // 1. ViewModels (Voyager Lifecycle'ına uygun injection)
+        // 1. ViewModels
         val mixerViewModel = koinScreenModel<MixerViewModel>()
         val mixerState by mixerViewModel.state.collectAsState()
 
         val playerViewModel = koinScreenModel<PlayerViewModel>()
         val playerState by playerViewModel.state.collectAsState()
 
+        // 2. UI State (Snackbar)
+        val snackbarHostState = remember { SnackbarHostState() }
+
+        // 3. Effect Handling (Side Effects)
+        LaunchedEffect(Unit) {
+            mixerViewModel.effect.collect { effect ->
+
+                when (effect) {
+                    is MixerEffect.ShowSnackbar -> {
+                        // BEST PRACTICE: UiText'i burada String'e çeviriyoruz.
+                        // Composable scope içinde olduğumuz için stringResource çalışır.
+                        val messageText = effect.message.asStringSuspend()
+
+                        snackbarHostState.showSnackbar(
+                            message = messageText,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                }
+            }
+        }
+
+        // 4. Dialog (State'e bağlı görünürlük)
+        SaveMixDialog(
+            isOpen = mixerState.isSaveDialogVisible,
+            onDismiss = {
+                mixerViewModel.processIntent(MixerIntent.HideSaveDialog)
+            },
+            onConfirm = { name ->
+                mixerViewModel.processIntent(MixerIntent.ConfirmSaveMix(name))
+            }
+        )
+
         Scaffold(
-            topBar = { MixerTopBar() }
+            topBar = { MixerTopBar() },
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
         ) { paddingValues ->
 
             Column(
@@ -135,7 +178,7 @@ data object MixerScreen : AppScreen {
                                 contentAlignment = Alignment.Center
                             ) {
                                 SaveMixButton(
-                                    onClick = { mixerViewModel.processIntent(MixerIntent.SaveMix) },
+                                    onClick = { mixerViewModel.processIntent(MixerIntent.ShowSaveDialog) },
                                     modifier = Modifier.fillMaxWidth(0.6f)
                                 )
                             }

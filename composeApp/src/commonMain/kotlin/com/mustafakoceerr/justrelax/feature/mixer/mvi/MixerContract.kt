@@ -1,23 +1,35 @@
 package com.mustafakoceerr.justrelax.feature.mixer.mvi
 
 import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
+import com.mustafakoceerr.justrelax.utils.UiText
 
 // 1. STATE
 data class MixerState(
     val selectedCount: Int = 5,
     val isLoading: Boolean = false,
     // UI'da hangi seslerin seçildiğini göstermek için (Volume bilgisi SoundManager'da tutuluyor ama burada da görsel için tutabiliriz)
-    val mixedSounds: List<Sound> = emptyList()
+    val mixedSounds: List<Sound> = emptyList(),
+    // YENİ: Dialog görünürlüğü
+    val isSaveDialogVisible: Boolean = false
 )
 
 // intent
-sealed interface MixerIntent{
-    data class SelectCount(val count: Int): MixerIntent
-    data object CreateMix: MixerIntent
-    data object SaveMix: MixerIntent
+sealed interface MixerIntent {
+    data class SelectCount(val count: Int) : MixerIntent
+    data object CreateMix : MixerIntent
+
+    // YENİ: Dialogu aç
+    data object ShowSaveDialog : MixerIntent
+
+    // YENİ: Dialogu kapat
+    data object HideSaveDialog : MixerIntent
+
+    // YENİ: İsim girildi ve onaylandı
+    data class ConfirmSaveMix(val name: String) : MixerIntent
 }
 
 // 3. EFFECT
 sealed interface MixerEffect {
-    // Örn: data class ShowToast(val message: String) : MixerEffect
+    // YENİ: Kullanıcıya geri bildirim
+    data class ShowSnackbar(val message: UiText) : MixerEffect
 }

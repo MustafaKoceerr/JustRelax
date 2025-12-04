@@ -1,4 +1,4 @@
-package com.mustafakoceerr.justrelax.anims
+package com.mustafakoceerr.justrelax.components.anims
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearOutSlowInEasing

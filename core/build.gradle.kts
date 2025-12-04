@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
 
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -90,6 +91,17 @@ kotlin {
 
                 // Extended icons
                 implementation(compose.materialIconsExtended)
+
+                // SQLDelight
+                implementation(libs.sqldelight.runtime)
+                implementation(libs.sqldelight.coroutines.extensions)
+
+                // RepositoryImpl içinde Flow ve Coroutines kullanmak için:
+                implementation(libs.kotlinx.coroutines.core)
+
+                // RepositoryImpl içinde tarih (Clock.System.now) kullanmak için:
+                implementation(libs.kotlinx.datetime)
+
             }
         }
 
@@ -110,6 +122,7 @@ kotlin {
                 implementation(libs.koin.android)
                 implementation(libs.core)
                 implementation(libs.androidx.appcompat)
+                implementation(libs.sqldelight.android.driver)
             }
         }
 
@@ -123,6 +136,7 @@ kotlin {
 
         iosMain {
             dependencies {
+                implementation(libs.sqldelight.native.driver)
                 // Multiplatform-Settings'in iOS sürücüsü burada olmalı.
             }
         }
@@ -143,3 +157,12 @@ compose.resources {
     generateResClass = always
 }
 
+sqldelight {
+    databases {
+        create("JustRelaxDb") {
+            // Veritabanı sınıfının hangi pakette oluşturulacağını belirtiyoruz.
+            // Bu paket ismi, DriverFactory'de import ettiğin yerle AYNI olmalı.
+            packageName.set("com.mustafakoceerr.justrelax.core.database")
+        }
+    }
+}

@@ -19,14 +19,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SavedMixesList(
-    mixes: List<SavedMix>,
-    currentPlayingId: Int?,
-    onMixClick: (SavedMix) -> Unit, // Tıklama (Play/Pause)
-    onMixDelete: (SavedMix) -> Unit, // Silme
+    mixes: List<SavedMixUiModel>, // DEĞİŞİKLİK: UI Model Listesi
+    currentPlayingId: Long?,      // DEĞİŞİKLİK: Long? (Domain ID tipi)
+    onMixClick: (SavedMixUiModel) -> Unit,
+    onMixDelete: (SavedMixUiModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -43,55 +44,10 @@ fun SavedMixesList(
                 isPlaying = currentPlayingId == mix.id,
                 onPlayClick = { onMixClick(mix) },
                 onDelete = { onMixDelete(mix) },
-                onRename = { /* İleride eklersin */ },
-                onShare = { /* İleride eklersin */ },
+                onRename = { /* İleride */ },
+                onShare = { /* İleride */ },
             )
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SavedMixesListPreview() {
-    JustRelaxTheme {
-        Surface {
-            SavedMixesList(
-                mixes = listOf(
-                    SavedMix(
-                        id = 1,
-                        title = "Rainforest Mix",
-                        date = "2 gün önce",
-                        icons = listOf(
-                            Icons.Default.Eco,
-                            Icons.Default.Headset,
-                            Icons.Default.MusicNote
-                        )
-                    ),
-                    SavedMix(
-                        id = 2,
-                        title = "Deep Focus Study",
-                        date = "5 saat önce",
-                        icons = listOf(
-                            Icons.Default.Star,
-                            Icons.Default.Favorite
-                        )
-                    ),
-                    SavedMix(
-                        id = 3,
-                        title = "Stormy Night",
-                        date = "1 gün önce",
-                        icons = listOf(
-                            Icons.Default.Cloud,
-                            Icons.Default.WaterDrop,
-                            Icons.Default.Bolt
-                        )
-                    )
-                ),
-                currentPlayingId = 2, // 2 numara çalıyor gibi görünsün
-                onMixClick = {},
-                onMixDelete = {},
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-    }
-}

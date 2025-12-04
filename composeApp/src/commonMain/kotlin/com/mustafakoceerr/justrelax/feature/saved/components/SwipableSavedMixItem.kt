@@ -17,20 +17,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 // --- YARDIMCI: Basit Veri Modeli ---
-data class SavedMix(
-    val id: Int,
-    val title: String,
-    val date: String,
-    val icons: List<ImageVector>
-)
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwipableSavedMixItem(
-    mix: SavedMix,
+    mix: SavedMixUiModel,
     isPlaying: Boolean,
     onPlayClick: () -> Unit,
     onDelete: () -> Unit,
@@ -52,9 +48,9 @@ fun SwipableSavedMixItem(
         content = {
             SavedMixCard(
                 title = mix.title,
-                date = mix.date,
+                date = mix.date, // ViewModel tarafından formatlanmış string
                 soundCount = mix.icons.size,
-                icons = mix.icons,
+                icons = mix.icons, // ViewModel tarafından hazırlanmış ikon listesi
                 isPlaying = isPlaying,
                 onPlayClick = onPlayClick,
                 onRenameClick = onRename,

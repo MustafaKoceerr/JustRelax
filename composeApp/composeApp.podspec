@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
     spec.license                  = ''
     spec.summary                  = 'Shared module for JustRelax app'
     spec.vendored_frameworks      = 'build/cocoapods/framework/ComposeApp.framework'
-    spec.libraries                = 'c++'
+                
     spec.ios.deployment_target    = '16.0'
                 
                 
@@ -51,4 +51,5 @@ Pod::Spec.new do |spec|
         }
     ]
     spec.resources = ['build/compose/cocoapods/compose-resources']
+    spec.libraries = 'sqlite3'
 end
