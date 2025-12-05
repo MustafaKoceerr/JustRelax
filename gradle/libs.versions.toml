@@ -95,6 +95,7 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 core = { group = "androidx.core", name = "core", version.ref = "coreVersion" }
 
 androidx-media = { module = "androidx.media:media", version.ref = "androidx-media" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }

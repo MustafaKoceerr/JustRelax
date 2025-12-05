@@ -40,4 +40,6 @@
     <string name="error_mix_name_empty">İsim boş olamaz.</string>
     <string name="error_no_sounds">Kaydedilecek ses yok.</string>
 
+    <string name="error_generic">Bir şeyler ters gitti. Lütfen tekrar dene.</string>
+    <string name="error_no_sounds_found">Önerilen sesler kütüphanede bulunamadı.</string>
 </resources>

@@ -13,6 +13,6 @@ fun initKoin(config: KoinAppDeclaration? = null){
         // platformModule -> SoundPlayer, Settings, Language (Hepsi burada)
         // appModule -> ViewModels
 
-        modules(coreModule, platformModule, appModule, homeModule,savedModule,mixerModule)
+        modules(coreModule, platformModule, appModule, homeModule,savedModule,mixerModule, aiModule)
     }
 }

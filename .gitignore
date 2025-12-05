@@ -324,3 +324,6 @@ fabric.properties
 #           - Also handy if you have a large number of dependant pods
 #           - AS PER https://guides.cocoapods.org/using/using-cocoapods.html NEVER IGNORE THE LOCK FILE
 Pods/
+
+
+/composeApp/src/commonMain/kotlin/com/mustafakoceerr/justrelax/feature/ai/data/ApiKeyConstant.kt

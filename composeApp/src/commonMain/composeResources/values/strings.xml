@@ -40,5 +40,6 @@
     <string name="error_mix_name_empty">Name cannot be empty.</string>
     <string name="error_no_sounds">There are no sounds to save.</string>
 
-
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_no_sounds_found">Recommended sounds were not found in the library.</string>
 </resources>

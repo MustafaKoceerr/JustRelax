@@ -16,37 +16,66 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.koin.koinScreenModel
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.feature.ai.AiViewModel
+import com.mustafakoceerr.justrelax.feature.ai.mvi.AiIntent
+import com.mustafakoceerr.justrelax.feature.ai.mvi.AiState
+import com.mustafakoceerr.justrelax.utils.asStringSuspend
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 data object AiScreen : AppScreen {
     @Composable
     override fun Content() {
+        // Koin ile ViewModel enjeksiyonu
+        val viewModel = koinScreenModel<AiViewModel>()
+        val state by viewModel.state.collectAsState()
 
+        AiScreenContent(
+            state = state,
+            onIntent = viewModel::processIntent
+        )
     }
-    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AIScreen() {
+private fun AiScreenContent(
+    state: AiState,
+    onIntent: (AiIntent) -> Unit
+) {
     // --- STATE ---
-    var promptText by remember { mutableStateOf("") }
+    var promptText by rememberSaveable { mutableStateOf("") }
     // Durumlar: IDLE (Bekliyor), LOADING (Düşünüyor), SUCCESS (Bitti)
-    var uiState by remember { mutableStateOf("IDLE") }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Hata Mesajı Dinleyicisi
+    LaunchedEffect(state.error) {
+        state.error?.let { uiText ->
+            snackbarHostState.showSnackbar(message = uiText.asStringSuspend())
+        }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("AI Composer") },
@@ -72,37 +101,46 @@ fun AIScreen() {
                 contentAlignment = Alignment.Center
             ) {
                 // Geçiş Animasyonu
-                AnimatedContent(targetState = uiState) { state ->
-                    when (state) {
-                        "IDLE", "LOADING" -> {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                AIVisualizer(isThinking = state == "LOADING")
-                                Spacer(modifier = Modifier.height(32.dp))
-                                if (state == "LOADING") {
-                                    Text("Sihir yapılıyor...", style = MaterialTheme.typography.bodyLarge)
-                                } else {
-                                    Text("Bana ne hissettiğini söyle...", style = MaterialTheme.typography.bodyLarge)
-                                }
-                            }
-                        }
-                        "SUCCESS" -> {
+                AnimatedContent(
+                    targetState = state, label = "AiStateAnimation"
+                ) { targetState ->
+                    when {
+                        // 1. Sonuç Başarılıysa
+                        targetState.generatedMix != null -> {
+                            val mix = targetState.generatedMix
                             AIResultCard(
-                                prompt = promptText,
-                                onPlayClick = { /* Oynat */ },
+                                // Prompt yerine AI'ın verdiği havalı ismi gösteriyoruz
+                                mixName = mix.mixName,       // Ayrı ayrı veriyoruz
+                                description = mix.description, // Ayrı ayrı veriyoruz
+                                onPlayClick = { onIntent(AiIntent.PlayMix) },
                                 onTryAgainClick = {
-                                    uiState = "IDLE"
-                                    promptText = ""
+                                    promptText = "" // Texti temizle
+                                    onIntent(AiIntent.Reset)
                                 }
                             )
+                        }
+
+                        else -> {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                AIVisualizer(isThinking = targetState.isLoading)
+                                Spacer(modifier = Modifier.height(32.dp))
+
+                                Text(
+                                    text = if (targetState.isLoading) "Sihir yapılıyor..."
+                                    else "Bana ne hissettiğini söyle...",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
                         }
                     }
                 }
             }
 
             // --- ALT ALAN (INPUT) ---
-            // Sadece IDLE durumundaysa gösterelim
+            // Sadece sonuç yoksa ve yüklenmiyorsa göster
             AnimatedVisibility(
-                visible = uiState == "IDLE",
+                visible = state.generatedMix == null && !state.isLoading,
                 enter = slideInVertically { it } + fadeIn(),
                 exit = slideOutVertically { it } + fadeOut()
             ) {
@@ -110,12 +148,9 @@ fun AIScreen() {
                     text = promptText,
                     onTextChange = { promptText = it },
                     onSendClick = {
-                        // Mock Logic: 2 saniye bekle sonra sonucu göster
-                        uiState = "LOADING"
-                        // Gerçekte burada ViewModel çağrısı olacak
-                        // Şimdilik basit bir delay simülasyonu yapamayız (Coroutine Scope lazım)
-                        // Ama UI testi için butona basınca direkt SUCCESS yapabiliriz:
-                        uiState = "SUCCESS"
+                        if (promptText.isNotBlank()) {
+                            onIntent(AiIntent.GenerateMix(promptText))
+                        }
                     }
                 )
             }
@@ -123,11 +158,14 @@ fun AIScreen() {
     }
 }
 
- @Preview
+@Preview
 @Composable
 fun AIScreenPreview() {
     JustRelaxTheme {
-        AIScreen()
+        AiScreenContent(
+            AiState(),
+            {}
+        )
     }
 }
 
