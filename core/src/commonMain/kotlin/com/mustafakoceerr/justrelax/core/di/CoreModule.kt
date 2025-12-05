@@ -11,6 +11,7 @@ import com.mustafakoceerr.justrelax.core.sound.data.manager.DataSeeder
 import com.mustafakoceerr.justrelax.core.sound.data.repository.SoundRepositoryImpl
 import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundController
 import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundManager
+import com.mustafakoceerr.justrelax.core.sound.domain.manager.SyncManager
 import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.timer.domain.manager.TimerManager
 import kotlinx.serialization.json.Json
@@ -48,6 +49,9 @@ val coreModule = module {
 
     // Data Seeder (Tek seferlik iş yaptığı için factory veya single olabilir, single daha güvenli)
     singleOf(::DataSeeder)
+
+    // SyncManager (Singleton olması mantıklı)
+    singleOf(::SyncManager)
 }
 
 // Bu beklenti, yukarıda güncellediğimiz PlatformModule dosyaları tarafından karşılanacak.

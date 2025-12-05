@@ -6,6 +6,7 @@ import com.mustafakoceerr.justrelax.feature.ai.data.AiService
 import com.mustafakoceerr.justrelax.feature.ai.data.AiServiceImpl
 import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.PlayAiMixUseCase
 import com.mustafakoceerr.justrelax.feature.home.HomeViewModel
+import com.mustafakoceerr.justrelax.feature.main.MainViewModel
 import com.mustafakoceerr.justrelax.feature.mixer.MixerViewModel
 import com.mustafakoceerr.justrelax.feature.mixer.domain.usecase.GenerateRandomMixUseCase
 import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
@@ -66,6 +67,9 @@ val mixerModule = module {
     // Constructor değişse bile 'factoryOf' kullandığımız için Koin
     // yeni parametreleri (SaveMixUseCase) otomatik olarak enjekte eder.
     factoryOf(::MixerViewModel)
+    factoryOf(::MainViewModel)
+
+
 }
 
 val aiModule = module {

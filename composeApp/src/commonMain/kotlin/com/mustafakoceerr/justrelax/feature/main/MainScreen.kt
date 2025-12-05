@@ -36,6 +36,10 @@ import kotlinx.serialization.Serializable
 object MainScreen: AppScreen{
     @Composable
     override fun Content() {
+        // 1. YENİ: MainViewModel'i buraya inject ediyoruz.
+        // init bloğu otomatik çalışacak ve sync başlayacak.
+        val mainViewModel = koinScreenModel<MainViewModel>()
+
         // YENİSİ: Voyager Lifecycle uyumlu injection
         val playerViewModel = koinScreenModel<PlayerViewModel>()
         val playerState by playerViewModel.state.collectAsState()
@@ -63,19 +67,21 @@ object MainScreen: AppScreen{
                     CurrentTab()
 
                     if (showActiveSoundsBar){
-                        ActiveSoundsBar(
-                            activeIcons = playerState.activeSoundDetails.map { it.icon },
-                            isPlaying = playerState.isMasterPlaying,
-                            onPlayPauseClick = {
-                                playerViewModel.processIntent(PlayerIntent.ToggleMasterPlayPause)
-                            },
-                            onStopAllClick = {
-                                playerViewModel.processIntent(PlayerIntent.StopAll)
-                            },
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .align(Alignment.BottomCenter)
-                        )
+                        // TODO: BUNUN FİXİNİ YAP. YENİ EKLENTİYE GÖRE AYARLA.
+
+//                        ActiveSoundsBar(
+//                            activeIcons = playerState.activeSoundDetails.map { it.icon },
+//                            isPlaying = playerState.isMasterPlaying,
+//                            onPlayPauseClick = {
+//                                playerViewModel.processIntent(PlayerIntent.ToggleMasterPlayPause)
+//                            },
+//                            onStopAllClick = {
+//                                playerViewModel.processIntent(PlayerIntent.StopAll)
+//                            },
+//                            modifier = Modifier
+//                                .padding(16.dp)
+//                                .align(Alignment.BottomCenter)
+//                        )
                     }
                 }
             }
