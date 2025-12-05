@@ -14,4 +14,7 @@ interface SoundRepository{
      * ID'ye göre tek bir sesin detayını getirir.
      */
     suspend fun getSoundById(id: String): Sound?
+
+    // YENİ
+    suspend fun syncSounds()
 }

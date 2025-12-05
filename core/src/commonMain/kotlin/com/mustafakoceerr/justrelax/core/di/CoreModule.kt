@@ -12,6 +12,7 @@ import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundController
 import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundManager
 import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.timer.domain.manager.TimerManager
+import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -34,6 +35,15 @@ val coreModule = module {
     }
 
     singleOf(::SavedMixRepositoryImpl) bind SavedMixRepository::class
+
+    single {
+        Json {
+            ignoreUnknownKeys = true // Bilinmeyen alan gelirse patlama
+            isLenient = true         // Tırnak işaretlerinde esnek ol
+            prettyPrint = true       // Loglarda güzel görünsün
+            encodeDefaults = true    // Varsayılan değerleri de JSON'a yaz
+        }
+    }
 
 }
 

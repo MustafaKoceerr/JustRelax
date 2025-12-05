@@ -1,0 +1,14 @@
+package com.mustafakoceerr.justrelax.core.sound.data.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class RemoteSoundDto(
+    @SerialName("id") val id: String,
+    @SerialName("category") val category: String, // "WATER", "NATURE" vb.
+    @SerialName("names") val names: Map<String, String>, // {"en": "Rain", "tr": "Yağmur"}
+    @SerialName("icon_url") val iconUrl: String,
+    @SerialName("audio_url") val audioUrl: String,
+    @SerialName("version") val version: Int = 1
+)

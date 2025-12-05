@@ -1,13 +1,11 @@
 package com.mustafakoceerr.justrelax.core.sound.domain.model
 
-import androidx.compose.ui.graphics.vector.ImageVector
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.StringResource
-
 data class Sound(
     val id: String,
-    val nameRes: StringResource, // Çoklu dil desteği için
-    val icon: ImageVector, // DEĞİŞTİ: DrawableResource -> ImageVector
-    val audioFileName: String, // Dosya adı (örn: "water_rain_light.mp3")
-    val category: SoundCategory
+    val name: String,             // ARTIK STRING (Resource değil)
+    val category: SoundCategory,
+    val iconUrl: String,          // Coil ile çekeceğiz
+    val audioUrl: String,         // Uzak sunucu linki
+    val localPath: String?,       // İndiyse dosya yolu, inmediyse null
+    val isDownloaded: Boolean = localPath != null
 )

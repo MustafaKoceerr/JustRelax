@@ -102,6 +102,17 @@ kotlin {
                 // RepositoryImpl içinde tarih (Clock.System.now) kullanmak için:
                 implementation(libs.kotlinx.datetime)
 
+                // Okio
+               implementation(libs.okio)
+
+                // Kotlinx Serialization
+                implementation(libs.kotlinx.serialization.json)
+
+                // Ktor
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(libs.ktor.client.logging)
             }
         }
 
@@ -116,13 +127,14 @@ kotlin {
 
                 // Multiplatform-Settings'in Android sürücüsü burada olmalı.
                 // Android için en modern ses motoru: Media3 (ExoPlayer)
-                implementation("androidx.media3:media3-exoplayer:1.8.0")
+                implementation(libs.androidx.media3.exoplayer)
 
                 implementation(libs.androidx.media)
                 implementation(libs.koin.android)
                 implementation(libs.core)
                 implementation(libs.androidx.appcompat)
                 implementation(libs.sqldelight.android.driver)
+
             }
         }
 

@@ -1,104 +1,133 @@
 package com.mustafakoceerr.justrelax.core.sound.data.repository
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Air
-import androidx.compose.material.icons.rounded.Forest
-import androidx.compose.material.icons.rounded.LocalCafe
-import androidx.compose.material.icons.rounded.LocalFireDepartment
-import androidx.compose.material.icons.rounded.ModeFanOff
-import androidx.compose.material.icons.rounded.Thunderstorm
-import androidx.compose.material.icons.rounded.WaterDrop
-import androidx.compose.material.icons.rounded.Waves
-import com.mustafakoceerr.justrelax.core.generated.resources.Res
-import com.mustafakoceerr.justrelax.core.generated.resources.sound_cafe
-import com.mustafakoceerr.justrelax.core.generated.resources.sound_campfire
-import com.mustafakoceerr.justrelax.core.generated.resources.sound_fan
-import com.mustafakoceerr.justrelax.core.generated.resources.sound_forest_birds
-import com.mustafakoceerr.justrelax.core.generated.resources.sound_ocean
-import com.mustafakoceerr.justrelax.core.generated.resources.sound_rain_light
-import com.mustafakoceerr.justrelax.core.generated.resources.sound_rain_thunder
-import com.mustafakoceerr.justrelax.core.generated.resources.sound_wind
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import com.mustafakoceerr.justrelax.core.database.JustRelaxDb
+import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
+import com.mustafakoceerr.justrelax.core.sound.data.dto.RemoteSoundDto
+import com.mustafakoceerr.justrelax.core.sound.data.mapper.SoundMapper
 import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
-import com.mustafakoceerr.justrelax.core.sound.domain.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
-
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 
-class SoundRepositoryImpl : SoundRepository {
+class SoundRepositoryImpl(
+    private val db: JustRelaxDb,
+    private val client: HttpClient,
+    private val settingsRepository: SettingsRepository,
+    private val mapper: SoundMapper,
+    private val json: Json // <--- YENİ: Inject edildi
+) : SoundRepository {
 
-    private val mockSounds = listOf(
-        // --- SU & YAĞMUR ---
-        Sound(
-            id = "water_1",
-            nameRes = Res.string.sound_rain_light,
-            icon = Icons.Rounded.WaterDrop, // Hazır ikon
-            audioFileName = "water_rain_light.mp3",
-            category = SoundCategory.WATER
-        ),
-        Sound(
-            id = "water_2",
-            nameRes = Res.string.sound_rain_thunder,
-            icon = Icons.Rounded.Thunderstorm, // Hazır ikon
-            audioFileName = "water_rain_thunder.mp3",
-            category = SoundCategory.WATER
-        ),
-        Sound(
-            id = "water_3",
-            nameRes = Res.string.sound_ocean,
-            icon = Icons.Rounded.Waves, // Hazır ikon
-            audioFileName = "water_ocean_light.mp3",
-            category = SoundCategory.WATER
-        ),
+    // TODO: Buraya kendi R2 bucket linkini koyacaksın
+    private val CONFIG_URL = "https://pub-xxxxxxxx.r2.dev/config.json"
 
-        // --- DOĞA & ORMAN ---
-        Sound(
-            id = "nature_1",
-            nameRes = Res.string.sound_forest_birds,
-            icon = Icons.Rounded.Forest, // Hazır ikon
-            audioFileName = "nature_forest_birds.mp3",
-            category = SoundCategory.NATURE
-        ),
-        Sound(
-            id = "nature_2",
-            nameRes = Res.string.sound_campfire,
-            icon = Icons.Rounded.LocalFireDepartment, // Ateş ikonu
-            audioFileName = "nature_campfire.mp3",
-            category = SoundCategory.NATURE
-        ),
+    private val queries = db.justRelaxDbQueries
 
-        // --- RÜZGAR ---
-        Sound(
-            id = "air_1",
-            nameRes = Res.string.sound_wind,
-            icon = Icons.Rounded.Air, // Rüzgar ikonu
-            audioFileName = "air_wind.mp3",
-            category = SoundCategory.AIR
-        ),
+    /**
+     * UI bu fonksiyonu dinler.
+     * Best Practice: combine() operatörü kullandık.
+     * Böylece kullanıcı DİLİ değiştirdiği an veya DB güncellendiği an
+     * liste otomatik olarak yeni dilde ve yeni haliyle UI'a akar.
+     */
 
-        // --- ŞEHİR ---
-        Sound(
-            id = "city_1",
-            nameRes = Res.string.sound_cafe,
-            icon = Icons.Rounded.LocalCafe, // Kahve ikonu
-            audioFileName = "city_cafe.mp3",
-            category = SoundCategory.CITY
-        ),
+    override fun getSounds(): Flow<List<Sound>> {
+        val dbFlow = queries.getAllSounds()
+            .asFlow()
+            .mapToList(Dispatchers.IO)
 
-        // --- GÜRÜLTÜ ---
-        Sound(
-            id = "noise_1",
-            nameRes = Res.string.sound_fan,
-            icon = Icons.Rounded.ModeFanOff, // Pervane ikonu
-            audioFileName = "noise_fan.mp3",
-            category = SoundCategory.NOISE
-        )
-    )
-    override fun getSounds(): Flow<List<Sound>> = flow{
-        emit(mockSounds)
+        val languageFlow = settingsRepository.getLanguage()
+
+        return combine(dbFlow, languageFlow) { entities, language ->
+            entities.map { entity ->
+                mapper.map(entity, language.code)
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
     override suspend fun getSoundById(id: String): Sound? {
-        return mockSounds.find { it.id == id }
+        return withContext(Dispatchers.IO) {
+            val entity = queries.getSoundById(id).executeAsOneOrNull() ?: return@withContext null
+            // Tekil çekimlerde varsayılan olarak sistem dilini veya İngilizceyi baz alabiliriz
+            // Veya settingsRepository'den anlık çekebiliriz ama şimdilik "en" diyelim.
+            // (Player tarafında isim çok kritik değilse)
+            mapper.map(entity, "en")
+        }
+        // TODO: TEKNİK BORÇ
     }
+
+    /**
+     * SENKRONİZASYON (Büyük Final)
+     * 1. JSON'ı indir.
+     * 2. Veritabanına yaz.
+     * 3. Silinenleri temizle.
+     */
+    override suspend fun syncSounds() {
+        withContext(Dispatchers.IO) {
+            try {
+                // 1. veriyi çek
+                val responseBody = client.get(CONFIG_URL).body<String>()
+                val remoteList = json.decodeFromString<List<RemoteSoundDto>>(responseBody)
+
+                // 2. Transaction ile Güvenli Yazma // fail olursa hiç yazmaz. rollback atar
+                queries.transaction {
+                    // A. Gelenleri Ekle/Güncelle (Upsert)
+                    remoteList.forEach { dto ->
+                        // Map -> JSON String dönüşümü
+                        val namesJsonStr = json.encodeToString(dto.names)
+                        // Mevcut kaydı korumak için önce var mı diye bakabiliriz
+                        // Ama SQL sorgumuz "INSERT OR REPLACE" olduğu için
+                        // localPath verisini kaybetmemek adına önce eski veriyi çekmemiz lazım.
+
+                        val existing = queries.getSoundById(dto.id).executeAsOneOrNull()
+                        val currentLocalPath = existing?.localPath
+
+                        queries.upsertSound(
+                            id = dto.id,
+                            category = dto.category,
+                            nameJson = namesJsonStr,
+                            iconUrl = dto.iconUrl,
+                            audioUrl = dto.audioUrl,
+                            localPath = currentLocalPath, // İndirilmişse yolu koru!
+                            version = dto.version.toLong()
+                        )
+                    }
+                    // B. Silinenleri Temizle (Remote'da yoksa Local'den sil)
+                    // Tüm yerel ID'leri çek
+                    val allLocalIds = queries.getAllSounds().executeAsList().map { it.id }
+                    val allRemoteIds = remoteList.map { it.id }.toSet()
+
+                    allLocalIds.forEach { localId ->
+                        if (localId !in allRemoteIds) {
+                            // TODO: İleride burada dosyayı da diskten sileceğiz.
+                            queries.deleteSoundById(localId)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                // İnternet yoksa veya JSON bozuksa sessizce başarısız ol.
+                // Kullanıcı eski verilerle devam eder (Offline-First).
+                e.printStackTrace()
+            }
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+

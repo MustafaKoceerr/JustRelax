@@ -4,12 +4,15 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.mustafakoceerr.justrelax.core.database.DatabaseDriverFactory
+import com.mustafakoceerr.justrelax.core.okio.AndroidStoragePathProvider
+import com.mustafakoceerr.justrelax.core.okio.StoragePathProvider
 import com.mustafakoceerr.justrelax.core.sound.data.player.AndroidSoundPlayer
 import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
 import com.mustafakoceerr.justrelax.core.ui.localization.AndroidLanguageSwitcher
 import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.SharedPreferencesSettings
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -31,5 +34,10 @@ actual val platformModule = module {
     single<SoundPlayer> { AndroidSoundPlayer(get()) }
 
     single { DatabaseDriverFactory(get()) } // Context otomatik gelir
+
+    // 1. Storage Provider (YENİ)
+    single {
+        AndroidStoragePathProvider(context = androidContext())
+    } bind StoragePathProvider::class
 
 }
