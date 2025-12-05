@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import java.util.ArrayDeque
 import com.mustafakoceerr.justrelax.core.R
+import java.io.File
 
 class JustRelaxService : Service() {
 
@@ -33,6 +35,7 @@ class JustRelaxService : Service() {
     // Aktif Çalanlar
     private val activePlayers = mutableMapOf<String, ExoPlayer>()
 
+    // Player Havuzu (Yedekler)
     // Player Havuzu (Yedekler)
     private val playerPool = ArrayDeque<ExoPlayer>()
     private val POOL_LIMIT = 8
@@ -93,16 +96,30 @@ class JustRelaxService : Service() {
 
     // --- SES İŞLEMLERİ (RÜTBE YÖNETİMİ BURADA) ---
 
-    @OptIn(ExperimentalResourceApi::class)
     fun playSound(sound: Sound, volume: Float) {
         if (activePlayers.containsKey(sound.id)) return
+
+        // 1. Dosya Kontrolü (Safety Check)
+        val path = sound.localPath
+        if (path == null) {
+            println("JustRelaxService: HATA - Ses indirilmemiş: ${sound.name}")
+            return
+        }
+
+        val file = File(path)
+        if (!file.exists()) {
+            println("JustRelaxService: HATA - Dosya path var ama diskte yok: $path")
+            return
+        }
 
         val player = acquirePlayer()
         player.volume = volume
 
         serviceScope.launch {
-            val uriString = Res.getUri("files/${sound.audioFileName}")
-            player.setMediaItem(MediaItem.fromUri(uriString.toUri()))
+            // 2. Dosyadan Oynatma (File -> Uri -> MediaItem)
+            val uri = Uri.fromFile(file)
+            player.setMediaItem(MediaItem.fromUri(uri))
+
             player.prepare()
             player.play()
 
@@ -113,7 +130,6 @@ class JustRelaxService : Service() {
                 activePlayers.values.forEach { it.play() }
             }
 
-            // 1. RÜTBE ATLA (Promote): Ses çalmaya başladı, bildirimi göster.
             updateNotification()
         }
     }
@@ -124,13 +140,9 @@ class JustRelaxService : Service() {
         }
 
         if (activePlayers.isEmpty()) {
-            // 2. RÜTBE DÜŞÜR (Demote): Hiç ses kalmadı.
-            // Bildirimi kaldır ama servisi ÖLDÜRME (stopSelf yok).
-            // Activity bağlı olduğu sürece servis arka planda "Er" olarak yaşar.
             demoteService()
             isMasterPlaying = false
         } else {
-            // Hala ses var, bildirimi güncelle (Sayı azaldı)
             updateNotification()
         }
     }
@@ -142,13 +154,13 @@ class JustRelaxService : Service() {
     fun pauseAll() {
         isMasterPlaying = false
         activePlayers.values.forEach { it.pause() }
-        updateNotification() // Bildirim kalsın (Pause modunda)
+        updateNotification()
     }
 
     fun resumeAll() {
         isMasterPlaying = true
         activePlayers.values.forEach { it.play() }
-        updateNotification() // Bildirim Play moduna geçsin
+        updateNotification()
     }
 
     fun stopAll() {
@@ -166,13 +178,10 @@ class JustRelaxService : Service() {
     // --- RÜTBE YÖNETİM FONKSİYONLARI ---
 
     private fun updateNotification() {
-        // startForeground servisi Foreground yapar ve bildirimi gösterir/günceller
         startForeground(NOTIFICATION_ID, createNotification())
     }
 
     private fun demoteService() {
-        // stopForeground servisi Background'a düşürür ve bildirimi siler.
-        // STOP_FOREGROUND_REMOVE: Bildirimi de kaldır demektir.
         stopForeground(STOP_FOREGROUND_REMOVE)
     }
 
@@ -184,8 +193,6 @@ class JustRelaxService : Service() {
 
         val playIntent = Intent(this, JustRelaxService::class.java).apply { action = ACTION_PLAY }
         val pauseIntent = Intent(this, JustRelaxService::class.java).apply { action = ACTION_PAUSE }
-
-        // Bu intent bildirim sağa kaydırılınca (Dismiss) çalışır
         val stopIntent = Intent(this, JustRelaxService::class.java).apply { action = ACTION_STOP }
 
         val pPlay = PendingIntent.getService(this, 1, playIntent, PendingIntent.FLAG_IMMUTABLE)
@@ -196,15 +203,10 @@ class JustRelaxService : Service() {
             .setSmallIcon(android.R.drawable.ic_media_play)
             .setContentTitle("Just Relax")
             .setContentText(if (activePlayers.isEmpty()) "Hazır" else "${activePlayers.size} Ses Çalıyor")
-            .setLargeIcon(
-                BitmapFactory.decodeResource(
-                    resources,
-                    R.drawable.ic_launcher_foreground
-                )
-            )
+            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground))
             .setContentIntent(pendingOpenIntent)
             .setOngoing(isMasterPlaying)
-            .setDeleteIntent(pDelete) // Swipe edilince ACTION_STOP çalışır
+            .setDeleteIntent(pDelete)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setStyle(MediaStyle().setShowActionsInCompactView(0))
 
@@ -217,33 +219,26 @@ class JustRelaxService : Service() {
         return builder.build()
     }
 
-    // --- SWIPE (UYGULAMA KAPATMA) KORUMASI ---
     override fun onTaskRemoved(rootIntent: Intent?) {
         if (isMasterPlaying) {
-            // Müzik çalıyorsa: Sadece duraklat, bildirim kalsın (Spotify Style)
             pauseAll()
         } else {
-            // Müzik çalmıyorsa ve kullanıcı app'i kapattıysa:
-            // Artık servisin yaşamasına gerek yok.
-            demoteService() // Bildirimi sil
-            stopSelf() // Servisi öldür (Havuz falan kalmasın, pil yemesin)
+            demoteService()
+            stopSelf()
         }
     }
 
     private fun createNotificationChannel() {
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (manager.getNotificationChannel(CHANNEL_ID) == null) {
-            val channel =
-                NotificationChannel(CHANNEL_ID, "Mixer Control", NotificationManager.IMPORTANCE_LOW)
+            val channel = NotificationChannel(CHANNEL_ID, "Mixer Control", NotificationManager.IMPORTANCE_LOW)
             manager.createNotificationChannel(channel)
         }
     }
 
     override fun onDestroy() {
         serviceScope.cancel()
-        // Aktifleri temizle
         activePlayers.values.forEach { it.release() }
-        // Havuzu temizle
         while (playerPool.isNotEmpty()) {
             playerPool.pop().release()
         }
@@ -256,42 +251,34 @@ class JustRelaxService : Service() {
         fun getService(): JustRelaxService = this@JustRelaxService
     }
 
-
     fun playMix(sounds: List<Pair<Sound,Float>>){
-        // 1. TEMİZLİK: Şu an çalan her şeyi durdur ve havuza geri gönder.
-        // stopAll() mantığının aynısı ama servisi öldürmüyoruz (demoteService yok).
         activePlayers.values.forEach { player ->
-            player.pause() // Önce durdur
-            player.clearMediaItems() // İçini boşalt
-            releasePlayerToPool(player) // Havuza at
+            player.pause()
+            player.clearMediaItems()
+            releasePlayerToPool(player)
         }
-
         activePlayers.clear()
 
-        // 2. KURULUM: Yeni listeyi tek seferde hazırla
         serviceScope.launch {
             sounds.forEach { (sound,volume)->
-                // Havuzdan temiz bir player al
-                val player = acquirePlayer()
-                player.volume = volume
+                // Dosya Kontrolü
+                val path = sound.localPath
+                if (path != null && File(path).exists()) {
+                    val player = acquirePlayer()
+                    player.volume = volume
 
-                // Dosya yolunu Sound nesnesinden alıyoruz
-                val uriString = Res.getUri("files/${sound.audioFileName}")
-                player.setMediaItem(MediaItem.fromUri(uriString.toUri()))
-                player.prepare()
+                    // Dosyadan Uri oluştur
+                    val uri = Uri.fromFile(File(path))
+                    player.setMediaItem(MediaItem.fromUri(uri))
 
-                // Hepsini hazırla ve başlat
-                player.play()
-
-                // Map'e ID ile kaydet (Yönetim ID üzerinden döner)
-                activePlayers[sound.id] = player
+                    player.prepare()
+                    player.play()
+                    activePlayers[sound.id] = player
+                } else {
+                    println("JustRelaxService: Mix içindeki ses bulunamadı: ${sound.name}")
+                }
             }
-
-            // 3. FİNAL: Master Play durumunu aç ve bildirimi güncelle
             isMasterPlaying = true
-
-            // Bildirimi SADECE 1 KERE güncelliyoruz.
-            // Kullanıcı 5 bildirim titremesi değil, tek bir geçiş hisseder.
             updateNotification()
         }
     }

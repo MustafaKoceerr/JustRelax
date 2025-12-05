@@ -1,12 +1,11 @@
 package com.mustafakoceerr.justrelax.core.sound.data.player
 
-import com.mustafakoceerr.justrelax.core.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
 import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.usePinned
+import kotlinx.cinterop.ObjCObjectVar
+import kotlinx.cinterop.memScoped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,8 +14,8 @@ import platform.AVFAudio.AVAudioPlayer
 import platform.AVFAudio.AVAudioSession
 import platform.AVFAudio.AVAudioSessionCategoryPlayback
 import platform.AVFAudio.setActive
-import platform.Foundation.NSData
-import platform.Foundation.dataWithBytes
+import platform.Foundation.NSError
+import platform.Foundation.NSURL
 import platform.MediaPlayer.MPMediaItemPropertyArtist
 import platform.MediaPlayer.MPMediaItemPropertyTitle
 import platform.MediaPlayer.MPNowPlayingInfoCenter
@@ -26,13 +25,14 @@ import platform.MediaPlayer.MPRemoteCommandCenter
 import platform.MediaPlayer.MPRemoteCommandHandlerStatusSuccess
 import platform.UIKit.UIApplication
 import platform.UIKit.beginReceivingRemoteControlEvents
+// KRİTİK IMPORTLAR: alloc, ptr, value, ObjCObjectVar hepsi burada
+import kotlinx.cinterop.*
 
 @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 class IosSoundPlayer : SoundPlayer {
 
     // Sadece aktif çalanları tutuyoruz. Havuz (Pool) yok.
     private val activePlayers = mutableMapOf<String, AVAudioPlayer>()
-
     private var isMasterPlaying = false
 
     init {
@@ -110,27 +110,49 @@ class IosSoundPlayer : SoundPlayer {
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class)
-    private suspend fun createNewPlayer(sound: Sound): AVAudioPlayer? {
-        return try {
-            val bytes = Res.readBytes("files/${sound.audioFileName}")
-            val nsData = bytes.usePinned { pinned ->
-                NSData.dataWithBytes(pinned.addressOf(0), bytes.size.toULong())
+    @OptIn(ExperimentalForeignApi::class)
+    private fun createNewPlayer(sound: Sound): AVAudioPlayer? {
+        val path = sound.localPath
+        if (path == null) {
+            println("iOS Error: Sound path is null for ID: ${sound.id}")
+            return null
+        }
+
+        val url = NSURL.fileURLWithPath(path)
+
+        // BEST PRACTICE: Native Memory Yönetimi
+        // 'memScoped' bloğu, içindeki native değişkenlerin (pointerlar)
+        // blok bitince hafızadan temizlenmesini garanti eder.
+        return memScoped {
+            // 1. NSError pointer'ı için stack'te yer ayırıyoruz (alloc)
+            // ObjCObjectVar<NSError?> -> Objective-C nesnesi tutan bir değişken
+            val errorPtr = alloc<ObjCObjectVar<NSError?>>()
+
+            // 2. Player'ı oluştururken hata pointer'ının adresini (.ptr) veriyoruz.
+            // iOS, hata olursa bu adrese hatayı yazacak.
+            val player = AVAudioPlayer(contentsOfURL = url, error = errorPtr.ptr)
+
+            // 3. Hata kontrolü: Pointer'ın gösterdiği değer (.value) dolu mu?
+            val error = errorPtr.value
+            if (error != null) {
+                // Hatanın detayını native olarak alıyoruz (localizedDescription)
+                println("iOS AVAudioPlayer Init Error: ${error.localizedDescription}")
+                return@memScoped null
             }
-            AVAudioPlayer(data = nsData, error = null).apply {
+
+            // 4. Player başarıyla oluştuysa ayarlarını yap
+            player?.apply {
                 numberOfLoops = -1 // Sonsuz döngü
-                volume = 0.5f // Varsayılan, sonra override ediliyor
+                // volume dışarıdan set ediliyor
             }
-        } catch (e: Exception) {
-            println("iOS Sound Error: ${e.message}")
-            null
+
+            player
         }
     }
 
     override fun stop(soundId: String) {
         activePlayers.remove(soundId)?.let { player ->
             player.stop()
-            // player değişkeni scope dışına çıkınca ARC tarafından temizlenir.
         }
 
         if (activePlayers.isEmpty()) {

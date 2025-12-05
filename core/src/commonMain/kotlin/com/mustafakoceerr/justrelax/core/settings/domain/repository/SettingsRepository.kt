@@ -12,4 +12,8 @@ interface SettingsRepository {
     // Dil ayarları (şimdilik sadece
     suspend fun saveLanguage(language: AppLanguage)
     fun getLanguage(): Flow<AppLanguage>
+
+    // YENİ: Seeding durumu
+    suspend fun isInitialSeedingDone(): Boolean
+    suspend fun setInitialSeedingDone(isDone: Boolean)
 }

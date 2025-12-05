@@ -7,6 +7,7 @@ import com.mustafakoceerr.justrelax.core.database.repository.SavedMixRepositoryI
 import com.mustafakoceerr.justrelax.core.navigation.AppNavigator
 import com.mustafakoceerr.justrelax.core.settings.data.repository.SettingsRepositoryImpl
 import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
+import com.mustafakoceerr.justrelax.core.sound.data.manager.DataSeeder
 import com.mustafakoceerr.justrelax.core.sound.data.repository.SoundRepositoryImpl
 import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundController
 import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundManager
@@ -45,6 +46,8 @@ val coreModule = module {
         }
     }
 
+    // Data Seeder (Tek seferlik iş yaptığı için factory veya single olabilir, single daha güvenli)
+    singleOf(::DataSeeder)
 }
 
 // Bu beklenti, yukarıda güncellediğimiz PlatformModule dosyaları tarafından karşılanacak.

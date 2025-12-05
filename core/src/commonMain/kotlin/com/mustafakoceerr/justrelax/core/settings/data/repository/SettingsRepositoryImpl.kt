@@ -15,6 +15,8 @@ class SettingsRepositoryImpl (
     companion object {
         private const val KEY_THEME = "app_theme"
         private const val KEY_LANGUAGE = "app_language"
+
+        private const val KEY_SEEDING_DONE = "initial_seeding_done"
     }
 
     override suspend fun saveTheme(theme: AppTheme) {
@@ -38,5 +40,13 @@ class SettingsRepositoryImpl (
         // 3. ADIM: Bu satır da aynı şekilde çalışacak.
         return settings.getStringFlow(KEY_LANGUAGE, defaultValue = AppLanguage.ENGLISH.code)
             .map { code -> AppLanguage.fromCode(code) }
+    }
+
+    override suspend fun isInitialSeedingDone(): Boolean {
+        return settings.getBoolean(KEY_SEEDING_DONE, defaultValue = false)
+    }
+
+    override suspend fun setInitialSeedingDone(isDone: Boolean) {
+        settings[KEY_SEEDING_DONE] = isDone
     }
 }

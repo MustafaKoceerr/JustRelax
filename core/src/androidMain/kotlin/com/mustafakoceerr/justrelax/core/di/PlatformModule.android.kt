@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import com.mustafakoceerr.justrelax.core.database.DatabaseDriverFactory
 import com.mustafakoceerr.justrelax.core.okio.AndroidStoragePathProvider
 import com.mustafakoceerr.justrelax.core.okio.StoragePathProvider
+import com.mustafakoceerr.justrelax.core.seeding.AndroidAssetReader
+import com.mustafakoceerr.justrelax.core.seeding.AssetReader
 import com.mustafakoceerr.justrelax.core.sound.data.player.AndroidSoundPlayer
 import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
 import com.mustafakoceerr.justrelax.core.ui.localization.AndroidLanguageSwitcher
@@ -39,5 +41,7 @@ actual val platformModule = module {
     single {
         AndroidStoragePathProvider(context = androidContext())
     } bind StoragePathProvider::class
+
+    single { AndroidAssetReader(androidContext()) } bind AssetReader::class
 
 }

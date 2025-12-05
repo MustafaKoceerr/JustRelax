@@ -4,6 +4,8 @@ package com.mustafakoceerr.justrelax.core.di
 import com.mustafakoceerr.justrelax.core.database.DatabaseDriverFactory
 import com.mustafakoceerr.justrelax.core.okio.IosStoragePathProvider
 import com.mustafakoceerr.justrelax.core.okio.StoragePathProvider
+import com.mustafakoceerr.justrelax.core.seeding.AssetReader
+import com.mustafakoceerr.justrelax.core.seeding.IosAssetReader
 import com.mustafakoceerr.justrelax.core.sound.data.player.IosSoundPlayer // Import Eklendi
 import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer // Import Eklendi
 import com.mustafakoceerr.justrelax.core.ui.localization.IosLanguageSwitcher
@@ -30,5 +32,7 @@ actual val platformModule: Module = module {
     single { DatabaseDriverFactory() }
 
     singleOf(::IosStoragePathProvider) bind StoragePathProvider::class
+
+    singleOf(::IosAssetReader) bind AssetReader::class
 
 }
