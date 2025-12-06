@@ -35,10 +35,10 @@ fun SwipableSavedMixItem(
 ) {
     val dismissState = rememberSwipeToDismissBoxState()
 
-    // 1. STATE TAKİBİ (Yön değişti: StartToEnd)
     LaunchedEffect(dismissState.currentValue) {
         if (dismissState.currentValue == SwipeToDismissBoxValue.StartToEnd) {
             onDelete()
+            // Silindikten sonra state'i resetlemeye gerek yok, item listeden gidecek.
         }
     }
 
@@ -48,9 +48,9 @@ fun SwipableSavedMixItem(
         content = {
             SavedMixCard(
                 title = mix.title,
-                date = mix.date, // ViewModel tarafından formatlanmış string
+                date = mix.date,
                 soundCount = mix.icons.size,
-                icons = mix.icons, // ViewModel tarafından hazırlanmış ikon listesi
+                icons = mix.icons, // Artık List<String> (URL) gidiyor
                 isPlaying = isPlaying,
                 onPlayClick = onPlayClick,
                 onRenameClick = onRename,
@@ -58,9 +58,8 @@ fun SwipableSavedMixItem(
                 onDeleteClick = onDelete
             )
         },
-        // 2. İZİN VERİLEN YÖNLER (Tersine çevirdik)
-        enableDismissFromStartToEnd = true,  // Soldan Sağa AÇIK (Sil)
-        enableDismissFromEndToStart = false  // Sağdan Sola KAPALI
+        enableDismissFromStartToEnd = true,
+        enableDismissFromEndToStart = false
     )
 }
 

@@ -9,7 +9,7 @@ data class SavedMixUiModel(
     val id: Long,
     val title: String,
     val date: String,
-    val icons: List<ImageVector>,
+    val icons: List<String>, // ImageVector -> String (URL)
     // Orijinal domain modelini de tutuyoruz ki çalarken veya silerken kullanalım
     val domainModel: DomainSavedMix
 )

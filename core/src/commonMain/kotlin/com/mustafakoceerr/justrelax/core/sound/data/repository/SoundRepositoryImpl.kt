@@ -118,6 +118,32 @@ class SoundRepositoryImpl(
         }
     }
 
+    override fun getDownloadedSounds(): Flow<List<Sound>> {
+        val dbFlow = queries.getDownloadedSounds()
+            .asFlow()
+            .mapToList(Dispatchers.IO)
+
+        val languageFlow = settingsRepository.getLanguage()
+
+        return combine(dbFlow, languageFlow) { queryResults, language ->
+            queryResults.map { result ->
+                // DÜZELTME: 'GetDownloadedSounds' tipini 'SoundEntity' tipine çeviriyoruz.
+                // Mapper bizden SoundEntity bekliyor.
+                val entity = com.mustafakoceerr.justrelax.core.database.SoundEntity(
+                    id = result.id,
+                    category = result.category,
+                    nameJson = result.nameJson,
+                    iconUrl = result.iconUrl,
+                    audioUrl = result.audioUrl,
+                    localPath = result.localPath,
+                    version = result.version
+                )
+
+                mapper.map(entity, language.code)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
 }
 
 

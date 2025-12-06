@@ -1,8 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.saved.components
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,26 +13,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Sort
-import androidx.compose.material.icons.filled.Air
-import androidx.compose.material.icons.filled.BubbleChart
-import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Headset
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.Nature
-import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -50,15 +43,19 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -331,13 +328,12 @@ fun SavedMixMenuPreview() {
     }
 }
 
-
 @Composable
 fun SavedMixCard(
     title: String,
     date: String,
     soundCount: Int,
-    icons: List<ImageVector>,
+    icons: List<String>, // URL Listesi
     isPlaying: Boolean,
     onPlayClick: () -> Unit,
     onRenameClick: () -> Unit,
@@ -345,171 +341,104 @@ fun SavedMixCard(
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // --- ANIMASYONLU ARKA PLAN ---
-    // Kartın rengi duruma göre yumuşakça değişsin
-    val animatedContainerColor by animateColorAsState(
-        targetValue = if(isPlaying) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainer,
-        animationSpec = tween (durationMillis = 500), // 500 ms yumuşak geçiş
-        label = "CardBackgroundColor"
-    )
-
     Card(
-        modifier= modifier
+        modifier = modifier
             .fillMaxWidth()
-        // Tıklanabilir yapıyoruz (Detay sayfasına gitmek istersen diye, şimdilik boş)
-            .clickable{onPlayClick()},
-        shape = RoundedCornerShape(16.dp), // Modern, yumuşak köşeler.
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable { onPlayClick() },
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = animatedContainerColor
+            containerColor = if (isPlaying) MaterialTheme.colorScheme.primaryContainer
+            else MaterialTheme.colorScheme.surfaceContainer,
+            contentColor = if (isPlaying) MaterialTheme.colorScheme.onPrimaryContainer
+            else MaterialTheme.colorScheme.onSurface
         ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = if (isPlaying) 4.dp else 1.dp // Çalan kart hafif yükselsin.
-        )
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        // Box kullanıyoruz çünkü "Menu" butonunu sağ üst köşeye (Absolute Position) koyacağız.
-        Box(modifier = Modifier.fillMaxWidth()){
-            // --- ANA İÇERİK (ROW) ---
-            Row(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // SOL TARAFTAKİ BLOK (BİLGİ + İKONLAR)
-                // weight(1f) veriyoruz ki Play butonuna kadar olan tüm alanı kaplasın.
-                Column(modifier = Modifier.weight(1f)) {
-                    // 1. Atom: Bilgi
-                    SavedMixInfo(
-                        title= title,
-                        soundCount= soundCount,
-                        date= date
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp)) // Araya ferahlık
-
-                    // 2. Atom: İkonlar
-                    SavedMixIcons(icons = icons)
-                }
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                // Sağ taraftaki blok (play buttonu)
-                //  3. Atom: play buttonu
-                SavedMixPlayButton(
-                    isPlaying = isPlaying,
-                    onClick = onPlayClick
-                )
-            }
-            // --- MENÜ (SAĞ ÜST KÖŞE) ---
-            // 4. Atom: Menü
-            // Row akışından bağımsız, sağ üst köşeye sabitliyoruz.
-            SavedMixMenu(
-                onRenameClick = onRenameClick,
-                onShareClick = onShareClick,
-                onDeleteClick = onDeleteClick,
-                modifier= Modifier.align(Alignment.TopEnd)
-            )
-        }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun SavedMixCardPreview() {
-    JustRelaxTheme {
-        Surface {
-            SavedMixCard(
-                title = "Deep Focus Mix",
-                date = "3 gün önce",
-                soundCount = 6,
-                icons = listOf(
-                    Icons.Default.Headset,
-                    Icons.Default.Star,
-                    Icons.Default.Favorite,
-                    Icons.Default.MusicNote
-                ),
-                isPlaying = false,
-                onPlayClick = {},
-                onRenameClick = {},
-                onShareClick = {},
-                onDeleteClick = {},
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun SavedMixCardComparePreview() {
-    JustRelaxTheme {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Çalmayan
-            SavedMixCard(
-                title = "Soft Rain Mix",
-                date = "1 gün önce",
-                soundCount = 4,
-                icons = listOf(
-                    Icons.Default.Cloud,
-                    Icons.Default.BubbleChart,
-                    Icons.Default.WaterDrop
-                ),
-                isPlaying = false,
-                onPlayClick = {},
-                onRenameClick = {},
-                onShareClick = {},
-                onDeleteClick = {}
-            )
+            // SOL TARA (Metinler ve İkonlar)
+            // Weight veriyoruz ki sağdaki buton sıkışmasın
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
 
-            // Çalan kart
-            SavedMixCard(
-                title = "Forest Wind Mix",
-                date = "5 saat önce",
-                soundCount = 7,
-                icons = listOf(
-                    Icons.Default.Eco,
-                    Icons.Default.Air,
-                    Icons.Default.Spa,
-                    Icons.Default.Nature
-                ),
-                isPlaying = true,
-                onPlayClick = {},
-                onRenameClick = {},
-                onShareClick = {},
-                onDeleteClick = {}
-            )
+                Text(
+                    text = "$soundCount Ses • $date",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // --- DÜZELTME: LAZY ROW ---
+                // --- GÜNCELLEME BURADA ---
+                LazyRow(
+                    // Boyut büyüdüğü için binme payını -8'den -12'ye çektik, daha tok durur.
+                    horizontalArrangement = Arrangement.spacedBy((-12).dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    items(icons.size) { index ->
+                        Surface(
+                            shape = CircleShape,
+                            border = BorderStroke(
+                                width = 2.dp,
+                                color = if (isPlaying) MaterialTheme.colorScheme.primaryContainer
+                                else MaterialTheme.colorScheme.surfaceContainer
+                            ),
+                            // Container Boyutu: 28dp -> 36dp yaptık
+                            modifier = Modifier.size(36.dp),
+                            color = MaterialTheme.colorScheme.surface
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                AsyncImage(
+                                    model = icons[index],
+                                    contentDescription = null,
+                                    // İkon Boyutu: 18dp -> 24dp yaptık
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .padding(2.dp),
+                                    contentScale = ContentScale.Fit,
+                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            // SAĞ TARAF (Play Butonu)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Surface(
+                    onClick = onPlayClick,
+                    shape = CircleShape,
+                    color = if (isPlaying) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = if (isPlaying) Icons.Rounded.Stop else Icons.Rounded.PlayArrow,
+                            contentDescription = "Play",
+                            tint = if (isPlaying) MaterialTheme.colorScheme.onPrimary
+                            else MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            }
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun SavedMixCardLongTitlePreview() {
-    JustRelaxTheme {
-        Surface {
-            SavedMixCard(
-                title = "Extremely Long Ambient Mix Name for Stress Relief and Deep Relaxation",
-                date = "2 hafta önce",
-                soundCount = 12,
-                icons = listOf(
-                    Icons.Default.Headset,
-                    Icons.Default.MusicNote,
-                    Icons.Default.Favorite
-                ),
-                isPlaying = false,
-                onPlayClick = {},
-                onRenameClick = {},
-                onShareClick = {},
-                onDeleteClick = {},
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-    }
-}
-
-

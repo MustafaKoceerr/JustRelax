@@ -29,10 +29,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.mustafakoceerr.justrelax.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.feature.home.components.SoundCard
+import com.mustafakoceerr.justrelax.feature.main.tabs.HomeTab
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
+import com.mustafakoceerr.justrelax.feature.mixer.components.DownloadSuggestionCard
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixCountSelector
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixerTopBar
 import com.mustafakoceerr.justrelax.feature.mixer.components.SaveMixButton
@@ -46,6 +49,7 @@ import com.mustafakoceerr.justrelax.utils.asStringSuspend
 data object MixerScreen : AppScreen {
     @Composable
     override fun Content() {
+         val tabNavigator = LocalTabNavigator.current
         // 1. ViewModels
         val mixerViewModel = koinScreenModel<MixerViewModel>()
         val mixerState by mixerViewModel.state.collectAsState()
@@ -71,19 +75,19 @@ data object MixerScreen : AppScreen {
                             duration = SnackbarDuration.Short
                         )
                     }
+                    is MixerEffect.NavigateToHome->{
+                         tabNavigator.current = HomeTab
+                    }
                 }
             }
         }
 
         // 4. Dialog (State'e bağlı görünürlük)
+        // 4. Dialog
         SaveMixDialog(
             isOpen = mixerState.isSaveDialogVisible,
-            onDismiss = {
-                mixerViewModel.processIntent(MixerIntent.HideSaveDialog)
-            },
-            onConfirm = { name ->
-                mixerViewModel.processIntent(MixerIntent.ConfirmSaveMix(name))
-            }
+            onDismiss = { mixerViewModel.processIntent(MixerIntent.HideSaveDialog) },
+            onConfirm = { name -> mixerViewModel.processIntent(MixerIntent.ConfirmSaveMix(name)) }
         )
 
         Scaffold(
@@ -144,36 +148,54 @@ data object MixerScreen : AppScreen {
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         modifier = Modifier.weight(1f)
                     ) {
-                        // A) Kartlar (Gerçek Veri)
+                        // A) SOUND KARTLARI
                         items(mixerState.mixedSounds) { sound ->
 
                             // PlayerState'den anlık durumu çekiyoruz
                             val isPlaying = playerState.activeSounds.containsKey(sound.id)
                             val volume = playerState.activeSounds[sound.id] ?: 0.5f
-                // TODO:
-//                            SoundCard(
-//                                sound = sound,
-//                                isPlaying = isPlaying,
-//                                volume = volume,
-//                                onCardClick = {
-//                                    playerViewModel.processIntent(PlayerIntent.ToggleSound(sound))
-//                                },
-//                                onVolumeChange = { newVol ->
-//                                    playerViewModel.processIntent(
-//                                        PlayerIntent.ChangeVolume(
-//                                            sound.id,
-//                                            newVol
-//                                        )
-//                                    )
-//                                }
-//                            )
+                            val isDownloading = false // playerState.downloadingSounds.contains(sound.id)
+                            SoundCard(
+                                sound = sound,
+                                isPlaying = isPlaying,
+                                isDownloading = isDownloading,
+                                volume = volume,
+                                onCardClick = {
+                                    playerViewModel.processIntent(PlayerIntent.ToggleSound(sound))
+                                },
+                                onVolumeChange = { newVol ->
+                                    playerViewModel.processIntent(
+                                        PlayerIntent.ChangeVolume(sound.id, newVol)
+                                    )
+                                }
+                            )
+                        }
+
+                        // B) BİLGİ KARTI (CALL TO ACTION)
+                        // Kullanıcının sesi azsa (Örn: < 10) göster.
+                        // Bu boolean'ın ViewModel'de hesaplanıp State'e eklendiğini varsayıyoruz.
+                        // Şimdilik test için 'true' veya logic verebilirsin.
+                        val showSuggestion = true // mixerState.showDownloadSuggestion
+
+                        if (showSuggestion){
+                            item(span = { GridItemSpan(maxLineSpan) }) {
+                                Box(
+                                    modifier = Modifier.padding(top = 24.dp)
+                                ) {
+                                    DownloadSuggestionCard(
+                                        onClick = {
+                                            mixerViewModel.processIntent(MixerIntent.ClickDownloadSuggestion)
+                                        }
+                                    )
+                                }
+                            }
                         }
 
                         // B) Kaydet butonu
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             Box(
                                 modifier = Modifier
-                                    .padding(top = 24.dp, bottom = 32.dp)
+                                    .padding(top = 24.dp, bottom = 16.dp)
                                     .fillMaxWidth(),
                                 contentAlignment = Alignment.Center
                             ) {

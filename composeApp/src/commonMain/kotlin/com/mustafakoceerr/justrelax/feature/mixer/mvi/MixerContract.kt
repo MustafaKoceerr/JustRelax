@@ -26,10 +26,15 @@ sealed interface MixerIntent {
 
     // YENİ: İsim girildi ve onaylandı
     data class ConfirmSaveMix(val name: String) : MixerIntent
+
+    // YENİ: Kullanıcı öneri kartına tıkladı
+    data object ClickDownloadSuggestion : MixerIntent
 }
 
 // 3. EFFECT
 sealed interface MixerEffect {
     // YENİ: Kullanıcıya geri bildirim
     data class ShowSnackbar(val message: UiText) : MixerEffect
+    // YENİ: Home ekranına git emri
+    data object NavigateToHome : MixerEffect
 }

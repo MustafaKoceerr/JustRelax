@@ -28,7 +28,7 @@ class MixerViewModel(
     private val soundManager: SoundManager,
     // YENİ: Repository eklendi
     private val saveMixUseCase: SaveMixUseCase // UseCase inject edildi
-): ScreenModel {
+) : ScreenModel {
 
     private val _state = MutableStateFlow(MixerState())
     val state = _state.asStateFlow()
@@ -41,36 +41,47 @@ class MixerViewModel(
             is MixerIntent.SelectCount -> {
                 _state.update { it.copy(selectedCount = intent.count) }
             }
+
             is MixerIntent.CreateMix -> createMix()
             is MixerIntent.ShowSaveDialog -> {
                 if (_state.value.mixedSounds.isNotEmpty()) {
                     _state.update { it.copy(isSaveDialogVisible = true) }
                 }
             }
+
             is MixerIntent.HideSaveDialog -> {
                 _state.update { it.copy(isSaveDialogVisible = false) }
             }
+
             is MixerIntent.ConfirmSaveMix -> saveMixToDb(intent.name)
+
+            is MixerIntent.ClickDownloadSuggestion -> {
+                screenModelScope.launch {
+                    // Buraya ileride Analytics kodu ekleyebilirsin:
+                    // analytics.logEvent("click_download_suggestion")
+
+                    _effect.send(MixerEffect.NavigateToHome)
+                }
+            }
         }
     }
 
     private fun createMix() {
-        // Eğer zaten yükleniyorsa tekrar basılmasını engelle (Double-click protection)
         if (_state.value.isLoading) return
 
         screenModelScope.launch {
-            // 1. UI KİLİTLE (Loading Başlat)
             _state.update { it.copy(isLoading = true) }
 
-            // 2. İŞLEMİ YAP (Atomic)
-            // UseCase veritabanından okur, Manager servise iletir.
+            // 1. UseCase'i çağır (Direkt Map döner)
             val mixMap = generateRandomMixUseCase(_state.value.selectedCount)
+
+            // 2. Player'a gönder
             soundManager.setMix(mixMap)
 
-            // 3. UX BEKLEMESİ (Debounce)
-            // İşlem 10ms sürse bile en az 500ms bekletiyoruz ki animasyon görünsün.
+            // 3. UX Beklemesi (Animasyon görünsün diye)
             delay(500)
 
+            // 4. State Güncelle
             _state.update {
                 it.copy(
                     mixedSounds = mixMap.keys.toList(),
@@ -79,6 +90,7 @@ class MixerViewModel(
             }
         }
     }
+
     private fun saveMixToDb(name: String) {
         screenModelScope.launch {
             val currentActiveSounds = soundManager.state.value.activeSounds
@@ -124,4 +136,4 @@ class MixerViewModel(
             }
         }
     }
-    }
+}

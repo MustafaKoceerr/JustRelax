@@ -4,6 +4,7 @@ package com.mustafakoceerr.justrelax.di
 import com.mustafakoceerr.justrelax.feature.ai.AiViewModel
 import com.mustafakoceerr.justrelax.feature.ai.data.AiService
 import com.mustafakoceerr.justrelax.feature.ai.data.AiServiceImpl
+import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.ObserveDownloadedSoundsUseCase
 import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.PlayAiMixUseCase
 import com.mustafakoceerr.justrelax.feature.home.HomeViewModel
 import com.mustafakoceerr.justrelax.feature.home.domain.usecase.DownloadAllMissingSoundsUseCase
@@ -12,6 +13,7 @@ import com.mustafakoceerr.justrelax.feature.mixer.MixerViewModel
 import com.mustafakoceerr.justrelax.feature.mixer.domain.usecase.GenerateRandomMixUseCase
 import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
 import com.mustafakoceerr.justrelax.feature.saved.SavedViewModel
+import com.mustafakoceerr.justrelax.feature.saved.domain.usecase.ObserveSavedMixesUseCase
 import com.mustafakoceerr.justrelax.feature.saved.domain.usecase.PlaySavedMixUseCase
 import com.mustafakoceerr.justrelax.feature.saved.domain.usecase.SaveMixUseCase
 import com.mustafakoceerr.justrelax.feature.settings.SettingsViewModel
@@ -54,7 +56,11 @@ val homeModule = module {
 
 
 val savedModule = module {
-    factoryOf(::PlaySavedMixUseCase) // Yeni UseCase
+    factoryOf(::PlaySavedMixUseCase)
+
+    // YENİ UseCase
+    factoryOf(::ObserveSavedMixesUseCase)
+
     factoryOf(::SavedViewModel)
 }
 
@@ -103,5 +109,8 @@ val aiModule = module {
     singleOf(::AiServiceImpl) bind AiService::class
     factoryOf(::PlayAiMixUseCase)
     factoryOf(::AiViewModel)
+    // YENİ UseCase
+    factoryOf(::ObserveDownloadedSoundsUseCase)
+
 }
 

@@ -17,4 +17,8 @@ interface SoundRepository{
 
     // YENİ
     suspend fun syncSounds()
+
+    // YENİ: Sadece indirilmiş sesleri getirir
+    fun getDownloadedSounds(): Flow<List<Sound>>
+
 }

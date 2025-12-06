@@ -33,11 +33,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.feature.ai.AiViewModel
+import com.mustafakoceerr.justrelax.feature.ai.mvi.AiEffect
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiIntent
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiState
+import com.mustafakoceerr.justrelax.feature.main.tabs.HomeTab
+import com.mustafakoceerr.justrelax.feature.mixer.components.DownloadSuggestionCard
 import com.mustafakoceerr.justrelax.utils.asStringSuspend
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -48,6 +52,20 @@ data object AiScreen : AppScreen {
         // Koin ile ViewModel enjeksiyonu
         val viewModel = koinScreenModel<AiViewModel>()
         val state by viewModel.state.collectAsState()
+        val tabNavigator = LocalTabNavigator.current
+
+        // Effect Handling (Navigasyon)
+        LaunchedEffect(Unit) {
+            viewModel.effect.collect { effect ->
+                when (effect) {
+                    is AiEffect.NavigateToHome -> {
+                        tabNavigator.current = HomeTab
+                    }
+                    // Error effect'i gelirse buraya eklersin
+                    else -> {}
+                }
+            }
+        }
 
         AiScreenContent(
             state = state,
@@ -120,6 +138,7 @@ private fun AiScreenContent(
                             )
                         }
 
+                        // 2. Yükleniyor veya Boş (Idle)
                         else -> {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 AIVisualizer(isThinking = targetState.isLoading)
@@ -138,21 +157,35 @@ private fun AiScreenContent(
             }
 
             // --- ALT ALAN (INPUT) ---
+            // Sadece IDLE durumundaysa ve Loading değilse göster
+            val isIdle = state.generatedMix == null && !state.isLoading
             // Sadece sonuç yoksa ve yüklenmiyorsa göster
             AnimatedVisibility(
                 visible = state.generatedMix == null && !state.isLoading,
                 enter = slideInVertically { it } + fadeIn(),
                 exit = slideOutVertically { it } + fadeOut()
             ) {
-                AIPromptInput(
-                    text = promptText,
-                    onTextChange = { promptText = it },
-                    onSendClick = {
-                        if (promptText.isNotBlank()) {
-                            onIntent(AiIntent.GenerateMix(promptText))
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                    // YENİ: Öneri Kartı (Input'un hemen üstünde)
+                    if (state.showDownloadSuggestion) {
+                        Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                            DownloadSuggestionCard(
+                                onClick = { onIntent(AiIntent.ClickDownloadSuggestion) }
+                            )
                         }
                     }
-                )
+
+                    AIPromptInput(
+                        text = promptText,
+                        onTextChange = { promptText = it },
+                        onSendClick = {
+                            if (promptText.isNotBlank()) {
+                                onIntent(AiIntent.GenerateMix(promptText))
+                            }
+                        }
+                    )
+                }
             }
         }
     }
