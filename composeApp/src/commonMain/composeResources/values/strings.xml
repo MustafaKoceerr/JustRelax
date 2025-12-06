@@ -42,4 +42,8 @@
 
     <string name="error_generic">Something went wrong. Please try again.</string>
     <string name="error_no_sounds_found">Recommended sounds were not found in the library.</string>
+
+    <string name="download_complete">All sounds have been downloaded! 🎉</string>
+    <string name="suggestion_hidden">Suggestion hidden.</string>
+    <string name="action_settings">SETTINGS</string>
 </resources>

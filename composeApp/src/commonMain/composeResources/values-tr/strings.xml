@@ -42,4 +42,8 @@
 
     <string name="error_generic">Bir şeyler ters gitti. Lütfen tekrar dene.</string>
     <string name="error_no_sounds_found">Önerilen sesler kütüphanede bulunamadı.</string>
+
+    <string name="download_complete">Tüm sesler indirildi! 🎉</string>
+    <string name="suggestion_hidden">Öneri gizlendi.</string>
+    <string name="action_settings">AYARLAR</string>
 </resources>

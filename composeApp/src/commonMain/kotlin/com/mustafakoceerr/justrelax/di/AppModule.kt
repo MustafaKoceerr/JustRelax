@@ -6,6 +6,7 @@ import com.mustafakoceerr.justrelax.feature.ai.data.AiService
 import com.mustafakoceerr.justrelax.feature.ai.data.AiServiceImpl
 import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.PlayAiMixUseCase
 import com.mustafakoceerr.justrelax.feature.home.HomeViewModel
+import com.mustafakoceerr.justrelax.feature.home.domain.usecase.DownloadAllMissingSoundsUseCase
 import com.mustafakoceerr.justrelax.feature.main.MainViewModel
 import com.mustafakoceerr.justrelax.feature.mixer.MixerViewModel
 import com.mustafakoceerr.justrelax.feature.mixer.domain.usecase.GenerateRandomMixUseCase
@@ -44,9 +45,12 @@ val appModule = module {
 
 
 val homeModule = module {
-    // get() sayısı azaldı (Navigator gitti)
+    // 1. UseCase Tanımı
+    factoryOf(::DownloadAllMissingSoundsUseCase)
+
+    // 2. ViewModel (Otomatik olarak UseCase'i inject edecek)
     factoryOf(::HomeViewModel)
-    }
+}
 
 
 val savedModule = module {
@@ -100,3 +104,4 @@ val aiModule = module {
     factoryOf(::PlayAiMixUseCase)
     factoryOf(::AiViewModel)
 }
+

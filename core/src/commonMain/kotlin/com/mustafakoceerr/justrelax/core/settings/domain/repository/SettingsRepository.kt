@@ -16,4 +16,9 @@ interface SettingsRepository {
     // YENİ: Seeding durumu
     suspend fun isInitialSeedingDone(): Boolean
     suspend fun setInitialSeedingDone(isDone: Boolean)
+
+
+    // --- YENİ EKLENENLER (Banner Zamanlaması İçin) ---
+    suspend fun getLastDownloadPromptTime(): Long
+    suspend fun setLastDownloadPromptTime(timestamp: Long)
 }

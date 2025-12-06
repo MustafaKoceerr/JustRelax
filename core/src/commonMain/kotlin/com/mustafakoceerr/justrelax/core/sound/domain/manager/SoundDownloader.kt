@@ -1,13 +1,17 @@
 package com.mustafakoceerr.justrelax.core.sound.domain.manager
 
+import com.mustafakoceerr.justrelax.core.sound.domain.model.DownloadStatus
+import kotlinx.coroutines.flow.Flow
+
 interface SoundDownloader{
     /**
-     * Sesi indirmeye başlar.
-     * @param soundId: İndirilecek sesin ID'si (DB'den URL'i bulur)
-     * @return Başarılı olursa true, hata olursa false döner.
+     * Sesi indirir ve durumunu akış olarak bildirir.
+     * @param soundId: İndirilecek sesin ID'si
      */
+    fun downloadSoundFlow(soundId: String): Flow<DownloadStatus>
+
+    // Eski fonksiyonu (tekil indirme için) tutabiliriz veya Flow'a çevirebiliriz.
+    // Kolaylık olsun diye eski fonksiyonu Flow'u collect edecek şekilde güncelleyebiliriz.
     suspend fun downloadSound(soundId: String): Boolean
 
-    // İleride buraya 'getProgress(soundId): Flow<Float>' ekleyebiliriz.
-    // TODO: Ekleme yap ve ui'da da göster.
 }

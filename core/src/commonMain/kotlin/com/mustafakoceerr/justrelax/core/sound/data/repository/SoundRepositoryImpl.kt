@@ -26,8 +26,6 @@ class SoundRepositoryImpl(
     private val mapper: SoundMapper,
     private val json: Json // <--- YENİ: Inject edildi
 ) : SoundRepository {
-
-    // TODO: Buraya kendi R2 bucket linkini koyacaksın
     private val CONFIG_URL = "https://pub-728a358af0b143fcbf9aa1e060e0dfa9.r2.dev/config.json"
 
     private val queries = db.justRelaxDbQueries

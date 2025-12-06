@@ -15,8 +15,9 @@ class SettingsRepositoryImpl (
     companion object {
         private const val KEY_THEME = "app_theme"
         private const val KEY_LANGUAGE = "app_language"
-
         private const val KEY_SEEDING_DONE = "initial_seeding_done"
+
+        private const val KEY_LAST_PROMPT = "last_download_prompt_time"
     }
 
     override suspend fun saveTheme(theme: AppTheme) {
@@ -48,5 +49,16 @@ class SettingsRepositoryImpl (
 
     override suspend fun setInitialSeedingDone(isDone: Boolean) {
         settings[KEY_SEEDING_DONE] = isDone
+    }
+
+    // --- YENİ IMPLEMENTASYONLAR ---
+    override suspend fun getLastDownloadPromptTime(): Long {
+        // Varsayılan olarak 0L döner (Hiç gösterilmedi demek)
+        return settings.getLong(KEY_LAST_PROMPT, defaultValue = 0L)
+    }
+    override suspend fun setLastDownloadPromptTime(timestamp: Long) {
+        // settings[KEY] = value syntax'ı Long için de çalışır (library extension sayesinde)
+        // veya settings.putLong(KEY_LAST_PROMPT, timestamp) de diyebilirsin.
+        settings[KEY_LAST_PROMPT] = timestamp
     }
 }

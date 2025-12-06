@@ -2,6 +2,7 @@ package com.mustafakoceerr.justrelax.feature.home.mvi
 
 import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
 import com.mustafakoceerr.justrelax.core.sound.domain.model.SoundCategory
+import com.mustafakoceerr.justrelax.utils.UiText
 
 // 1. State: UI'ın anlık durum fotoğrafı
 data class HomeState(
@@ -9,6 +10,11 @@ data class HomeState(
     val categories : List<SoundCategory> = SoundCategory.entries, // Tüm kategoriler
     val selectedCategory: SoundCategory = SoundCategory.WATER, // varsayılan kategori
     val sounds: List<Sound> = emptyList(), // Seçili kategorideki sesler
+
+    val showDownloadBanner: Boolean = false,
+    val isDownloadingAll: Boolean = false,
+    val totalDownloadProgress: Float = 0f, // 0.0 - 1.0 (Banner için)
+    val snackbarMessage: UiText? = null // String yerine UiText
 )
 
 // 2. Intent: Kullanıcının yapmak istediği eylemler
@@ -17,6 +23,11 @@ sealed interface HomeIntent {
     data object LoadData : HomeIntent
     data class SelectCategory(val category: SoundCategory) : HomeIntent
     data object SettingsClicked : HomeIntent
+
+    // --- YENİ INTENTLER ---
+    data object DownloadAllMissing : HomeIntent
+    data object DismissBanner : HomeIntent
+    data object ClearMessage : HomeIntent // Snackbar gösterildikten sonra state'i temizlemek için
 }
 
 // 3. Effect: Tek seferlik olaylar (Navigasyon, toast vb.)
