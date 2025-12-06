@@ -12,4 +12,8 @@ class AndroidStoragePathProvider (
         return context.filesDir.absolutePath.toPath()
     }
 
+    override fun getCacheDir(): Path {
+        return context.cacheDir.absolutePath.toPath()
+    }
+
 }

@@ -107,7 +107,7 @@ kotlin {
 
             // Coil
             implementation(libs.coil.compose)
-//            implementation(libs.coil.network.okhttp) // hata verdi KMP için uygun değil.
+            implementation(libs.coil.network)
             implementation(libs.coil.svg) // SVG ikonlar için şart
 
         }

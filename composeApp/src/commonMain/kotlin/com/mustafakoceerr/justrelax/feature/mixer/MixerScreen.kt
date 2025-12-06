@@ -150,23 +150,23 @@ data object MixerScreen : AppScreen {
                             // PlayerState'den anlık durumu çekiyoruz
                             val isPlaying = playerState.activeSounds.containsKey(sound.id)
                             val volume = playerState.activeSounds[sound.id] ?: 0.5f
-
-                            SoundCard(
-                                sound = sound,
-                                isPlaying = isPlaying,
-                                volume = volume,
-                                onCardClick = {
-                                    playerViewModel.processIntent(PlayerIntent.ToggleSound(sound))
-                                },
-                                onVolumeChange = { newVol ->
-                                    playerViewModel.processIntent(
-                                        PlayerIntent.ChangeVolume(
-                                            sound.id,
-                                            newVol
-                                        )
-                                    )
-                                }
-                            )
+                // TODO:
+//                            SoundCard(
+//                                sound = sound,
+//                                isPlaying = isPlaying,
+//                                volume = volume,
+//                                onCardClick = {
+//                                    playerViewModel.processIntent(PlayerIntent.ToggleSound(sound))
+//                                },
+//                                onVolumeChange = { newVol ->
+//                                    playerViewModel.processIntent(
+//                                        PlayerIntent.ChangeVolume(
+//                                            sound.id,
+//                                            newVol
+//                                        )
+//                                    )
+//                                }
+//                            )
                         }
 
                         // B) Kaydet butonu

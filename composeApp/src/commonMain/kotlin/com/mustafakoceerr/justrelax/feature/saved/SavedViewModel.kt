@@ -59,28 +59,29 @@ class SavedViewModel(
     }
 
     private fun observeMixes() {
-        screenModelScope.launch {
-            combine(
-                savedMixRepository.getAllMixes(),
-                soundRepository.getSounds()
-            ) { savedMixes, allSounds ->
-                savedMixes.map { domainMix ->
-                    val icons = domainMix.sounds.mapNotNull { savedSound ->
-                        allSounds.find { it.id == savedSound.id }?.icon
-                    }.ifEmpty { listOf(Icons.Default.MusicNote) }
-
-                    SavedMixUiModel(
-                        id = domainMix.id,
-                        title = domainMix.name,
-                        date = formatEpoch(domainMix.dateEpoch),
-                        icons = icons,
-                        domainModel = domainMix
-                    )
-                }
-            }.collect { uiMixes ->
-                _state.update { it.copy(mixes = uiMixes, isLoading = false) }
-            }
-        }
+        // TODO:
+//        screenModelScope.launch {
+//            combine(
+//                savedMixRepository.getAllMixes(),
+//                soundRepository.getSounds()
+//            ) { savedMixes, allSounds ->
+//                savedMixes.map { domainMix ->
+//                    val icons = domainMix.sounds.mapNotNull { savedSound ->
+//                        allSounds.find { it.id == savedSound.id }?.icon
+//                    }.ifEmpty { listOf(Icons.Default.MusicNote) }
+//
+//                    SavedMixUiModel(
+//                        id = domainMix.id,
+//                        title = domainMix.name,
+//                        date = formatEpoch(domainMix.dateEpoch),
+//                        icons = icons,
+//                        domainModel = domainMix
+//                    )
+//                }
+//            }.collect { uiMixes ->
+//                _state.update { it.copy(mixes = uiMixes, isLoading = false) }
+//            }
+//        }
     }
 
     // --- TEMİZLENMİŞ TOGGLE MANTIĞI ---

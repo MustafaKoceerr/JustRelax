@@ -88,6 +88,8 @@ data object HomeScreen : AppScreen {
                         sounds = homeState.sounds,
                         // Aktiflik ve Volume bilgisini PlayerViewModel'den alıyoruz
                         activeSounds = playerState.activeSounds,
+                        // YENİ: İndirilenleri UI'a bildiriyoruz
+                        downloadingSoundIds = playerState.downloadingSoundIds,
                         onSoundClick = {sound->
                             playerViewModel.processIntent(PlayerIntent.ToggleSound(sound))
                         },

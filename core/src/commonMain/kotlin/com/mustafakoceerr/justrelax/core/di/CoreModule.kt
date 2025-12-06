@@ -8,8 +8,11 @@ import com.mustafakoceerr.justrelax.core.navigation.AppNavigator
 import com.mustafakoceerr.justrelax.core.settings.data.repository.SettingsRepositoryImpl
 import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
 import com.mustafakoceerr.justrelax.core.sound.data.manager.DataSeeder
+import com.mustafakoceerr.justrelax.core.sound.data.manager.SoundDownloaderImpl
+import com.mustafakoceerr.justrelax.core.sound.data.mapper.SoundMapper
 import com.mustafakoceerr.justrelax.core.sound.data.repository.SoundRepositoryImpl
 import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundController
+import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundDownloader
 import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundManager
 import com.mustafakoceerr.justrelax.core.sound.domain.manager.SyncManager
 import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
@@ -23,6 +26,11 @@ import org.koin.dsl.module
 val coreModule = module {
     singleOf(::AppNavigator)
     singleOf(::SettingsRepositoryImpl) bind SettingsRepository::class
+
+    // --- EKSİK PARÇA 1: SoundMapper ---
+    // SoundRepositoryImpl bunu constructor'da istiyor.
+    singleOf(::SoundMapper)
+
     singleOf(::SoundRepositoryImpl) bind SoundRepository::class
 
     // sound manager'da timer manager'da singleton
@@ -40,19 +48,22 @@ val coreModule = module {
 
     single {
         Json {
-            ignoreUnknownKeys = true // Bilinmeyen alan gelirse patlama
-            isLenient = true         // Tırnak işaretlerinde esnek ol
-            prettyPrint = true       // Loglarda güzel görünsün
-            encodeDefaults = true    // Varsayılan değerleri de JSON'a yaz
+            ignoreUnknownKeys = true
+            isLenient = true
+            prettyPrint = true
+            encodeDefaults = true
         }
     }
 
-    // Data Seeder (Tek seferlik iş yaptığı için factory veya single olabilir, single daha güvenli)
+    // --- EKSİK PARÇA 2: SoundDownloader ---
+    // Bunu da yazmıştık, eklemezsek ileride patlar.
+    singleOf(::SoundDownloaderImpl) bind SoundDownloader::class
+
+    // Data Seeder
     singleOf(::DataSeeder)
 
-    // SyncManager (Singleton olması mantıklı)
+    // SyncManager
     singleOf(::SyncManager)
 }
 
-// Bu beklenti, yukarıda güncellediğimiz PlatformModule dosyaları tarafından karşılanacak.
 expect val platformModule: Module

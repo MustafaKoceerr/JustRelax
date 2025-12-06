@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
 
     alias(libs.plugins.sqldelight)
+    // Gerekli plugin'leri toml'dan alıyoruz
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {

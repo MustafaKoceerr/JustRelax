@@ -29,61 +29,67 @@ class DataSeeder (
     suspend fun seedData(){
         withContext(Dispatchers.IO){
             // 1. Kontrol: Daha önce yapıldıysa tekrar yapma
-            if(settingsRepository.isInitialSeedingDone()) return@withContext
+            // Kontrol
+            if (settingsRepository.isInitialSeedingDone()) {
+                println("DataSeeder: Zaten yapılmış, atlanıyor.")
+                return@withContext
+            }
 
+            println("DataSeeder: İlk kurulum başlıyor...")
             try {
-                // 2. Config dosyasını Asset'ten oku
-                // Dosya adı: "initial_config.json" (Bunu assets klasörüne koymalısın)
+                // 1. Config Oku
+                println("DataSeeder: initial_config.json okunuyor...")
                 val configBytes = assetReader.readAsset("initial_config.json")
                 val configString = configBytes.decodeToString()
                 val initialSounds = json.decodeFromString<List<RemoteSoundDto>>(configString)
+                println("DataSeeder: Config okundu. ${initialSounds.size} ses bulundu.")
 
                 val soundsDir = storageProvider.getAppDataDir().div("sounds")
-                if (!fileSystem.exists(soundsDir)){
+                if (!fileSystem.exists(soundsDir)) {
                     fileSystem.createDirectory(soundsDir)
                 }
 
-                queries.transaction{
-                    initialSounds.forEach { dto->
+                queries.transaction {
+                    initialSounds.forEach { dto ->
                         try {
-                            // 3. Ses dosyasını Asset'ten oku
-                            // Asset'teki isim ile ID aynı olmalı veya JSON'da belirtilmeli.
-                            // Varsayım: Asset adı = "id.mp3" (örn: rain.mp3)
-                            val assetFileName = "${dto.id}.mp3"
+                            val assetFileName = dto.audioUrl.substringAfterLast("/")
+                            println("DataSeeder: Kopyalanıyor -> $assetFileName")
+
+                            // Dosyayı Asset'ten oku
                             val audioBytes = assetReader.readAsset(assetFileName)
 
-                            // 4. Diske Yaz (Okio)
+                            // Diske yaz
                             val targetFile = soundsDir.div(assetFileName)
-
-                            // FileSystem.sink ile yazıyoruz
-                            fileSystem.sink(targetFile).buffer().use { sink->
+                            fileSystem.sink(targetFile).buffer().use { sink ->
                                 sink.write(audioBytes)
                             }
-                            // 5. Veritabanına Kaydet (localPath dolu olarak!)
-                            val namesJsonStr = json.encodeToString(dto.names)
 
+                            // DB'ye yaz
+                            val namesJsonStr = json.encodeToString(dto.names)
                             queries.upsertSound(
                                 id = dto.id,
                                 category = dto.category,
                                 nameJson = namesJsonStr,
                                 iconUrl = dto.iconUrl,
                                 audioUrl = dto.audioUrl,
-                                localPath = targetFile.toString(), // <-- İŞTE SİHİR BURADA
+                                localPath = targetFile.toString(),
                                 version = dto.version.toLong()
                             )
-                        }catch (e: Exception){
-                            println("Seeding Error for ${dto.id}: ${e.message}")
-                            // Bir dosya hatalıysa diğerlerine devam et (Transaction içinde olduğumuz için
-                            // buradaki try-catch transaction'ı bozmaz, sadece o dosyayı atlar)
+                            println("DataSeeder: Başarılı -> ${dto.id}")
+
+                        } catch (e: Exception) {
+                            println("DataSeeder HATASI (${dto.id}): ${e.message}")
+                            e.printStackTrace()
                         }
                     }
                 }
-                // 6. İşlem Başarılı: Bayrağı dik
+
                 settingsRepository.setInitialSeedingDone(true)
-            }catch (e: Exception){
+                println("DataSeeder: Kurulum başarıyla bitti bayrak dikildi.")
+
+            } catch (e: Exception) {
+                println("DataSeeder: GENEL HATA!")
                 e.printStackTrace()
-                // Genel bir hata olursa (örn: config.json yoksa) hiçbir şey yapma,
-                // bir sonraki açılışta tekrar dener.
             }
         }
     }

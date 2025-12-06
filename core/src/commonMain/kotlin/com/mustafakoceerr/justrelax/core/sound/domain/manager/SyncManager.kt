@@ -16,18 +16,28 @@ class SyncManager(
      */
     suspend fun initializeApp(){
         withContext(Dispatchers.IO){
+            // 1. ADIM: SEEDING (Yerel Dosyalar)
+            // Burası internetten bağımsızdır, asla patlamamalı.
             try {
-                // 1. Adım: Seeding (Hızlı - Diskten okur)
-                // Eğer daha önce yapıldıysa zaten hemen döner (return).
+                println("SyncManager: Seeding başlatılıyor...")
                 dataSeeder.seedData()
-
-                // 2. Adım: Sync (Yavaş - İnternetten çeker)
-                // Bu işlem başarısız olsa bile (internet yoksa),
-                // 1. adım sayesinde kullanıcının elinde veriler vardır.
-                soundRepository.syncSounds()
-            }catch (e: Exception){
-                // Loglama yapılabilir (Crashlytics vs.)
+                println("SyncManager: Seeding tamamlandı.")
+            } catch (e: Exception) {
+                println("SyncManager: SEEDING HATASI!")
                 e.printStackTrace()
+                // Seeding hatası Sync'i durdurmasın.
+            }
+
+            // 2. ADIM: SYNC (Uzak Sunucu)
+            // Burası SSL hatası verebilir, internet olmayabilir.
+            try {
+                println("SyncManager: Remote Sync başlatılıyor...")
+                soundRepository.syncSounds()
+                println("SyncManager: Remote Sync tamamlandı.")
+            } catch (e: Exception) {
+                println("SyncManager: REMOTE SYNC HATASI (İnternet yok veya SSL sorunu)")
+                // e.printStackTrace() // Log kirliliği yapmasın diye kapattım, istersen aç.
+                println("Hata Detayı: ${e.message}")
             }
         }
     }

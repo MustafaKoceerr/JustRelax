@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.home.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,11 +22,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.VolumeUp
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.CloudDownload
 import androidx.compose.material.icons.rounded.Headphones
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,10 +44,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
 import com.mustafakoceerr.justrelax.core.sound.domain.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
@@ -80,8 +87,6 @@ fun HomeTopBar(
 }
 
 
-
-
 @Composable
 fun HomeTabRow(
     categories: List<SoundCategory>,
@@ -97,7 +102,7 @@ fun HomeTabRow(
         contentColor = MaterialTheme.colorScheme.primary,
         divider = {} // Çizgiyi kaldırdım daha temiz görünüm için
     ) {
-        categories.forEach { category->
+        categories.forEach { category ->
             val isSelected = category == selectedCategory
             Tab(
                 selected = isSelected,
@@ -129,9 +134,10 @@ fun HomeTabRow(
 fun SoundCard(
     sound: Sound,
     isPlaying: Boolean,
+    isDownloading: Boolean, // YENİ: İndiriliyor mu?
     volume: Float,
-    onCardClick:()-> Unit,
-    onVolumeChange:(Float)-> Unit,
+    onCardClick: () -> Unit,
+    onVolumeChange: (Float) -> Unit,
     modifier: Modifier = Modifier // Dışarıdan müdahale için
 ) {
     // Animasyon ekleyelim: Slider açılırken yumuşak geçiş olsun
@@ -151,25 +157,63 @@ fun SoundCard(
             Box(contentAlignment = Alignment.Center) {
                 // Ikon sabit kalır 32 dp. ortada şık görünür. ikonlar sabit dp verilirler.
                 Surface(
-                    modifier = Modifier.size(48.dp),// İkonun kapsayıcısı SABİT
-                    shape = CircleShape,
+                    modifier = Modifier.size(48.dp)
+                        // İndirilmemişse veya indiriliyorsa biraz şeffaf yapalım (Alpha),// İkonun kapsayıcısı SABİT
+                        .alpha(if (sound.isDownloaded) 1f else 0.3f), shape = CircleShape,
                     color = if (isPlaying) MaterialTheme.colorScheme.primary else
                         MaterialTheme.colorScheme.surfaceContainer,
                     contentColor = if (isPlaying) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = sound.icon,
-                            modifier = Modifier.size(24.dp), // İkon boyutu standart 24dp
-                            contentDescription = null
+
+                        AsyncImage(
+                            model = sound.iconUrl,
+                            contentDescription = sound.name,
+                            modifier = Modifier.size(24.dp),
+                            contentScale = ContentScale.Fit,
+                            colorFilter = ColorFilter.tint(
+                                if (isPlaying) MaterialTheme.colorScheme.onPrimary
+                                else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         )
                     }
                 }
+                // 2. DURUM KATMANI (İndirme İkonu veya Spinner)
+                if (!sound.isDownloaded) {
+                    if (isDownloading) {
+                        // Dönüyor...
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 3.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    } else {
+                        // İndir Butonu (Bulut)
+                        // Arkasına ufak bir zemin atalım ki ikon karışmasın
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
+                                    CircleShape
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.CloudDownload,
+                                contentDescription = "Download",
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
             }
-
         }
 
-        if (isPlaying){
+        // Slider veya İsim Alanı
+
+        if (isPlaying) {
             VolumeSlider(
                 value = volume,
                 onValueChange = onVolumeChange,
@@ -177,15 +221,15 @@ fun SoundCard(
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp) // Kartın kenarlarına yapışmasın
             )
-        }else{
+        } else {
             Text(
-                text = stringResource(sound.nameRes), // Modelden gelen isim
+                text = sound.name, // Modelden gelen isim
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,             // Renk: onSurface (En net okunan siyah/koyu gri)
-                modifier = Modifier.padding(horizontal = 4.dp) // Yanlardan hafif boşluk
-                , color = MaterialTheme.colorScheme.onSurface
+                modifier = Modifier.padding(horizontal = 4.dp), // Yanlardan hafif boşluk
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (sound.isDownloaded) 1f else 0.5f)
             )
         }
     }
@@ -196,36 +240,41 @@ fun SoundCard(
 fun SoundCardGrid(
     sounds: List<Sound>,
     activeSounds: Map<String, Float>,
+    downloadingSoundIds: Set<String>, // YENİ: Şu an inenlerin listesi
     onSoundClick: (Sound) -> Unit,
-    onVolumeChange: (String,Float) -> Unit,
+    onVolumeChange: (String, Float) -> Unit,
     contentPadding: PaddingValues
-){
+) {
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 110.dp),
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
-    ){
+    ) {
         items(
-            items= sounds,
-            key = {it.id}
-        ){
-            sound->
+            items = sounds,
+            key = { it.id }
+        ) { sound ->
             val isPlaying = activeSounds.containsKey(sound.id)
             val volume = activeSounds[sound.id] ?: 0.5f
+
+            // Bu ses şu an indirilenler listesinde mi?
+            val isDownloading = downloadingSoundIds.contains(sound.id)
 
             SoundCard(
                 sound = sound,
                 isPlaying = isPlaying,
+                isDownloading = isDownloading,
                 volume = volume,
-                onCardClick = {onSoundClick(sound)},
-                onVolumeChange= {newVol -> onVolumeChange(sound.id, newVol)}
+                onCardClick = { onSoundClick(sound) },
+                onVolumeChange = { newVol -> onVolumeChange(sound.id, newVol) }
             )
         }
 
     }
 }
+
 @Composable
 fun ActiveSoundsBar(
     activeIcons: List<ImageVector>,
@@ -233,15 +282,14 @@ fun ActiveSoundsBar(
     onPlayPauseClick: () -> Unit,
     onStopAllClick: () -> Unit,
     modifier: Modifier = Modifier
-)
-{
+) {
 
     //Bu bar dikkat çekici olmallı bu yüzden PrimaryContainer kullanıyoruz.
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .height(64.dp), // Standart mini player yüksekliği.
-             shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         color = MaterialTheme.colorScheme.primaryContainer,
 
         // üzerindeki ikonların rengi (Koyu kahve)
@@ -249,7 +297,7 @@ fun ActiveSoundsBar(
 
         // Hafif bir gölge (elevation) verelim ki içerikten ayrılsın.
         shadowElevation = 4.dp
-        ) {
+    ) {
 
         Row(
             modifier = Modifier
@@ -265,19 +313,20 @@ fun ActiveSoundsBar(
                 horizontalArrangement = Arrangement.spacedBy(8.dp), // İkonlar arası boşluk,
                 contentPadding = PaddingValues(end = 16.dp) // butonlara yapışmasın
             ) {
-                items(activeIcons.size){index ->
-                    Surface(modifier = Modifier.size(32.dp),
+                items(activeIcons.size) { index ->
+                    Surface(
+                        modifier = Modifier.size(32.dp),
                         shape = CircleShape,
                         // İkonlar kendi içinde bir tık daha kkoyu/farklı dursun
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f ),
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
                         contentColor = MaterialTheme.colorScheme.onSurface
-                 ) {
-                        Box(contentAlignment = Alignment.Center){
-                            Icon(
-                                imageVector = activeIcons[index],
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            AsyncImage(
+                                model = activeIcons[index],
                                 contentDescription = null,
                                 modifier = Modifier.size(20.dp),
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                             )
                         }
                     }
@@ -288,9 +337,9 @@ fun ActiveSoundsBar(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 // 1. Play/ pause butonu
-                IconButton(onClick = onPlayPauseClick){
+                IconButton(onClick = onPlayPauseClick) {
                     Icon(
                         // Duruma göre icon değişir.
                         imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
@@ -303,13 +352,14 @@ fun ActiveSoundsBar(
                 // 2. Hepsini Durdur (Kapat) Butonu
                 // Bu biraz daha "tehlikeli" veya "kapatma" işlemi olduğu için
                 // farklı bir stil verebiliriz ama şimdilik IconButton yeterli.
-            IconButton(onClick = onStopAllClick){
-                Icon(
-                    imageVector = Icons.Rounded.Close,
-                    contentDescription = "Close all sounds",
-                    modifier = Modifier.size(28.dp)
-                )
-            }}
+                IconButton(onClick = onStopAllClick) {
+                    Icon(
+                        imageVector = Icons.Rounded.Close,
+                        contentDescription = "Close all sounds",
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+            }
 
         }
 
@@ -350,7 +400,8 @@ fun ActiveSoundsBarPreview() {
 fun VolumeSlider(
     value: Float,
     onValueChange: (Float) -> Unit,
-    modifier: Modifier = Modifier){
+    modifier: Modifier = Modifier
+) {
     Slider(
         value = value,
         onValueChange = onValueChange,
@@ -364,13 +415,14 @@ fun VolumeSlider(
         )
     )
 }
+
 @Composable
 @Preview
 fun SliderPreview() {
     JustRelaxTheme {
         VolumeSlider(0.3f, {})
     }
-    }
+}
 
 
 
