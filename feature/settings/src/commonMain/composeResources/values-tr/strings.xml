@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- SettingsScreen - theme & language info -->
+    <string name="current_theme">Current theme: %1$s</string>
+    <string name="current_language">Current language: %1$s</string>
+
+    <!-- Theme options -->
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System</string>
+
+    <!-- Language section -->
+    <string name="language_settings_title">Language Settings</string>
+    <string name="language_system_default">System Default</string>
+    <string name="language_english">English</string>
+    <string name="language_turkish">Turkish</string>
+</resources>

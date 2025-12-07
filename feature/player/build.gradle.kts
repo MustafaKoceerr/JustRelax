@@ -1,0 +1,40 @@
+plugins {
+    id("justrelax.kmp.library")
+    id("justrelax.android.library.compose")
+}
+
+android {
+    namespace = "com.mustafakoceerr.justrelax.feature.player"
+}
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            // --- Core Modülleri ---
+            implementation(project(":core:common"))
+            implementation(project(":core:model"))
+            implementation(project(":core:ui"))
+            implementation(project(":core:navigation"))
+
+            // KRİTİK: Ses motoruna erişim
+            implementation(project(":core:audio"))
+            // Ayrıca indirme işlemi için Data katmanına erişim gerekebilir (SoundDownloader)
+            implementation(project(":core:data"))
+
+            // --- Compose ---
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+
+            // --- Koin ---
+            implementation(libs.findLibrary("koin-core").get())
+            implementation(libs.findLibrary("koin-compose").get())
+            implementation(libs.findLibrary("koin-compose-viewmodel").get())
+
+            // --- Voyager (ScreenModel için) ---
+            implementation(libs.findLibrary("voyager-screenmodel").get())
+        }
+    }
+}

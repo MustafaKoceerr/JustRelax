@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.core.database.domain.repository
 
-import com.mustafakoceerr.justrelax.core.database.domain.model.SavedMix
 import kotlinx.coroutines.flow.Flow
 
 interface SavedMixRepository {
