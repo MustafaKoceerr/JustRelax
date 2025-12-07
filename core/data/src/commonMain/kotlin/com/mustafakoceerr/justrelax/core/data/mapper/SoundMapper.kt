@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.core.data.mapper
 
+import com.mustafakoceerr.justrelax.core.database.SoundEntity
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import kotlinx.serialization.json.Json

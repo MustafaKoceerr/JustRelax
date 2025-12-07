@@ -1,128 +1,13 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-
-    // Gerekli plugin'leri toml'dan alıyoruz
     alias(libs.plugins.kotlin.serialization)
-
     kotlin("native.cocoapods")
 }
-
-kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-
-
-    // CocoaPods entegrasyonu
-    cocoapods {
-        summary = "Shared module for JustRelax app"
-        homepage = "https://example.com/justrelax"
-        version = "1.0.0"
-
-        ios.deploymentTarget = "16.0"
-        // --- ÇÖZÜM BURASI ---
-        // Bu satır, oluşturulan .podspec dosyasına
-        // "spec.libraries = 'sqlite3'" satırını ekler.
-        // Böylece 'pod install' dediğinde Xcode otomatik olarak sqlite3'ü bağlar.
-        extraSpecAttributes["libraries"] = "'sqlite3'"
-
-        framework {
-            baseName = "ComposeApp"
-            isStatic = true // Compose için statik olması önerilir
-
-            // Eğer export ettiğin kütüphaneler varsa buraya eklersin
-            // --- ÇÖZÜM BURASI ---
-            // iOS sistemindeki SQLite3 kütüphanesini linkle
-//            linkerOpts.add("-lsqlite3")
-             export(projects.core)
-
-            // export(libs.someLibrary)
-        }
-    }
-
-    sourceSets {
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.koin.android)
-            implementation(libs.ktor.client.android)
-            implementation(libs.sqldelight.android.driver)
-
-        }
-        commonMain.dependencies {
-            api(project(":core"))
-
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-
-            // Koin
-            // Koin core
-            implementation(libs.koin.core)
-            implementation(libs.koin.core.coroutines)
-            // Compose Multiplatform Koin API
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-
-            // Voyager
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.screenmodel)
-            implementation(libs.voyager.transitions)
-            implementation(libs.voyager.koin)
-            implementation(libs.voyager.tab.navigator)
-            // Ktor
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.ktor.client.logging)
-
-            // Kotlinx Serialization
-            implementation(libs.kotlinx.serialization.json)
-
-            // Multiplatform Settings
-            implementation(libs.multiplatform.settings.no.arg)
-            implementation(libs.multiplatform.settings.coroutines)
-
-            // SQLDelight
-            implementation(libs.sqldelight.runtime)
-            implementation(libs.sqldelight.coroutines.extensions)
-
-            // Extended icons
-            implementation(compose.materialIconsExtended)
-
-            // RepositoryImpl içinde tarih (Clock.System.now) kullanmak için:
-            implementation(libs.kotlinx.datetime)
-
-            // Coil
-            implementation(libs.coil.compose)
-            implementation(libs.coil.network)
-            implementation(libs.coil.svg) // SVG ikonlar için şart
-
-        }
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
-            implementation(libs.sqldelight.native.driver)
-        }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
-    }
-
-}
-
-
 android {
     namespace = "com.mustafakoceerr.justrelax"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -134,25 +19,94 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    // ✅ EKLENDİ: Compose'u manuel açıyoruz
+    buildFeatures {
+        compose = true
+    }
 }
 
+kotlin {
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+    // iOS Hedefleri (Plugin olmadığı için manuel ekliyoruz)
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    cocoapods {
+        summary = "JustRelax Shared App"
+        homepage = "https://example.com/justrelax"
+        version = "1.0.0"
+        ios.deploymentTarget = "16.0"
+        extraSpecAttributes["libraries"] = "'sqlite3'"
+
+        framework {
+            baseName = "ComposeApp"
+            isStatic = true
+
+            // Core UI ve Main Feature'ı dışarı açıyoruz
+            export(project(":core:ui"))
+            export(project(":feature:main"))
+        }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            // --- MODÜLLER ---
+            implementation(project(":core:common"))
+            implementation(project(":core:model"))
+            implementation(project(":core:ui"))
+            implementation(project(":core:data"))
+            implementation(project(":core:audio"))
+            implementation(project(":core:navigation"))
+
+            implementation(project(":feature:main"))
+            implementation(project(":feature:home"))
+            implementation(project(":feature:mixer"))
+            implementation(project(":feature:saved"))
+            implementation(project(":feature:ai"))
+            implementation(project(":feature:timer"))
+            implementation(project(":feature:settings"))
+            implementation(project(":feature:player"))
+
+            // --- Koin ---
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+
+            // --- Compose ---
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+
+            // Coil (Resim Yükleme)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
+            implementation(libs.coil.svg)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.koin.android)
+            implementation(libs.androidx.activity.compose)
+        }
+    }
 }
 
 // --- KRİTİK NOKTA ---

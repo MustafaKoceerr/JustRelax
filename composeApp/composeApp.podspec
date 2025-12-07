@@ -5,7 +5,7 @@ Pod::Spec.new do |spec|
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
     spec.license                  = ''
-    spec.summary                  = 'Shared module for JustRelax app'
+    spec.summary                  = 'JustRelax Shared App'
     spec.vendored_frameworks      = 'build/cocoapods/framework/ComposeApp.framework'
                 
     spec.ios.deployment_target    = '16.0'
