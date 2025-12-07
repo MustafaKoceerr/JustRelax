@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.home.mvi
 
-import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
-import com.mustafakoceerr.justrelax.core.sound.domain.model.SoundCategory
 import com.mustafakoceerr.justrelax.utils.UiText
 
 // 1. State: UI'ın anlık durum fotoğrafı

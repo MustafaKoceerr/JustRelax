@@ -7,8 +7,6 @@ import com.mustafakoceerr.justrelax.composeapp.generated.resources.download_comp
 import com.mustafakoceerr.justrelax.composeapp.generated.resources.suggestion_hidden
 import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
 import com.mustafakoceerr.justrelax.core.sound.domain.model.BatchDownloadStatus
-import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
-import com.mustafakoceerr.justrelax.core.sound.domain.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
 import com.mustafakoceerr.justrelax.feature.home.domain.usecase.DownloadAllMissingSoundsUseCase
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeEffect

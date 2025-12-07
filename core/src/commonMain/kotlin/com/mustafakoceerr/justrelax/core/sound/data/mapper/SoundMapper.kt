@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.core.sound.data.mapper
 import com.mustafakoceerr.justrelax.core.database.SoundEntity
-import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
-import com.mustafakoceerr.justrelax.core.sound.domain.model.SoundCategory
 import kotlinx.serialization.json.Json
 
 class SoundMapper (

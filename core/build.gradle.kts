@@ -171,6 +171,7 @@ compose.resources {
     generateResClass = always
 }
 
+// Todo bunu sil:
 sqldelight {
     databases {
         create("JustRelaxDb") {

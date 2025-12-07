@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.core.sound.domain.repository
 
-import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
 import kotlinx.coroutines.flow.Flow
 
 interface SoundRepository{

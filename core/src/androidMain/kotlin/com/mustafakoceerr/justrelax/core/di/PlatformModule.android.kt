@@ -8,10 +8,6 @@ import com.mustafakoceerr.justrelax.core.okio.AndroidStoragePathProvider
 import com.mustafakoceerr.justrelax.core.okio.StoragePathProvider
 import com.mustafakoceerr.justrelax.core.seeding.AndroidAssetReader
 import com.mustafakoceerr.justrelax.core.seeding.AssetReader
-import com.mustafakoceerr.justrelax.core.sound.data.player.AndroidSoundPlayer
-import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
-import com.mustafakoceerr.justrelax.core.ui.localization.AndroidLanguageSwitcher
-import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.SharedPreferencesSettings
 import org.koin.android.ext.koin.androidContext
@@ -28,14 +24,6 @@ actual val platformModule = module {
     // 2. ESKİ TARİF: Artık SharedPreferences'i 'get()' ile bulabilir.
     single<ObservableSettings> { SharedPreferencesSettings(get()) }
 
-    // 2. Language Switcher Bağımlılığı (Buraya taşıdık)
-    singleOf(::AndroidLanguageSwitcher) bind LanguageSwitcher::class
-
-    // --- EKLENEN KISIM ---
-    // SoundPlayer'ı bağlıyoruz. AndroidSoundPlayer context istediği için 'get()' veriyoruz.
-    single<SoundPlayer> { AndroidSoundPlayer(get()) }
-
-    single { DatabaseDriverFactory(get()) } // Context otomatik gelir
 
     // 1. Storage Provider (YENİ)
     single {

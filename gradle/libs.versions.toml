@@ -1,7 +1,6 @@
 [versions]
 kotlin = "2.2.21"
 agp = "8.11.0"
-
 android-compileSdk = "36"
 android-minSdk = "29"
 android-targetSdk = "36"
@@ -108,6 +107,20 @@ okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil" }
+
+
+# --- Build Logic Dependencies (Plugin geliştirmek için gerekli artifactler) ---
+# Android Gradle Plugin (Kod erişimi için)
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+
+# Kotlin Gradle Plugin
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+# Compose Multiplatform Gradle Plugin
+compose-gradlePlugin = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "composeMultiplatform" }
+
+# Compose Compiler Gradle Plugin
+composeCompiler-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
 
 [plugins]

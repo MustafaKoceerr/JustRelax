@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
-import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.feature.ai.AiViewModel
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiEffect
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiIntent

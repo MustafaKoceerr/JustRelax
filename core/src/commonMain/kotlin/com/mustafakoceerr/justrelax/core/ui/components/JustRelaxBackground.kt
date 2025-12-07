@@ -15,7 +15,8 @@ fun JustRelaxBackground(
 ) {
     // --- RENK PALETİ SEÇİMİ ---
     // Temadan gelen renkleri kullanarak dinamik bir fırça oluşturuyoruz.
-    // Core modülündeki Theme.kt ve Color.kt dosyalarındaki tanımları kullanır.
+    // Core modülündeki
+    // Theme.kt ve Color.kt dosyalarındaki tanımları kullanır.
 
     val colorTop = MaterialTheme.colorScheme.surfaceContainer
     val colorBottom = MaterialTheme.colorScheme.background

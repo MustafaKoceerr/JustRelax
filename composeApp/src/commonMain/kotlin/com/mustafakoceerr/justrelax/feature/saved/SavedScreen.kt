@@ -19,13 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
-import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.feature.main.tabs.MixerTab
-import com.mustafakoceerr.justrelax.feature.mixer.MixerScreen
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesEmptyScreen
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesList
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesTopBar

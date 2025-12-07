@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.mixer.domain.usecase
 
-import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
 import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
 import kotlinx.coroutines.flow.first
 

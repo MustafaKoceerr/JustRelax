@@ -15,7 +15,7 @@ import coil3.svg.SvgDecoder
 import com.mustafakoceerr.justrelax.core.navigation.AppNavigator
 import com.mustafakoceerr.justrelax.core.settings.domain.model.AppTheme
 import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
-import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.feature.main.MainScreen
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

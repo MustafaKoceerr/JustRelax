@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.ai.domain.usecase
 
 import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundManager
-import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
 import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
 import com.mustafakoceerr.justrelax.feature.ai.data.model.AiMixResponse
 

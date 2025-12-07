@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.core.sound.domain.manager
 
-import com.mustafakoceerr.justrelax.core.sound.domain.model.Sound
-import com.mustafakoceerr.justrelax.core.sound.domain.player.SoundPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
