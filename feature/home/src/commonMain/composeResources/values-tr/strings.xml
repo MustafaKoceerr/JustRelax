@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="download_complete">Tüm sesler indirildi! 🎉</string>
+    <string name="suggestion_hidden">Öneri gizlendi.</string>
+    <string name="action_settings">AYARLAR</string>
+
+    <!-- Kategoriler -->
+    <string name="category_water">Water &amp; Rain</string>
+    <string name="category_nature">Nature &amp; Forest</string>
+    <string name="category_air">Wind &amp; Atmosphere</string>
+    <string name="category_city">City &amp; Indoor</string>
+    <string name="category_noise">White Noise &amp; Mechanical</string>
+</resources>

@@ -1,3 +1,5 @@
 package com.mustafakoceerr.justrelax.core.common
 
-actual fun platform(): String = "Android"
+import android.os.Build
+
+actual fun platform(): String = "Android ${Build.VERSION.RELEASE}"

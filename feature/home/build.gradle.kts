@@ -19,12 +19,6 @@ kotlin {
             implementation(project(":core:data")) // Repository
             implementation(project(":core:audio")) // SoundManager
 
-            // --- Feature Dependency (Geçici Teknik Borç) ---
-            // Home, PlayerViewModel'i kullanıyorsa:
-            implementation(project(":feature:player"))
-            // Home, Settings ekranına gitmek istiyorsa (Navigasyon için):
-            // implementation(project(":feature:settings")) -> Bunu yapmayacağız, AppNavigator kullanacağız.
-
             // --- Compose ---
             implementation(compose.runtime)
             implementation(compose.foundation)

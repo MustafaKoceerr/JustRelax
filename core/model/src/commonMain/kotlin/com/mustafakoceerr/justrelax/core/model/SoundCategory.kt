@@ -8,5 +8,10 @@ enum class SoundCategory(val id: String) {
     NATURE("nature"),
     AIR("air"),
     CITY("city"),
-    NOISE("noise")
+    NOISE("noise");
+
+    companion object {
+        // Güvenli dönüşüm: Bulamazsa varsayılan (örn: NATURE) döner veya null.
+        fun fromId(id: String): SoundCategory = entries.find { it.id == id } ?: NATURE
+    }
 }

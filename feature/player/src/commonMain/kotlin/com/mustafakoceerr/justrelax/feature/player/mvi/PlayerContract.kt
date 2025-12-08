@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.player.mvi
 
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.Res
+import com.mustafakoceerr.justrelax.core.model.Sound
+
 
 data class PlayerState(
     val activeSounds: Map<String, Float> = emptyMap(),

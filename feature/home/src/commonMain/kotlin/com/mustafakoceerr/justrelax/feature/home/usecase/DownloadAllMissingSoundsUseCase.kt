@@ -1,8 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.home.usecase
 
-import com.mustafakoceerr.justrelax.core.sound.domain.manager.SoundDownloader
-import com.mustafakoceerr.justrelax.core.sound.domain.model.BatchDownloadStatus
-import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.domain.manager.SoundDownloader
+import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.model.BatchDownloadStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow

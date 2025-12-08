@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.feature.saved.SavedMixUiModel
+import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
 
 @Composable
 fun SavedMixesList(

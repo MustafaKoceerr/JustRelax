@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="msg_mix_saved_success">%1$s başarıyla kaydedildi!</string>
+    <string name="error_mix_name_exists">Bu isimde bir mix zaten var.</string>
+    <string name="error_mix_name_empty">İsim boş olamaz.</string>
+    <string name="error_no_sounds">Kaydedilecek ses yok.</string>
+
+</resources>

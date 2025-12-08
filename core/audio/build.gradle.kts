@@ -11,6 +11,8 @@ kotlin {
         commonMain.dependencies {
             api(project(":core:common"))
             api(project(":core:model"))
+            api(project(":core:domain"))
+
             implementation(libs.findLibrary("kotlinx-coroutines-core").get())
             implementation(libs.findLibrary("koin-core").get())
         }

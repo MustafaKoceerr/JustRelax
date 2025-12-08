@@ -14,6 +14,7 @@ kotlin {
             // Alt katmanlara erişim
             api(project(":core:common"))
             api(project(":core:model"))
+            api(project(":core:domain"))
 
             // Networking (Ktor)
             implementation(libs.findLibrary("ktor-client-core").get())

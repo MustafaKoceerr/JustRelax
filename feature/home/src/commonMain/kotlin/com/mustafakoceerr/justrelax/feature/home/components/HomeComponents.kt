@@ -2,7 +2,6 @@ package com.mustafakoceerr.justrelax.feature.home.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -14,8 +13,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -23,7 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.model.SoundCategory
+import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
+import com.mustafakoceerr.justrelax.core.ui.components.VolumeSlider
+import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.feature.home.util.icon
+import com.mustafakoceerr.justrelax.feature.home.util.titleRes
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -96,11 +99,7 @@ fun HomeTabRow(
         }
 
     }
-
 }
-
-
-
 
 @Composable
 fun SoundCardGrid(
@@ -143,25 +142,7 @@ fun SoundCardGrid(
 
 
 
-@Composable
-fun VolumeSlider(
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Slider(
-        value = value,
-        onValueChange = onValueChange,
-        valueRange = 0f..1f,
-        modifier = modifier
-            .height(24.dp),
-        colors = SliderDefaults.colors(
-            thumbColor = MaterialTheme.colorScheme.primary,
-            activeTrackColor = MaterialTheme.colorScheme.primary,
-            inactiveTickColor = MaterialTheme.colorScheme.outlineVariant
-        )
-    )
-}
+
 
 @Composable
 @Preview

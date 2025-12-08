@@ -19,8 +19,6 @@ kotlin {
             implementation(project(":core:data")) // Repository
             implementation(project(":core:audio")) // SoundManager
 
-            // --- Feature Dependency (Teknik Borç) ---
-
             // --- Compose ---
             implementation(compose.runtime)
             implementation(compose.foundation)

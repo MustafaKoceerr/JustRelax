@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.mixer.usecase
 
+import com.mustafakoceerr.justrelax.core.domain.repository.SavedMixRepository
+
 class SaveMixUseCase(
     private val repository: SavedMixRepository
 ) {

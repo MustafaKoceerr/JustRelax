@@ -1,9 +1,21 @@
 package com.mustafakoceerr.justrelax.di
 
+import com.mustafakoceerr.justrelax.core.navigation.TabProvider
+import com.mustafakoceerr.justrelax.feature.home.navigation.HomeNavigator
+import com.mustafakoceerr.justrelax.navigation.HomeNavigatorImpl
+import com.mustafakoceerr.justrelax.navigation.TabProviderImpl
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
+import org.koin.dsl.module
 
-// import com.mustafakoceerr.justrelax.feature.home.HomeViewModel (İleride eklenecek)
+val appModule = module {
+    // 1. Tab Provider (Tüm featurelar tab değiştirmek isterse bunu kullanır)
+    single<TabProvider> { TabProviderImpl() }
+
+    // HomeNavigator istendiğinde HomeNavigatorImpl ver
+    factory<HomeNavigator> { HomeNavigatorImpl() }
+}
+
 
 fun initKoin(config: KoinAppDeclaration? = null) {
     startKoin {

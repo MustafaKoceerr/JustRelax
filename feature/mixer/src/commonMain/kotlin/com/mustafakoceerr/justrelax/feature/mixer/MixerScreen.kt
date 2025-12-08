@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -29,57 +30,51 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
-import com.mustafakoceerr.justrelax.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
-import com.mustafakoceerr.justrelax.feature.home.components.SoundCard
-import com.mustafakoceerr.justrelax.feature.main.tabs.HomeTab
+import com.mustafakoceerr.justrelax.core.navigation.TabProvider
+import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
+import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
+import com.mustafakoceerr.justrelax.core.ui.util.asStringSuspend
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
 import com.mustafakoceerr.justrelax.feature.mixer.components.DownloadSuggestionCard
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixCountSelector
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixerTopBar
 import com.mustafakoceerr.justrelax.feature.mixer.components.SaveMixButton
-import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
-import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerIntent
-import com.mustafakoceerr.justrelax.utils.asStringSuspend
-import kotlin.text.get
+import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerEffect
+import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerIntent
+import org.koin.compose.koinInject
 
 data object MixerScreen : AppScreen {
     @Composable
     override fun Content() {
-         val tabNavigator = LocalTabNavigator.current
-        // 1. ViewModels
+        val tabNavigator = LocalTabNavigator.current
+        val tabProvider = koinInject<TabProvider>()
+
+        // 1. ViewModels (SADECE MIXER VIEWMODEL)
         val mixerViewModel = koinScreenModel<MixerViewModel>()
         val mixerState by mixerViewModel.state.collectAsState()
-
-        val playerViewModel = koinScreenModel<PlayerViewModel>()
-        val playerState by playerViewModel.state.collectAsState()
 
         // 2. UI State (Snackbar)
         val snackbarHostState = remember { SnackbarHostState() }
 
-        // 3. Effect Handling (Side Effects)
+        // 3. Effect Handling
         LaunchedEffect(Unit) {
             mixerViewModel.effect.collect { effect ->
-
                 when (effect) {
                     is MixerEffect.ShowSnackbar -> {
-                        // BEST PRACTICE: UiText'i burada String'e çeviriyoruz.
-                        // Composable scope içinde olduğumuz için stringResource çalışır.
                         val messageText = effect.message.asStringSuspend()
-
                         snackbarHostState.showSnackbar(
                             message = messageText,
                             duration = SnackbarDuration.Short
                         )
                     }
-                    is MixerEffect.NavigateToHome->{
-                         tabNavigator.current = HomeTab
+                    is MixerEffect.NavigateToHome -> {
+                        tabNavigator.current = tabProvider.homeTab
                     }
                 }
             }
         }
 
-        // 4. Dialog (State'e bağlı görünürlük)
         // 4. Dialog
         SaveMixDialog(
             isOpen = mixerState.isSaveDialogVisible,
@@ -98,9 +93,6 @@ data object MixerScreen : AppScreen {
                     .fillMaxSize()
             ) {
                 // 1. Üst Kısım (Sabit)
-
-                // A) Sayı seçici
-                // State: mixerState.selectedCount
                 MixCountSelector(
                     selectedCount = mixerState.selectedCount,
                     onCountSelected = { count ->
@@ -109,12 +101,9 @@ data object MixerScreen : AppScreen {
                     modifier = Modifier.padding(vertical = 16.dp)
                 )
 
-                // B) Oluştur butonu
                 Box(modifier = Modifier.padding(horizontal = 16.dp)) {
                     CreateMixButton(
-                        onClick = {
-                            mixerViewModel.processIntent(MixerIntent.CreateMix)
-                        },
+                        onClick = { mixerViewModel.processIntent(MixerIntent.CreateMix) },
                         isLoading = mixerState.isLoading
                     )
                 }
@@ -122,14 +111,11 @@ data object MixerScreen : AppScreen {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // -- 2. Alt kısım (GRID) --
-
-                // Loading Durumu (Opsiyonel ama iyi bir UX için ekledim)
                 if (mixerState.isLoading) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
                     }
                 }
-                // Mix Listesi Doluysa
                 else if (mixerState.mixedSounds.isNotEmpty()) {
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(minSize = 110.dp),
@@ -137,8 +123,6 @@ data object MixerScreen : AppScreen {
                             start = 16.dp,
                             end = 16.dp,
                             top = 16.dp,
-                            // PlayerBar (~64dp) + BottomNav (~80dp) + Boşluk (~16dp) ≈ 140-150dp
-                            // Kullanıcı en aşağı kaydırdığında butonun barın üstünde kalmasını sağlar.
                             bottom = 60.dp
                         ),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -147,38 +131,30 @@ data object MixerScreen : AppScreen {
                     ) {
                         // A) SOUND KARTLARI
                         items(mixerState.mixedSounds) { sound ->
+                            // PlayerState verisi artık MixerState içinde
+                            val isPlaying = mixerState.activeSounds.containsKey(sound.id)
+                            val volume = mixerState.activeSounds[sound.id] ?: 0.5f
 
-                            // PlayerState'den anlık durumu çekiyoruz
-                            val isPlaying = playerState.activeSounds.containsKey(sound.id)
-                            val volume = playerState.activeSounds[sound.id] ?: 0.5f
-                            val isDownloading = false // playerState.downloadingSounds.contains(sound.id)
                             SoundCard(
                                 sound = sound,
                                 isPlaying = isPlaying,
-                                isDownloading = isDownloading,
+                                isDownloading = false, // Mixer'da indirme yok
                                 volume = volume,
                                 onCardClick = {
-                                    playerViewModel.processIntent(PlayerIntent.ToggleSound(sound))
+                                    // MixerIntent kullanıyoruz
+                                    mixerViewModel.processIntent(MixerIntent.ToggleSound(sound))
                                 },
                                 onVolumeChange = { newVol ->
-                                    playerViewModel.processIntent(
-                                        PlayerIntent.ChangeVolume(sound.id, newVol)
-                                    )
+                                    mixerViewModel.processIntent(MixerIntent.ChangeVolume(sound.id, newVol))
                                 }
                             )
                         }
 
-                        // B) BİLGİ KARTI (CALL TO ACTION)
-                        // Kullanıcının sesi azsa (Örn: < 10) göster.
-                        // Bu boolean'ın ViewModel'de hesaplanıp State'e eklendiğini varsayıyoruz.
-                        // Şimdilik test için 'true' veya logic verebilirsin.
-                        val showSuggestion = true // mixerState.showDownloadSuggestion
-
+                        // B) BİLGİ KARTI
+                        val showSuggestion = true
                         if (showSuggestion){
                             item(span = { GridItemSpan(maxLineSpan) }) {
-                                Box(
-                                    modifier = Modifier.padding(top = 24.dp)
-                                ) {
+                                Box(modifier = Modifier.padding(top = 24.dp)) {
                                     DownloadSuggestionCard(
                                         onClick = {
                                             mixerViewModel.processIntent(MixerIntent.ClickDownloadSuggestion)
@@ -188,7 +164,7 @@ data object MixerScreen : AppScreen {
                             }
                         }
 
-                        // B) Kaydet butonu
+                        // C) Kaydet butonu
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             Box(
                                 modifier = Modifier

@@ -1,5 +1,8 @@
 package com.mustafakoceerr.justrelax.core.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class AppLanguage(val code: String) {
     SYSTEM("system"),
     ENGLISH("en"),

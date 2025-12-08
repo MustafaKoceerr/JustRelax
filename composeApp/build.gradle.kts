@@ -62,7 +62,6 @@ kotlin {
 
             // Core UI ve Main Feature'ı dışarı açıyoruz
             export(project(":core:ui"))
-            export(project(":feature:main"))
         }
     }
 
@@ -76,7 +75,6 @@ kotlin {
             implementation(project(":core:audio"))
             implementation(project(":core:navigation"))
 
-            implementation(project(":feature:main"))
             implementation(project(":feature:home"))
             implementation(project(":feature:mixer"))
             implementation(project(":feature:saved"))

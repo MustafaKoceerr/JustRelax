@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- Duration unit abbreviations -->
+    <string name="duration_hour_short">h</string>    <!-- hour -->
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">sec</string>
+</resources>

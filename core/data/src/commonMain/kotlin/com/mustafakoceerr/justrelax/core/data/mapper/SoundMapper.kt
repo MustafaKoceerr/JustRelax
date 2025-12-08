@@ -30,7 +30,7 @@ class SoundMapper(private val json: Json) {
 
     private fun mapCategory(categoryStr: String): SoundCategory {
         return try {
-            SoundCategory.valueOf(categoryStr)
+            SoundCategory.fromId(categoryStr)
         } catch (e: Exception) {
             SoundCategory.NATURE
         }

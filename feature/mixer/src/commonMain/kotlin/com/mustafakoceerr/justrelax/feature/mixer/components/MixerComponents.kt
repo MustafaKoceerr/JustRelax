@@ -31,8 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.components.anims.LoadingDots
-import com.mustafakoceerr.justrelax.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="msg_mix_saved_success">%1$s was saved successfully!</string>
+    <string name="error_mix_name_exists">A mix with this name already exists.</string>
+    <string name="error_mix_name_empty">Name cannot be empty.</string>
+    <string name="error_no_sounds">There are no sounds to save.</string>
+</resources>

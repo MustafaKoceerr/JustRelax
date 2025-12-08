@@ -6,7 +6,7 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.mustafakoceerr.justrelax.feature.saved.SavedMixUiModel
+import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
 
 // --- YARDIMCI: Basit Veri Modeli ---
 

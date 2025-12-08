@@ -2,41 +2,62 @@ package com.mustafakoceerr.justrelax.feature.home
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.Res
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.download_complete
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.suggestion_hidden
-import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
-import com.mustafakoceerr.justrelax.core.sound.domain.model.BatchDownloadStatus
-import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
-import com.mustafakoceerr.justrelax.feature.home.usecase.DownloadAllMissingSoundsUseCase
-import com.mustafakoceerr.justrelax.utils.UiText
+import com.mustafakoceerr.justrelax.core.audio.SoundManager
+import com.mustafakoceerr.justrelax.core.audio.domain.usecase.ToggleSoundUseCase
+import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.model.BatchDownloadStatus
+import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.model.SoundCategory
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
+import com.mustafakoceerr.justrelax.feature.home.mvi.HomeEffect
+import com.mustafakoceerr.justrelax.feature.home.mvi.HomeIntent
+import com.mustafakoceerr.justrelax.feature.home.mvi.HomeState
+import com.mustafakoceerr.justrelax.feature.home.usecase.HomeBannerUseCases
+import justrelax.feature.home.generated.resources.Res
+import justrelax.feature.home.generated.resources.download_complete
+import justrelax.feature.home.generated.resources.suggestion_hidden
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
-/**
- * Burada navigasyonu direkt yapmayarak Effect ile ui'a git emri vererek, viewModel'imizin voyager (navigasyon kütüphanesi)'nden bağımsız
- * olmasını sağlıyoruz.
- */
+// Todo: Proje bitiminde bu işi iki farklı use case'e ayır.
 class HomeViewModel(
-    private val repository: SoundRepository,
-    private val settingsRepository: SettingsRepository,
-    private val downloadAllMissingSoundsUseCase: DownloadAllMissingSoundsUseCase
+    private val soundRepository: SoundRepository,
+    private val soundManager: SoundManager,
+    private val toggleSoundUseCase: ToggleSoundUseCase,
+    private val bannerUseCases: HomeBannerUseCases
 ) : ScreenModel {
 
-    // _state'i private tutup dışarıya read-only açıyoruz.
-    private val _state = MutableStateFlow(HomeState())
-    val state = _state.asStateFlow()
+    // İç state (Sadece Home verileri)
+    private val _homeState = MutableStateFlow(HomeState())
 
-    // Effectleri iletmek için Channel kullanıyoruz (Hot Stream)
-    // Channel.BUFFERED: Alıcı hazır olmasa bile eventi tutar.
+    // İndirme durumları (Local State)
+    private val _downloadingIds = MutableStateFlow<Set<String>>(emptySet())
+
+    // DIŞARIYA AÇILAN STATE (Combine edilmiş)
+    val state = combine(
+        _homeState,
+        soundManager.state,
+        _downloadingIds
+    ) { homeState, audioState, downloadingIds ->
+        homeState.copy(
+            activeSounds = audioState.activeSounds,
+            downloadingSoundIds = downloadingIds
+        )
+    }.stateIn(
+        scope = screenModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = HomeState()
+    )
+
     private val _effect = Channel<HomeEffect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
+
     private var allSoundsCache: List<Sound> = emptyList()
 
     init {
@@ -48,69 +69,74 @@ class HomeViewModel(
             is HomeIntent.LoadData -> loadSounds()
             is HomeIntent.SelectCategory -> selectCategory(intent.category)
             is HomeIntent.SettingsClicked -> onSettingsClicked()
-
-            // --- YENİ HANDLERS ---
             is HomeIntent.DownloadAllMissing -> downloadAllMissing()
             is HomeIntent.DismissBanner -> dismissBanner()
-            is HomeIntent.ClearMessage -> _state.update { it.copy(snackbarMessage = null) }
+            is HomeIntent.ClearMessage -> _homeState.update { it.copy(snackbarMessage = null) }
+
+            // --- PLAYER INTENTLERİ ---
+            is HomeIntent.ToggleSound -> toggleSound(intent.sound)
+            is HomeIntent.ChangeVolume -> changeVolume(intent.id, intent.volume)
         }
     }
-    @OptIn(ExperimentalTime::class)
+
+    private fun toggleSound(sound: Sound) {
+        screenModelScope.launch {
+            toggleSoundUseCase(sound, _downloadingIds.value.contains(sound.id))
+                .collect { result ->
+                    if (result is ToggleSoundUseCase.Result.Downloading) {
+                        _downloadingIds.update {
+                            if (result.isDownloading) it + sound.id else it - sound.id
+                        }
+                    }
+                    // Diğer durumlar (Toggled) SoundManager tarafından yönetilir, state otomatik güncellenir.
+                }
+        }
+    }
+
+    private fun changeVolume(id: String, volume: Float) {
+        soundManager.changeVolume(id, volume)
+    }
+
     private fun dismissBanner() {
         screenModelScope.launch {
-            settingsRepository.setLastDownloadPromptTime(Clock.System.now().toEpochMilliseconds())
-            _state.update {
+            bannerUseCases.dismiss()
+            _homeState.update {
                 it.copy(
                     showDownloadBanner = false,
-                    // Snackbar mesajını UiText ile set ediyoruz
                     snackbarMessage = UiText.StringResource(Res.string.suggestion_hidden)
                 )
             }
         }
     }
+
     private fun loadSounds() {
         screenModelScope.launch {
-            repository.getSounds().collect { sounds ->
+            soundRepository.getSounds().collect { sounds ->
                 allSoundsCache = sounds
-                filterSoundsByCategory(_state.value.selectedCategory)
-
-                // Sesler yüklendiğinde banner kontrolü yap
+                filterSoundsByCategory(_homeState.value.selectedCategory)
                 checkMissingSounds(sounds)
             }
         }
     }
-    // Banner Gösterme Mantığı (3 Gün Kuralı)
-    @OptIn(ExperimentalTime::class)
+
     private fun checkMissingSounds(sounds: List<Sound>) {
         screenModelScope.launch {
-            val missingCount = sounds.count { !it.isDownloaded }
-
-            if (missingCount > 0) {
-                val lastPrompt = settingsRepository.getLastDownloadPromptTime()
-                val now = Clock.System.now().toEpochMilliseconds()
-                val threeDaysInMillis = 3 * 24 * 60 * 60 * 1000L
-
-                if (lastPrompt == 0L || (now - lastPrompt) > threeDaysInMillis) {
-                    _state.update { it.copy(showDownloadBanner = true) }
-                }
-            } else {
-                // Eksik yoksa banner'ı gizle
-                _state.update { it.copy(showDownloadBanner = false) }
-            }
+            val shouldShow = bannerUseCases.shouldShow(sounds)
+            _homeState.update { it.copy(showDownloadBanner = shouldShow) }
         }
     }
+
     private fun selectCategory(category: SoundCategory) {
-        _state.update { it.copy(selectedCategory = category) }
+        _homeState.update { it.copy(selectedCategory = category) }
         filterSoundsByCategory(category)
     }
 
     private fun filterSoundsByCategory(category: SoundCategory) {
         val filtered = allSoundsCache.filter { it.category == category }
-        _state.update { it.copy(sounds = filtered, isLoading = false) }
+        _homeState.update { it.copy(sounds = filtered, isLoading = false) }
     }
 
     private fun onSettingsClicked() {
-        // Navigasyon yapmıyoruz, "Git" emri veriyoruz.
         screenModelScope.launch {
             _effect.send(HomeEffect.NavigateToSettings)
         }
@@ -118,28 +144,27 @@ class HomeViewModel(
 
     private fun downloadAllMissing() {
         screenModelScope.launch {
-            _state.update { it.copy(isDownloadingAll = true, totalDownloadProgress = 0f) }
+            _homeState.update { it.copy(isDownloadingAll = true, totalDownloadProgress = 0f) }
 
-            downloadAllMissingSoundsUseCase().collect { status ->
+            bannerUseCases.downloadAllMissingSounds().collect { status ->
                 when (status) {
                     is BatchDownloadStatus.Progress -> {
-                        _state.update { it.copy(totalDownloadProgress = status.percentage) }
+                        _homeState.update { it.copy(totalDownloadProgress = status.percentage) }
                     }
                     is BatchDownloadStatus.Completed -> {
-                        _state.update {
+                        _homeState.update {
                             it.copy(
                                 isDownloadingAll = false,
                                 showDownloadBanner = false,
-                                // Başarı mesajı (UiText)
                                 snackbarMessage = UiText.StringResource(Res.string.download_complete)
                             )
                         }
                     }
                     is BatchDownloadStatus.Error -> {
-                        _state.update { it.copy(isDownloadingAll = false) }
+                        _homeState.update { it.copy(isDownloadingAll = false) }
                     }
                 }
             }
         }
     }
-}// end of the class
+}

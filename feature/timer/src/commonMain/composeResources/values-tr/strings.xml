@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- Süre birimleri kısaltmaları -->
+    <string name="duration_hour_short">sa</string>   <!-- saat -->
+    <string name="duration_minute_short">dk</string> <!-- dakika -->
+    <string name="duration_second_short">sn</string> <!-- saniye -->
+</resources>

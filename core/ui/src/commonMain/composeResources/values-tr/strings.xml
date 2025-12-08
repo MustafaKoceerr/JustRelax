@@ -13,12 +13,7 @@
     <string name="language_english">İngilizce</string>
     <string name="language_turkish">Türkçe</string>
 
-    <!-- Kategoriler -->
-    <string name="category_water">Water &amp; Rain</string>
-    <string name="category_nature">Nature &amp; Forest</string>
-    <string name="category_air">Wind &amp; Atmosphere</string>
-    <string name="category_city">City &amp; Indoor</string>
-    <string name="category_noise">White Noise &amp; Mechanical</string>
+
 
     <!-- Ses İsimleri -->
     <string name="sound_rain_light">Light Rain</string>

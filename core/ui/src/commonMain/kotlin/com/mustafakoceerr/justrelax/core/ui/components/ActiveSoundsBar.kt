@@ -34,7 +34,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ActiveSoundsBar(
-    activeIcons: List<ImageVector>,
+    activeIcons: List<String>,
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
     onStopAllClick: () -> Unit,

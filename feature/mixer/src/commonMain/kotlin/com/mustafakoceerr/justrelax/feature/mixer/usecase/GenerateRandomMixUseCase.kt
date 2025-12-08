@@ -1,7 +1,9 @@
 package com.mustafakoceerr.justrelax.feature.mixer.usecase
 
-import com.mustafakoceerr.justrelax.core.sound.domain.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.model.Sound
 import kotlinx.coroutines.flow.first
+import kotlin.random.Random
 
 class GenerateRandomMixUseCase(
     private val soundRepository: SoundRepository
@@ -15,6 +17,12 @@ class GenerateRandomMixUseCase(
         val selectedSounds = downloadedSounds.shuffled().take(requestedCount)
 
         // 3. Hepsine varsayılan ses seviyesi ata (0.5f) ve döndür
-        return selectedSounds.associateWith { 0.5f }
+        // 3. Rastgele Ses Seviyesi Ata (%20 ile %90 arası)
+        return selectedSounds.associateWith {
+            // (0..1 * 0.7) + 0.2  => Sonuç 0.2 ile 0.9 arası olur.
+            val randomVolume = (Random.nextFloat() * 0.7f) + 0.2f
+
+            randomVolume
     }
+}
 }
