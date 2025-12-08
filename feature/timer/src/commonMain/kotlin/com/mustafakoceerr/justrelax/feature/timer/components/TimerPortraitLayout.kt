@@ -26,10 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mustafakoceerr.justrelax.core.timer.domain.model.TimerStatus
-import com.mustafakoceerr.justrelax.utils.calculateEndTime
-import com.mustafakoceerr.justrelax.utils.formatDurationVerbose
-import com.mustafakoceerr.justrelax.utils.formatTime
+import com.mustafakoceerr.justrelax.core.audio.TimerStatus
+import com.mustafakoceerr.justrelax.core.common.formatTime
+import com.mustafakoceerr.justrelax.feature.timer.util.calculateEndTime
+import com.mustafakoceerr.justrelax.feature.timer.util.formatDurationVerbose
 
 @Composable
 fun TimerPortraitLayout(

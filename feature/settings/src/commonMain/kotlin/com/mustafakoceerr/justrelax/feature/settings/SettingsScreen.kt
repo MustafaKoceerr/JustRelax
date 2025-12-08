@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
+import com.mustafakoceerr.justrelax.feature.settings.util.nativeName
 import justrelax.feature.settings.generated.resources.Res
 import justrelax.feature.settings.generated.resources.current_language
 import justrelax.feature.settings.generated.resources.current_theme

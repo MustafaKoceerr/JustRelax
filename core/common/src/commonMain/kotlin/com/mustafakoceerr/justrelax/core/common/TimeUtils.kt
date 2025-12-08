@@ -25,7 +25,7 @@ fun formatTime(totalSeconds: Long): String {
 
 // Tarih formatlama logic'i (Helper)
 @OptIn(ExperimentalTime::class)
-private fun formatEpoch(epochMillis: Long): String {
+fun formatEpoch(epochMillis: Long): String {
     val instant = Instant.fromEpochMilliseconds(epochMillis)
     val date = instant.toLocalDateTime(TimeZone.currentSystemDefault())
     // Örn: 12.10.2025

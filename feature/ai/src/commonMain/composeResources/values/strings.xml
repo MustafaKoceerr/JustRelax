@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_no_sounds_found">Recommended sounds were not found in the library.</string>
+</resources>

@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.core.data.seeding
 
 import android.content.Context
-import com.mustafakoceerr.justrelax.core.data.seeding.AssetReader
+import com.mustafakoceerr.justrelax.core.domain.manager.AssetReader
 
 class AndroidAssetReader(
     private val context: Context

@@ -1,4 +1,4 @@
-package com.mustafakoceerr.justrelax.feature.ai
+package com.mustafakoceerr.justrelax.feature.ai.domain.repository
 
 import com.mustafakoceerr.justrelax.feature.ai.data.model.AiMixResponse
 
@@ -8,4 +8,3 @@ interface AiService {
     // Ama şimdilik standart Kotlin Result kullanıyorsan öyle kalsın.
     suspend fun generateMix(userPrompt: String): Result<AiMixResponse>
 }
-

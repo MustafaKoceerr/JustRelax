@@ -39,6 +39,8 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.findLibrary("ktor-client-android").get())
             implementation(libs.findLibrary("sqldelight-android-driver").get())
+
+            implementation(libs.findLibrary("koin-android").get())
         }
 
         iosMain.dependencies {

@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-// Todo: Proje bitiminde bu işi iki farklı use case'e ayır.
 class HomeViewModel(
     private val soundRepository: SoundRepository,
     private val soundManager: SoundManager,

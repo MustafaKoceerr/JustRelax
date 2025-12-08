@@ -3,6 +3,7 @@ package com.mustafakoceerr.justrelax.feature.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher

@@ -21,35 +21,38 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
-import com.mustafakoceerr.justrelax.ui.theme.JustRelaxTheme
-import com.mustafakoceerr.justrelax.feature.main.tabs.MixerTab
+import com.mustafakoceerr.justrelax.core.navigation.TabProvider
+import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesEmptyScreen
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesList
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesTopBar
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedEffect
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedIntent
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 
 data object SavedScreen : AppScreen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        // DOĞRU OLAN: Sekmeler arası geçiş için TabNavigator
         val tabNavigator = LocalTabNavigator.current
 
-        // 1. ViewModel (Koin Injection)
+        // 1. TabProvider Injection (MixerTab'ı bilmeden oraya gitmek için)
+        val tabProvider = koinInject<TabProvider>()
+
+        // 2. ViewModel
         val savedViewModel = koinScreenModel<SavedViewModel>()
         val state by savedViewModel.state.collectAsState()
 
         val snackbarHostState = remember { SnackbarHostState() }
 
-        // 2. Effect Handling
+        // 3. Effect Handling
         LaunchedEffect(Unit) {
             savedViewModel.effect.collect { effect ->
                 when (effect) {
                     is SavedEffect.NavigateToMixer -> {
-                        // Navigasyon işlemi burada yapılıyor
-                        tabNavigator.current = MixerTab
+                        // DÜZELTME: Provider üzerinden geçiş
+                        tabNavigator.current = tabProvider.mixerTab
                     }
                     is SavedEffect.ShowSnackbar -> {
                         val result = snackbarHostState.showSnackbar(
@@ -65,7 +68,7 @@ data object SavedScreen : AppScreen {
             }
         }
 
-        // 3. UI
+        // 4. UI
         Scaffold(
             topBar = {
                 SavedMixesTopBar(onFilterClick = { /* İleride */ })
@@ -78,11 +81,9 @@ data object SavedScreen : AppScreen {
                     .padding(paddingValues)
                     .fillMaxSize()
             ) {
-                // Loading
                 if (state.isLoading) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
-                // Boş Durum
                 else if (state.mixes.isEmpty()) {
                     SavedMixesEmptyScreen(
                         onCreateClick = {
@@ -90,7 +91,6 @@ data object SavedScreen : AppScreen {
                         }
                     )
                 }
-                // Dolu Liste
                 else {
                     SavedMixesList(
                         mixes = state.mixes,
@@ -107,7 +107,6 @@ data object SavedScreen : AppScreen {
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

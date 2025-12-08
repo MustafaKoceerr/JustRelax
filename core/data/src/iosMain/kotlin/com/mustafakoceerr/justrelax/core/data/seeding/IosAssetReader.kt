@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.core.data.seeding
 
-import com.mustafakoceerr.justrelax.core.data.seeding.AssetReader
+import com.mustafakoceerr.justrelax.core.domain.manager.AssetReader
 import kotlinx.cinterop.*
 import platform.Foundation.*
 import platform.posix.memcpy

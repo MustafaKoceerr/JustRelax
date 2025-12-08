@@ -35,14 +35,17 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
-import com.mustafakoceerr.justrelax.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.core.navigation.TabProvider
+import com.mustafakoceerr.justrelax.core.ui.components.DownloadSuggestionCard
+import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.core.ui.util.asStringSuspend
 import com.mustafakoceerr.justrelax.feature.ai.components.AIPromptInput
 import com.mustafakoceerr.justrelax.feature.ai.components.AIResultCard
 import com.mustafakoceerr.justrelax.feature.ai.components.AIVisualizer
-import com.mustafakoceerr.justrelax.feature.main.tabs.HomeTab
-import com.mustafakoceerr.justrelax.feature.mixer.components.DownloadSuggestionCard
-import com.mustafakoceerr.justrelax.utils.asStringSuspend
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import com.mustafakoceerr.justrelax.feature.ai.mvi.AiEffect
+import com.mustafakoceerr.justrelax.feature.ai.mvi.AiIntent
+import com.mustafakoceerr.justrelax.feature.ai.mvi.AiState
+import org.koin.compose.koinInject
 
 
 data object AiScreen : AppScreen {
@@ -51,17 +54,21 @@ data object AiScreen : AppScreen {
         // Koin ile ViewModel enjeksiyonu
         val viewModel = koinScreenModel<AiViewModel>()
         val state by viewModel.state.collectAsState()
-        val tabNavigator = LocalTabNavigator.current
 
-        // Effect Handling (Navigasyon)
+        val tabNavigator = LocalTabNavigator.current
+        val tabProvider = koinInject<TabProvider>() // <-- YENİ
+
         LaunchedEffect(Unit) {
             viewModel.effect.collect { effect ->
                 when (effect) {
                     is AiEffect.NavigateToHome -> {
-                        tabNavigator.current = HomeTab
+                        // DÜZELTME: Direkt sınıf adı yerine Provider kullanıyoruz.
+                        tabNavigator.current = tabProvider.homeTab
                     }
                     // Error effect'i gelirse buraya eklersin
-                    else -> {}
+                    is AiEffect.ShowError -> {
+                        // TODO: Hata gösterimi ekle.
+                    }
                 }
             }
         }
@@ -189,22 +196,6 @@ private fun AiScreenContent(
         }
     }
 }
-
-@Preview
-@Composable
-fun AIScreenPreview() {
-    JustRelaxTheme {
-        AiScreenContent(
-            AiState(),
-            {}
-        )
-    }
-}
-
-
-
-
-
 
 
 

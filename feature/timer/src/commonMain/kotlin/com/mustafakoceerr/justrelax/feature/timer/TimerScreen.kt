@@ -10,8 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.koin.koinScreenModel
+import com.mustafakoceerr.justrelax.core.audio.TimerStatus
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
-import com.mustafakoceerr.justrelax.core.timer.domain.model.TimerStatus
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerLandscapeLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerPortraitLayout

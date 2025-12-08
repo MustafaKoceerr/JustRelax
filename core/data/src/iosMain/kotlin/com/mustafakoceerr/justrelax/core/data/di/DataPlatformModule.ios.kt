@@ -1,6 +1,10 @@
 package com.mustafakoceerr.justrelax.core.data.di
 
 import com.mustafakoceerr.justrelax.core.data.database.DatabaseDriverFactory
+import com.mustafakoceerr.justrelax.core.data.okio.IosStoragePathProvider
+import com.mustafakoceerr.justrelax.core.data.seeding.IosAssetReader
+import com.mustafakoceerr.justrelax.core.domain.manager.AssetReader
+import com.mustafakoceerr.justrelax.core.domain.manager.StoragePathProvider
 import com.russhwolf.settings.NSUserDefaultsSettings
 import com.russhwolf.settings.ObservableSettings
 import org.koin.dsl.bind

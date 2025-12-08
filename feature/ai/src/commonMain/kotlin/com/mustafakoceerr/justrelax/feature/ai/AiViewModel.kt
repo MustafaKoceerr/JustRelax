@@ -2,13 +2,16 @@ package com.mustafakoceerr.justrelax.feature.ai
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.Res
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.error_generic
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.error_no_sounds_found
-import com.mustafakoceerr.justrelax.feature.ai.data.AiService
-import com.mustafakoceerr.justrelax.feature.ai.usecase.ObserveDownloadedSoundsUseCase
-import com.mustafakoceerr.justrelax.feature.ai.usecase.PlayAiMixUseCase
-import com.mustafakoceerr.justrelax.utils.UiText
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
+import com.mustafakoceerr.justrelax.feature.ai.domain.repository.AiService
+import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.ObserveDownloadedSoundsUseCase
+import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.PlayAiMixUseCase
+import com.mustafakoceerr.justrelax.feature.ai.mvi.AiEffect
+import com.mustafakoceerr.justrelax.feature.ai.mvi.AiIntent
+import com.mustafakoceerr.justrelax.feature.ai.mvi.AiState
+import justrelax.feature.ai.generated.resources.Res
+import justrelax.feature.ai.generated.resources.error_generic
+import justrelax.feature.ai.generated.resources.error_no_sounds_found
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

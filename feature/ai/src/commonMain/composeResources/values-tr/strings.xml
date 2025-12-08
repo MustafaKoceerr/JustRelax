@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="error_generic">Bir şeyler ters gitti. Lütfen tekrar dene.</string>
+    <string name="error_no_sounds_found">Önerilen sesler kütüphanede bulunamadı.</string>
+</resources>

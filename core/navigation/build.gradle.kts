@@ -17,6 +17,8 @@ kotlin {
             api(libs.findLibrary("voyager-tab-navigator").get())
 
             // Coroutines (AppNavigator için)
-            implementation(libs.findLibrary("kotlinx-coroutines-core").get())        }
+            implementation(libs.findLibrary("kotlinx-coroutines-core").get())
+            implementation(libs.findLibrary("koin-core").get())
+        }
     }
 }

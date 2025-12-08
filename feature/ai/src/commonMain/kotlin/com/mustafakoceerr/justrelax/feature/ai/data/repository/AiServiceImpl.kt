@@ -1,5 +1,19 @@
-package com.mustafakoceerr.justrelax.feature.ai
+package com.mustafakoceerr.justrelax.feature.ai.data.repository
 
+import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
+import com.mustafakoceerr.justrelax.feature.ai.data.API_KEY_CONSTANTS
+import com.mustafakoceerr.justrelax.feature.ai.data.model.AiMixResponse
+import com.mustafakoceerr.justrelax.feature.ai.data.model.GeminiContent
+import com.mustafakoceerr.justrelax.feature.ai.data.model.GeminiPart
+import com.mustafakoceerr.justrelax.feature.ai.data.model.GeminiRequest
+import com.mustafakoceerr.justrelax.feature.ai.data.model.GeminiResponse
+import com.mustafakoceerr.justrelax.feature.ai.domain.repository.AiService
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 

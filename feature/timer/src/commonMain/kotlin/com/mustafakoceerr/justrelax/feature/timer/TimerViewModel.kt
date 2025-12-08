@@ -3,7 +3,7 @@ package com.mustafakoceerr.justrelax.feature.timer
 // IMPORTLAR GÜNCELLENDİ
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.mustafakoceerr.justrelax.core.timer.domain.manager.TimerManager
+import com.mustafakoceerr.justrelax.core.audio.TimerManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

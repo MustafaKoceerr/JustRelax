@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.timer
 
-import com.mustafakoceerr.justrelax.core.timer.domain.model.TimerStatus
+import com.mustafakoceerr.justrelax.core.audio.TimerStatus
 
 data class TimerState(
     val status: TimerStatus = TimerStatus.IDLE,

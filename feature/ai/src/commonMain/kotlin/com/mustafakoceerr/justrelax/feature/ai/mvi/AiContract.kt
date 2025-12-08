@@ -1,7 +1,7 @@
-package com.mustafakoceerr.justrelax.feature.ai
+package com.mustafakoceerr.justrelax.feature.ai.mvi
 
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.ai.data.model.AiMixResponse
-import com.mustafakoceerr.justrelax.utils.UiText
 
 // --- STATE (Durum) ---
 data class AiState(

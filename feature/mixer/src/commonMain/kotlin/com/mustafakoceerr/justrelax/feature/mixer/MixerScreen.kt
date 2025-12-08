@@ -36,7 +36,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 import com.mustafakoceerr.justrelax.core.ui.util.asStringSuspend
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
-import com.mustafakoceerr.justrelax.feature.mixer.components.DownloadSuggestionCard
+import com.mustafakoceerr.justrelax.core.ui.components.DownloadSuggestionCard
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixCountSelector
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixerTopBar
 import com.mustafakoceerr.justrelax.feature.mixer.components.SaveMixButton

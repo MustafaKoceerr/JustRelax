@@ -12,14 +12,14 @@ import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.crossfade
 import coil3.svg.SvgDecoder
 import com.mustafakoceerr.justrelax.core.navigation.AppNavigator
-import com.mustafakoceerr.justrelax.core.settings.domain.model.AppTheme
-import com.mustafakoceerr.justrelax.core.settings.domain.repository.SettingsRepository
-import com.mustafakoceerr.justrelax.ui.theme.JustRelaxTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.compose.koinInject
 import coil3.disk.DiskCache // <-- EKLENDİ
-import com.mustafakoceerr.justrelax.core.okio.StoragePathProvider
+import com.mustafakoceerr.justrelax.core.domain.manager.StoragePathProvider
+import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
+import com.mustafakoceerr.justrelax.core.model.AppTheme
+import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 
 @Composable
 fun JustRelaxApp() {

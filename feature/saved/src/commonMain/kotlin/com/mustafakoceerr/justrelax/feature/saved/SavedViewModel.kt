@@ -3,6 +3,9 @@ package com.mustafakoceerr.justrelax.feature.saved
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.mustafakoceerr.justrelax.core.audio.SoundManager
+import com.mustafakoceerr.justrelax.core.domain.repository.SavedMixRepository
+import com.mustafakoceerr.justrelax.core.model.SavedMix
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedEffect
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedIntent
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
@@ -15,13 +18,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
 class SavedViewModel(
     private val savedMixRepository: SavedMixRepository,
-    // soundRepository sildik (UseCase içinde var)
     private val soundManager: SoundManager,
     private val playSavedMixUseCase: PlaySavedMixUseCase,
-    private val observeSavedMixesUseCase: ObserveSavedMixesUseCase // YENİ: Inject edildi
+    private val observeSavedMixesUseCase: ObserveSavedMixesUseCase
 ) : ScreenModel {
 
     private val _state = MutableStateFlow(SavedState())
@@ -50,12 +51,10 @@ class SavedViewModel(
 
     private fun observeMixes() {
         screenModelScope.launch {
-            // Logic tamamen UseCase'de, burada sadece sonucu alıyoruz.
             observeSavedMixesUseCase().collect { uiMixes ->
                 _state.update { it.copy(mixes = uiMixes, isLoading = false) }
             }
         }
-
     }
 
     private fun toggleMix(mixId: Long) {
@@ -72,6 +71,7 @@ class SavedViewModel(
             }
         }
     }
+
     private fun deleteMix(uiMix: SavedMixUiModel) {
         screenModelScope.launch {
             lastDeletedMix = uiMix.domainModel
@@ -94,5 +94,4 @@ class SavedViewModel(
             lastDeletedMix = null
         }
     }
-
 }

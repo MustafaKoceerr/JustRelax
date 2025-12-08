@@ -13,10 +13,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Headphones
-import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Icon
@@ -27,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -132,22 +128,16 @@ fun ActiveSoundsBarPreview() {
     MaterialTheme {
         ActiveSoundsBar(
             activeIcons = listOf(
-                Icons.AutoMirrored.Rounded.VolumeUp,
-                Icons.Rounded.MusicNote,
-                Icons.Rounded.Headphones,
-                Icons.AutoMirrored.Rounded.VolumeUp,
-                Icons.Rounded.MusicNote,
-                Icons.Rounded.Headphones,
-                Icons.AutoMirrored.Rounded.VolumeUp,
-                Icons.Rounded.MusicNote,
-                Icons.Rounded.Headphones,
-                Icons.AutoMirrored.Rounded.VolumeUp,
-                Icons.Rounded.MusicNote,
-                Icons.Rounded.Headphones
+                "https://example.com/icon1.png",
+                "https://example.com/icon2.png",
+                "https://example.com/icon3.png",
+                "https://example.com/icon4.png",
+                "https://example.com/icon5.png",
+                "https://example.com/icon6.png"
             ),
             isPlaying = true,
-            onPlayPauseClick = { },
-            onStopAllClick = { },
+            onPlayPauseClick = {},
+            onStopAllClick = {},
             modifier = Modifier
         )
     }

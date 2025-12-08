@@ -27,6 +27,9 @@ kotlin {
 
             // Coil (Eğer ortak UI bileşenlerinde resim yüklüyorsan)
             implementation(libs.findLibrary("coil-compose").get())
+
+            implementation(libs.findLibrary("koin-core").get())
+
         }
 
         androidMain.dependencies {
