@@ -17,7 +17,7 @@ androidx-espresso = "3.7.0"
 androidx-testExt = "1.3.0"
 # Voyager
 kotlinxDatetime = "0.7.1"
-media3Exoplayer = "1.8.0"
+media3 = "1.8.0"
 voyager = "1.1.0-beta03"          # KMP için oturmuş beta
 
 # DI / Network vs.
@@ -38,8 +38,10 @@ coreVersion = "1.17.0"
 okio ="3.16.2"
 coil3 = "3.3.0" # Veya en güncel stabil sürüm
 
+buildConfig = "6.0.6"
+
+
 [libraries]
-androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Exoplayer" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -97,8 +99,10 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 # Extended icons
 core = { group = "androidx.core", name = "core", version.ref = "coreVersion" }
 
-# Media
-androidx-media = { module = "androidx.media:media", version.ref = "androidx-media" }
+# Media3
+androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
+androidx-media3-session   = { module = "androidx.media3:media3-session", version.ref = "media3" }
+androidx-media3-common    = { module = "androidx.media3:media3-common", version.ref = "media3" }
 
 # Okio ( Path belirleme)
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
@@ -122,7 +126,7 @@ compose-gradlePlugin = { module = "org.jetbrains.compose:compose-gradle-plugin",
 # Compose Compiler Gradle Plugin
 composeCompiler-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
-
+androidx-media-session-compat = { module = "androidx.media:media", version.ref = "androidx-media" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -133,3 +137,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
+buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }

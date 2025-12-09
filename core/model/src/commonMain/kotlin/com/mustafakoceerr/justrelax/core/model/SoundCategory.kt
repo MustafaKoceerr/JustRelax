@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class SoundCategory(val id: String) {
-    WATER("water"),
-    NATURE("nature"),
-    AIR("air"),
-    CITY("city"),
-    NOISE("noise");
+    WATER("WATER"),
+    NATURE("NATURE"),
+    AIR("AIR"),
+    CITY("CITY"),
+    NOISE("NOISE");
 
     companion object {
         // Güvenli dönüşüm: Bulamazsa varsayılan (örn: NATURE) döner veya null.

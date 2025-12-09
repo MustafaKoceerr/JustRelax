@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.ai.data.repository
 
 import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
-import com.mustafakoceerr.justrelax.feature.ai.data.API_KEY_CONSTANTS
+import com.mustafakoceerr.justrelax.feature.ai.BuildConfig
 import com.mustafakoceerr.justrelax.feature.ai.data.model.AiMixResponse
 import com.mustafakoceerr.justrelax.feature.ai.data.model.GeminiContent
 import com.mustafakoceerr.justrelax.feature.ai.data.model.GeminiPart
@@ -22,7 +22,7 @@ class AiServiceImpl(
     private val soundRepository: SoundRepository
 ) : AiService {
 
-    private val API_KEY = API_KEY_CONSTANTS
+    private val API_KEY = BuildConfig.GEMINI_API_KEY
 
     // DÜZELTME: Listende açıkça görünen "gemini-2.0-flash" modelini kullanıyoruz.
     // Başındaki "models/" kısmını siliyoruz, sadece isim.

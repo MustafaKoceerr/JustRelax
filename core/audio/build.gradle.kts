@@ -20,9 +20,11 @@ kotlin {
         androidMain.dependencies {
             // Android Ses Motoru (ExoPlayer / Media3)
             implementation(libs.findLibrary("androidx-media3-exoplayer").get())
-            implementation(libs.findLibrary("androidx-media").get())
-
+            implementation(libs.findLibrary("androidx-media3-session").get())
+            implementation(libs.findLibrary("androidx-media3-common").get())
             implementation(libs.findLibrary("koin-android").get())
+            implementation(libs.findLibrary("androidx-core-ktx").get())
+            implementation(libs.findLibrary("androidx-media-session-compat").get())
         }
 
         iosMain.dependencies {

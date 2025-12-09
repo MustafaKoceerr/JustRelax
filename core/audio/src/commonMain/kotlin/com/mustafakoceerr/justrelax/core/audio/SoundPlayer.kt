@@ -39,7 +39,6 @@ interface SoundPlayer{
 
 
     fun pause(soundId: String)
-    fun resume(soundId: String)
     fun pauseAll()
     fun resumeAll()
 
