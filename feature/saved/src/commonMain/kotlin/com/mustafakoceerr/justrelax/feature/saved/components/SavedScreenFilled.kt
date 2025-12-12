@@ -59,50 +59,6 @@ import coil3.compose.AsyncImage
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SavedMixesTopBar(
-    onFilterClick: () -> Unit, // Filtre ikonuna basılınca ne olacak? (Bottom Sheet açılacak)
-    modifier: Modifier = Modifier
-) {
-    CenterAlignedTopAppBar(
-        modifier = modifier,
-        // Renkler: Mixer ekranıyla tutarlı olsun diye PrimaryContainer kullanabiliriz
-        // Veya daha sade olsun dersen Background/Surface de olur.
-        // Senin "MixerTopBar"da PrimaryContainer kullandığını hatırlıyorum, tutarlılık için aynısını yapalım.
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
-        title = {
-            Text(
-                text = "Kayıtlı Mixler",
-                style = MaterialTheme.typography.titleLarge
-            )
-        },
-        actions = {
-            // Sağ taraftaki Filtre/sırala ikonu
-            IconButton(onClick = onFilterClick) {
-                Icon(
-                    // FilterList veya sort ikonu uygun
-                    imageVector = Icons.AutoMirrored.Rounded.Sort,
-                    contentDescription = "Sırala ve Filtrele"
-                )
-            }
-        }
-    )
-}
-
-@Preview
-@Composable
-fun SavedMixesTopBarPreview(
-) {
-    JustRelaxTheme {
-        SavedMixesTopBar({})
-    }
-}
-
 @Composable
 fun SavedMixInfo(
     title: String,
@@ -251,20 +207,20 @@ fun SavedMixPlayButtonPreview() {
 
 @Composable
 fun SavedMixMenu(
-    onRenameClick:() -> Unit,
-    onShareClick: ()-> Unit,
-    onDeleteClick:()-> Unit,
+    onRenameClick: () -> Unit,
+    onShareClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     // Menünün açık/kapalı durumunu burada tutuyoruz
     var expanded by remember { mutableStateOf(false) }
 
-    Box(modifier = modifier){
+    Box(modifier = modifier) {
         // 1. üç nokta ikonu
         IconButton(
-            onClick = {expanded = true},
+            onClick = { expanded = true },
             modifier = Modifier.size(32.dp) // Biraz küçük olabilir, ikincil işlem
-        ){
+        ) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
                 contentDescription = "Seçenekler",
@@ -275,38 +231,44 @@ fun SavedMixMenu(
         // 2. Açılır menü
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = {expanded = false },
+            onDismissRequest = { expanded = false },
             // Menü arkalanı
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
             shape = RoundedCornerShape(12.dp)
-        ){
+        ) {
             DropdownMenuItem(
-                text = {Text("Yeniden adlandır")},
+                text = { Text("Yeniden adlandır") },
                 onClick = {
                     expanded = false
                     onRenameClick()
                 },
-                leadingIcon = { Icon(Icons.Rounded.Edit, null)}
+                leadingIcon = { Icon(Icons.Rounded.Edit, null) }
             )
 
             // Share
             DropdownMenuItem(
-                text = {Text("Paylaş")},
+                text = { Text("Paylaş") },
                 onClick = {
                     expanded = false
                     onShareClick()
                 },
-                leadingIcon = {Icon(Icons.Rounded.Share,null)}
+                leadingIcon = { Icon(Icons.Rounded.Share, null) }
             )
 
             // Delete (Kritik işlem olduğu için kırmızı yapabiliriz opsiyonel olarak)
             DropdownMenuItem(
-                text = {Text("Sil", color = MaterialTheme.colorScheme.error)},
+                text = { Text("Sil", color = MaterialTheme.colorScheme.error) },
                 onClick = {
                     expanded = false
                     onDeleteClick()
                 },
-                leadingIcon = {Icon(Icons.Rounded.Delete, null, tint = MaterialTheme.colorScheme.error )}
+                leadingIcon = {
+                    Icon(
+                        Icons.Rounded.Delete,
+                        null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
             )
         }
     }

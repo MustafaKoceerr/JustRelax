@@ -17,7 +17,7 @@ data class SavedMixUiModel(
 data class SavedState(
     val isLoading: Boolean = true,
     val mixes: List<SavedMixUiModel> = emptyList(),
-    val currentPlayingMixId: Long? = null
+    val currentPlayingMixId: Long = -1
 )
 
 // 2. Intent

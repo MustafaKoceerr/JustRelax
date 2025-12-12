@@ -40,4 +40,8 @@ interface AudioPlayer {
      * Tüm kaynakları temizle (Service bağlantısını kes)
      */
     suspend fun releaseAll()
+
+    // Master Player'ı (ve dolayısıyla Notification'ı) yönetmek için
+    fun pauseAll()
+    fun resumeAll()
 }
