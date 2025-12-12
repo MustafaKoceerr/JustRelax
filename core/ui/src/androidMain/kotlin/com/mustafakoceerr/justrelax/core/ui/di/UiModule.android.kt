@@ -5,6 +5,6 @@ import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-actual val uiModule = module {
+actual val platformUiModule = module {
     single { AndroidLanguageSwitcher() } bind LanguageSwitcher::class
 }

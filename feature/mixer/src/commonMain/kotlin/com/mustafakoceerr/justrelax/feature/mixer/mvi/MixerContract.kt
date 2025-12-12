@@ -7,11 +7,14 @@ import com.mustafakoceerr.justrelax.core.ui.util.UiText
 data class MixerState(
     val selectedCount: Int = 5,
     val isLoading: Boolean = false,
-    val mixedSounds: List<Sound> = emptyList(),
+    val mixedSounds: List<Sound> = emptyList(), // Ekranda gösterilen kartlar
     val isSaveDialogVisible: Boolean = false,
 
-    // YENİ: Player durumu
-    val activeSounds: Map<String, Float> = emptyMap()
+    // Player durumu (SoundManager'dan gelir)
+    val activeSounds: Map<String, Float> = emptyMap(),
+
+    // YENİ: İndirilmiş ses sayısı az ise öneri kartını göster
+    val showDownloadSuggestion: Boolean = false
 )
 
 // intent

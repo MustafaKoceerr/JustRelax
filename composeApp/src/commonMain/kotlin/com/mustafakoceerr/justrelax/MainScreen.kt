@@ -1,5 +1,8 @@
 package com.mustafakoceerr.justrelax
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
@@ -23,6 +26,8 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.PlayerBottomBar
+import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
+import com.mustafakoceerr.justrelax.feature.home.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.feature.player.PlayerScreenModel
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerIntent
 import com.mustafakoceerr.justrelax.tabs.AiTab
@@ -31,6 +36,7 @@ import com.mustafakoceerr.justrelax.tabs.MixerTab
 import com.mustafakoceerr.justrelax.tabs.SavedTab
 import com.mustafakoceerr.justrelax.tabs.TimerTab
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
 @Serializable
 object MainScreen : AppScreen {
@@ -39,6 +45,8 @@ object MainScreen : AppScreen {
         val mainViewModel = koinScreenModel<MainViewModel>()
         val playerScreenModel = koinScreenModel<PlayerScreenModel>()
         val playerState by playerScreenModel.state.collectAsState()
+
+        val snackbarController = koinInject<GlobalSnackbarController>()
 
         TabNavigator(HomeTab) { tabNavigator ->
             val currentTab = tabNavigator.current
@@ -55,6 +63,10 @@ object MainScreen : AppScreen {
             val shouldShowPlayer = playerState.isVisible && isPlayerVisibleInThisTab
 
             Scaffold(
+                snackbarHost = {
+                    // Daha önce tasarladığımız Custom Snackbar Host'u kullanıyoruz
+                    JustRelaxSnackbarHost(hostState = snackbarController.hostState)
+                },
                 // Scaffold'un bottomBar'ı içine Column açıyoruz.
                 // Böylece PlayerBar üstte, NavBar altta olacak şekilde yapışık dururlar.
                 bottomBar = {
@@ -84,9 +96,25 @@ object MainScreen : AppScreen {
                     }
                 }
             ) { innerPadding ->
-                // Scaffold, bottomBar'ın toplam yüksekliğine göre innerPadding'i ayarlar.
-                // Böylece Player açılınca içerik otomatik yukarı itilir.
-                Box(modifier = Modifier.padding(innerPadding)) {
+                // --- YENİ: YAYLI ANİMASYON ---
+                // Scaffold'un hesapladığı padding aniden değişir (0dp -> 80dp).
+                // Biz bunu animateDpAsState ile yumuşatıyoruz.
+
+                val animatedBottomPadding by animateDpAsState(
+                    targetValue = innerPadding.calculateBottomPadding(),
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ),
+                    label = "BottomPaddingAnimation"
+                )
+
+                Box(
+                    modifier = Modifier.padding(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = animatedBottomPadding // Animasyonlu değer
+                    )
+                ) {
                     CurrentTab()
                 }
             }

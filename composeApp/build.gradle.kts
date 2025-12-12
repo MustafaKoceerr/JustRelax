@@ -76,7 +76,7 @@ kotlin {
             implementation(project(":core:navigation"))
 
             implementation(project(":feature:home"))
-//            implementation(project(":feature:mixer"))
+            implementation(project(":feature:mixer"))
             implementation(project(":feature:saved"))
             implementation(project(":feature:ai"))
             implementation(project(":feature:timer"))

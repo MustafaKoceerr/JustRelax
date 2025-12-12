@@ -321,20 +321,23 @@ fun TimerSetupScreen(
     // State'i burada oluşturup Picker'a veriyoruz (State Hoisting)
     val pickerState = rememberJustRelaxTimerState()
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+    // Ana Kapsayıcı BOX
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        Spacer(modifier = Modifier.weight(1f))
+        // 1. ORTA KISIM (WHEEL PICKER)
+        // Tam ortada dursun
+        Box(
+            modifier = Modifier.align(Alignment.Center),
+            contentAlignment = Alignment.Center
+        ) {
+            JustRelaxTimerPicker(
+                state = pickerState
+            )
+        }
 
-        // Picker Bileşeni
-        JustRelaxTimerPicker(
-            state = pickerState
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Başlat Butonu
+        // 2. ALT KISIM (BAŞLAT BUTONU)
+        // En alta sabitleyip, aşağıdan 48dp boşluk bırakıyoruz.
         Button(
             onClick = {
                 val total = pickerState.totalSeconds
@@ -343,7 +346,9 @@ fun TimerSetupScreen(
                 }
             },
             modifier = Modifier
-                .widthIn(min = 120.dp) // Esnek genişlik (En az 120dp)
+                .align(Alignment.BottomCenter) // Alta Çapa At
+                .padding(bottom = 48.dp)       // Sabit Boşluk
+                .widthIn(min = 120.dp)
                 .height(56.dp),
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
             colors = ButtonDefaults.buttonColors(
@@ -356,8 +361,5 @@ fun TimerSetupScreen(
                 style = MaterialTheme.typography.titleMedium
             )
         }
-
-        Spacer(modifier = Modifier.height(64.dp)) // Alt boşluk (Ergonomi için)
     }
 }
-

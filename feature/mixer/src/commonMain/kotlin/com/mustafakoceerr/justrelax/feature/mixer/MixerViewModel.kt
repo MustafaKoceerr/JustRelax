@@ -3,7 +3,9 @@ package com.mustafakoceerr.justrelax.feature.mixer
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.mustafakoceerr.justrelax.core.audio.SoundManager
+import com.mustafakoceerr.justrelax.core.audio.domain.usecase.GetDownloadedSoundCountUseCase
 import com.mustafakoceerr.justrelax.core.audio.domain.usecase.ToggleSoundUseCase
+import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerEffect
@@ -21,6 +23,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -31,19 +34,20 @@ class MixerViewModel(
     private val generateRandomMixUseCase: GenerateRandomMixUseCase,
     private val soundManager: SoundManager,
     private val saveMixUseCase: SaveMixUseCase,
-    private val toggleSoundUseCase: ToggleSoundUseCase // YENİ: Action için
-) : ScreenModel {
+    private val toggleSoundUseCase: ToggleSoundUseCase, // <--- ARTIK BU VAR
+    private val getDownloadedSoundCountUseCase: GetDownloadedSoundCountUseCase // <--- REPO YERİNE BU VAR
+     ) : ScreenModel {
 
-    // İç State (Sadece Mixer'e özel veriler)
+    // İç State
     private val _mixerState = MutableStateFlow(MixerState())
 
-    // Dışarıya Açılan State (Mixer + Player State Birleşimi)
+    // Dış State (SoundManager ile birleştirilmiş)
     val state = combine(
         _mixerState,
         soundManager.state
     ) { mixerState, audioState ->
         mixerState.copy(
-            activeSounds = audioState.activeSounds
+            activeSounds = audioState.activeSounds.mapValues { it.value.targetVolume }
         )
     }.stateIn(
         scope = screenModelScope,
@@ -54,6 +58,17 @@ class MixerViewModel(
     private val _effect = Channel<MixerEffect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
+    init {
+        // ARTIK REPOSITORY YOK, USECASE VAR
+        screenModelScope.launch {
+            getDownloadedSoundCountUseCase().collectLatest { count ->
+                _mixerState.update {
+                    it.copy(showDownloadSuggestion = count < 20)
+                }
+            }
+        }
+    }
+
     fun processIntent(intent: MixerIntent) {
         when (intent) {
             is MixerIntent.SelectCount -> {
@@ -61,9 +76,15 @@ class MixerViewModel(
             }
 
             is MixerIntent.CreateMix -> createMix()
+
             is MixerIntent.ShowSaveDialog -> {
-                if (_mixerState.value.mixedSounds.isNotEmpty()) {
+                // Sadece çalan ses varsa kaydetmeye izin ver
+                if (soundManager.state.value.activeSounds.isNotEmpty()) {
                     _mixerState.update { it.copy(isSaveDialogVisible = true) }
+                } else {
+                    screenModelScope.launch {
+                        _effect.send(MixerEffect.ShowSnackbar(UiText.StringResource(Res.string.error_no_sounds)))
+                    }
                 }
             }
 
@@ -79,7 +100,6 @@ class MixerViewModel(
                 }
             }
 
-            // --- PLAYER INTENTLERİ ---
             is MixerIntent.ToggleSound -> toggleSound(intent.sound)
             is MixerIntent.ChangeVolume -> changeVolume(intent.id, intent.volume)
         }
@@ -87,17 +107,16 @@ class MixerViewModel(
 
     private fun toggleSound(sound: Sound) {
         screenModelScope.launch {
-            // Mixer ekranında listelenen sesler zaten indirilmiş seslerdir.
-            // Bu yüzden 'isCurrentlyDownloading' her zaman false'tur.
+            // BEST PRACTICE: Logic tek bir yerde (UseCase)
+            // Mixer'da indirme olmadığı için isDownloading hep false
             toggleSoundUseCase(sound, isCurrentlyDownloading = false).collect {
-                // Buradan dönen Result (Downloading vs.) ile Mixer ekranında bir işimiz yok.
-                // SoundManager state'i güncellediğinde UI otomatik güncellenecek.
+                // Sonuçları dinlememize gerek yok, SoundManager state'i güncelleyince UI güncellenir.
             }
         }
     }
 
     private fun changeVolume(id: String, volume: Float) {
-        soundManager.changeVolume(id, volume)
+        soundManager.onVolumeChange(id, volume)
     }
 
     private fun createMix() {
@@ -106,11 +125,16 @@ class MixerViewModel(
         screenModelScope.launch {
             _mixerState.update { it.copy(isLoading = true) }
 
+            // 1. Rastgele mix oluştur (Map<Sound, Float>)
             val mixMap = generateRandomMixUseCase(_mixerState.value.selectedCount)
+
+            // 2. SoundManager'a "Bunları çal" de
             soundManager.setMix(mixMap)
 
-            delay(500)
+            // Biraz bekle ki kullanıcı yükleniyor efektini görsün (Opsiyonel)
+            delay(300)
 
+            // 3. UI'ı güncelle (Kartları göster)
             _mixerState.update {
                 it.copy(
                     mixedSounds = mixMap.keys.toList(),
@@ -122,7 +146,14 @@ class MixerViewModel(
 
     private fun saveMixToDb(name: String) {
         screenModelScope.launch {
-            val currentActiveSounds = soundManager.state.value.activeSounds
+            // SoundManager'dan o an aktif olan sesleri alıp kaydediyoruz
+            // Not: soundManager.state.value.activeSounds -> Map<String, ActiveSound>
+            // Bizim UseCase -> Map<String, Float> istiyor. Dönüştürelim.
+
+            val currentActiveSounds = soundManager.state.value.activeSounds.mapValues {
+                it.value.targetVolume
+            }
+
             val result = saveMixUseCase(name, currentActiveSounds)
 
             when (result) {

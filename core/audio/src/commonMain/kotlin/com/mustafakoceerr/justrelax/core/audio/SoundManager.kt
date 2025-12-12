@@ -141,4 +141,41 @@ class SoundManager(
             }
         }
     }
+
+    /**
+     * MIXER ÖZEL: Mevcut çalanları durdurur ve verilen listeyi başlatır.
+     * @param mix: Çalınacak sesler ve ses seviyeleri (Map<Sound, Float>)
+     */
+    suspend fun setMix(mix: Map<Sound, Float>) {
+        // 1. ADIM: Şu an çalan fiziksel player'ları durdur.
+        _state.value.activeSounds.keys.forEach { soundId ->
+            audioPlayer.stop(soundId)
+        }
+
+        // 2. ADIM: Yeni ActiveSound haritasını hazırla
+        // DÜZELTME BURADA: mapValues yerine 'associate' kullanıyoruz.
+        // Çünkü Key'i 'Sound' objesinden 'String' (ID) tipine çevirmemiz lazım.
+        val newActiveSounds = mix.entries.associate { (sound, volume) ->
+            sound.id to ActiveSound(
+                sound = sound,
+                targetVolume = volume,
+                currentVolume = volume
+            )
+        }
+
+        // 3. ADIM: State'i TEK SEFERDE güncelle
+        _state.update {
+            it.copy(
+                activeSounds = newActiveSounds,
+                isMasterPlaying = true
+            )
+        }
+
+        // 4. ADIM: Yeni sesleri fiziksel olarak başlat
+        mix.forEach { (sound, volume) ->
+            sound.localPath?.let { path ->
+                audioPlayer.play(sound.id, path, volume)
+            }
+        }
+    }
 }

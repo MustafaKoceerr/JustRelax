@@ -3,13 +3,14 @@ package com.mustafakoceerr.justrelax.di
 import com.mustafakoceerr.justrelax.MainViewModel
 import com.mustafakoceerr.justrelax.core.audio.di.audioModule
 import com.mustafakoceerr.justrelax.core.data.di.dataModule
-import com.mustafakoceerr.justrelax.core.data.di.dataPlatformModule
 import com.mustafakoceerr.justrelax.core.navigation.TabProvider
 import com.mustafakoceerr.justrelax.core.navigation.di.navigationModule
-import com.mustafakoceerr.justrelax.core.ui.di.uiModule
+import com.mustafakoceerr.justrelax.core.ui.di.platformUiModule
+import com.mustafakoceerr.justrelax.core.ui.di.sharedUiModule
 import com.mustafakoceerr.justrelax.feature.ai.di.aiModule
 import com.mustafakoceerr.justrelax.feature.home.di.homeModule
 import com.mustafakoceerr.justrelax.feature.home.navigation.HomeNavigator
+import com.mustafakoceerr.justrelax.feature.mixer.di.mixerModule
 import com.mustafakoceerr.justrelax.feature.player.di.playerModule
 import com.mustafakoceerr.justrelax.feature.saved.di.savedModule
 import com.mustafakoceerr.justrelax.feature.settings.di.settingsModule
@@ -51,16 +52,16 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             audioModule,
             // AppNavigator
             navigationModule,
-            uiModule,
+            platformUiModule,
             // --- FEATURES ---
 
             savedModule,
             aiModule,
             timerModule,
             settingsModule,
-//            playerModule,
             homeModule,
-//            mixerModule,
+            mixerModule,
+            sharedUiModule,
         )
     }
 }

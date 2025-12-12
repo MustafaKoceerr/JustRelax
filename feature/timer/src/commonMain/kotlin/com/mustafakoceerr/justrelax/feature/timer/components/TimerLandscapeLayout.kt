@@ -2,6 +2,7 @@ package com.mustafakoceerr.justrelax.feature.timer.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Notifications
@@ -24,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mustafakoceerr.justrelax.core.audio.TimerStatus
@@ -92,31 +95,44 @@ fun TimerButtonsRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            // Alttan boşluk
             .padding(bottom = 24.dp),
+        // Eğer ekran çok darsa butonlar birbirine girmesin, araları açılsın
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Sol button: Sil
+        // --- SOL BUTON: SİL ---
         FilledTonalButton(
             onClick = onCancelClick,
             modifier = Modifier
                 .height(50.dp)
-                .width(110.dp)
+                // DEFENSIVE 1: Sabit width yerine widthIn.
+                // En az 100dp olsun ama gerekirse uzasın.
+                .widthIn(min = 100.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp) // İç boşluk
         ) {
             Icon(Icons.Rounded.Close, null, Modifier.size(20.dp))
             Spacer(Modifier.width(8.dp))
-            Text("Sil", style = MaterialTheme.typography.labelLarge)
+            Text(
+                text = "Sil",
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
 
-        Spacer(modifier = Modifier.width(32.dp))
+        Spacer(modifier = Modifier.width(32.dp)) // Aradaki boşluk (Biraz kıstım)
 
-        // Sağ button: Duraklat
+        // --- SAĞ BUTON: DURAKLAT / DEVAM ET ---
         val isRunning = status == TimerStatus.RUNNING
         Button(
             onClick = onToggleClick,
             modifier = Modifier
                 .height(50.dp)
-                .width(140.dp),
+                // DEFENSIVE 2: Sabit 140dp yerine widthIn.
+                // "Devam Et" uzun bir yazı, o yüzden min 130dp verelim, sığmazsa uzasın.
+                .widthIn(min = 130.dp),
+            contentPadding = PaddingValues(horizontal = 24.dp), // Yazı kenara yapışmasın
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (isRunning) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
             )
@@ -126,9 +142,13 @@ fun TimerButtonsRow(
                 null, Modifier.size(20.dp)
             )
             Spacer(Modifier.width(8.dp))
+
+            // Metin uzarsa butonu itecek, sığmazsa ... koyacak (Son çare)
             Text(
                 text = if (isRunning) "Duraklat" else "Devam Et",
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

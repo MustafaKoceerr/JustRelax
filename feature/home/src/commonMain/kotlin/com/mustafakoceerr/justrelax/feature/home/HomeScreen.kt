@@ -4,6 +4,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -12,12 +17,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.feature.home.components.DownloadBanner
 import com.mustafakoceerr.justrelax.feature.home.components.HomeTabRow
 import com.mustafakoceerr.justrelax.feature.home.components.HomeTopBar
@@ -30,9 +37,10 @@ import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.koinInject
 
 data object HomeScreen : Screen {
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
+        val navigator = LocalNavigator.currentOrThrow.parent ?: LocalNavigator.currentOrThrow
         val homeNavigator = koinInject<HomeNavigator>() // Modüller arası navigasyon
 
         val screenModel = koinScreenModel<HomeScreenModel>()
@@ -60,9 +68,20 @@ data object HomeScreen : Screen {
         }
 
         Scaffold(
+            // KRİTİK: Arka plan gradyanının görünmesi için şeffaf yapıyoruz
+            containerColor = Color.Transparent,
             topBar = {
-                HomeTopBar(
-                    onSettingsClick = { screenModel.processIntent(HomeIntent.SettingsClicked) }
+                // ARTIK GENEL BİLEŞENİMİZİ KULLANIYORUZ
+                JustRelaxTopBar(
+                    title = "Just Relax",
+                    actions = {
+                        IconButton(onClick = { screenModel.processIntent(HomeIntent.SettingsClicked) }) {
+                            Icon(
+                                imageVector = Icons.Outlined.Settings,
+                                contentDescription = "Settings"
+                            )
+                        }
+                    }
                 )
             },
             snackbarHost = { JustRelaxSnackbarHost(snackbarHostState) }
