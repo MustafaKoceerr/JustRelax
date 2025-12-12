@@ -13,28 +13,33 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.navigation.TabProvider
-import com.mustafakoceerr.justrelax.core.ui.components.DownloadSuggestionCard
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
-import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.core.ui.util.asStringSuspend
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
+import com.mustafakoceerr.justrelax.core.ui.components.DownloadSuggestionCard
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixCountSelector
 import com.mustafakoceerr.justrelax.feature.mixer.components.SaveMixButton
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerEffect
@@ -45,28 +50,28 @@ data object MixerScreen : AppScreen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        // --- NAVIGASYON & DI ---
         val tabNavigator = LocalTabNavigator.current
         val tabProvider = koinInject<TabProvider>()
 
-        // ViewModels
+        // 1. ViewModels (SADECE MIXER VIEWMODEL)
         val mixerViewModel = koinScreenModel<MixerViewModel>()
         val mixerState by mixerViewModel.state.collectAsState()
 
-        // Global Snackbar (MainScreen yönetiyor)
-        val snackbarController = koinInject<GlobalSnackbarController>()
+        // 2. UI State (Snackbar)
+        val snackbarHostState = remember { SnackbarHostState() }
 
-        // --- SIDE EFFECTS ---
+        // 3. Effect Handling
         LaunchedEffect(Unit) {
             mixerViewModel.effect.collect { effect ->
                 when (effect) {
                     is MixerEffect.ShowSnackbar -> {
                         val messageText = effect.message.asStringSuspend()
-                        snackbarController.showSnackbar(
+                        snackbarHostState.showSnackbar(
                             message = messageText,
                             duration = SnackbarDuration.Short
                         )
                     }
+
                     is MixerEffect.NavigateToHome -> {
                         tabNavigator.current = tabProvider.homeTab
                     }
@@ -74,125 +79,128 @@ data object MixerScreen : AppScreen {
             }
         }
 
-        // --- DIALOG ---
+        // 4. Dialog
         SaveMixDialog(
             isOpen = mixerState.isSaveDialogVisible,
             onDismiss = { mixerViewModel.processIntent(MixerIntent.HideSaveDialog) },
             onConfirm = { name -> mixerViewModel.processIntent(MixerIntent.ConfirmSaveMix(name)) }
         )
 
-        // --- ANA UI (SCAFFOLD YOK) ---
-        // MainScreen zaten padding veriyor, o yüzden direkt Box ile başlıyoruz.
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                // 1. TOP BAR (Manuel Yerleşim)
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = {
                 JustRelaxTopBar(
                     title = "Mixer"
                 )
+            },
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        ) { paddingValues ->
 
-                // 2. İÇERİK (Header + Grid/Empty)
-                Column(
-                    modifier = Modifier
-                        .weight(1f) // Kalan alanı kapla
-                        .fillMaxWidth()
-                ) {
-                    // A) Üst Kısım (Sabit: Seçici + Buton)
-                    MixCountSelector(
-                        selectedCount = mixerState.selectedCount,
-                        onCountSelected = { count ->
-                            mixerViewModel.processIntent(MixerIntent.SelectCount(count))
-                        },
-                        modifier = Modifier.padding(vertical = 16.dp)
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+            ) {
+                // 1. Üst Kısım (Sabit)
+                MixCountSelector(
+                    selectedCount = mixerState.selectedCount,
+                    onCountSelected = { count ->
+                        mixerViewModel.processIntent(MixerIntent.SelectCount(count))
+                    },
+                    modifier = Modifier.padding(vertical = 16.dp)
+                )
+
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    CreateMixButton(
+                        onClick = { mixerViewModel.processIntent(MixerIntent.CreateMix) },
+                        isLoading = mixerState.isLoading
                     )
+                }
 
-                    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        CreateMixButton(
-                            onClick = { mixerViewModel.processIntent(MixerIntent.CreateMix) },
-                            isLoading = mixerState.isLoading
-                        )
-                    }
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                // -- 2. Alt kısım (GRID) --
 
-                    // B) Alt Kısım (Grid veya Empty State)
-                    if (mixerState.mixedSounds.isNotEmpty()) {
-                        LazyVerticalGrid(
-                            columns = GridCells.Adaptive(minSize = 110.dp),
-                            contentPadding = PaddingValues(
-                                start = 16.dp,
-                                end = 16.dp,
-                                top = 16.dp,
-                                bottom = 24.dp
-                            ),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            // Sound Kartları
-                            items(mixerState.mixedSounds) { sound ->
-                                val isPlaying = mixerState.activeSounds.containsKey(sound.id)
-                                val volume = mixerState.activeSounds[sound.id] ?: 0.5f
+                if (mixerState.mixedSounds.isNotEmpty()) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = 110.dp),
+                        contentPadding = PaddingValues(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 16.dp,
+                            bottom = 60.dp
+                        ),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        // A) SOUND KARTLARI
+                        items(mixerState.mixedSounds) { sound ->
+                            // PlayerState verisi artık MixerState içinde
+                            val isPlaying = mixerState.activeSounds.containsKey(sound.id)
+                            val volume = mixerState.activeSounds[sound.id] ?: 0.5f
 
-                                SoundCard(
-                                    sound = sound,
-                                    isPlaying = isPlaying,
-                                    isDownloading = false,
-                                    volume = volume,
-                                    onCardClick = {
-                                        mixerViewModel.processIntent(MixerIntent.ToggleSound(sound))
-                                    },
-                                    onVolumeChange = { newVol ->
-                                        mixerViewModel.processIntent(MixerIntent.ChangeVolume(sound.id, newVol))
-                                    }
-                                )
-                            }
-
-                            // Bilgi Kartı (Varsa)
-                            if (mixerState.showDownloadSuggestion) {
-                                item(span = { GridItemSpan(maxLineSpan) }) {
-                                    Box(modifier = Modifier.padding(top = 24.dp)) {
-                                        DownloadSuggestionCard(
-                                            onClick = {
-                                                mixerViewModel.processIntent(MixerIntent.ClickDownloadSuggestion)
-                                            }
+                            SoundCard(
+                                sound = sound,
+                                isPlaying = isPlaying,
+                                isDownloading = false, // Mixer'da indirme yok
+                                volume = volume,
+                                onCardClick = {
+                                    // MixerIntent kullanıyoruz
+                                    mixerViewModel.processIntent(MixerIntent.ToggleSound(sound))
+                                },
+                                onVolumeChange = { newVol ->
+                                    mixerViewModel.processIntent(
+                                        MixerIntent.ChangeVolume(
+                                            sound.id,
+                                            newVol
                                         )
-                                    }
+                                    )
                                 }
-                            }
+                            )
+                        }
 
-                            // Kaydet Butonu
+                        // B) BİLGİ KARTI
+                        if (mixerState.showDownloadSuggestion) {
                             item(span = { GridItemSpan(maxLineSpan) }) {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(top = 24.dp, bottom = 16.dp)
-                                        .fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    SaveMixButton(
-                                        onClick = { mixerViewModel.processIntent(MixerIntent.ShowSaveDialog) },
-                                        modifier = Modifier.fillMaxWidth(0.6f)
+                                Box(modifier = Modifier.padding(top = 24.dp)) {
+                                    DownloadSuggestionCard(
+                                        onClick = {
+                                            mixerViewModel.processIntent(MixerIntent.ClickDownloadSuggestion)
+                                        }
                                     )
                                 }
                             }
                         }
-                    } else {
-                        // Boş Durum
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "Bir sayı seç ve karıştır!",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+
+                        // C) Kaydet butonu
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(top = 24.dp, bottom = 16.dp)
+                                    .fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                SaveMixButton(
+                                    onClick = { mixerViewModel.processIntent(MixerIntent.ShowSaveDialog) },
+                                    modifier = Modifier.fillMaxWidth(0.6f)
+                                )
+                            }
                         }
+                    }
+                } else {
+                    // --- BOŞ DURUM (EMPTY STATE) ---
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Bir sayı seç ve karıştır!",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
             }

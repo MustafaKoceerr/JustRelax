@@ -4,75 +4,73 @@ import android.content.Context
 import com.mustafakoceerr.justrelax.core.audio.manager.MasterPlayer
 import com.mustafakoceerr.justrelax.core.audio.manager.ServiceBridge
 import com.mustafakoceerr.justrelax.core.audio.manager.SoundPoolManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class AndroidAudioPlayer(
-    private val context: Context
+    private val context: Context // Context'i private val yapalım ki lazy blokları erişebilsin
 ) : AudioPlayer {
-
-    // --- AYARLAR ---
-    companion object {
-        // Servis kapanmadan önce beklenecek süre (Mühlet)
-        // setMix işlemi sırasında servisin kapanıp açılmasını (titremeyi) önler.
-        private const val SERVICE_SHUTDOWN_GRACE_PERIOD_MS = 1000L
-    }
 
     private val _isPlaying = MutableStateFlow(false)
     override val isPlaying: StateFlow<Boolean> = _isPlaying.asStateFlow()
 
-    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    private var stopServiceJob: Job? = null
-
+    // 1. SoundPool (Bağımsız olduğu için direkt tanımlayabiliriz)
     private val soundPool = SoundPoolManager(context)
 
-    // ... (ServiceBridge ve MasterPlayer tanımları AYNI - Değişmedi) ...
+    // 2. ServiceBridge (BY LAZY + EXPLICIT TYPE)
+    // "by lazy" sayesinde masterPlayer'a erişebilir, çünkü bu kod hemen çalışmaz.
     private val serviceBridge: ServiceBridge by lazy {
         ServiceBridge(
             context = context,
             onMasterToggle = {
+                // Burada masterPlayer'a erişmek güvenli
                 if (masterPlayer.isPlaying) masterPlayer.pause() else masterPlayer.play()
             },
             onStopAction = {
-                stopAllSoundsInternal(immediate = true)
+                stopAllSoundsInternal()
             }
         )
     }
 
+    // 3. MasterPlayer (BY LAZY + EXPLICIT TYPE)
+    // "by lazy" sayesinde serviceBridge'e erişebilir.
     private val masterPlayer: MasterPlayer by lazy {
         MasterPlayer(context) { isMasterPlaying ->
             _isPlaying.value = isMasterPlaying
+
+            // Master durursa herkes sussun, başlarsa herkes konuşsun
             if (isMasterPlaying) soundPool.resumeAll() else soundPool.pauseAll()
+
+            // Bildirimi güncelle (serviceBridge burada güvenle çağrılır)
             serviceBridge.updateNotification(isMasterPlaying, soundPool.getActiveCount())
         }
     }
 
-    // ... (play, pause, resume fonksiyonları AYNI - Değişmedi) ...
+    // --- AUDIO PLAYER IMPLEMENTATION ---
 
     override suspend fun play(soundId: String, url: String, volume: Float) {
-        cancelPendingStop() // İptal et, yeni iş geldi!
+        // Servisi ve Master'ı ayağa kaldır (Lazy oldukları için burada init olacaklar)
         serviceBridge.startAndBind()
         masterPlayer.prepareAndPlay()
+
+        // Sesi çal
         soundPool.play(soundId, url, volume)
+
+        // Bildirimi güncelle
         serviceBridge.updateNotification(masterPlayer.isPlaying, soundPool.getActiveCount())
     }
 
     override fun pause(soundId: String) {
         soundPool.pause(soundId)
+        // Tekil pause yapıldığında bildirim güncellemeye gerek yok, master hala çalıyor.
     }
 
     override fun resume(soundId: String) {
-        cancelPendingStop()
         serviceBridge.startAndBind()
-        masterPlayer.play()
+        masterPlayer.play() // Master durmuşsa o da başlasın
         soundPool.resume(soundId)
+
         serviceBridge.updateNotification(masterPlayer.isPlaying, soundPool.getActiveCount())
     }
 
@@ -80,8 +78,7 @@ class AndroidAudioPlayer(
         soundPool.stop(soundId)
 
         if (soundPool.getActiveCount() == 0) {
-            // Son ses kapandı, mühlet verelim.
-            scheduleDelayedStop()
+            stopAllSoundsInternal()
         } else {
             serviceBridge.updateNotification(masterPlayer.isPlaying, soundPool.getActiveCount())
         }
@@ -92,51 +89,23 @@ class AndroidAudioPlayer(
     }
 
     override suspend fun releaseAll() {
-        stopAllSoundsInternal(immediate = true)
+        stopAllSoundsInternal()
         soundPool.releaseAll()
     }
 
-    // --- GÜNCELLENEN KISIM ---
-
-    private fun scheduleDelayedStop() {
-        if (stopServiceJob?.isActive == true) return
-
-        stopServiceJob = scope.launch {
-            // 1 Saniye bekle. Bu sürede yeni bir play gelirse burası iptal olur.
-            delay(SERVICE_SHUTDOWN_GRACE_PERIOD_MS)
-            stopAllSoundsInternal(immediate = true)
-        }
-    }
-
-    private fun cancelPendingStop() {
-        stopServiceJob?.cancel()
-        stopServiceJob = null
-    }
-
-    private fun stopAllSoundsInternal(immediate: Boolean) {
+    // Yardımcı fonksiyon: Her şeyi durdur ve kapat
+    private fun stopAllSoundsInternal() {
+        // Eğer masterPlayer henüz init olmadıysa (hiç çalmadıysa) erişmeye çalışma
+        // Bu kontrol lazy property'nin gereksiz yere init olmasını engeller
         runCatching {
             masterPlayer.pause()
             masterPlayer.release()
         }
+
         runCatching {
             serviceBridge.stopAndUnbind()
         }
+
         _isPlaying.value = false
-    }
-
-    override fun pauseAll() {
-        // Master'ı durdur.
-        // Master'ın listener'ı tetiklenecek -> soundPool.pauseAll() çalışacak -> Notification güncellenecek.
-        cancelPendingStop() // Servis kapanmasın, sadece dursun
-        masterPlayer.pause()
-    }
-
-    override fun resumeAll() {
-        // Master'ı başlat.
-        // Master'ın listener'ı tetiklenecek -> soundPool.resumeAll() çalışacak -> Notification güncellenecek.
-        cancelPendingStop()
-
-        serviceBridge.startAndBind() // Servis bağlı değilse bağla
-        masterPlayer.play()
     }
 }

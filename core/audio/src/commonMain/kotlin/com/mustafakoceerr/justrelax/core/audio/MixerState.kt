@@ -5,8 +5,7 @@ import com.mustafakoceerr.justrelax.core.model.Sound
 data class MixerState(
     val isMasterPlaying: Boolean = false, // Genel Play/Pause durumu
     val activeSounds: Map<String, ActiveSound> = emptyMap(), // Çalan sesler ve detayları
-    val isLoading: Boolean = false,
-    val activeMixId: Long = -1
+    val isLoading: Boolean = false
 ) {
     // Notification başlığı için yardımcı fonksiyon
     fun getNotificationSubtitle(): String {

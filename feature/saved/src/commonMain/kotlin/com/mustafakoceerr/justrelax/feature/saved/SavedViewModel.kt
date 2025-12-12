@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.saved
 
+
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.mustafakoceerr.justrelax.core.audio.SoundManager
@@ -14,11 +15,9 @@ import com.mustafakoceerr.justrelax.feature.saved.usecase.PlaySavedMixUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
 class SavedViewModel(
     private val savedMixRepository: SavedMixRepository,
     private val soundManager: SoundManager,
@@ -36,24 +35,6 @@ class SavedViewModel(
 
     init {
         processIntent(SavedIntent.LoadMixes)
-        observePlaybackState()
-    }
-
-    private fun observePlaybackState() {
-        screenModelScope.launch {
-            soundManager.state.collectLatest { audioState ->
-                _state.update {
-                    it.copy(
-                        // YENİ: -1 kontrolü
-                        currentPlayingMixId = if (audioState.isMasterPlaying && audioState.activeMixId != -1L) {
-                            audioState.activeMixId
-                        } else {
-                            -1 // Çalmıyorsa veya manuel değiştirildiyse -1
-                        }
-                    )
-                }
-            }
-        }
     }
 
     fun processIntent(intent: SavedIntent) {
@@ -77,12 +58,11 @@ class SavedViewModel(
     }
 
     private fun toggleMix(mixId: Long) {
-        // YENİ: -1 kontrolü
-        val currentActiveId = soundManager.state.value.activeMixId
-        val isPlaying = soundManager.state.value.isMasterPlaying
+        val currentId = _state.value.currentPlayingMixId
 
-        if (currentActiveId == mixId && isPlaying) {
+        if (currentId == mixId) {
             soundManager.stopAll()
+            _state.update { it.copy(currentPlayingMixId = null) }
         } else {
             val mixToPlay = _state.value.mixes.find { it.id == mixId }?.domainModel ?: return
             screenModelScope.launch {
@@ -97,9 +77,9 @@ class SavedViewModel(
             lastDeletedMix = uiMix.domainModel
             savedMixRepository.deleteMix(uiMix.id)
 
-            // YENİ: -1 kontrolü
             if (_state.value.currentPlayingMixId == uiMix.id) {
                 soundManager.stopAll()
+                _state.update { it.copy(currentPlayingMixId = null) }
             }
 
             _effect.send(SavedEffect.ShowSnackbar("${uiMix.title} silindi", "Geri Al"))

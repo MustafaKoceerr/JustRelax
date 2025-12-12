@@ -19,6 +19,7 @@ class SoundManager(
     val state = _state.asStateFlow()
 
     init {
+        // Notification'dan (Service'den) gelen Play/Pause durumunu dinle
         scope.launch {
             audioPlayer.isPlaying.collect { isPlaying ->
                 _state.update {
@@ -28,6 +29,12 @@ class SoundManager(
         }
     }
 
+    /**
+     * MIXER MANTIĞI:
+     * - Ses zaten listede varsa -> Çıkar (Durdur)
+     * - Ses listede yoksa -> Ekle (Çal)
+     * - Diğer seslere dokunma!
+     */
     suspend fun toggleSound(sound: Sound, initialVolume: Float = 0.5f) {
         val currentState = _state.value
         val isAlreadyActive = currentState.activeSounds.containsKey(sound.id)
@@ -40,54 +47,55 @@ class SoundManager(
     }
 
     private suspend fun addSound(sound: Sound, volume: Float) {
+        // 1. State'i güncelle (Mevcut listeye ekle)
         _state.update { current ->
             val newMap = current.activeSounds.toMutableMap()
             newMap[sound.id] = ActiveSound(sound, volume, volume)
 
+            // Yeni ses eklenince Master otomatik play moduna geçer
             current.copy(
                 activeSounds = newMap,
-                isMasterPlaying = true,
-                activeMixId = -1 // Manuel ekleme -> Mix bozuldu
+                isMasterPlaying = true
             )
         }
 
+        // 2. Player'ı başlat
         sound.localPath?.let { path ->
             audioPlayer.play(sound.id, path, volume)
         }
     }
 
     private fun removeSound(soundId: String) {
+        // 1. Player'ı durdur
         audioPlayer.stop(soundId)
 
+        // 2. State'i güncelle (Listeden çıkar)
         _state.update { current ->
             val newMap = current.activeSounds.toMutableMap()
             newMap.remove(soundId)
 
+            // Eğer liste tamamen boşaldıysa Master da durmuş demektir
             current.copy(
                 activeSounds = newMap,
-                isMasterPlaying = newMap.isNotEmpty(),
-                activeMixId = -1 // Manuel silme -> Mix bozuldu
+                isMasterPlaying = newMap.isNotEmpty()
             )
         }
     }
 
-    // --- GERİ EKLENEN VE GÜNCELLENEN FONKSİYON ---
     fun onVolumeChange(soundId: String, newVolume: Float) {
         _state.update { state ->
             val sounds = state.activeSounds.toMutableMap()
             val activeSound = sounds[soundId] ?: return@update state
 
             sounds[soundId] = activeSound.copy(targetVolume = newVolume, currentVolume = newVolume)
-
-            state.copy(
-                activeSounds = sounds,
-                activeMixId = -1 // YENİ: Ses seviyesi değişirse de mix bozulmuş sayılır (SavedScreen'deki seçim kalkar)
-            )
+            state.copy(activeSounds = sounds)
         }
         audioPlayer.setVolume(soundId, newVolume)
     }
-    // ---------------------------------------------
 
+    /**
+     * Ana Play/Pause Butonu (veya Bildirimden gelen emir)
+     */
     suspend fun toggleMasterPlayPause() {
         if (_state.value.isMasterPlaying) {
             pauseAll()
@@ -96,37 +104,57 @@ class SoundManager(
         }
     }
 
+    /**
+     * Tüm sesleri duraklat (State'deki listeyi koru)
+     */
     private fun pauseAll() {
-        audioPlayer.pauseAll()
+        _state.value.activeSounds.keys.forEach { soundId ->
+            audioPlayer.pause(soundId)
+        }
         _state.update { it.copy(isMasterPlaying = false) }
     }
 
+    /**
+     * Duraklatılan tüm sesleri devam ettir
+     */
     private fun resumeAll() {
         if (_state.value.activeSounds.isEmpty()) return
-        audioPlayer.resumeAll()
+
+        _state.value.activeSounds.keys.forEach { soundId ->
+            audioPlayer.resume(soundId)
+        }
         _state.update { it.copy(isMasterPlaying = true) }
     }
 
+    /**
+     * Her şeyi durdur ve listeyi temizle (Çarpı butonu veya Timer bitişi)
+     */
     override fun stopAll() {
         scope.launch {
+            // Player'daki her şeyi durdur
             _state.value.activeSounds.keys.forEach { soundId ->
                 audioPlayer.stop(soundId)
             }
+            // Listeyi sıfırla
             _state.update {
-                it.copy(
-                    activeSounds = emptyMap(),
-                    isMasterPlaying = false,
-                    activeMixId = -1
-                )
+                it.copy(activeSounds = emptyMap(), isMasterPlaying = false)
             }
         }
     }
 
-    suspend fun setMix(mix: Map<Sound, Float>, mixId: Long = -1) {
+    /**
+     * MIXER ÖZEL: Mevcut çalanları durdurur ve verilen listeyi başlatır.
+     * @param mix: Çalınacak sesler ve ses seviyeleri (Map<Sound, Float>)
+     */
+    suspend fun setMix(mix: Map<Sound, Float>) {
+        // 1. ADIM: Şu an çalan fiziksel player'ları durdur.
         _state.value.activeSounds.keys.forEach { soundId ->
             audioPlayer.stop(soundId)
         }
 
+        // 2. ADIM: Yeni ActiveSound haritasını hazırla
+        // DÜZELTME BURADA: mapValues yerine 'associate' kullanıyoruz.
+        // Çünkü Key'i 'Sound' objesinden 'String' (ID) tipine çevirmemiz lazım.
         val newActiveSounds = mix.entries.associate { (sound, volume) ->
             sound.id to ActiveSound(
                 sound = sound,
@@ -135,14 +163,15 @@ class SoundManager(
             )
         }
 
+        // 3. ADIM: State'i TEK SEFERDE güncelle
         _state.update {
             it.copy(
                 activeSounds = newActiveSounds,
-                isMasterPlaying = true,
-                activeMixId = mixId
+                isMasterPlaying = true
             )
         }
 
+        // 4. ADIM: Yeni sesleri fiziksel olarak başlat
         mix.forEach { (sound, volume) ->
             sound.localPath?.let { path ->
                 audioPlayer.play(sound.id, path, volume)
