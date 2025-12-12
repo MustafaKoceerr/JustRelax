@@ -12,14 +12,19 @@ import org.koin.dsl.module
 expect val platformAudioModule: Module
 
 val audioModule = module {
-    // 2. Platform modülünü buraya dahil et
     includes(platformAudioModule)
 
-    // 3. Common tanımlar
-    // SoundManager, 'get()' dediğinde platformAudioModule içindeki SoundPlayer'ı bulacak.
+    // SoundManager (Service ve UI bunu kullanır)
     single { SoundManager(get()) } bind SoundController::class
 
+    // Timer
     single { TimerManager(get()) }
 
-    factory { ToggleSoundUseCase(get(), get()) }
+    // UseCase (ViewModel bunu kullanır)
+    factory {
+        ToggleSoundUseCase(
+            soundManager = get(),
+            soundDownloader = get()
+        )
+    }
 }

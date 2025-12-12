@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.home.di
 
-import com.mustafakoceerr.justrelax.feature.home.HomeViewModel
+import com.mustafakoceerr.justrelax.feature.home.HomeScreenModel
 import com.mustafakoceerr.justrelax.feature.home.usecase.DismissBannerUseCase
 import com.mustafakoceerr.justrelax.feature.home.usecase.DownloadAllMissingSoundsUseCase
 import com.mustafakoceerr.justrelax.feature.home.usecase.HomeBannerUseCases
@@ -22,11 +22,11 @@ val homeModule = module {
     }
     // ViewModel artık 6 parametre alıyor
     factory {
-        HomeViewModel(
-            get(),
-            get(),
-            get(),
-            get(),
+        HomeScreenModel(
+            soundRepository = get(),
+            soundManager = get(),
+            toggleSoundUseCase = get(),
+            bannerUseCases = get()
         )
     }
 }

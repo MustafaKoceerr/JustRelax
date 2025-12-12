@@ -6,52 +6,55 @@ import com.mustafakoceerr.justrelax.core.model.Sound
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class ToggleSoundUseCase (
+class ToggleSoundUseCase(
     private val soundManager: SoundManager,
     private val soundDownloader: SoundDownloader
-){
-    // Nested Interface: Sektörel standarttır, temizdir.
-    // Neden İyi? "Namespace Pollution" (İsim Uzayı Kirliliği) engeller.
+) {
     sealed interface Result {
-        data object Ignored : Result
-        data object Toggled : Result
-        data class Downloading(val isDownloading: Boolean) : Result
+        data object Ignored : Result // İşlem yapılmadı (Zaten iniyor vb.)
+        data object Toggled : Result // Açıldı veya Kapandı (Service tetiklenir)
+        data class Downloading(val isDownloading: Boolean) : Result // İndirme durumu
         data class Error(val message: String) : Result
     }
 
-
     operator fun invoke(sound: Sound, isCurrentlyDownloading: Boolean): Flow<Result> = flow {
-        // 1. Zaten çalıyorsa durdur
+        // 1. DURUM: Ses zaten çalıyor mu? -> DURDUR
+        // SoundManager state'i günceller -> Service bunu görür -> Notification güncellenir.
         if (soundManager.state.value.activeSounds.containsKey(sound.id)) {
             soundManager.toggleSound(sound)
             emit(Result.Toggled)
             return@flow
         }
 
-        // 2. Zaten indiriliyorsa işlem yapma
+        // 2. DURUM: Zaten şu an indiriliyor mu? -> İŞLEM YAPMA
         if (isCurrentlyDownloading) {
             emit(Result.Ignored)
             return@flow
         }
 
-        // 3. İndirilmişse çal
+        // 3. DURUM: Dosya cihazda var mı? -> ÇAL
+        // SoundManager state'i günceller -> Service başlar -> Ses çalar.
         if (sound.isDownloaded) {
             soundManager.toggleSound(sound)
             emit(Result.Toggled)
             return@flow
         }
 
-        // 4. İndirilmemişse -> İNDİR
+        // 4. DURUM: Dosya yok -> SADECE İNDİR
         emit(Result.Downloading(true))
+
+        // İndirme işlemini başlat
         val isSuccess = soundDownloader.downloadSound(sound.id)
+
         emit(Result.Downloading(false))
 
         if (isSuccess) {
-            // İndirme başarılı, ama sound objesi eski (isDownloaded=false).
-            // Kullanıcı tekrar basmalı veya buradan otomatik tetiklemelisin.
-            // Şimdilik kullanıcıya bırakıyoruz.
+            // İndirme başarılı.
+            // BURADA DURUYORUZ. Otomatik çalma yok.
+            // Kullanıcı UI'da "İndirildi" ikonunu görecek (Repository flow'u sayesinde)
+            // ve isterse tekrar basacak.
         } else {
-            emit(Result.Error("Download failed"))
+            emit(Result.Error("İndirme başarısız."))
         }
     }
 }

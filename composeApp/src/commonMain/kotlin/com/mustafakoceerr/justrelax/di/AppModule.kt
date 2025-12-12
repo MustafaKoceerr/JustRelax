@@ -10,7 +10,6 @@ import com.mustafakoceerr.justrelax.core.ui.di.uiModule
 import com.mustafakoceerr.justrelax.feature.ai.di.aiModule
 import com.mustafakoceerr.justrelax.feature.home.di.homeModule
 import com.mustafakoceerr.justrelax.feature.home.navigation.HomeNavigator
-import com.mustafakoceerr.justrelax.feature.mixer.di.mixerModule
 import com.mustafakoceerr.justrelax.feature.player.di.playerModule
 import com.mustafakoceerr.justrelax.feature.saved.di.savedModule
 import com.mustafakoceerr.justrelax.feature.settings.di.settingsModule
@@ -18,8 +17,10 @@ import com.mustafakoceerr.justrelax.feature.timer.di.timerModule
 import com.mustafakoceerr.justrelax.navigation.HomeNavigatorImpl
 import com.mustafakoceerr.justrelax.navigation.TabProviderImpl
 import org.koin.core.context.startKoin
+import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
+
 
 // 1. ComposeApp Modülüne Özel Tanımlar
 // (MainViewModel ve Navigation Implementasyonları burada)
@@ -31,6 +32,7 @@ val appModule = module {
     single<TabProvider> { TabProviderImpl() }
     factory<HomeNavigator> { HomeNavigatorImpl() }
 }
+expect val platformAudioModule: Module
 
 // 2. Koin Başlatıcı
 fun initKoin(config: KoinAppDeclaration? = null) {
@@ -38,9 +40,10 @@ fun initKoin(config: KoinAppDeclaration? = null) {
         config?.invoke(this)
 
         modules(
+            platformAudioModule,
             // --- APP LEVEL ---
             appModule,
-
+            playerModule,
             // --- CORE ---
             // Platforma özel DB, Settings, Context vb. (Android/iOS)
             dataModule,
@@ -50,13 +53,14 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             navigationModule,
             uiModule,
             // --- FEATURES ---
-            homeModule,
-            mixerModule,
+
             savedModule,
             aiModule,
             timerModule,
             settingsModule,
-            playerModule
+//            playerModule,
+            homeModule,
+//            mixerModule,
         )
     }
 }

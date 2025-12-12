@@ -2,20 +2,28 @@ package com.mustafakoceerr.justrelax.feature.player.mvi
 
 import com.mustafakoceerr.justrelax.core.model.Sound
 
-
+// 1. STATE: UI ne görüyorsa burada olmalı
 data class PlayerState(
-    val activeSounds: Map<String, Float> = emptyMap(),
-    val isMasterPlaying: Boolean = true,
-    // Çalan seslerin detaylı listesi (Sound objeleri - UI'da ikon göstermek için)
-    // Bunu burada tutmak performans sağlar, her UI kendi hesaplamaz.
-    val activeSoundDetails: List<Sound> = emptyList(),
-    // YENİ: Şu an indirilmekte olan seslerin ID listesi
-    val downloadingSoundIds: Set<String> = emptySet()
-)
+    val activeSounds: List<Sound> = emptyList(), // Aktif ses listesi
+    val isMasterPlaying: Boolean = false,        // Genel oynatma durumu
+    val isLoading: Boolean = false
+) {
+    // UI kolayca erişsin diye helper
+    val isVisible: Boolean
+        get() = activeSounds.isNotEmpty()
 
-sealed interface PlayerIntent{
-    data class ToggleSound(val sound: Sound): PlayerIntent
-    data class ChangeVolume(val soundId: String, val volume: Float): PlayerIntent
-    data object ToggleMasterPlayPause: PlayerIntent
-    data object StopAll: PlayerIntent
+    // Sadece ikon URL'lerini UI'a vermek için helper
+    val activeIconUrls: List<String>
+        get() = activeSounds.map { it.iconUrl }
+}
+
+// 2. INTENT: Kullanıcının yaptığı eylemler
+sealed interface PlayerIntent {
+    data object ToggleMasterPlayPause : PlayerIntent // Play/Pause butonuna basıldı
+    data object StopAll : PlayerIntent               // Çarpı butonuna basıldı
+}
+
+// 3. EFFECT: Tek seferlik olaylar (Toast, Navigate vb.)
+sealed interface PlayerEffect {
+    data class ShowMessage(val message: String) : PlayerEffect
 }

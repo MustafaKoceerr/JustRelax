@@ -26,7 +26,8 @@ class PlayAiMixUseCase(
 
         // 2. Eğer geçerli bir mix oluştuysa çal
         return if (mixMap.isNotEmpty()){
-            soundManager.setMix(mixMap)
+            // todo aç
+//            soundManager.setMix(mixMap)
             true
         }else{
             false

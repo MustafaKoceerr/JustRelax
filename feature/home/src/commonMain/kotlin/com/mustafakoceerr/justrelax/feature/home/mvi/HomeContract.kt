@@ -4,40 +4,44 @@ import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
-// 1. State: UI'ın anlık durum fotoğrafı
-// 1. State: UI'ın anlık durum fotoğrafı
 data class HomeState(
-    val isLoading: Boolean = true,
-    val categories : List<SoundCategory> = SoundCategory.entries, // Tüm kategoriler
-    val selectedCategory: SoundCategory = SoundCategory.WATER, // varsayılan kategori
-    val sounds: List<Sound> = emptyList(), // Seçili kategorideki sesler
+    // Veriler
+    val categories: List<SoundCategory> = SoundCategory.entries,
+    val selectedCategory: SoundCategory = SoundCategory.NATURE,
+    val allSounds: List<Sound> = emptyList(), // Filtrelenmemiş ham liste
 
+    // UI Durumları
+    val activeSounds: Map<String, Float> = emptyMap(), // Çalan sesler ve volumeleri
+    val downloadingSoundIds: Set<String> = emptySet(), // Şu an inmekte olan tekil sesler
+
+    // Banner Durumları
     val showDownloadBanner: Boolean = false,
     val isDownloadingAll: Boolean = false,
-    val totalDownloadProgress: Float = 0f, // 0.0 - 1.0 (Banner için)
-    val snackbarMessage: UiText? = null, // String yerine UiText
+    val totalDownloadProgress: Float = 0f,
 
-    // --- YENİ EKLENEN PLAYER STATE ALANLARI ---
-    val activeSounds: Map<String, Float> = emptyMap(),
-    val downloadingSoundIds: Set<String> = emptySet()
-)
+    val isLoading: Boolean = true
+) {
+    // UI'da gösterilecek filtrelenmiş liste (Helper Property)
+    val sounds: List<Sound>
+        get() = allSounds.filter { it.category == selectedCategory }
+}
 
 // 2. Intent: Kullanıcının yapmak istediği eylemler
 sealed interface HomeIntent {
-    data object LoadData : HomeIntent
     data class SelectCategory(val category: SoundCategory) : HomeIntent
-    data object SettingsClicked : HomeIntent
+    data class ToggleSound(val sound: Sound) : HomeIntent
+    data class ChangeVolume(val soundId: String, val volume: Float) : HomeIntent
 
+    // Banner İşlemleri
     data object DownloadAllMissing : HomeIntent
     data object DismissBanner : HomeIntent
-    data object ClearMessage : HomeIntent // Snackbar gösterildikten sonra state'i temizlemek için
 
-    // --- YENİ EKLENEN PLAYER INTENTLERİ ---
-    data class ToggleSound(val sound: Sound) : HomeIntent
-    data class ChangeVolume(val id: String, val volume: Float) : HomeIntent
+    // Navigasyon
+    data object SettingsClicked : HomeIntent
 }
 
 // 3. Effect: Tek seferlik olaylar (Navigasyon, toast vb.)
 sealed interface HomeEffect {
+    data class ShowMessage(val message: String) : HomeEffect
     data object NavigateToSettings : HomeEffect
 }

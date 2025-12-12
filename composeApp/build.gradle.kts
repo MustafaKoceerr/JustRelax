@@ -76,7 +76,7 @@ kotlin {
             implementation(project(":core:navigation"))
 
             implementation(project(":feature:home"))
-            implementation(project(":feature:mixer"))
+//            implementation(project(":feature:mixer"))
             implementation(project(":feature:saved"))
             implementation(project(":feature:ai"))
             implementation(project(":feature:timer"))
@@ -105,6 +105,11 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.koin.android)
             implementation(libs.androidx.activity.compose)
+
+            // Android Ses Motoru (ExoPlayer / Media3)
+            implementation(libs.androidx.media3.exoplayer)
+            implementation(libs.androidx.media3.session)
+            implementation(libs.androidx.media3.common)
         }
     }
 }

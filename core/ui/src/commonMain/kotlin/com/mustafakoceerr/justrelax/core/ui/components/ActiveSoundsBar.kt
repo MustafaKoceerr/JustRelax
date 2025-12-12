@@ -1,5 +1,12 @@
 package com.mustafakoceerr.justrelax.core.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -28,30 +36,61 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * Bu ana kapsayıcıdır. Animasyonu ve görünürlüğü yönetir.
+ * Scaffold'un bottomBar parametresine veya Box içinde en alta koyulabilir.
+ */
 @Composable
-fun ActiveSoundsBar(
+fun PlayerBottomBar(
+    isVisible: Boolean, // State'den gelecek (activeSounds.isNotEmpty())
     activeIcons: List<String>,
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
     onStopAllClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    AnimatedVisibility(
+        visible = isVisible,
+        modifier = modifier,
+        // Aşağıdan yukarıya kayarak gel + Fade In
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> fullHeight }, // Kendi boyu kadar aşağıdan başla
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+        ) + fadeIn(),
+        // Aşağıya kayarak kaybol + Fade Out
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> fullHeight }, // Kendi boyu kadar aşağı git
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+        ) + fadeOut()
+    ) {
+        ActiveSoundsBarContent(
+            activeIcons = activeIcons,
+            isPlaying = isPlaying,
+            onPlayPauseClick = onPlayPauseClick,
+            onStopAllClick = onStopAllClick
+        )
+    }
+}
 
-    //Bu bar dikkat çekici olmallı bu yüzden PrimaryContainer kullanıyoruz.
+@Composable
+private fun ActiveSoundsBarContent(
+    activeIcons: List<String>,
+    isPlaying: Boolean,
+    onPlayPauseClick: () -> Unit,
+    onStopAllClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp), // Standart mini player yüksekliği.
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+            .height(80.dp) // Yükseklik biraz artırıldı, padding için pay
+            .padding(horizontal = 16.dp, vertical = 8.dp), // Kenarlardan boşluk (Floating hissi için)
+        shape = RoundedCornerShape(24.dp), // Daha yuvarlak hatlar
         color = MaterialTheme.colorScheme.primaryContainer,
-
-        // üzerindeki ikonların rengi (Koyu kahve)
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-
-        // Hafif bir gölge (elevation) verelim ki içerikten ayrılsın.
-        shadowElevation = 4.dp
+        shadowElevation = 8.dp, // Gölge artırıldı
+        tonalElevation = 8.dp
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -59,63 +98,70 @@ fun ActiveSoundsBar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Sol taraf: çalan ikonlar.
-            // weight 1 f veriyoruz ki butonların kalan tüm alanı kapsasın
+            // SOL: Aktif İkonlar
             LazyRow(
                 modifier = Modifier.weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(8.dp), // İkonlar arası boşluk,
-                contentPadding = PaddingValues(end = 16.dp) // butonlara yapışmasın
-            ) {
-                items(activeIcons.size) { index ->
-                    Surface(
-                        modifier = Modifier.size(32.dp),
-                        shape = CircleShape,
-                        // İkonlar kendi içinde bir tık daha kkoyu/farklı dursun
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
-                        contentColor = MaterialTheme.colorScheme.onSurface
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            AsyncImage(
-                                model = activeIcons[index],
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp),
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
-                            )
-                        }
-                    }
-                }
-            }
-
-            // Sağ taraf : Kotnrol butonları
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy((-8).dp), // İkonlar hafif iç içe geçsin (Avatar group gibi)
+                contentPadding = PaddingValues(end = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 1. Play/ pause butonu
-                IconButton(onClick = onPlayPauseClick) {
-                    Icon(
-                        // Duruma göre icon değişir.
-                        imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
-                        contentDescription = "Play/Pause",
-                        modifier = Modifier.size(32.dp) // Buton biraz büyük olsun
-                    )
-                }
-
-
-                // 2. Hepsini Durdur (Kapat) Butonu
-                // Bu biraz daha "tehlikeli" veya "kapatma" işlemi olduğu için
-                // farklı bir stil verebiliriz ama şimdilik IconButton yeterli.
-                IconButton(onClick = onStopAllClick) {
-                    Icon(
-                        imageVector = Icons.Rounded.Close,
-                        contentDescription = "Close all sounds",
-                        modifier = Modifier.size(28.dp)
-                    )
+                items(activeIcons) { iconUrl ->
+                    SoundIconItem(iconUrl)
                 }
             }
 
-        }
+            // SAĞ: Kontroller
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Play/Pause
+                IconButton(
+                    onClick = onPlayPauseClick,
+                    modifier = Modifier.size(48.dp) // Dokunma alanı geniş
+                ) {
+                    Icon(
+                        imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
+                        contentDescription = "Play/Pause",
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
 
+                // Stop All
+                IconButton(
+                    onClick = onStopAllClick,
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Close,
+                        contentDescription = "Close all",
+                        modifier = Modifier.size(28.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SoundIconItem(url: String) {
+    Surface(
+        modifier = Modifier
+            .size(36.dp)
+            .padding(2.dp), // Border efekti için boşluk
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.surfaceContainerHighest,
+        border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer) // Arka planla karışmasın diye sınır
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            AsyncImage(
+                model = url,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
+            )
+        }
     }
 }
 
@@ -126,7 +172,8 @@ fun ActiveSoundsBar(
 @Composable
 fun ActiveSoundsBarPreview() {
     MaterialTheme {
-        ActiveSoundsBar(
+        PlayerBottomBar(
+            isVisible = true,
             activeIcons = listOf(
                 "https://example.com/icon1.png",
                 "https://example.com/icon2.png",
