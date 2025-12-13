@@ -19,7 +19,7 @@ class SoundManager(
     val state = _state.asStateFlow()
 
     init {
-        // Notification'dan (Service'den) gelen Play/Pause durumunu dinle
+        // TEK DOĞRULUK KAYNAĞI BURASIDIR
         scope.launch {
             audioPlayer.isPlaying.collect { isPlaying ->
                 _state.update {
@@ -108,22 +108,24 @@ class SoundManager(
      * Tüm sesleri duraklat (State'deki listeyi koru)
      */
     private fun pauseAll() {
-        _state.value.activeSounds.keys.forEach { soundId ->
-            audioPlayer.pause(soundId)
-        }
-        _state.update { it.copy(isMasterPlaying = false) }
+        // Sadece Player'a emir ver.
+        // Player durunca 'init' bloğundaki flow tetiklenecek ve UI güncellenecek.
+        audioPlayer.pauseAll()
+
+        // SİLİNDİ: _state.update { it.copy(isMasterPlaying = false) }
     }
 
     /**
      * Duraklatılan tüm sesleri devam ettir
      */
+
     private fun resumeAll() {
         if (_state.value.activeSounds.isEmpty()) return
 
-        _state.value.activeSounds.keys.forEach { soundId ->
-            audioPlayer.resume(soundId)
-        }
-        _state.update { it.copy(isMasterPlaying = true) }
+        // Sadece Player'a emir ver.
+        audioPlayer.resumeAll()
+
+        // SİLİNDİ: _state.update { it.copy(isMasterPlaying = true) }
     }
 
     /**

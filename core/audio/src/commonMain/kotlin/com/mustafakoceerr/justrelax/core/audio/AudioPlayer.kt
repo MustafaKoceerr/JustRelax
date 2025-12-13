@@ -40,4 +40,14 @@ interface AudioPlayer {
      * Tüm kaynakları temizle (Service bağlantısını kes)
      */
     suspend fun releaseAll()
+
+    /**
+     * Master Player'ı (ve dolayısıyla tüm sistemi) duraklatır.
+     */
+    fun pauseAll()
+
+    /**
+     * Master Player'ı (ve dolayısıyla tüm sistemi) devam ettirir.
+     */
+    fun resumeAll()
 }
