@@ -4,11 +4,11 @@ import com.mustafakoceerr.justrelax.feature.settings.SettingsViewModel
 import org.koin.dsl.module
 
 val settingsModule = module {
-    // SettingsRepository ve LanguageSwitcher zaten Core modüllerinde tanımlı.
-    // Burada sadece ViewModel'i tanımlıyoruz.
     factory {
         SettingsViewModel(
             settingsRepository = get(),
+            soundRepository = get(), // Eklendi
+            downloadAllUseCase = get(), // Eklendi
             languageSwitcher = get(),
             systemLauncher = get()
         )

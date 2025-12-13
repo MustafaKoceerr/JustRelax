@@ -9,6 +9,8 @@ import com.mustafakoceerr.justrelax.core.data.repository.SettingsRepositoryImpl
 import com.mustafakoceerr.justrelax.core.data.repository.SoundDownloaderImpl
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepositoryImpl
 import com.mustafakoceerr.justrelax.core.database.JustRelaxDb
+import com.mustafakoceerr.justrelax.core.domain.manager.AppInitializationManager
+import com.mustafakoceerr.justrelax.core.domain.manager.AppInitializer
 import com.mustafakoceerr.justrelax.core.domain.manager.SoundDownloader
 import com.mustafakoceerr.justrelax.core.domain.repository.SavedMixRepository
 import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
@@ -20,6 +22,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val dataModule = module {
@@ -109,5 +112,8 @@ val dataModule = module {
             dataSeeder = get(),
             soundRepository = get()
         )
-    }
+    } bind AppInitializer::class
+
+    single { AppInitializationManager(get()) }
+
 }

@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -55,12 +56,11 @@ class SoundRepositoryImpl(
     override suspend fun getSoundById(id: String): Sound? {
         return withContext(Dispatchers.IO) {
             val entity = queries.getSoundById(id).executeAsOneOrNull() ?: return@withContext null
-            // Tekil çekimlerde varsayılan olarak sistem dilini veya İngilizceyi baz alabiliriz
-            // Veya settingsRepository'den anlık çekebiliriz ama şimdilik "en" diyelim.
-            // (Player tarafında isim çok kritik değilse)
-            mapper.map(entity, "en")
+            // DÜZELTME: Hardcoded "en" yerine, gerçek dili çekiyoruz.
+            // first() fonksiyonu akıştan o anki değeri alır ve durur.
+            val currentLang = settingsRepository.getLanguage().first().code
+            mapper.map(entity, currentLang)
         }
-        // TODO: TEKNİK BORÇ
     }
 
     /**
@@ -143,6 +143,16 @@ class SoundRepositoryImpl(
                 mapper.map(entity, language.code)
             }
         }.flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun getMissingSounds(): List<Sound> {
+        return withContext(Dispatchers.IO) {
+            // SQLDelight sorgusu: WHERE localPath IS NULL
+            val entities = queries.getMissingSounds().executeAsList()
+            // Mapper ile çevir (Dil parametresi önemli değil, ID ve URL lazım)
+            val currentLang = settingsRepository.getLanguage().first().code
+            entities.map { mapper.map(it, currentLang) }
+        }
     }
 
 }

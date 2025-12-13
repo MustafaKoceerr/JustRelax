@@ -11,5 +11,4 @@ import org.koin.dsl.module
 actual val coreUiModule = module {
     single { AndroidLanguageSwitcher() } bind LanguageSwitcher::class
     single<SystemLauncher> { AndroidSystemLauncher(androidContext()) }
-
 }

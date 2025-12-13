@@ -1,36 +1,90 @@
 package com.mustafakoceerr.justrelax.feature.settings
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
+import com.mustafakoceerr.justrelax.core.audio.domain.usecase.DownloadAllMissingSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
+import com.mustafakoceerr.justrelax.core.model.BatchDownloadStatus
 import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 import com.mustafakoceerr.justrelax.core.ui.util.SystemLauncher
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val settingsRepository: SettingsRepository,
+    private val soundRepository: SoundRepository,
+    private val downloadAllUseCase: DownloadAllMissingSoundsUseCase,
     private val languageSwitcher: LanguageSwitcher,
     private val systemLauncher: SystemLauncher
-) : ViewModel() {
+) : ScreenModel {
 
-    // --- Data States (Repository'den gelenler) ---
+    // --- Data States (Kalıcı veriler) ---
     val currentTheme = settingsRepository.getTheme()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AppTheme.SYSTEM)
+        .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), AppTheme.SYSTEM)
 
     val currentLanguage = settingsRepository.getLanguage()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AppLanguage.ENGLISH)
+        .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), AppLanguage.ENGLISH)
 
-    // --- UI State
+    // --- Download States (Anlık durumlar) ---
+    private val _isDownloading = MutableStateFlow(false)
+    val isDownloading = _isDownloading.asStateFlow()
+
+    private val _downloadProgress = MutableStateFlow(0f)
+    val downloadProgress = _downloadProgress.asStateFlow()
+
+    val isLibraryComplete = soundRepository.getSounds()
+        .combine(_isDownloading) { sounds, isDownloading ->
+            !isDownloading && sounds.isNotEmpty() && sounds.all { it.isDownloaded }
+        }
+        .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    // --- UI States (Geçici durumlar) ---
     private val _isLanguageSheetOpen = MutableStateFlow(false)
     val isLanguageSheetOpen = _isLanguageSheetOpen.asStateFlow()
+
+    // --- Effect Channel (Tek seferlik olaylar) ---
+    private val _effect = Channel<SettingsEffect>()
+    val effect = _effect.receiveAsFlow()
+
+
+    // --- ACTIONS (UI'dan gelen eylemler) ---
+
+    fun onDownloadAllClicked() {
+        if (_isDownloading.value) return // Zaten iniyorsa tekrar başlatma
+
+        screenModelScope.launch {
+            _effect.send(SettingsEffect.ShowSnackbar("İndirme başlıyor..."))
+            downloadAllUseCase().collect { status ->
+                when (status) {
+                    is BatchDownloadStatus.Progress -> {
+                        _isDownloading.value = true
+                        _downloadProgress.value = status.percentage
+                    }
+                    BatchDownloadStatus.Completed -> {
+                        _isDownloading.value = false
+                        _downloadProgress.value = 1f
+                        _effect.send(SettingsEffect.ShowSnackbar("Tüm sesler indirildi!"))
+                    }
+                    is BatchDownloadStatus.Error -> {
+                        _isDownloading.value = false
+                        _effect.send(SettingsEffect.ShowSnackbar("Hata: İndirme başarısız oldu."))
+                    }
+                }
+            }
+        }
+    }
+
     fun onLanguageTileClicked() {
-        // MANTIK: Platform destekliyorsa Sheet aç, desteklemiyorsa Ayarlara git.
         if (languageSwitcher.supportsInAppSwitching) {
             _isLanguageSheetOpen.value = true
         } else {
@@ -39,22 +93,10 @@ class SettingsViewModel(
     }
 
     fun onLanguageSelected(language: AppLanguage) {
-        viewModelScope.launch {
-            // 1. Repository'ye kaydet (Kalıcılık için)
+        screenModelScope.launch {
             settingsRepository.saveLanguage(language)
-
-            // 2. Platform dilini değiştir (Android için)
             languageSwitcher.updateLanguage(language)
-
-            // 3. Sheet'i kapat
-            _isLanguageSheetOpen.value = false
-        }
-    }
-
-    // --- Theme Logic ---
-    fun updateTheme(theme: AppTheme) {
-        viewModelScope.launch {
-            settingsRepository.saveTheme(theme)
+            dismissLanguageSheet()
         }
     }
 
@@ -62,10 +104,14 @@ class SettingsViewModel(
         _isLanguageSheetOpen.value = false
     }
 
-    // --- External Actions (Destek, Puanlama, Gizlilik) ---
-    // String'leri UI (Composable) çözümler, buraya saf metin gelir.
+    fun updateTheme(theme: AppTheme) {
+        screenModelScope.launch {
+            settingsRepository.saveTheme(theme)
+        }
+    }
+
     fun sendFeedback(supportEmail: String, subject: String, body: String) {
-        systemLauncher.sendFeedbackEmail(to = supportEmail, subject = subject, body = body)
+        systemLauncher.sendFeedbackEmail(supportEmail, subject, body)
     }
 
     fun rateApp() {

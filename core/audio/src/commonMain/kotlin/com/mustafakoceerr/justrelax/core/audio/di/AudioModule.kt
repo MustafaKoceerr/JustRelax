@@ -2,6 +2,7 @@ package com.mustafakoceerr.justrelax.core.audio.di
 
 import com.mustafakoceerr.justrelax.core.audio.SoundManager
 import com.mustafakoceerr.justrelax.core.audio.TimerManager
+import com.mustafakoceerr.justrelax.core.audio.domain.usecase.DownloadAllMissingSoundsUseCase
 import com.mustafakoceerr.justrelax.core.audio.domain.usecase.ToggleSoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.manager.SoundController
 import org.koin.core.module.Module
@@ -27,4 +28,13 @@ val audioModule = module {
             soundDownloader = get()
         )
     }
+
+    // EKSİK OLAN PARÇA BURASI
+    factory {
+        DownloadAllMissingSoundsUseCase(
+            repository = get(),
+            soundDownloader = get()
+        )
+    }
+
 }

@@ -21,4 +21,7 @@ interface SoundRepository{
     // YENİ: Sadece indirilmiş sesleri getirir
     fun getDownloadedSounds(): Flow<List<Sound>>
 
+    // YENİ: Sadece indirilmemiş (eksik) sesleri getirir.
+    // Flow değil suspend kullanıyoruz çünkü o anlık duruma göre indirme başlatacağız.
+    suspend fun getMissingSounds(): List<Sound>
 }

@@ -1,4 +1,4 @@
-package com.mustafakoceerr.justrelax.feature.home.components
+package com.mustafakoceerr.justrelax.core.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -69,41 +69,3 @@ fun JustRelaxSnackbarHost(
     }
 }
 
-@Preview(
-    name = "JustRelax Snackbar – Mesaj",
-    showBackground = true
-)
-@Composable
-fun JustRelaxSnackbarHostMessagePreview() {
-    val hostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(Unit) {
-        hostState.showSnackbar(
-            message = "Mix başarıyla kaydedildi."
-        )
-    }
-
-    MaterialTheme {
-        JustRelaxSnackbarHost(hostState = hostState)
-    }
-}
-
-@Preview(
-    name = "JustRelax Snackbar – Aksiyonlu",
-    showBackground = true
-)
-@Composable
-fun JustRelaxSnackbarHostWithActionPreview() {
-    val hostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(Unit) {
-        hostState.showSnackbar(
-            message = "Mix silindi.",
-            actionLabel = "Geri Al"
-        )
-    }
-
-    MaterialTheme {
-        JustRelaxSnackbarHost(hostState = hostState)
-    }
-}

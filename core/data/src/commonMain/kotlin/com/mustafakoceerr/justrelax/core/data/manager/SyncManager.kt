@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.core.data.manager
 
+import com.mustafakoceerr.justrelax.core.domain.manager.AppInitializer
 import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -8,28 +9,24 @@ import kotlinx.coroutines.withContext
 class SyncManager(
     private val dataSeeder: DataSeeder,
     private val soundRepository: SoundRepository
-) {
+): AppInitializer {
     /**
      * Uygulama açılışında çağrılacak tek fonksiyon.
      * Sıralama önemlidir: Önce yerel veriyi garantiye al, sonra internete bak.
      */
-    suspend fun initializeApp(){
-        withContext(Dispatchers.IO) {
-            // 1. ADIM: SEEDING (Yerel Dosyalar)
-            // Burası internetten bağımsızdır, asla patlamamalı.
+    override suspend fun initializeApp() {
+        withContext(Dispatchers.IO){
             try {
                 dataSeeder.seedData()
-            } catch (e: Exception) {
+            }catch (e: Exception){
                 e.printStackTrace()
-                // Seeding hatası Sync'i durdurmasın.
             }
 
-            // 2. ADIM: SYNC (Uzak Sunucu)
-            // Burası SSL hatası verebilir, internet olmayabilir.
             try {
                 soundRepository.syncSounds()
-            } catch (e: Exception) {
-                // e.printStackTrace() // Log kirliliği yapmasın diye kapattım, istersen aç.
+            }catch (e: Exception){
+                // Hata fırlat ki AppInitializationManager yakalasın.
+                throw e
             }
         }
     }

@@ -27,8 +27,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.feature.home.components.DownloadBanner
 import com.mustafakoceerr.justrelax.feature.home.components.HomeTabRow
-import com.mustafakoceerr.justrelax.feature.home.components.HomeTopBar
-import com.mustafakoceerr.justrelax.feature.home.components.JustRelaxSnackbarHost
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.feature.home.components.SoundCardGrid
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeEffect
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeIntent
@@ -57,11 +56,9 @@ data object HomeScreen : Screen {
                     }
 
                     HomeEffect.NavigateToSettings -> {
-                        // Core modüldeki AppScreen dönüşümü ile git
-                        val settingsScreen = homeNavigator.toSettings()
-                        // Voyager'ın push metodu Screen bekler, AppScreen'i cast etmemiz gerekebilir
-                        // Eğer AppScreen : Screen ise sorun yok.
-                        navigator.push(settingsScreen as Screen)
+                        // ARTIK CAST'E GEREK YOK!
+                        val settingsScreen = homeNavigator.toSettings() // <-- BU SATIR VARDI
+                        navigator.push(settingsScreen)
                     }
                 }
             }

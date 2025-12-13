@@ -3,6 +3,7 @@ package com.mustafakoceerr.justrelax.di
 import com.mustafakoceerr.justrelax.MainViewModel
 import com.mustafakoceerr.justrelax.core.audio.di.audioModule
 import com.mustafakoceerr.justrelax.core.data.di.dataModule
+import com.mustafakoceerr.justrelax.core.domain.manager.AppInitializationManager
 import com.mustafakoceerr.justrelax.core.navigation.TabProvider
 import com.mustafakoceerr.justrelax.core.navigation.di.navigationModule
 import com.mustafakoceerr.justrelax.core.ui.di.coreUiModule
@@ -30,8 +31,10 @@ val appModule = module {
     factory { MainViewModel(get()) }
 
     // Navigation Implementations (Interface -> Concrete Class)
+
     single<TabProvider> { TabProviderImpl() }
     factory<HomeNavigator> { HomeNavigatorImpl() }
+
 }
 expect val platformAudioModule: Module
 

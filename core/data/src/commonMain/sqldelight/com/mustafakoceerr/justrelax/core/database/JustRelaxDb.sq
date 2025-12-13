@@ -81,3 +81,6 @@ UPDATE mixEntity SET name = ? WHERE id = ?;
 -- İsim kontrolü (Varsa 1, yoksa 0 döner)
 countMixesByName:
 SELECT COUNT(*) FROM mixEntity WHERE name = ?;
+
+getMissingSounds:
+SELECT * FROM soundEntity WHERE localPath IS NULL;
