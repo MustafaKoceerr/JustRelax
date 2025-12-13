@@ -14,7 +14,6 @@ val savedModule = module {
     factory {
         SavedViewModel(
             savedMixRepository = get(),
-            soundManager = get(),
             playSavedMixUseCase = get(),
             observeSavedMixesUseCase = get()
         )

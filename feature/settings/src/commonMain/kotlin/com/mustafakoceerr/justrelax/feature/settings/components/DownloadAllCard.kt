@@ -25,6 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
+import justrelax.feature.settings.generated.resources.Res
+import justrelax.feature.settings.generated.resources.download_all_completed_title
+import justrelax.feature.settings.generated.resources.download_all_subtitle_recommended
+import justrelax.feature.settings.generated.resources.download_all_title
+import justrelax.feature.settings.generated.resources.download_progress
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun DownloadAllCard(
@@ -58,14 +64,14 @@ fun DownloadAllCard(
 
             Column {
                 Text(
-                    text = if (isDownloaded) "Kütüphane Tamamlandı" else "Tüm Sesleri İndir",
+                    text = if (isDownloaded) stringResource(Res.string.download_all_completed_title) else stringResource(Res.string.download_all_title),
                     style = MaterialTheme.typography.titleMedium,
                     color = contentColor
                 )
 
                 if (!isDownloaded && isDownloading){
                     Text(
-                        text = "Kesintisiz deneyim için önerilir.",
+                        text = stringResource(Res.string.download_all_subtitle_recommended),
                         style = MaterialTheme.typography.bodySmall,
                         color = contentColor.copy(alpha = 0.8f)
                     )
@@ -85,7 +91,10 @@ fun DownloadAllCard(
 
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "İndiriliyor... %${(progress * 100).toInt()}",
+                text = stringResource(
+                    Res.string.download_progress,
+                    (progress * 100).toInt()
+                ),
                 style = MaterialTheme.typography.labelSmall,
                 color= contentColor,
                 modifier = Modifier.align(Alignment.End)

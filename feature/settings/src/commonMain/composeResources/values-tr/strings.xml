@@ -1,17 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- SettingsScreen - theme & language info -->
-    <string name="current_theme">Current theme: %1$s</string>
-    <string name="current_language">Current language: %1$s</string>
 
-    <!-- Theme options -->
-    <string name="theme_light">Light</string>
-    <string name="theme_dark">Dark</string>
-    <string name="theme_system">System</string>
+    <!-- Settings -->
+    <string name="settings_title">Ayarlar</string>
 
-    <!-- Language section -->
-    <string name="language_settings_title">Language Settings</string>
-    <string name="language_system_default">System Default</string>
-    <string name="language_english">English</string>
-    <string name="language_turkish">Turkish</string>
+    <!-- Sections -->
+    <string name="section_content">İçerik</string>
+    <string name="section_support">Destek</string>
+
+    <!-- Theme -->
+    <string name="theme_section_title">Görünüm</string>
+    <string name="theme_system">Sistem</string>
+    <string name="theme_light">Aydınlık</string>
+    <string name="theme_dark">Karanlık</string>
+    <string name="current_theme">Geçerli tema: %1$s</string>
+
+    <!-- Language -->
+    <string name="settings_language_title">Dil</string>
+    <string name="language_selection_title">Dil Seçimi</string>
+    <string name="language_settings_title">Dil Ayarları</string>
+    <string name="language_system_default">Sistem varsayılanı</string>
+    <string name="current_language">Geçerli dil: %1$s</string>
+
+    <!-- Download all sounds -->
+    <string name="download_all_title">Tüm sesleri indir</string>
+    <string name="download_all_completed_title">Kütüphane tamamlandı</string>
+    <string name="download_all_subtitle_recommended">Kesintisiz deneyim için önerilir.</string>
+    <string name="download_progress">İndiriliyor… %%1$d</string>
+
+    <!-- Rating -->
+    <string name="rate_app_title">Uygulamayı Puanla</string>
+    <string name="rate_app_subtitle">Bize destek ol</string>
+
+    <!-- Feedback -->
+    <string name="feedback_title">İletişim &amp; Hata Bildir</string>
+    <string name="feedback_subtitle">Bir sorun mu var?</string>
+    <string name="feedback_subject">Just Relax – Destek &amp; Geri Bildirim</string>
+    <string name="feedback_body_template">\n\n\n---\nLütfen mesajınızı yukarıya yazın.</string>
+    <string name="support_email">kocerlabs@gmail.com</string>
+
+    <!-- About -->
+    <string name="about_title">Hakkında</string>
+
+    <!-- Legal -->
+    <string name="privacy_policy_url">https://www.google.com</string>
+
 </resources>

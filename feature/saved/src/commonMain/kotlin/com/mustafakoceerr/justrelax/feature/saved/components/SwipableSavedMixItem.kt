@@ -15,7 +15,6 @@ import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
 @Composable
 fun SwipableSavedMixItem(
     mix: SavedMixUiModel,
-    isPlaying: Boolean,
     onPlayClick: () -> Unit,
     onDelete: () -> Unit,
     onRename: () -> Unit,
@@ -39,7 +38,6 @@ fun SwipableSavedMixItem(
                 date = mix.date,
                 soundCount = mix.icons.size,
                 icons = mix.icons, // Artık List<String> (URL) gidiyor
-                isPlaying = isPlaying,
                 onPlayClick = onPlayClick,
                 onRenameClick = onRename,
                 onShareClick = onShare,

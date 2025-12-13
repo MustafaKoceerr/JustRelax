@@ -1,9 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.saved
 
-
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.mustafakoceerr.justrelax.core.audio.SoundManager
 import com.mustafakoceerr.justrelax.core.domain.repository.SavedMixRepository
 import com.mustafakoceerr.justrelax.core.model.SavedMix
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedEffect
@@ -18,9 +16,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
 class SavedViewModel(
     private val savedMixRepository: SavedMixRepository,
-    private val soundManager: SoundManager,
     private val playSavedMixUseCase: PlaySavedMixUseCase,
     private val observeSavedMixesUseCase: ObserveSavedMixesUseCase
 ) : ScreenModel {
@@ -40,7 +38,7 @@ class SavedViewModel(
     fun processIntent(intent: SavedIntent) {
         when (intent) {
             is SavedIntent.LoadMixes -> observeMixes()
-            is SavedIntent.PlayMix -> toggleMix(intent.mixId)
+            is SavedIntent.PlayMix -> playMix(intent.mixId)
             is SavedIntent.DeleteMix -> deleteMix(intent.mix)
             is SavedIntent.UndoDelete -> undoDelete()
             is SavedIntent.CreateNewMix -> {
@@ -57,18 +55,13 @@ class SavedViewModel(
         }
     }
 
-    private fun toggleMix(mixId: Long) {
-        val currentId = _state.value.currentPlayingMixId
+    private fun playMix(mixId: Long) {
+        // Listeden mix'i bul
+        val mixToPlay = _state.value.mixes.find { it.id == mixId }?.domainModel ?: return
 
-        if (currentId == mixId) {
-            soundManager.stopAll()
-            _state.update { it.copy(currentPlayingMixId = null) }
-        } else {
-            val mixToPlay = _state.value.mixes.find { it.id == mixId }?.domainModel ?: return
-            screenModelScope.launch {
-                playSavedMixUseCase(mixToPlay)
-                _state.update { it.copy(currentPlayingMixId = mixId) }
-            }
+        screenModelScope.launch {
+            // Sadece çal. UI güncellemesi yok, animasyon tetikleme yok.
+            playSavedMixUseCase(mixToPlay)
         }
     }
 
@@ -76,12 +69,6 @@ class SavedViewModel(
         screenModelScope.launch {
             lastDeletedMix = uiMix.domainModel
             savedMixRepository.deleteMix(uiMix.id)
-
-            if (_state.value.currentPlayingMixId == uiMix.id) {
-                soundManager.stopAll()
-                _state.update { it.copy(currentPlayingMixId = null) }
-            }
-
             _effect.send(SavedEffect.ShowSnackbar("${uiMix.title} silindi", "Geri Al"))
         }
     }

@@ -27,6 +27,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.AppTheme
+import justrelax.feature.settings.generated.resources.Res
+import justrelax.feature.settings.generated.resources.theme_dark
+import justrelax.feature.settings.generated.resources.theme_light
+import justrelax.feature.settings.generated.resources.theme_section_title
+import justrelax.feature.settings.generated.resources.theme_system
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ThemeSelector(
@@ -37,7 +43,7 @@ fun ThemeSelector(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = "Görünüm",
+            text = stringResource(Res.string.theme_section_title),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
@@ -50,21 +56,23 @@ fun ThemeSelector(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             ThemeOptionCard(
-                title = "Sistem",
+                title = stringResource(Res.string.theme_system),
                 icon = Icons.Rounded.SettingsBrightness,
                 isSelected = currentTheme == AppTheme.SYSTEM,
                 onClick = { onThemeSelected(AppTheme.SYSTEM) },
                 modifier = Modifier.weight(1f)
             )
+
             ThemeOptionCard(
-                title = "Aydınlık",
+                title = stringResource(Res.string.theme_light),
                 icon = Icons.Rounded.LightMode,
                 isSelected = currentTheme == AppTheme.LIGHT,
                 onClick = { onThemeSelected(AppTheme.LIGHT) },
                 modifier = Modifier.weight(1f)
             )
+
             ThemeOptionCard(
-                title = "Karanlık",
+                title = stringResource(Res.string.theme_dark),
                 icon = Icons.Rounded.DarkMode,
                 isSelected = currentTheme == AppTheme.DARK,
                 onClick = { onThemeSelected(AppTheme.DARK) },

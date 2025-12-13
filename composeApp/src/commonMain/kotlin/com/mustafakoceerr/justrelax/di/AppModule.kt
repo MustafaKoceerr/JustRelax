@@ -5,7 +5,7 @@ import com.mustafakoceerr.justrelax.core.audio.di.audioModule
 import com.mustafakoceerr.justrelax.core.data.di.dataModule
 import com.mustafakoceerr.justrelax.core.navigation.TabProvider
 import com.mustafakoceerr.justrelax.core.navigation.di.navigationModule
-import com.mustafakoceerr.justrelax.core.ui.di.platformUiModule
+import com.mustafakoceerr.justrelax.core.ui.di.coreUiModule
 import com.mustafakoceerr.justrelax.core.ui.di.sharedUiModule
 import com.mustafakoceerr.justrelax.feature.ai.di.aiModule
 import com.mustafakoceerr.justrelax.feature.home.di.homeModule
@@ -52,7 +52,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             audioModule,
             // AppNavigator
             navigationModule,
-            platformUiModule,
+            coreUiModule,
             // --- FEATURES ---
 
             savedModule,

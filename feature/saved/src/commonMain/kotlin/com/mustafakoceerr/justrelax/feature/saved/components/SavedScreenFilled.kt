@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.saved.components
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +29,7 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Share
-import androidx.compose.material.icons.rounded.Stop
+import androidx.compose.animation.core.Animatable
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -43,13 +45,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -251,20 +260,20 @@ fun SavedMixPlayButtonPreview() {
 
 @Composable
 fun SavedMixMenu(
-    onRenameClick:() -> Unit,
-    onShareClick: ()-> Unit,
-    onDeleteClick:()-> Unit,
+    onRenameClick: () -> Unit,
+    onShareClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     // Menünün açık/kapalı durumunu burada tutuyoruz
     var expanded by remember { mutableStateOf(false) }
 
-    Box(modifier = modifier){
+    Box(modifier = modifier) {
         // 1. üç nokta ikonu
         IconButton(
-            onClick = {expanded = true},
+            onClick = { expanded = true },
             modifier = Modifier.size(32.dp) // Biraz küçük olabilir, ikincil işlem
-        ){
+        ) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
                 contentDescription = "Seçenekler",
@@ -275,38 +284,44 @@ fun SavedMixMenu(
         // 2. Açılır menü
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = {expanded = false },
+            onDismissRequest = { expanded = false },
             // Menü arkalanı
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
             shape = RoundedCornerShape(12.dp)
-        ){
+        ) {
             DropdownMenuItem(
-                text = {Text("Yeniden adlandır")},
+                text = { Text("Yeniden adlandır") },
                 onClick = {
                     expanded = false
                     onRenameClick()
                 },
-                leadingIcon = { Icon(Icons.Rounded.Edit, null)}
+                leadingIcon = { Icon(Icons.Rounded.Edit, null) }
             )
 
             // Share
             DropdownMenuItem(
-                text = {Text("Paylaş")},
+                text = { Text("Paylaş") },
                 onClick = {
                     expanded = false
                     onShareClick()
                 },
-                leadingIcon = {Icon(Icons.Rounded.Share,null)}
+                leadingIcon = { Icon(Icons.Rounded.Share, null) }
             )
 
             // Delete (Kritik işlem olduğu için kırmızı yapabiliriz opsiyonel olarak)
             DropdownMenuItem(
-                text = {Text("Sil", color = MaterialTheme.colorScheme.error)},
+                text = { Text("Sil", color = MaterialTheme.colorScheme.error) },
                 onClick = {
                     expanded = false
                     onDeleteClick()
                 },
-                leadingIcon = {Icon(Icons.Rounded.Delete, null, tint = MaterialTheme.colorScheme.error )}
+                leadingIcon = {
+                    Icon(
+                        Icons.Rounded.Delete,
+                        null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
             )
         }
     }
@@ -333,107 +348,148 @@ fun SavedMixCard(
     title: String,
     date: String,
     soundCount: Int,
-    icons: List<String>, // URL Listesi
-    isPlaying: Boolean,
+    icons: List<String>,
     onPlayClick: () -> Unit,
-    onRenameClick: () -> Unit,
-    onShareClick: () -> Unit,
-    onDeleteClick: () -> Unit,
+    onRenameClick: () -> Unit = {},
+    onShareClick: () -> Unit = {},
+    onDeleteClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    // --- RENKLER ---
+    val baseColor = MaterialTheme.colorScheme.surfaceContainer
+    val shimmerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f)
+    val borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+
+    // --- ŞEKİL ---
+    // Şekli bir değişkene atıyoruz ki hem Card hem de Clip için aynısını kullanalım
+    val cardShape = RoundedCornerShape(16.dp)
+
+    // --- ANİMASYON ---
+    val shimmerProgress = remember { Animatable(0f) }
+    var clickTrigger by remember { mutableStateOf(0) }
+
+    LaunchedEffect(clickTrigger) {
+        if (clickTrigger > 0) {
+            shimmerProgress.snapTo(0f)
+            shimmerProgress.animateTo(
+                targetValue = 2f,
+                animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
+            )
+            shimmerProgress.snapTo(0f)
+        }
+    }
+
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clickable { onPlayClick() },
-        shape = RoundedCornerShape(16.dp),
+            // --- DÜZELTME BURADA ---
+            // Çizim yapmadan önce alanı yuvarlak olarak kırpıyoruz (Maskeliyoruz)
+            .clip(cardShape)
+            .clickable {
+                onPlayClick()
+                clickTrigger++
+            }
+            .drawBehind {
+                // 1. Zemin
+                drawRect(baseColor)
+
+                // 2. Işık Efekti
+                if (shimmerProgress.value > 0f) {
+                    val distance = size.width + size.height
+                    val currentOffset = distance * shimmerProgress.value
+
+                    val brush = Brush.linearGradient(
+                        colors = listOf(baseColor, shimmerColor, baseColor),
+                        start = Offset(currentOffset - size.width, currentOffset - size.height),
+                        end = Offset(currentOffset, currentOffset),
+                        tileMode = TileMode.Clamp
+                    )
+                    drawRect(brush = brush)
+                }
+            },
+        shape = cardShape,
         colors = CardDefaults.cardColors(
-            containerColor = if (isPlaying) MaterialTheme.colorScheme.primaryContainer
-            else MaterialTheme.colorScheme.surfaceContainer,
-            contentColor = if (isPlaying) MaterialTheme.colorScheme.onPrimaryContainer
-            else MaterialTheme.colorScheme.onSurface
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(1.dp, borderColor)
     ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            // SOL TARA (Metinler ve İkonlar)
-            // Weight veriyoruz ki sağdaki buton sıkışmasın
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // SOL TARA (Metinler ve İkonlar)
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
 
-                Text(
-                    text = "$soundCount Ses • $date",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    Text(
+                        text = "$soundCount Ses • $date",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                // --- DÜZELTME: LAZY ROW ---
-                // --- GÜNCELLEME BURADA ---
-                LazyRow(
-                    // Boyut büyüdüğü için binme payını -8'den -12'ye çektik, daha tok durur.
-                    horizontalArrangement = Arrangement.spacedBy((-12).dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    items(icons.size) { index ->
-                        Surface(
-                            shape = CircleShape,
-                            border = BorderStroke(
-                                width = 2.dp,
-                                color = if (isPlaying) MaterialTheme.colorScheme.primaryContainer
-                                else MaterialTheme.colorScheme.surfaceContainer
-                            ),
-                            // Container Boyutu: 28dp -> 36dp yaptık
-                            modifier = Modifier.size(36.dp),
-                            color = MaterialTheme.colorScheme.surface
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                AsyncImage(
-                                    model = icons[index],
-                                    contentDescription = null,
-                                    // İkon Boyutu: 18dp -> 24dp yaptık
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .padding(2.dp),
-                                    contentScale = ContentScale.Fit,
-                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-                                )
+                    // MİNİ İKONLAR
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy((-12).dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        items(icons.size) { index ->
+                            Surface(
+                                shape = CircleShape,
+                                border = BorderStroke(
+                                    width = 2.dp,
+                                    color = MaterialTheme.colorScheme.primary
+                                ),
+                                modifier = Modifier.size(36.dp),
+                                color = MaterialTheme.colorScheme.surface
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    AsyncImage(
+                                        model = icons[index],
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                            .padding(2.dp),
+                                        contentScale = ContentScale.Fit,
+                                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            // SAĞ TARAF (Play Butonu)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
+                // SAĞ TARAF (Play Butonu)
                 Surface(
-                    onClick = onPlayClick,
+                    onClick = {
+                        onPlayClick()
+                        clickTrigger++
+                    },
                     shape = CircleShape,
-                    color = if (isPlaying) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    color = MaterialTheme.colorScheme.secondaryContainer,
                     modifier = Modifier.size(48.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
-                            imageVector = if (isPlaying) Icons.Rounded.Stop else Icons.Rounded.PlayArrow,
+                            imageVector = Icons.Rounded.PlayArrow,
                             contentDescription = "Play",
-                            tint = if (isPlaying) MaterialTheme.colorScheme.onPrimary
-                            else MaterialTheme.colorScheme.onSurface,
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
                             modifier = Modifier.size(24.dp)
                         )
                     }

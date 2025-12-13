@@ -11,8 +11,7 @@ import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
 
 @Composable
 fun SavedMixesList(
-    mixes: List<SavedMixUiModel>, // DEĞİŞİKLİK: UI Model Listesi
-    currentPlayingId: Long?,      // DEĞİŞİKLİK: Long? (Domain ID tipi)
+    mixes: List<SavedMixUiModel>,
     onMixClick: (SavedMixUiModel) -> Unit,
     onMixDelete: (SavedMixUiModel) -> Unit,
     modifier: Modifier = Modifier
@@ -28,7 +27,6 @@ fun SavedMixesList(
         ) { mix ->
             SwipableSavedMixItem(
                 mix = mix,
-                isPlaying = currentPlayingId == mix.id,
                 onPlayClick = { onMixClick(mix) },
                 onDelete = { onMixDelete(mix) },
                 onRename = { /* İleride */ },

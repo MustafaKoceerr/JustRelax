@@ -6,23 +6,23 @@ import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 
 class AndroidLanguageSwitcher : LanguageSwitcher {
+    // Android uygulama içinde değiştirebilir -> TRUE
+    override val supportsInAppSwitching: Boolean = true
 
     override suspend fun updateLanguage(language: AppLanguage) {
         val localeList = if (language == AppLanguage.SYSTEM){
-            LocaleListCompat.getEmptyLocaleList() // sistem varsayılanını uygula
-        }else{
-            LocaleListCompat.forLanguageTags(language.code) // seçili dili uygula
+            LocaleListCompat.getEmptyLocaleList()
+        } else {
+            LocaleListCompat.forLanguageTags(language.code)
         }
-        // Sonsuz döngü kontrolü: Zaten o dildeysek tekrar set etme!
+
         val currentLocales = AppCompatDelegate.getApplicationLocales()
         if (currentLocales.toLanguageTags() != localeList.toLanguageTags()) {
             AppCompatDelegate.setApplicationLocales(localeList)
-            // Best practices AppCompactDelegate ile dil değiştirmektir.
-        }    }
-
-    override fun openSystemSettings() {
-    // androidde system settings açmıyoruz.
+        }
     }
 
-
+    override fun openSystemSettings() {
+        // Android'de kullanılmayacak ama interface gereği boş durabilir
+    }
 }

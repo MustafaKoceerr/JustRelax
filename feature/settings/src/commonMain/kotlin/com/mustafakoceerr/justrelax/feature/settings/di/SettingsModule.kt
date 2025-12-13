@@ -9,7 +9,8 @@ val settingsModule = module {
     factory {
         SettingsViewModel(
             settingsRepository = get(),
-            languageSwitcher = get()
+            languageSwitcher = get(),
+            systemLauncher = get()
         )
     }
 }

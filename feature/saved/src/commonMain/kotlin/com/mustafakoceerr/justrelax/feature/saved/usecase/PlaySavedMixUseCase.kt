@@ -3,6 +3,7 @@ package com.mustafakoceerr.justrelax.feature.saved.usecase
 import com.mustafakoceerr.justrelax.core.audio.SoundManager
 import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.SavedMix
+import com.mustafakoceerr.justrelax.core.model.Sound
 import kotlinx.coroutines.flow.first
 
 
@@ -13,18 +14,20 @@ class PlaySavedMixUseCase(
     suspend operator fun invoke(savedMix: SavedMix) {
         val allSounds = soundRepository.getSounds().first()
 
-        val mixMap = savedMix.sounds.mapNotNull { savedSound ->
+        // ID eşleşmesi yaparak çalınacak listeyi hazırla
+        val mixMap = mutableMapOf<Sound, Float>()
+
+        savedMix.sounds.forEach { savedSound ->
             val realSound = allSounds.find { it.id == savedSound.id }
-            if (realSound != null) {
-                realSound to savedSound.volume
-            } else {
-                null
+            // Sadece indirilmiş sesleri çal (Güvenlik)
+            if (realSound != null && realSound.isDownloaded) {
+                mixMap[realSound] = savedSound.volume
             }
-        }.toMap()
+        }
 
         if (mixMap.isNotEmpty()) {
-            // todo: aç bunu
-//            soundManager.setMix(mixMap)
+            // Fire and Forget: Sadece çal, ID göndermene gerek yok (-1 gider)
+            soundManager.setMix(mixMap)
         }
     }
 }
