@@ -1,6 +1,9 @@
 package com.mustafakoceerr.justrelax.core.audio
 
+import android.app.Activity
+import android.app.Application
 import android.content.Context
+import android.os.Bundle
 import com.mustafakoceerr.justrelax.core.audio.manager.MasterPlayer
 import com.mustafakoceerr.justrelax.core.audio.manager.ServiceBridge
 import com.mustafakoceerr.justrelax.core.audio.manager.SoundPoolManager
@@ -13,15 +16,40 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class AndroidAudioPlayer(
     private val context: Context
 ) : AudioPlayer {
 
+    // --- BURASI EKLENDİ: Yaşam Döngüsü Takibi ---
+    init {
+        (context.applicationContext as? Application)?.registerActivityLifecycleCallbacks(
+            object : Application.ActivityLifecycleCallbacks {
+                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+                override fun onActivityStarted(activity: Activity) {}
+                override fun onActivityResumed(activity: Activity) {}
+                override fun onActivityPaused(activity: Activity) {}
+                override fun onActivityStopped(activity: Activity) {}
+                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+
+                override fun onActivityDestroyed(activity: Activity) {
+                    // Eğer aktivite sadece ekran döndürme vb. için değil, gerçekten kapanıyorsa (Swipe/Back)
+                    if (!activity.isChangingConfigurations) {
+                        // Servisi öldür ve bağlantıyı kes
+                        // releaseAll suspend olduğu için burada runBlocking kullanıyoruz (Destroy anı kritiktir)
+                        runBlocking {
+                            releaseAll()
+                        }
+                    }
+                }
+            }
+        )
+    }
     companion object {
         // Servis kapanmadan önce beklenecek süre (1 Saniye)
         // setMix sırasında servisin titremesini önler.
-        private const val SERVICE_SHUTDOWN_GRACE_PERIOD_MS = 1000L
+        private const val SERVICE_SHUTDOWN_GRACE_PERIOD_MS = 500L
     }
 
     private val _isPlaying = MutableStateFlow(false)
