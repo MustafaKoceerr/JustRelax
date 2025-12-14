@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.core.ui.components
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,7 @@ fun JustRelaxTopBar(
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     CenterAlignedTopAppBar(
+        windowInsets = WindowInsets(0), // <-- bunu ekle
         title = {
             Text(
                 text = title,

@@ -13,12 +13,14 @@ import com.mustafakoceerr.justrelax.feature.ai.navigation.AiNavigator
 import com.mustafakoceerr.justrelax.feature.home.di.homeModule
 import com.mustafakoceerr.justrelax.feature.home.navigation.HomeNavigator
 import com.mustafakoceerr.justrelax.feature.mixer.di.mixerModule
+import com.mustafakoceerr.justrelax.feature.mixer.navigation.MixerNavigator
 import com.mustafakoceerr.justrelax.feature.player.di.playerModule
 import com.mustafakoceerr.justrelax.feature.saved.di.savedModule
 import com.mustafakoceerr.justrelax.feature.settings.di.settingsModule
 import com.mustafakoceerr.justrelax.feature.timer.di.timerModule
 import com.mustafakoceerr.justrelax.navigation.AiNavigatorImpl
 import com.mustafakoceerr.justrelax.navigation.HomeNavigatorImpl
+import com.mustafakoceerr.justrelax.navigation.MixerNavigatorImpl
 import com.mustafakoceerr.justrelax.navigation.TabProviderImpl
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -37,6 +39,7 @@ val appModule = module {
     single<TabProvider> { TabProviderImpl() }
     factory<HomeNavigator> { HomeNavigatorImpl() }
     factory<AiNavigator> { AiNavigatorImpl() }
+    factory<MixerNavigator> { MixerNavigatorImpl() }
 
 }
 expect val platformAudioModule: Module

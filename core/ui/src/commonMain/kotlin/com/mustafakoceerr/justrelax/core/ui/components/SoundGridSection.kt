@@ -13,14 +13,17 @@ import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.Sound
 
 /**
- * Tüm ekranlarda kullanılan Ses Kartları Izgarası.
+ * Tüm uygulamada kullanılan standart Ses Listesi Izgarası.
+ * Home, Mixer ve AI ekranlarının hepsi görsel olarak bu yapıyı kullanır.
  *
  * @param sounds: Listelenecek sesler.
- * @param activeSoundsVolumeMap: Çalan seslerin ID ve Volume bilgisi.
+ * @param activeSoundsVolumeMap: Şu an çalan seslerin ID'si ve Ses Seviyesi.
  * @param downloadingSoundIds: (Opsiyonel) Şu an inmekte olan seslerin ID listesi. (Sadece Home kullanır)
- * @param onSoundClick: Karta tıklanınca ne olsun? (Home: İndir/Çal, Diğerleri: Çal)
- * @param onVolumeChange: Slider değişince ne olsun?
- * ...
+ * @param onSoundClick: Karta tıklanınca (Home: İndir/Çal, Diğerleri: Çal/Durdur).
+ * @param onVolumeChange: Ses seviyesi değişince.
+ * @param headerContent: Listenin en başına eklenecek özel içerik (Örn: Mixer sayacı).
+ * @param footerContent: Listenin en sonuna eklenecek özel içerik (Örn: Kaydet butonu).
+ * @param contentPadding: Listenin kenar boşlukları (PlayerBar için alttan boşluk bırakmak gerekebilir).
  */
 @Composable
 fun SoundGridSection(
@@ -32,7 +35,7 @@ fun SoundGridSection(
     modifier: Modifier = Modifier,
     headerContent: (LazyGridScope.() -> Unit)? = null,
     footerContent: (LazyGridScope.() -> Unit)? = null,
-    contentPadding: PaddingValues = PaddingValues(16.dp) // Esneklik için
+    contentPadding: PaddingValues = PaddingValues(16.dp)
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 110.dp),
@@ -41,25 +44,31 @@ fun SoundGridSection(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (headerContent != null) headerContent()
+        // 1. Varsa Header
+        if (headerContent != null) {
+            headerContent()
+        }
 
+        // 2. Ses Kartları
         items(sounds, key = { it.id }) { sound ->
+            // Map içinde varsa çalıyor demektir.
             val volume = activeSoundsVolumeMap[sound.id]
             val isPlaying = volume != null
             val isDownloading = downloadingSoundIds.contains(sound.id)
 
-            // SoundCard bileşeni zaten indirme durumunu (isDownloading) ve
-            // indirilip indirilmediğini (sound.localPath == null) biliyor olmalı.
             SoundCard(
                 sound = sound,
                 isPlaying = isPlaying,
                 isDownloading = isDownloading,
-                volume = volume ?: 0.5f,
+                volume = volume ?: 0.5f, // Çalmıyorsa varsayılan 0.5 göster
                 onCardClick = { onSoundClick(sound) },
                 onVolumeChange = { newVol -> onVolumeChange(sound.id, newVol) }
             )
         }
 
-        if (footerContent != null) footerContent()
+        // 3. Varsa Footer
+        if (footerContent != null) {
+            footerContent()
+        }
     }
 }

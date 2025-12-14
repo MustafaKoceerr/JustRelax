@@ -16,11 +16,10 @@ val mixerModule = module {
 
     factory {
         MixerViewModel(
-            generateRandomMixUseCase = get(),
-            soundManager = get(),
-            saveMixUseCase = get(),
-            toggleSoundUseCase = get(), // Core Audio'dan gelir
-            getDownloadedSoundCountUseCase = get() // Yeni eklediğimiz
+            get(),
+            get(),
+            get(),
+            get(),
         )
     }
 }

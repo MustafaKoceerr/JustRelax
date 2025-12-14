@@ -2,6 +2,7 @@ package com.mustafakoceerr.justrelax.core.audio.di
 
 import com.mustafakoceerr.justrelax.core.audio.SoundManager
 import com.mustafakoceerr.justrelax.core.audio.TimerManager
+import com.mustafakoceerr.justrelax.core.audio.controller.SoundListController
 import com.mustafakoceerr.justrelax.core.audio.domain.usecase.DownloadAllMissingSoundsUseCase
 import com.mustafakoceerr.justrelax.core.audio.domain.usecase.GetActiveSoundsUseCase
 import com.mustafakoceerr.justrelax.core.audio.domain.usecase.ToggleSoundUseCase
@@ -43,4 +44,7 @@ val audioModule = module {
             get()
         )
     }
+
+    single { SoundListController.Factory(soundManager = get()) }
+
 }

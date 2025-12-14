@@ -3,6 +3,7 @@ package com.mustafakoceerr.justrelax.feature.mixer
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.mustafakoceerr.justrelax.core.audio.SoundManager
+import com.mustafakoceerr.justrelax.core.audio.controller.SoundListController
 import com.mustafakoceerr.justrelax.core.audio.domain.usecase.GetDownloadedSoundCountUseCase
 import com.mustafakoceerr.justrelax.core.audio.domain.usecase.ToggleSoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
@@ -23,6 +24,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -32,54 +34,47 @@ import kotlinx.coroutines.launch
 
 class MixerViewModel(
     private val generateRandomMixUseCase: GenerateRandomMixUseCase,
-    private val soundManager: SoundManager,
     private val saveMixUseCase: SaveMixUseCase,
-    private val toggleSoundUseCase: ToggleSoundUseCase, // <--- ARTIK BU VAR
-    private val getDownloadedSoundCountUseCase: GetDownloadedSoundCountUseCase // <--- REPO YERİNE BU VAR
-     ) : ScreenModel {
+    private val getDownloadedSoundCountUseCase: GetDownloadedSoundCountUseCase,
+    private val controllerFactory: SoundListController.Factory // <--- Factory
+) : ScreenModel {
 
-    // İç State
+    // 1. Controller
+    val soundListController = controllerFactory.create(screenModelScope)
+
     private val _mixerState = MutableStateFlow(MixerState())
 
-    // Dış State (SoundManager ile birleştirilmiş)
-    val state = combine(
-        _mixerState,
-        soundManager.state
-    ) { mixerState, audioState ->
-        mixerState.copy(
-            activeSounds = audioState.activeSounds.mapValues { it.value.targetVolume }
-        )
-    }.stateIn(
-        scope = screenModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = MixerState()
-    )
+    // DÜZELTME: combine kaldırıldı. Artık sadece kendi state'ini sunuyor.
+    val state = _mixerState.asStateFlow()
 
     private val _effect = Channel<MixerEffect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
     init {
-        // ARTIK REPOSITORY YOK, USECASE VAR
         screenModelScope.launch {
             getDownloadedSoundCountUseCase().collectLatest { count ->
-                _mixerState.update {
-                    it.copy(showDownloadSuggestion = count < 20)
-                }
+                // Todo: bu count'u bir use case'e koyabiliriz ya da %80 gibi belirleyebiliriz.
+                _mixerState.update { it.copy(showDownloadSuggestion = count < 20) }
             }
         }
     }
 
     fun processIntent(intent: MixerIntent) {
         when (intent) {
-            is MixerIntent.SelectCount -> {
-                _mixerState.update { it.copy(selectedCount = intent.count) }
+            is MixerIntent.SelectCount -> _mixerState.update { it.copy(selectedCount = intent.count) }
+            is MixerIntent.CreateMix -> createMix()
+            is MixerIntent.HideSaveDialog -> _mixerState.update { it.copy(isSaveDialogVisible = false) }
+            is MixerIntent.ClickDownloadSuggestion -> screenModelScope.launch {
+                _effect.send(
+                    MixerEffect.NavigateToSettings
+                )
             }
 
-            is MixerIntent.CreateMix -> createMix()
+            is MixerIntent.ConfirmSaveMix -> saveMixToDb(intent.name)
 
             is MixerIntent.ShowSaveDialog -> {
-                // Sadece çalan ses varsa kaydetmeye izin ver
-                if (soundManager.state.value.activeSounds.isNotEmpty()) {
+                // Controller state'inden kontrol ediyoruz
+                if (soundListController.activeSoundsState.value.isNotEmpty()) {
                     _mixerState.update { it.copy(isSaveDialogVisible = true) }
                 } else {
                     screenModelScope.launch {
@@ -87,107 +82,39 @@ class MixerViewModel(
                     }
                 }
             }
-
-            is MixerIntent.HideSaveDialog -> {
-                _mixerState.update { it.copy(isSaveDialogVisible = false) }
-            }
-
-            is MixerIntent.ConfirmSaveMix -> saveMixToDb(intent.name)
-
-            is MixerIntent.ClickDownloadSuggestion -> {
-                screenModelScope.launch {
-                    _effect.send(MixerEffect.NavigateToHome)
-                }
-            }
-
-            is MixerIntent.ToggleSound -> toggleSound(intent.sound)
-            is MixerIntent.ChangeVolume -> changeVolume(intent.id, intent.volume)
         }
-    }
-
-    private fun toggleSound(sound: Sound) {
-        screenModelScope.launch {
-            // BEST PRACTICE: Logic tek bir yerde (UseCase)
-            // Mixer'da indirme olmadığı için isDownloading hep false
-            toggleSoundUseCase(sound, isCurrentlyDownloading = false).collect {
-                // Sonuçları dinlememize gerek yok, SoundManager state'i güncelleyince UI güncellenir.
-            }
-        }
-    }
-
-    private fun changeVolume(id: String, volume: Float) {
-        soundManager.onVolumeChange(id, volume)
     }
 
     private fun createMix() {
         if (_mixerState.value.isLoading) return
-
         screenModelScope.launch {
             _mixerState.update { it.copy(isLoading = true) }
-
-            // 1. Rastgele mix oluştur (Map<Sound, Float>)
             val mixMap = generateRandomMixUseCase(_mixerState.value.selectedCount)
 
-            // 2. SoundManager'a "Bunları çal" de
-            soundManager.setMix(mixMap)
+            soundListController.setMix(mixMap)
 
-            // Biraz bekle ki kullanıcı yükleniyor efektini görsün (Opsiyonel)
             delay(300)
-
-            // 3. UI'ı güncelle (Kartları göster)
             _mixerState.update {
                 it.copy(
-                    mixedSounds = mixMap.keys.toList(),
-                    isLoading = false
+                    mixedSounds = mixMap.keys.toList(), isLoading = false
                 )
             }
         }
     }
 
-    private fun saveMixToDb(name: String) {
+    private fun saveMixToDb(name: String){
         screenModelScope.launch {
-            // SoundManager'dan o an aktif olan sesleri alıp kaydediyoruz
-            // Not: soundManager.state.value.activeSounds -> Map<String, ActiveSound>
-            // Bizim UseCase -> Map<String, Float> istiyor. Dönüştürelim.
-
-            val currentActiveSounds = soundManager.state.value.activeSounds.mapValues {
-                it.value.targetVolume
-            }
-
+            val currentActiveSounds = soundListController.activeSoundsState.value
             val result = saveMixUseCase(name, currentActiveSounds)
 
-            when (result) {
+            val effectMsg = when(result){
                 is SaveMixResult.Success -> {
                     _mixerState.update { it.copy(isSaveDialogVisible = false) }
-                    _effect.send(
-                        MixerEffect.ShowSnackbar(
-                            UiText.StringResource(Res.string.msg_mix_saved_success, name)
-                        )
-                    )
+                    UiText.StringResource(Res.string.msg_mix_saved_success, name)
                 }
-                is SaveMixResult.Error.NameAlreadyExists -> {
-                    _effect.send(
-                        MixerEffect.ShowSnackbar(
-                            UiText.StringResource(Res.string.error_mix_name_exists)
-                        )
-                    )
-                }
-                is SaveMixResult.Error.EmptyName -> {
-                    _effect.send(
-                        MixerEffect.ShowSnackbar(
-                            UiText.StringResource(Res.string.error_mix_name_empty)
-                        )
-                    )
-                }
-                is SaveMixResult.Error.NoSounds -> {
-                    _mixerState.update { it.copy(isSaveDialogVisible = false) }
-                    _effect.send(
-                        MixerEffect.ShowSnackbar(
-                            UiText.StringResource(Res.string.error_no_sounds)
-                        )
-                    )
-                }
+                else -> UiText.StringResource(Res.string.error_no_sounds)
             }
+            _effect.send(MixerEffect.ShowSnackbar(effectMsg))
         }
     }
 }
