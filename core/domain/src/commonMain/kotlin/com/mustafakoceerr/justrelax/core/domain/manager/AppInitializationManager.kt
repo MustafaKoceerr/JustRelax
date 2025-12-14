@@ -16,7 +16,6 @@ class AppInitializationManager(private val appInitializer: AppInitializer) {
             // Arayüz üzerinden çağırdığı için arkada ne çalıştığını bilmiyor.
             appInitializer.initializeApp()
         } catch (e: Exception) {
-            println("AppInitialization Error: ${e.message}")
         } finally {
             _isInitialized.value = true
         }

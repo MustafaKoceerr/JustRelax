@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="go_to_settings">Go to Settings</string>
-
-    <!-- Theme -->
     <string name="current_theme">Current Theme: %1$s</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_system">System</string>
-
-    <!-- Language -->
     <string name="current_language">Current Language: %1$s</string>
     <string name="language_english">English</string>
     <string name="language_turkish">Turkish</string>
-
-
-
-    <!-- Ses İsimleri -->
     <string name="sound_rain_light">Light Rain</string>
     <string name="sound_rain_thunder">Rain &amp; Thunder</string>
     <string name="sound_ocean">Ocean Waves</string>
@@ -24,5 +16,15 @@
     <string name="sound_wind">Wind Ambience</string>
     <string name="sound_cafe">Cafe Ambience</string>
     <string name="sound_fan">Fan Noise</string>
-
+    <string name="download_suggestion_title">More sounds?</string>
+    <string name="download_suggestion_description">Complete your library and enjoy the mixer.</string>
+    <string name="download_suggestion_action_cd">View</string>
+    <string name="save_mix_dialog_title">Save Mix</string>
+    <string name="save_mix_dialog_description">Give this mix a name:</string>
+    <string name="save_mix_dialog_name_label">Mix Name</string>
+    <string name="save_mix_dialog_name_placeholder">e.g. Sleep Mode, Focus...</string>
+    <string name="save_mix_dialog_name_error">Please enter a name</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="sound_action_download">Download</string>
 </resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="saved_empty_image_cd">Henüz kaydedilmiş mix yok</string>
+    <string name="saved_empty_title">Henüz Kayıt Yok</string>
+    <string name="saved_empty_description">Favori seslerini karıştırıp buraya kaydedebilirsin. Kendi huzur koleksiyonunu oluşturmaya başla.</string>
+    <string name="action_create_new_mix">Yeni Mix Oluştur</string>
+    <string name="action_delete">Sil</string>
+    <string name="saved_mix_metadata">%1$d Ses • %2$s</string>
+    <string name="action_play">Oynat</string>
+    <string name="action_pause">Duraklat</string>
+    <string name="action_more_options">Seçenekler</string>
+    <string name="action_rename">Yeniden Adlandır</string>
+    <string name="action_share">Paylaş</string>
+    <string name="saved_screen_title">Kayıtlı Mixler</string>
+</resources>

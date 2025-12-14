@@ -21,6 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_cancel
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_save
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_description
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_name_error
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_name_label
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_name_placeholder
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SaveMixDialog(
@@ -29,19 +38,21 @@ fun SaveMixDialog(
     onConfirm: (String) -> Unit
 ) {
     if (isOpen) {
-        // Her açılışta boş başlar, kullanıcıyı yazmaya zorlar.
         var mixName by remember { mutableStateOf("") }
         var isError by remember { mutableStateOf(false) }
 
         AlertDialog(
             onDismissRequest = onDismiss,
             title = {
-                Text(text = "Mix'i Kaydet", style = MaterialTheme.typography.titleLarge)
+                Text(
+                    text = stringResource(Res.string.save_mix_dialog_title),
+                    style = MaterialTheme.typography.titleLarge
+                )
             },
             text = {
                 Column {
                     Text(
-                        text = "Bu karışıma bir isim ver:",
+                        text = stringResource(Res.string.save_mix_dialog_description),
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -50,20 +61,37 @@ fun SaveMixDialog(
                         value = mixName,
                         onValueChange = {
                             mixName = it
-                            // Kullanıcı yazmaya başlayınca hata mesajını kaldır
                             if (isError) isError = false
                         },
-                        label = { Text("Mix İsmi") },
-                        // Default value yerine Placeholder: Kullanıcıya fikir verir ama veri değildir.
-                        placeholder = { Text("Örn: Uyku Modu, Çalışma...") },
+                        label = {
+                            Text(
+                                text = stringResource(
+                                    Res.string.save_mix_dialog_name_label
+                                )
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(
+                                    Res.string.save_mix_dialog_name_placeholder
+                                )
+                            )
+                        },
                         singleLine = true,
                         isError = isError,
-                        // Hata durumunda altta uyarı çıkar
-                        supportingText = if (isError) { { Text("Lütfen bir isim girin") } } else null,
+                        supportingText = if (isError) {
+                            {
+                                Text(
+                                    text = stringResource(
+                                        Res.string.save_mix_dialog_name_error
+                                    )
+                                )
+                            }
+                        } else null,
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Sentences, // Baş harf büyük
-                            imeAction = ImeAction.Done // Klavyede "Tamam" butonu
+                            capitalization = KeyboardCapitalization.Sentences,
+                            imeAction = ImeAction.Done
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = {
@@ -87,12 +115,20 @@ fun SaveMixDialog(
                         }
                     }
                 ) {
-                    Text("Kaydet")
+                    Text(
+                        text = stringResource(
+                            Res.string.action_save
+                        )
+                    )
                 }
             },
             dismissButton = {
                 TextButton(onClick = onDismiss) {
-                    Text("İptal")
+                    Text(
+                        text = stringResource(
+                            Res.string.action_cancel
+                        )
+                    )
                 }
             }
         )

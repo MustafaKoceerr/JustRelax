@@ -13,6 +13,9 @@ import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.components.DownloadSuggestionCard
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiIntent
+import justrelax.feature.ai.generated.resources.Res
+import justrelax.feature.ai.generated.resources.ai_screen_title
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,20 +32,21 @@ fun AiIdleScreen(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. TopBar (Artık ekranın kendi parçası)
-        JustRelaxTopBar(title = "Just Relax AI")
+        // 1. TopBar
+        JustRelaxTopBar(
+            title = stringResource(Res.string.ai_screen_title)
+        )
 
-        // 2. Üst Boşluk (Spacer)
-        // TopBar'dan sonraki boşluk. AIVisualizer'ı ortalamak için weight kullanıyoruz.
+        // 2. Üst boşluk
         Spacer(modifier = Modifier.weight(1f))
 
-        // 3. AIVisualizer (Nefes alan daire)
+        // 3. AI Visualizer
         AIVisualizer(isThinking = isThinking)
 
-        // 4. Alt Boşluk (Spacer)
+        // 4. Alt boşluk
         Spacer(modifier = Modifier.weight(1f))
 
-        // 5. İndirme Öneri Kartı
+        // 5. Download Suggestion
         if (showDownloadSuggestion) {
             DownloadSuggestionCard(
                 onClick = { onIntent(AiIntent.ClickDownloadSuggestion) },
@@ -51,7 +55,7 @@ fun AiIdleScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // 6. AIPromptInput
+        // 6. Prompt Input
         AIPromptInput(
             text = prompt,
             isPlayingSomething = activeSoundsCount > 0,
@@ -63,7 +67,6 @@ fun AiIdleScreen(
             onSuggestionClick = { onIntent(AiIntent.SelectSuggestion(it)) }
         )
 
-        // Alttan boşluk (NavBar'a yapışmasın)
         Spacer(modifier = Modifier.height(16.dp))
     }
 }

@@ -37,7 +37,6 @@ class SettingsRepositoryImpl (
         settings[KEY_LANGUAGE] = language.code
     }
 
-    // Todo: Bu bir cold flow, bunu stateFlow ile değiştir ve daha profesyonel yönet.
     @OptIn(ExperimentalSettingsApi::class)
     override fun getLanguage(): Flow<AppLanguage> {
         // 3. ADIM: Bu satır da aynı şekilde çalışacak.

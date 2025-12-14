@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="error_generic">Algo salió mal. Inténtalo de nuevo.</string>
+    <string name="error_no_sounds_found">No se encontraron sonidos recomendados en la biblioteca.</string>
+    <string name="error_no_sounds_to_save">No hay sonidos para guardar.</string>
+    <string name="error_mix_name_exists">Ya existe un mix con este nombre.</string>
+    <string name="success_mix_saved">%1$s se guardó correctamente.</string>
+    <string name="ai_screen_title">Just Relax AI</string>
+    <string name="ai_suggestion_rainforest">Selva Lluviosa</string>
+    <string name="ai_suggestion_deep_sleep">Sueño Profundo</string>
+    <string name="ai_suggestion_cafe">Ambiente de Café</string>
+    <string name="ai_suggestion_meditation">Meditación</string>
+    <string name="ai_suggestion_storm">Tormenta</string>
+    <string name="ai_prompt_placeholder">Describe tu entorno ideal...</string>
+    <string name="ai_prompt_placeholder_with_context">¿Qué añadimos aquí?</string>
+    <string name="ai_context_toggle_cd">Contexto</string>
+    <string name="ai_action_generate">Generar</string>
+    <string name="ai_action_edit">Editar</string>
+    <string name="ai_action_regenerate">Regenerar</string>
+    <string name="action_save">Guardar</string>
+</resources>

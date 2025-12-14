@@ -49,106 +49,159 @@ import com.mustafakoceerr.justrelax.feature.mixer.components.SaveMixButton
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerEffect
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerIntent
 import com.mustafakoceerr.justrelax.feature.mixer.navigation.MixerNavigator
+import justrelax.feature.mixer.generated.resources.Res
+import justrelax.feature.mixer.generated.resources.mixer_empty_state_message
+import justrelax.feature.mixer.generated.resources.mixer_screen_title
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-
 data object MixerScreen : AppScreen {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        // 1. Dependencies
-        // Parent navigator'a ihtiyacımız var çünkü Settings tam ekran açılacak (Tab'ın içinde değil)
-        val navigator = LocalNavigator.currentOrThrow.parent ?: LocalNavigator.currentOrThrow
+        val navigator =
+            LocalNavigator.currentOrThrow.parent ?: LocalNavigator.currentOrThrow
+
         val mixerNavigator = koinInject<MixerNavigator>()
         val snackbarController = koinInject<GlobalSnackbarController>()
 
-        // 2. ViewModel & States
         val mixerViewModel = koinScreenModel<MixerViewModel>()
         val mixerState by mixerViewModel.state.collectAsState()
-        val activeSoundsMap by mixerViewModel.soundListController.activeSoundsState.collectAsState()
+        val activeSoundsMap by mixerViewModel
+            .soundListController
+            .activeSoundsState
+            .collectAsState()
 
-
-        // 3. Effect Handling (Global Snackbar & Navigation)
         LaunchedEffect(Unit) {
             mixerViewModel.effect.collect { effect ->
                 when (effect) {
                     is MixerEffect.ShowSnackbar -> {
-                        // Global Controller'ı tetikliyoruz
-                        snackbarController.showSnackbar(effect.message.asStringSuspend())
+                        snackbarController.showSnackbar(
+                            effect.message.asStringSuspend()
+                        )
                     }
 
                     is MixerEffect.NavigateToSettings -> {
-                        // Settings bir "Tab" olmadığı için push ile yeni ekran olarak açıyoruz
-                        navigator.push(mixerNavigator.toSettings())
+                        navigator.push(
+                            mixerNavigator.toSettings()
+                        )
                     }
                 }
             }
         }
 
-        // 4. Dialog (Scaffold dışında, en üstte)
         SaveMixDialog(
             isOpen = mixerState.isSaveDialogVisible,
-            onDismiss = { mixerViewModel.processIntent(MixerIntent.HideSaveDialog) },
-            onConfirm = { name -> mixerViewModel.processIntent(MixerIntent.ConfirmSaveMix(name)) }
+            onDismiss = {
+                mixerViewModel.processIntent(
+                    MixerIntent.HideSaveDialog
+                )
+            },
+            onConfirm = { name ->
+                mixerViewModel.processIntent(
+                    MixerIntent.ConfirmSaveMix(name)
+                )
+            }
         )
 
-        // 3. UI Structure
         Scaffold(
             containerColor = Color.Transparent,
-            // Sadece TopBar burada tanımlı. SnackbarHost YOK (MainScreen yönetiyor).
-            // ÖNEMLİ 1: İçerideki Scaffold sistem çubuklarını (Status Bar) tekrar hesaplamasın.
             contentWindowInsets = WindowInsets(0.dp),
-            topBar = { JustRelaxTopBar(title = "Mixer") }
+            topBar = {
+                JustRelaxTopBar(
+                    title = stringResource(
+                        Res.string.mixer_screen_title
+                    )
+                )
+            }
         ) { innerPadding ->
-            // innerPadding: Sadece bu Scaffold'un TopBar yüksekliğini içerir.
-            // MainScreen'den gelen BottomBar boşluğu zaten dışarıdaki Box tarafından halledildi.
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    // ÖNEMLİ 2: Tüm padding'i değil, SADECE TopBar yüksekliğini tepeden veriyoruz.
-                    // Böylece bottom veya horizontal padding sıfır kalır.
-                    .padding(top = innerPadding.calculateTopPadding())
-
+                    .padding(
+                        top = innerPadding.calculateTopPadding()
+                    )
             ) {
-                // Üst Kısım
                 MixCountSelector(
                     selectedCount = mixerState.selectedCount,
-                    onCountSelected = { mixerViewModel.processIntent(MixerIntent.SelectCount(it)) },
+                    onCountSelected = {
+                        mixerViewModel.processIntent(
+                            MixerIntent.SelectCount(it)
+                        )
+                    },
                     modifier = Modifier.padding(vertical = 16.dp)
                 )
 
                 Box(modifier = Modifier.padding(horizontal = 16.dp)) {
                     CreateMixButton(
-                        onClick = { mixerViewModel.processIntent(MixerIntent.CreateMix) },
+                        onClick = {
+                            mixerViewModel.processIntent(
+                                MixerIntent.CreateMix
+                            )
+                        },
                         isLoading = mixerState.isLoading
                     )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Alt Kısım (Ortak Grid)
                 if (mixerState.mixedSounds.isNotEmpty()) {
                     SoundGridSection(
                         sounds = mixerState.mixedSounds,
                         activeSoundsVolumeMap = activeSoundsMap,
-                        onSoundClick = { mixerViewModel.soundListController.onSoundClicked(it) },
-                        onVolumeChange = { id, vol -> mixerViewModel.soundListController.onVolumeChanged(id, vol) },
+                        onSoundClick = {
+                            mixerViewModel
+                                .soundListController
+                                .onSoundClicked(it)
+                        },
+                        onVolumeChange = { id, vol ->
+                            mixerViewModel
+                                .soundListController
+                                .onVolumeChanged(id, vol)
+                        },
                         modifier = Modifier.weight(1f),
-                        // Grid'in alt boşluğu: FAB veya ekstra bir şey olmadığı için standart bırakabiliriz.
-                        // MainScreen zaten BottomBar kadar boşluk bıraktı.
                         contentPadding = PaddingValues(16.dp),
                         footerContent = {
                             if (mixerState.showDownloadSuggestion) {
-                                item(span = { GridItemSpan(maxLineSpan) }) {
-                                    Box(modifier = Modifier.padding(top = 24.dp)) {
-                                        DownloadSuggestionCard(onClick = { mixerViewModel.processIntent(MixerIntent.ClickDownloadSuggestion) })
+                                item(
+                                    span = {
+                                        GridItemSpan(maxLineSpan)
+                                    }
+                                ) {
+                                    Box(
+                                        modifier = Modifier.padding(top = 24.dp)
+                                    ) {
+                                        DownloadSuggestionCard(
+                                            onClick = {
+                                                mixerViewModel.processIntent(
+                                                    MixerIntent.ClickDownloadSuggestion
+                                                )
+                                            }
+                                        )
                                     }
                                 }
                             }
-                            item(span = { GridItemSpan(maxLineSpan) }) {
-                                Box(modifier = Modifier.padding(top = 24.dp, bottom = 16.dp).fillMaxWidth(), contentAlignment = Alignment.Center) {
+
+                            item(
+                                span = {
+                                    GridItemSpan(maxLineSpan)
+                                }
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(
+                                            top = 24.dp,
+                                            bottom = 16.dp
+                                        )
+                                        .fillMaxWidth(),
+                                    contentAlignment = Alignment.Center
+                                ) {
                                     SaveMixButton(
-                                        onClick = { mixerViewModel.processIntent(MixerIntent.ShowSaveDialog) },
+                                        onClick = {
+                                            mixerViewModel.processIntent(
+                                                MixerIntent.ShowSaveDialog
+                                            )
+                                        },
                                         modifier = Modifier.fillMaxWidth(0.6f)
                                     )
                                 }
@@ -156,9 +209,19 @@ data object MixerScreen : AppScreen {
                         }
                     )
                 } else {
-                    // Empty State
-                    Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Text("Bir sayı seç ve karıştır!", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(
+                                Res.string.mixer_empty_state_message
+                            ),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
             }

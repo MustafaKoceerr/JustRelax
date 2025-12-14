@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="msg_mix_saved_success">%1$s başarıyla kaydedildi!</string>
-    <string name="error_mix_name_exists">Bu isimde bir mix zaten var.</string>
+    <string name="error_mix_name_exists">Bu isimde bir mix zaten mevcut.</string>
     <string name="error_mix_name_empty">İsim boş olamaz.</string>
     <string name="error_no_sounds">Kaydedilecek ses yok.</string>
-
+    <string name="mix_count_selector_title">Kaç ses ile mix yapmak istiyorsun?</string>
+    <string name="action_create_mix">Mix Oluştur</string>
+    <string name="action_save_mix">Mix’i Kaydet</string>
+    <string name="mixer_screen_title">Mixer</string>
+    <string name="mixer_empty_state_message">Bir sayı seç ve karıştır!</string>
 </resources>

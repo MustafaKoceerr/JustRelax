@@ -31,22 +31,27 @@ import com.mustafakoceerr.justrelax.feature.home.components.SoundCardGrid
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeEffect
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeIntent
 import com.mustafakoceerr.justrelax.feature.home.navigation.HomeNavigator
+import justrelax.feature.home.generated.resources.Res
+import justrelax.feature.home.generated.resources.action_settings
+import justrelax.feature.home.generated.resources.home_screen_title
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 data object HomeScreen : Screen {
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow.parent ?: LocalNavigator.currentOrThrow
-        val homeNavigator = koinInject<HomeNavigator>() // Modüller arası navigasyon
+        val navigator = LocalNavigator.currentOrThrow.parent
+            ?: LocalNavigator.currentOrThrow
 
+        val homeNavigator = koinInject<HomeNavigator>()
         val screenModel = koinScreenModel<HomeScreenModel>()
         val state by screenModel.state.collectAsState()
 
         val snackbarHostState = remember { SnackbarHostState() }
 
-        // Effect Dinleme (Toast, Navigasyon)
         LaunchedEffect(Unit) {
             screenModel.effect.collectLatest { effect ->
                 when (effect) {
@@ -55,72 +60,95 @@ data object HomeScreen : Screen {
                     }
 
                     HomeEffect.NavigateToSettings -> {
-                        // ARTIK CAST'E GEREK YOK!
-                        val settingsScreen = homeNavigator.toSettings() // <-- BU SATIR VARDI
-                        navigator.push(settingsScreen)
+                        navigator.push(homeNavigator.toSettings())
                     }
                 }
             }
         }
 
         Scaffold(
-            // KRİTİK: Arka plan gradyanının görünmesi için şeffaf yapıyoruz
             containerColor = Color.Transparent,
             topBar = {
-                // ARTIK GENEL BİLEŞENİMİZİ KULLANIYORUZ
                 JustRelaxTopBar(
-                    title = "Just Relax",
+                    title = stringResource(Res.string.home_screen_title),
                     actions = {
-                        IconButton(onClick = { screenModel.processIntent(HomeIntent.SettingsClicked) }) {
+                        IconButton(
+                            onClick = {
+                                screenModel.processIntent(
+                                    HomeIntent.SettingsClicked
+                                )
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Outlined.Settings,
-                                contentDescription = "Settings"
+                                contentDescription = stringResource(
+                                    Res.string.action_settings
+                                )
                             )
                         }
                     }
                 )
             },
-            snackbarHost = { JustRelaxSnackbarHost(snackbarHostState) }
+            snackbarHost = {
+                JustRelaxSnackbarHost(snackbarHostState)
+            }
         ) { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = paddingValues.calculateTopPadding())
-                ) {
-                    HomeTabRow(
-                        categories = state.categories,
-                        selectedCategory = state.selectedCategory,
-                        onCategorySelected = { category ->
-                            screenModel.processIntent(HomeIntent.SelectCategory(category))
-                        }
-                    )
-
-                    DownloadBanner(
-                        isVisible = state.showDownloadBanner,
-                        isDownloading = state.isDownloadingAll,
-                        downloadProgress = state.totalDownloadProgress,
-                        onConfirm = { screenModel.processIntent(HomeIntent.DownloadAllMissing) },
-                        onDismiss = { screenModel.processIntent(HomeIntent.DismissBanner) },
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
-
-                    SoundCardGrid(
-                        sounds = state.sounds, // Filtrelenmiş liste
-                        activeSounds = state.activeSounds,
-                        downloadingSoundIds = state.downloadingSoundIds,
-                        onSoundClick = { sound ->
-                            screenModel.processIntent(HomeIntent.ToggleSound(sound))
-                        },
-                        onVolumeChange = { id, vol ->
-                            screenModel.processIntent(HomeIntent.ChangeVolume(id, vol))
-                        },
-                        contentPadding = PaddingValues(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 16.dp,
-                            bottom = paddingValues.calculateBottomPadding() + 80.dp // PlayerBar için boşluk
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = paddingValues.calculateTopPadding())
+            ) {
+                HomeTabRow(
+                    categories = state.categories,
+                    selectedCategory = state.selectedCategory,
+                    onCategorySelected = { category ->
+                        screenModel.processIntent(
+                            HomeIntent.SelectCategory(category)
                         )
+                    }
+                )
+
+                DownloadBanner(
+                    isVisible = state.showDownloadBanner,
+                    isDownloading = state.isDownloadingAll,
+                    downloadProgress = state.totalDownloadProgress,
+                    onConfirm = {
+                        screenModel.processIntent(
+                            HomeIntent.DownloadAllMissing
+                        )
+                    },
+                    onDismiss = {
+                        screenModel.processIntent(
+                            HomeIntent.DismissBanner
+                        )
+                    },
+                    modifier = Modifier.padding(
+                        horizontal = 16.dp,
+                        vertical = 8.dp
                     )
+                )
+
+                SoundCardGrid(
+                    sounds = state.sounds,
+                    activeSounds = state.activeSounds,
+                    downloadingSoundIds = state.downloadingSoundIds,
+                    onSoundClick = { sound ->
+                        screenModel.processIntent(
+                            HomeIntent.ToggleSound(sound)
+                        )
+                    },
+                    onVolumeChange = { id, vol ->
+                        screenModel.processIntent(
+                            HomeIntent.ChangeVolume(id, vol)
+                        )
+                    },
+                    contentPadding = PaddingValues(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 16.dp,
+                        bottom = paddingValues.calculateBottomPadding() + 80.dp
+                    )
+                )
             }
         }
     }

@@ -45,71 +45,52 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import justrelax.feature.timer.generated.resources.Res
+import justrelax.feature.timer.generated.resources.timer_action_start
+import justrelax.feature.timer.generated.resources.timer_unit_hour
+import justrelax.feature.timer.generated.resources.timer_unit_minute
+import justrelax.feature.timer.generated.resources.timer_unit_second
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-/**
- * SENIOR NOTU: INFINITE WHEEL PICKER MANTIĞI
- *
- * Bu bileşen "Sanal Sonsuzluk" (Virtual Infinity) kullanır.
- * Gerçekte sonsuz bir liste yoktur. Int.MAX_VALUE kadar büyük bir liste oluştururuz.
- * Kullanıcıyı bu listenin tam ortasından başlatırız.
- * Kullanıcı yukarı veya aşağı kaydırdığında aslında bu devasa listenin içinde gezer.
- * Modulo (%) operatörü ile [index % items.size] diyerek gerçek veriyi buluruz.
- */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun InfiniteWheelPicker(
     modifier: Modifier = Modifier,
     width: Dp = 90.dp,
-    itemHeight: Dp = 100.dp, // Her bir satırın yüksekliği (Sabit olmalı)
-    items: List<String>, // Gösterilecek veriler (00, 01, 02...)
-    initialItem: String, // Başlangıçta seçili olacak değer
+    itemHeight: Dp = 100.dp,
+    items: List<String>,
+    initialItem: String,
     textStyle: TextStyle = MaterialTheme.typography.displayMedium,
-    activeColor: Color = MaterialTheme.colorScheme.onSurface, // Seçili olanın rengi (Parlak)
-    inactiveColor: Color = activeColor.copy(alpha = 0.2f), // Seçili olmayanın rengi (Silik)
-    onItemSelected: (String, Int) -> Unit // Seçim değiştiğinde tetiklenen callback
+    activeColor: Color = MaterialTheme.colorScheme.onSurface,
+    inactiveColor: Color = activeColor.copy(alpha = 0.2f),
+    onItemSelected: (String, Int) -> Unit
 ) {
-    // 1. SANAL SONSUZLUK AYARLARI
     val largeCount = Int.MAX_VALUE
-    val startIndex = largeCount / 2 // Listenin ortası
+    val startIndex = largeCount / 2
 
-    // Başlangıç indeksini hesapla:
-    // Kullanıcının istediği 'initialItem'ın, listenin ortasındaki en yakın karşılığını buluyoruz.
     val initialIndex = remember(items, initialItem) {
         val index = items.indexOf(initialItem)
         if (index != -1) startIndex + index - (startIndex % items.size) else startIndex
     }
 
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIndex)
-
-    // 2. NATIVE SNAPPING (YAPIŞMA)
-    // Kaydırma bitince tekerleğin "tık" diye en yakın sayıya oturmasını sağlayan native API.
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
-
-    // 3. PERFORMANS OPTİMİZASYONU (derivedStateOf)
-    // listState.firstVisibleItemIndex her piksel kaymasında değişir.
-    // derivedStateOf kullanmazsak, her pikselde tüm ekranı yeniden çizer (Recomposition).
-    // Bunu kullanarak sadece index değiştiğinde (yeni sayıya geçince) tetiklenmesini sağlıyoruz.
     val centerIndex by remember { derivedStateOf { listState.firstVisibleItemIndex } }
 
-    // Seçim değişikliğini dinle ve dışarıya haber ver
     LaunchedEffect(listState.isScrollInProgress) {
         if (!listState.isScrollInProgress) {
-            // Modulo (%) ile gerçek indeksi buluyoruz (Örn: 10005 % 60 = 5)
             val actualIndex = centerIndex % items.size
             onItemSelected(items[actualIndex], actualIndex)
         }
     }
 
-    // 4. GÖRSEL MASKELEME (GRADIENT BRUSH)
-    // Üstü ve altı silik, ortası parlak yapan fırça.
     val brush = remember(activeColor, inactiveColor) {
         Brush.verticalGradient(
             0.0f to inactiveColor,
-            0.35f to inactiveColor, // Üst kısım silik
-            0.35f to activeColor,   // KESKİN GEÇİŞ: Buradan itibaren parlak
-            0.65f to activeColor,   // Orta kısım parlak
-            0.65f to inactiveColor, // KESKİN GEÇİŞ: Buradan itibaren silik
+            0.35f to inactiveColor,
+            0.35f to activeColor,
+            0.65f to activeColor,
+            0.65f to inactiveColor,
             1.0f to inactiveColor
         )
     }
@@ -117,7 +98,7 @@ fun InfiniteWheelPicker(
     Box(
         modifier = modifier
             .width(width)
-            .height(itemHeight * 3), // Ekranda her zaman 3 satır görünür
+            .height(itemHeight * 3),
         contentAlignment = Alignment.Center
     ) {
         LazyColumn(
@@ -125,19 +106,14 @@ fun InfiniteWheelPicker(
             flingBehavior = flingBehavior,
             modifier = Modifier
                 .fillMaxSize()
-                // --- SENIOR GRAFİK HİLESİ ---
-                // CompositingStrategy.Offscreen: İçeriği önce sanal bir katmana çizer.
-                // BlendMode.SrcIn: Fırçayı (Gradient) sadece metinlerin üzerine uygular.
-                // Sonuç: Metinler yukarı çıktıkça renk değiştirir (Silikleşir).
                 .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
                 .drawWithCache {
                     onDrawWithContent {
-                        drawContent() // Metinleri çiz
-                        drawRect(brush = brush, blendMode = BlendMode.SrcIn) // Fırçayı uygula
+                        drawContent()
+                        drawRect(brush = brush, blendMode = BlendMode.SrcIn)
                     }
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
-            // Padding sayesinde listenin başı ve sonu tam ortaya gelebilir
             contentPadding = PaddingValues(vertical = itemHeight)
         ) {
             items(largeCount) { index ->
@@ -145,14 +121,14 @@ fun InfiniteWheelPicker(
 
                 Box(
                     modifier = Modifier
-                        .height(itemHeight) // Sabit yükseklik
+                        .height(itemHeight)
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = item,
                         style = textStyle,
-                        color = Color.Black, // Rengi Brush belirlediği için burası önemsiz
+                        color = Color.Black,
                         maxLines = 1,
                         textAlign = TextAlign.Center
                     )
@@ -162,11 +138,6 @@ fun InfiniteWheelPicker(
     }
 }
 
-/**
- * STATE HOLDER (DURUM YÖNETİCİSİ)
- * Saat, Dakika ve Saniye verilerini tutan sınıf.
- * Bu sayede UI (Composable) içinde logic yazmak yerine state üzerinden yönetiriz.
- */
 class JustRelaxTimerState(
     initialHour: Int,
     initialMinute: Int,
@@ -176,12 +147,10 @@ class JustRelaxTimerState(
     var minute by mutableIntStateOf(initialMinute)
     var second by mutableIntStateOf(initialSecond)
 
-    // Toplam saniyeyi hesaplayan yardımcı özellik
     val totalSeconds: Long
         get() = (hour * 3600L) + (minute * 60L) + second
 
     companion object {
-        // Ekran döndürüldüğünde veya tema değiştiğinde verilerin kaybolmaması için Saver.
         val Saver: Saver<JustRelaxTimerState, *> = listSaver(
             save = { listOf(it.hour, it.minute, it.second) },
             restore = { JustRelaxTimerState(it[0], it[1], it[2]) }
@@ -200,8 +169,6 @@ fun rememberJustRelaxTimerState(
     }
 }
 
-// --- YARDIMCI COMPONENT ---
-// Her bir tekerleği ve başlığını hizalayan sarmalayıcı
 @Composable
 private fun TimerUnitColumn(
     label: String,
@@ -212,13 +179,11 @@ private fun TimerUnitColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Başlık (Saat, Dakika...)
         Text(
             text = label,
             style = labelStyle,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        // Tekerlek
         content()
     }
 }
@@ -228,13 +193,10 @@ fun JustRelaxTimerPicker(
     modifier: Modifier = Modifier,
     state: JustRelaxTimerState = rememberJustRelaxTimerState()
 ) {
-    // --- VERİLER ---
-    // remember kullanıyoruz ki her çizimde listeler tekrar oluşmasın
     val hours = remember { (0..24).map { it.toString().padStart(2, '0') } }
     val minutes = remember { (0..59).map { it.toString().padStart(2, '0') } }
     val seconds = remember { (0..59).map { it.toString().padStart(2, '0') } }
 
-    // --- STİLLER ---
     val textStyle = MaterialTheme.typography.displayLarge.copy(
         fontSize = 50.sp,
         fontWeight = FontWeight.Bold
@@ -252,14 +214,15 @@ fun JustRelaxTimerPicker(
 
     val itemHeight = 100.dp
 
-    // --- DÜZEN ---
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 1. SAAT
-        TimerUnitColumn(label = "Saat", labelStyle = labelStyle) {
+        TimerUnitColumn(
+            label = stringResource(Res.string.timer_unit_hour),
+            labelStyle = labelStyle
+        ) {
             InfiniteWheelPicker(
                 itemHeight = itemHeight,
                 items = hours,
@@ -269,8 +232,6 @@ fun JustRelaxTimerPicker(
             )
         }
 
-        // AYIRAÇ (:)
-        // label = " " (Boşluk) vererek hizalamayı koruyoruz.
         TimerUnitColumn(label = " ", labelStyle = labelStyle) {
             Text(
                 text = ":",
@@ -280,8 +241,10 @@ fun JustRelaxTimerPicker(
             )
         }
 
-        // 2. DAKİKA
-        TimerUnitColumn(label = "Dakika", labelStyle = labelStyle) {
+        TimerUnitColumn(
+            label = stringResource(Res.string.timer_unit_minute),
+            labelStyle = labelStyle
+        ) {
             InfiniteWheelPicker(
                 itemHeight = itemHeight,
                 items = minutes,
@@ -291,7 +254,6 @@ fun JustRelaxTimerPicker(
             )
         }
 
-        // AYIRAÇ (:)
         TimerUnitColumn(label = " ", labelStyle = labelStyle) {
             Text(
                 text = ":",
@@ -301,8 +263,10 @@ fun JustRelaxTimerPicker(
             )
         }
 
-        // 3. SANİYE
-        TimerUnitColumn(label = "Saniye", labelStyle = labelStyle) {
+        TimerUnitColumn(
+            label = stringResource(Res.string.timer_unit_second),
+            labelStyle = labelStyle
+        ) {
             InfiniteWheelPicker(
                 itemHeight = itemHeight,
                 items = seconds,
@@ -318,15 +282,11 @@ fun JustRelaxTimerPicker(
 fun TimerSetupScreen(
     onStartClick: (Long) -> Unit
 ) {
-    // State'i burada oluşturup Picker'a veriyoruz (State Hoisting)
     val pickerState = rememberJustRelaxTimerState()
 
-    // Ana Kapsayıcı BOX
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // 1. ORTA KISIM (WHEEL PICKER)
-        // Tam ortada dursun
         Box(
             modifier = Modifier.align(Alignment.Center),
             contentAlignment = Alignment.Center
@@ -336,8 +296,6 @@ fun TimerSetupScreen(
             )
         }
 
-        // 2. ALT KISIM (BAŞLAT BUTONU)
-        // En alta sabitleyip, aşağıdan 48dp boşluk bırakıyoruz.
         Button(
             onClick = {
                 val total = pickerState.totalSeconds
@@ -346,8 +304,8 @@ fun TimerSetupScreen(
                 }
             },
             modifier = Modifier
-                .align(Alignment.BottomCenter) // Alta Çapa At
-                .padding(bottom = 48.dp)       // Sabit Boşluk
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 48.dp)
                 .widthIn(min = 120.dp)
                 .height(56.dp),
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
@@ -357,7 +315,9 @@ fun TimerSetupScreen(
             )
         ) {
             Text(
-                "Başlat",
+                text = stringResource(
+                    Res.string.timer_action_start
+                ),
                 style = MaterialTheme.typography.titleMedium
             )
         }

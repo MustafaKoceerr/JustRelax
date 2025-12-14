@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import com.mustafakoceerr.justrelax.core.audio.service.JustRelaxService
+import com.mustafakoceerr.justrelax.core.audio.R
 
 class ServiceBridge(
     private val context: Context,
@@ -15,7 +16,7 @@ class ServiceBridge(
     private var service: JustRelaxService? = null
     private var isBound = false
 
-    // CACHING: Servis bağlı değilken gelen son durumu burada tutacağız.
+    // CACHING
     private var lastIsPlaying: Boolean = false
     private var lastActiveCount: Int = 0
 
@@ -28,8 +29,6 @@ class ServiceBridge(
             service?.onMasterToggleAction = onMasterToggle
             service?.onStopAction = onStopAction
 
-            // KRİTİK NOKTA: Bağlantı kurulduğu an, hafızadaki son durumu servise bas!
-            // Böylece "Play" emri arada kaynamaz.
             pushUpdateToService()
         }
 
@@ -42,13 +41,7 @@ class ServiceBridge(
     fun startAndBind() {
         if (!isBound) {
             val intent = Intent(context, JustRelaxService::class.java)
-            // Android 8.0+ kontrolü Service içinde veya burada yapılabilir,
-            // startForegroundService çağırmak güvenlidir.
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                context.startForegroundService(intent)
-            } else {
-                context.startService(intent)
-            }
+            context.startForegroundService(intent)
             context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
     }
@@ -58,8 +51,8 @@ class ServiceBridge(
             service?.stopForegroundService()
             try {
                 context.unbindService(connection)
-            } catch (e: Exception) {
-                // Bazen servis zaten ölmüş olabilir, çökmesin.
+            } catch (_: Exception) {
+                // Servis ölmüş olabilir
             }
             isBound = false
             service = null
@@ -67,16 +60,21 @@ class ServiceBridge(
     }
 
     fun updateNotification(isPlaying: Boolean, activeCount: Int) {
-        // 1. Önce hafızaya kaydet (Her zaman en güncel veri bizde kalsın)
         lastIsPlaying = isPlaying
         lastActiveCount = activeCount
-
-        // 2. Servis varsa güncelle, yoksa onServiceConnected bekleyecek.
         pushUpdateToService()
     }
 
     private fun pushUpdateToService() {
-        val text = if (lastActiveCount > 0) "$lastActiveCount ses çalıyor" else "Just Relax"
+        val text = if (lastActiveCount > 0) {
+            context.getString(
+                R.string.notification_active_sound_count,
+                lastActiveCount
+            )
+        } else {
+            context.getString(R.string.app_name)
+        }
+
         service?.updateNotification(lastIsPlaying, text)
     }
 }

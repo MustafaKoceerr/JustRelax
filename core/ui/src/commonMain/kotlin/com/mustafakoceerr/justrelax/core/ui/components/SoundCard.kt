@@ -27,20 +27,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SoundCard(
     sound: Sound,
     isPlaying: Boolean,
-    isDownloading: Boolean, // YENİ: İndiriliyor mu?
+    isDownloading: Boolean,
     volume: Float,
     onCardClick: () -> Unit,
     onVolumeChange: (Float) -> Unit,
-    modifier: Modifier = Modifier // Dışarıdan müdahale için
+    modifier: Modifier = Modifier
 ) {
-    // Animasyon ekleyelim: Slider açılırken yumuşak geçiş olsun
-    // val animateShape by animateDpAsState(...) yapılabilir ama şimdilik simple.
-
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -50,44 +50,52 @@ fun SoundCard(
             onClick = onCardClick,
             modifier = Modifier.aspectRatio(1f),
             shape = MaterialTheme.shapes.medium,
-            color = if (isPlaying) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh
+            color = if (isPlaying)
+                MaterialTheme.colorScheme.primaryContainer
+            else
+                MaterialTheme.colorScheme.surfaceContainerHigh
         ) {
             Box(contentAlignment = Alignment.Center) {
-                // Ikon sabit kalır 32 dp. ortada şık görünür. ikonlar sabit dp verilirler.
+
                 Surface(
-                    modifier = Modifier.size(48.dp)
-                        // İndirilmemişse veya indiriliyorsa biraz şeffaf yapalım (Alpha),// İkonun kapsayıcısı SABİT
-                        .alpha(if (sound.isDownloaded) 1f else 0.3f), shape = CircleShape,
-                    color = if (isPlaying) MaterialTheme.colorScheme.primary else
+                    modifier = Modifier
+                        .size(48.dp)
+                        .alpha(if (sound.isDownloaded) 1f else 0.3f),
+                    shape = CircleShape,
+                    color = if (isPlaying)
+                        MaterialTheme.colorScheme.primary
+                    else
                         MaterialTheme.colorScheme.surfaceContainer,
-                    contentColor = if (isPlaying) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                    contentColor = if (isPlaying)
+                        MaterialTheme.colorScheme.onPrimary
+                    else
+                        MaterialTheme.colorScheme.onSurfaceVariant
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-
                         AsyncImage(
                             model = sound.iconUrl,
                             contentDescription = sound.name,
                             modifier = Modifier.size(24.dp),
                             contentScale = ContentScale.Fit,
                             colorFilter = ColorFilter.tint(
-                                if (isPlaying) MaterialTheme.colorScheme.onPrimary
-                                else MaterialTheme.colorScheme.onSurfaceVariant
+                                if (isPlaying)
+                                    MaterialTheme.colorScheme.onPrimary
+                                else
+                                    MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                     }
                 }
-                // 2. DURUM KATMANI (İndirme İkonu veya Spinner)
+
+                // DURUM KATMANI (İndirme / Spinner)
                 if (!sound.isDownloaded) {
                     if (isDownloading) {
-                        // Dönüyor...
                         CircularProgressIndicator(
                             modifier = Modifier.size(24.dp),
                             strokeWidth = 3.dp,
                             color = MaterialTheme.colorScheme.primary
                         )
                     } else {
-                        // İndir Butonu (Bulut)
-                        // Arkasına ufak bir zemin atalım ki ikon karışmasın
                         Box(
                             modifier = Modifier
                                 .size(32.dp)
@@ -99,7 +107,9 @@ fun SoundCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.CloudDownload,
-                                contentDescription = "Download",
+                                contentDescription = stringResource(
+                                    Res.string.sound_action_download
+                                ),
                                 modifier = Modifier.size(20.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
@@ -109,25 +119,26 @@ fun SoundCard(
             }
         }
 
-        // Slider veya İsim Alanı
-
+        // SLIDER veya İSİM
         if (isPlaying) {
             VolumeSlider(
                 value = volume,
                 onValueChange = onVolumeChange,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp) // Kartın kenarlarına yapışmasın
+                    .padding(horizontal = 8.dp)
             )
         } else {
             Text(
-                text = sound.name, // Modelden gelen isim
+                text = sound.name,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,             // Renk: onSurface (En net okunan siyah/koyu gri)
-                modifier = Modifier.padding(horizontal = 4.dp), // Yanlardan hafif boşluk
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (sound.isDownloaded) 1f else 0.5f)
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(horizontal = 4.dp),
+                color = MaterialTheme.colorScheme.onSurface.copy(
+                    alpha = if (sound.isDownloaded) 1f else 0.5f
+                )
             )
         }
     }

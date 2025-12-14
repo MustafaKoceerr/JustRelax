@@ -18,6 +18,7 @@ import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 
+// Todo: ai screen'i geliştir, daha iyi modeller daha iyi cevaplar almaya çalış.
 class AiServiceImpl(
     private val client: HttpClient,
     private val soundRepository: SoundRepository

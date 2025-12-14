@@ -1,0 +1,13 @@
+<resources>
+    <string name="error_email_app_not_found">
+        E-posta uygulaması bulunamadı.
+    </string>
+
+    <string name="error_browser_not_found">
+        Tarayıcı açılamadı.
+    </string>
+
+    <string name="play_store_web_url">
+        https://play.google.com/store/apps/details?id=%1$s
+    </string>
+</resources>

@@ -33,32 +33,25 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import justrelax.feature.saved.generated.resources.Res
+import justrelax.feature.saved.generated.resources.action_create_new_mix
+import justrelax.feature.saved.generated.resources.saved_empty_description
+import justrelax.feature.saved.generated.resources.saved_empty_image_cd
+import justrelax.feature.saved.generated.resources.saved_empty_title
 import justrelax.feature.saved.generated.resources.saved_empty_vector
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
-@Composable
-fun SavedMixesEmptyState(
-    onCreateClick: () -> Unit, // Kullanıcıyı Mixer ekranına yönlendirecek fonksiyon
-    modifier: Modifier = Modifier
-) {
-
-}
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun EmptyStateVisual(
     modifier: Modifier = Modifier
 ) {
-    // --- SÜZÜLME ANİMASYONU (FLOATING) ---
-    // Vektörün canlı görünmesi için hafif yukarı-aşağı hareketi
     val infiniteTransition = rememberInfiniteTransition(label = "floating")
     val offsetY by infiniteTransition.animateFloat(
         initialValue = -15f,
         targetValue = 15f,
         animationSpec = infiniteRepeatable(
-            animation = tween(2500, easing = FastOutSlowInEasing), // Yavaş ve akıcı
+            animation = tween(2500, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "offsetY"
@@ -68,25 +61,17 @@ fun EmptyStateVisual(
         modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        // KMP Kaynağı Kullanımı
         Image(
             painter = painterResource(Res.drawable.saved_empty_vector),
-            contentDescription = "Henüz kaydedilmiş mix yok",
+            contentDescription = stringResource(
+                Res.string.saved_empty_image_cd
+            ),
             modifier = Modifier
-                .height(220.dp) // Vektörün boyutuna göre burayı artırıp azaltabilirsin
+                .height(220.dp)
                 .fillMaxWidth()
-                // Animasyonu uyguluyoruz:
                 .graphicsLayer { translationY = offsetY },
             contentScale = ContentScale.Fit
         )
-    }
-}
-
-@Preview
-@Composable
-fun EmptyStateVisualPreview(){
-    JustRelaxTheme {
-        EmptyStateVisual()
     }
 }
 
@@ -98,9 +83,10 @@ fun EmptyStateMessage(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Başlık
         Text(
-            text = "Henüz Kayıt Yok",
+            text = stringResource(
+                Res.string.saved_empty_title
+            ),
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
@@ -108,24 +94,16 @@ fun EmptyStateMessage(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Açıklama
         Text(
-            text = "Favori seslerini karıştırıp buraya kaydedebilirsin. Kendi huzur koleksiyonunu oluşturmaya başla.",
+            text = stringResource(
+                Res.string.saved_empty_description
+            ),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
-            lineHeight = 24.sp // Okunabilirlik için satır aralığı
+            lineHeight = 24.sp
         )
     }
-}
-
-@Preview
-@Composable
-fun EmptyStateMessagePreview(){
-    JustRelaxTheme {
-        EmptyStateMessage()
-    }
-
 }
 
 @Composable
@@ -136,36 +114,26 @@ fun EmptyStateAction(
     Button(
         onClick = onClick,
         modifier = modifier
-            .widthIn(min = 200.dp) // En az 200dp genişlik
+            .widthIn(min = 200.dp)
             .height(50.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
         )
     ) {
-        Icon(Icons.Rounded.Add, contentDescription = null)
+        Icon(
+            imageVector = Icons.Rounded.Add,
+            contentDescription = null
+        )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Yeni Mix Oluştur",
+            text = stringResource(
+                Res.string.action_create_new_mix
+            ),
             style = MaterialTheme.typography.titleMedium
         )
     }
 }
-
-@Preview
-@Composable
-fun EmptyStateActionPreview(
-
-) {
-    JustRelaxTheme {
-        EmptyStateAction(
-            {}
-        )
-    }
-
-}
-
-
 
 @Composable
 fun SavedMixesEmptyScreen(
@@ -175,35 +143,20 @@ fun SavedMixesEmptyScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(32.dp), // Genel kenar boşluğu
+            .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center // Dikeyde ortala
+        verticalArrangement = Arrangement.Center
     ) {
-        // 1. Görsel
         EmptyStateVisual()
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // 2. Mesaj
         EmptyStateMessage()
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // 3. Aksiyon
         EmptyStateAction(
             onClick = onCreateClick
         )
     }
-}
-
-@Preview
-@Composable
-fun SavedMixesEmptyScreenPreview(
-) {
-    JustRelaxTheme {
-        SavedMixesEmptyScreen(
-            {}
-        )
-    }
-
 }

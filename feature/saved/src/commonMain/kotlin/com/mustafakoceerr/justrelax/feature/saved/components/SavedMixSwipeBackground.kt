@@ -17,6 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import justrelax.feature.saved.generated.resources.Res
+import justrelax.feature.saved.generated.resources.action_delete
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,26 +27,26 @@ fun SavedMixSwipeBackground(
     dismissState: SwipeToDismissBoxState,
     modifier: Modifier = Modifier
 ) {
-    // Renk kontrolü (Yön değişti: StartToEnd)
-    val color = if (dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
-        MaterialTheme.colorScheme.errorContainer
-    } else {
-        Color.Transparent
-    }
+    val color =
+        if (dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
+            MaterialTheme.colorScheme.errorContainer
+        } else {
+            Color.Transparent
+        }
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(color, RoundedCornerShape(16.dp))
             .padding(horizontal = 24.dp),
-        // KRİTİK DEĞİŞİKLİK: İkonu SOLA hizalıyoruz
         contentAlignment = Alignment.CenterStart
     ) {
-        // İkonu sadece doğru yönde kaydırırken göster
         if (dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd) {
             Icon(
                 imageVector = Icons.Rounded.Delete,
-                contentDescription = "Sil",
+                contentDescription = stringResource(
+                    Res.string.action_delete
+                ),
                 tint = MaterialTheme.colorScheme.onErrorContainer
             )
         }

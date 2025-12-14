@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Ajustes</string>
+    <string name="section_content">Contenido</string>
+    <string name="section_support">Soporte</string>
+    <string name="theme_section_title">Apariencia</string>
+    <string name="theme_system">Sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
+    <string name="current_theme">Tema actual: %1$s</string>
+    <string name="settings_language_title">Idioma</string>
+    <string name="language_selection_title">Selección de Idioma</string>
+    <string name="language_settings_title">Configuración de Idioma</string>
+    <string name="language_system_default">Predeterminado del sistema</string>
+    <string name="current_language">Idioma actual: %1$s</string>
+    <string name="download_all_title">Descargar todos los sonidos</string>
+    <string name="download_all_completed_title">Biblioteca completada</string>
+    <string name="download_all_subtitle_recommended">Recomendado para una experiencia sin interrupciones.</string>
+    <string name="download_progress">Descargando… %1$d%%</string>
+    <string name="rate_app_title">Calificar la aplicación</string>
+    <string name="rate_app_subtitle">Apóyanos</string>
+    <string name="feedback_title">Contacto y Reportar un Problema</string>
+    <string name="feedback_subtitle">¿Tienes algún problema?</string>
+    <string name="feedback_subject">Just Relax – Soporte y Comentarios</string>
+    <string name="feedback_body_template">\n\n\n---\nPor favor, escribe tu mensaje arriba.</string>
+    <string name="support_email">kocerlabs@gmail.com</string>
+    <string name="about_title">Acerca de</string>
+    <string name="privacy_policy_url">https://www.google.com</string>
+</resources>

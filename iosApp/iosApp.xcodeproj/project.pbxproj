@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		46E47070D77A6977AC19531C /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 328BB5B9087A51993C17DEF5 /* Pods_iosApp.framework */; };
-		C3C963FC2EE3C50B00B012A4 /* initial_config.json in Resources */ = {isa = PBXBuildFile; fileRef = C3C963FB2EE3C50B00B012A4 /* initial_config.json */; };
+		C3356B8D2EEF1552006659C1 /* initial_config.json in Resources */ = {isa = PBXBuildFile; fileRef = C3356B8C2EEF1552006659C1 /* initial_config.json */; };
 		C3F4F3202EE2878B00C8D72C /* nature_campfire.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C3F4F31A2EE2878B00C8D72C /* nature_campfire.mp3 */; };
 		C3F4F3212EE2878B00C8D72C /* city_cafe.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C3F4F3192EE2878B00C8D72C /* city_cafe.mp3 */; };
 		C3F4F3222EE2878B00C8D72C /* water_ocean_light.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C3F4F31D2EE2878B00C8D72C /* water_ocean_light.mp3 */; };
@@ -22,7 +22,7 @@
 /* Begin PBXFileReference section */
 		328BB5B9087A51993C17DEF5 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD7D4F4DD3FEBC808443E1D0 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
-		C3C963FB2EE3C50B00B012A4 /* initial_config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = initial_config.json; sourceTree = "<group>"; };
+		C3356B8C2EEF1552006659C1 /* initial_config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = initial_config.json; sourceTree = "<group>"; };
 		C3F4F3182EE2878B00C8D72C /* air_wind.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = air_wind.mp3; sourceTree = "<group>"; };
 		C3F4F3192EE2878B00C8D72C /* city_cafe.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = city_cafe.mp3; sourceTree = "<group>"; };
 		C3F4F31A2EE2878B00C8D72C /* nature_campfire.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = nature_campfire.mp3; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 		CCB93A5B419645FD9CC5708C = {
 			isa = PBXGroup;
 			children = (
-				C3C963FB2EE3C50B00B012A4 /* initial_config.json */,
+				C3356B8C2EEF1552006659C1 /* initial_config.json */,
 				C3F4F3182EE2878B00C8D72C /* air_wind.mp3 */,
 				C3F4F3192EE2878B00C8D72C /* city_cafe.mp3 */,
 				C3F4F31A2EE2878B00C8D72C /* nature_campfire.mp3 */,
@@ -191,7 +191,7 @@
 				C3F4F3242EE2878B00C8D72C /* air_wind.mp3 in Resources */,
 				C3F4F3252EE2878B00C8D72C /* water_rain_light.mp3 in Resources */,
 				C3F4F3262EE2878B00C8D72C /* water_rain_thunder.mp3 in Resources */,
-				C3C963FC2EE3C50B00B012A4 /* initial_config.json in Resources */,
+				C3356B8D2EEF1552006659C1 /* initial_config.json in Resources */,
 				C3F4F3272EE2878B00C8D72C /* nature_forest_birds.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

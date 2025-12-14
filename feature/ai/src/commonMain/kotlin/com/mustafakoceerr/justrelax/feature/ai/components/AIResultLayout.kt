@@ -37,16 +37,19 @@ import com.mustafakoceerr.justrelax.core.audio.controller.SoundListController
 import com.mustafakoceerr.justrelax.core.ui.components.SoundGridSection
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiIntent
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiUiState
-
+import justrelax.feature.ai.generated.resources.Res
+import justrelax.feature.ai.generated.resources.action_save
+import justrelax.feature.ai.generated.resources.ai_action_edit
+import justrelax.feature.ai.generated.resources.ai_action_regenerate
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AiResultScreen(
-    successUiState: AiUiState.SUCCESS, // İsim, Açıklama ve Ses Listesi burada
-    controller: SoundListController,   // Ses kontrolü burada
+    successUiState: AiUiState.SUCCESS,
+    controller: SoundListController,
     onIntent: (AiIntent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Controller'dan aktif sesleri dinliyoruz
     val activeSoundsMap by controller.activeSoundsState.collectAsState()
 
     Column(
@@ -70,7 +73,9 @@ fun AiResultScreen(
         ) {
             Text(
                 text = successUiState.mixName,
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold
+                ),
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f, fill = false)
@@ -78,7 +83,9 @@ fun AiResultScreen(
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
                 imageVector = Icons.Rounded.Edit,
-                contentDescription = "Düzenle",
+                contentDescription = stringResource(
+                    Res.string.ai_action_edit
+                ),
                 tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
                 modifier = Modifier.size(20.dp)
             )
@@ -99,7 +106,7 @@ fun AiResultScreen(
         // --- 2. SES KARTLARI ---
         SoundGridSection(
             sounds = successUiState.sounds,
-            activeSoundsVolumeMap = activeSoundsMap, // Controller State
+            activeSoundsVolumeMap = activeSoundsMap,
             onSoundClick = { controller.onSoundClicked(it) },
             onVolumeChange = { id, vol -> controller.onVolumeChanged(id, vol) },
             modifier = Modifier.weight(1f),
@@ -111,28 +118,51 @@ fun AiResultScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
+            horizontalArrangement = Arrangement.spacedBy(
+                16.dp,
+                Alignment.CenterHorizontally
+            )
         ) {
             OutlinedButton(
                 onClick = { onIntent(AiIntent.RegenerateMix) },
-                modifier = Modifier.weight(1f).height(50.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp)
             ) {
-                Icon(Icons.Rounded.Refresh, null, modifier = Modifier.size(20.dp))
-                Spacer(Modifier.width(8.dp))
-                Text("Yenile")
+                Icon(
+                    imageVector = Icons.Rounded.Refresh,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(
+                        Res.string.ai_action_regenerate
+                    )
+                )
             }
 
             Button(
                 onClick = { onIntent(AiIntent.ShowSaveDialog) },
-                modifier = Modifier.weight(1f).height(50.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
-                Icon(Icons.Rounded.Save, null, modifier = Modifier.size(20.dp))
-                Spacer(Modifier.width(8.dp))
-                Text("Kaydet")
+                Icon(
+                    imageVector = Icons.Rounded.Save,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(
+                        Res.string.action_save
+                    )
+                )
             }
         }
     }

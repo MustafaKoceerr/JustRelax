@@ -23,7 +23,3 @@ sealed interface PlayerIntent {
     data object StopAll : PlayerIntent               // Çarpı butonuna basıldı
 }
 
-// 3. EFFECT: Tek seferlik olaylar (Toast, Navigate vb.)
-sealed interface PlayerEffect {
-    data class ShowMessage(val message: String) : PlayerEffect
-}

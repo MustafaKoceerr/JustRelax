@@ -136,7 +136,8 @@ class HomeScreenModel(
                             )
                         }
                         bannerUseCases.dismiss() // Bir daha sorma (Tarih güncelle)
-                        _effect.send(HomeEffect.ShowMessage("Tüm sesler indirildi!"))
+                        // todo UiText'e geçir.
+//                        _effect.send(HomeEffect.ShowMessage("Tüm sesler indirildi!"))
                     }
                     is BatchDownloadStatus.Error -> {
                         _state.update { it.copy(isDownloadingAll = false) }

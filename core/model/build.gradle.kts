@@ -11,10 +11,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.findLibrary("kotlinx-serialization-json").get())
-
-            // SoundCategory içinde ImageVector kullanıyorduk ama onu temizleyeceğiz demiştik.
-            // Şimdilik temizlemeden taşıyacaksak buraya compose eklememiz gerekir.
-            // AMA biz temizleyerek taşıyacağız, o yüzden compose eklemiyorum.
         }
     }
 }

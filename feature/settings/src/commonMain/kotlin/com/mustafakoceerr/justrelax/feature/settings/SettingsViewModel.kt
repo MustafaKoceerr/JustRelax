@@ -62,8 +62,9 @@ class SettingsViewModel(
     fun onDownloadAllClicked() {
         if (_isDownloading.value) return // Zaten iniyorsa tekrar başlatma
 
+        // Todo: metinleri UiText'e taşı ayrıca global snackbar kullan.
         screenModelScope.launch {
-            _effect.send(SettingsEffect.ShowSnackbar("İndirme başlıyor..."))
+//            _effect.send(SettingsEffect.ShowSnackbar("İndirme başlıyor..."))
             downloadAllUseCase().collect { status ->
                 when (status) {
                     is BatchDownloadStatus.Progress -> {
@@ -73,11 +74,11 @@ class SettingsViewModel(
                     BatchDownloadStatus.Completed -> {
                         _isDownloading.value = false
                         _downloadProgress.value = 1f
-                        _effect.send(SettingsEffect.ShowSnackbar("Tüm sesler indirildi!"))
+//                        _effect.send(SettingsEffect.ShowSnackbar("Tüm sesler indirildi!"))
                     }
                     is BatchDownloadStatus.Error -> {
                         _isDownloading.value = false
-                        _effect.send(SettingsEffect.ShowSnackbar("Hata: İndirme başarısız oldu."))
+//                        _effect.send(SettingsEffect.ShowSnackbar("Hata: İndirme başarısız oldu."))
                     }
                 }
             }

@@ -66,61 +66,24 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import justrelax.feature.saved.generated.resources.Res
+import justrelax.feature.saved.generated.resources.action_delete
+import justrelax.feature.saved.generated.resources.action_more_options
+import justrelax.feature.saved.generated.resources.action_pause
+import justrelax.feature.saved.generated.resources.action_play
+import justrelax.feature.saved.generated.resources.action_rename
+import justrelax.feature.saved.generated.resources.action_share
+import justrelax.feature.saved.generated.resources.saved_mix_metadata
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SavedMixesTopBar(
-    onFilterClick: () -> Unit, // Filtre ikonuna basılınca ne olacak? (Bottom Sheet açılacak)
-    modifier: Modifier = Modifier
-) {
-    CenterAlignedTopAppBar(
-        modifier = modifier,
-        // Renkler: Mixer ekranıyla tutarlı olsun diye PrimaryContainer kullanabiliriz
-        // Veya daha sade olsun dersen Background/Surface de olur.
-        // Senin "MixerTopBar"da PrimaryContainer kullandığını hatırlıyorum, tutarlılık için aynısını yapalım.
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
-        title = {
-            Text(
-                text = "Kayıtlı Mixler",
-                style = MaterialTheme.typography.titleLarge
-            )
-        },
-        actions = {
-            // Sağ taraftaki Filtre/sırala ikonu
-            IconButton(onClick = onFilterClick) {
-                Icon(
-                    // FilterList veya sort ikonu uygun
-                    imageVector = Icons.AutoMirrored.Rounded.Sort,
-                    contentDescription = "Sırala ve Filtrele"
-                )
-            }
-        }
-    )
-}
-
-@Preview
-@Composable
-fun SavedMixesTopBarPreview(
-) {
-    JustRelaxTheme {
-        SavedMixesTopBar({})
-    }
-}
-
 @Composable
 fun SavedMixInfo(
     title: String,
     soundCount: Int,
-    date: String, // Örn: 2 gün önce
+    date: String,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        // Başlık
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
@@ -131,29 +94,16 @@ fun SavedMixInfo(
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // Alt bilgi (metadata)
-        // "8 Ses • 2 gün önce" formatında
         Text(
-            text = "$soundCount Ses • $date",
+            text = stringResource(
+                Res.string.saved_mix_metadata,
+                soundCount,
+                date
+            ),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SavedMixInfoPreview() {
-    JustRelaxTheme {
-        Surface {
-            SavedMixInfo(
-                title = "Deep Forest Mix",
-                soundCount = 6,
-                date = "2 gün önce",
-                modifier = Modifier.padding(16.dp)
-            )
-        }
     }
 }
 
@@ -174,42 +124,9 @@ fun SavedMixIcons(
                 modifier = Modifier.size(20.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )
-
         }
     }
 }
-
-
-@Preview(showBackground = true)
-@Composable
-fun SavedMixIconsPreview() {
-    JustRelaxTheme {
-        Surface {
-            SavedMixIcons(
-                icons = listOf(
-                    Icons.Default.Favorite,
-                    Icons.Default.Star,
-                    Icons.Default.Headset,
-                    Icons.Default.MusicNote,
-                    Icons.Default.Favorite,
-                    Icons.Default.Star,
-                    Icons.Default.Headset,
-                    Icons.Default.MusicNote,
-                    Icons.Default.Favorite,
-                    Icons.Default.Star,
-                    Icons.Default.Headset,
-                    Icons.Default.MusicNote,
-                    Icons.Default.Favorite,
-                    Icons.Default.Star,
-                    Icons.Default.Headset,
-                    Icons.Default.MusicNote
-                ),
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-    }
-}
-
 
 @Composable
 fun SavedMixPlayButton(
@@ -217,44 +134,37 @@ fun SavedMixPlayButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // FilledTonal: Hem belirgin hem de kartın üzerinde çok bağırmayan en iyi stil.
     FilledTonalIconButton(
         onClick = onClick,
         modifier = modifier.size(48.dp),
         colors = IconButtonDefaults.filledTonalIconButtonColors(
-            // Aktifse Primary (Renkli), Pasifse Secondary (Gri/Bej)
-            containerColor = if (isPlaying) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer,
-            contentColor = if (isPlaying) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
+            containerColor =
+                if (isPlaying)
+                    MaterialTheme.colorScheme.primary
+                else
+                    MaterialTheme.colorScheme.secondaryContainer,
+            contentColor =
+                if (isPlaying)
+                    MaterialTheme.colorScheme.onPrimary
+                else
+                    MaterialTheme.colorScheme.onSecondaryContainer
         )
     ) {
         Icon(
-            imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
-            contentDescription = if (isPlaying) "Duraklat" else "Oynat",
+            imageVector =
+                if (isPlaying)
+                    Icons.Rounded.Pause
+                else
+                    Icons.Rounded.PlayArrow,
+            contentDescription =
+                stringResource(
+                    if (isPlaying)
+                        Res.string.action_pause
+                    else
+                        Res.string.action_play
+                ),
             modifier = Modifier.size(24.dp)
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SavedMixPlayButtonPreview() {
-    JustRelaxTheme {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(16.dp)
-        ) {
-            // Pause ikonlu (oynuyor durumu)
-            SavedMixPlayButton(
-                isPlaying = true,
-                onClick = {}
-            )
-
-            // Play ikonlu (durmuş durumu)
-            SavedMixPlayButton(
-                isPlaying = false,
-                onClick = {}
-            )
-        }
     }
 }
 
@@ -265,52 +175,71 @@ fun SavedMixMenu(
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Menünün açık/kapalı durumunu burada tutuyoruz
     var expanded by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
-        // 1. üç nokta ikonu
         IconButton(
             onClick = { expanded = true },
-            modifier = Modifier.size(32.dp) // Biraz küçük olabilir, ikincil işlem
+            modifier = Modifier.size(32.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = "Seçenekler",
+                contentDescription = stringResource(
+                    Res.string.action_more_options
+                ),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
-        // 2. Açılır menü
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            // Menü arkalanı
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
             shape = RoundedCornerShape(12.dp)
         ) {
             DropdownMenuItem(
-                text = { Text("Yeniden adlandır") },
+                text = {
+                    Text(
+                        text = stringResource(
+                            Res.string.action_rename
+                        )
+                    )
+                },
                 onClick = {
                     expanded = false
                     onRenameClick()
                 },
-                leadingIcon = { Icon(Icons.Rounded.Edit, null) }
+                leadingIcon = {
+                    Icon(Icons.Rounded.Edit, null)
+                }
             )
 
-            // Share
             DropdownMenuItem(
-                text = { Text("Paylaş") },
+                text = {
+                    Text(
+                        text = stringResource(
+                            Res.string.action_share
+                        )
+                    )
+                },
                 onClick = {
                     expanded = false
                     onShareClick()
                 },
-                leadingIcon = { Icon(Icons.Rounded.Share, null) }
+                leadingIcon = {
+                    Icon(Icons.Rounded.Share, null)
+                }
             )
 
-            // Delete (Kritik işlem olduğu için kırmızı yapabiliriz opsiyonel olarak)
             DropdownMenuItem(
-                text = { Text("Sil", color = MaterialTheme.colorScheme.error) },
+                text = {
+                    Text(
+                        text = stringResource(
+                            Res.string.action_delete
+                        ),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                },
                 onClick = {
                     expanded = false
                     onDeleteClick()
@@ -322,22 +251,6 @@ fun SavedMixMenu(
                         tint = MaterialTheme.colorScheme.error
                     )
                 }
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SavedMixMenuPreview() {
-    JustRelaxTheme {
-        Surface(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            SavedMixMenu(
-                onRenameClick = {},
-                onShareClick = {},
-                onDeleteClick = {}
             )
         }
     }
@@ -355,16 +268,14 @@ fun SavedMixCard(
     onDeleteClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    // --- RENKLER ---
     val baseColor = MaterialTheme.colorScheme.surfaceContainer
-    val shimmerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f)
-    val borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+    val shimmerColor =
+        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f)
+    val borderColor =
+        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
 
-    // --- ŞEKİL ---
-    // Şekli bir değişkene atıyoruz ki hem Card hem de Clip için aynısını kullanalım
     val cardShape = RoundedCornerShape(16.dp)
 
-    // --- ANİMASYON ---
     val shimmerProgress = remember { Animatable(0f) }
     var clickTrigger by remember { mutableStateOf(0) }
 
@@ -373,7 +284,10 @@ fun SavedMixCard(
             shimmerProgress.snapTo(0f)
             shimmerProgress.animateTo(
                 targetValue = 2f,
-                animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
+                animationSpec = tween(
+                    durationMillis = 1000,
+                    easing = LinearEasing
+                )
             )
             shimmerProgress.snapTo(0f)
         }
@@ -383,26 +297,33 @@ fun SavedMixCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            // --- DÜZELTME BURADA ---
-            // Çizim yapmadan önce alanı yuvarlak olarak kırpıyoruz (Maskeliyoruz)
             .clip(cardShape)
             .clickable {
                 onPlayClick()
                 clickTrigger++
             }
             .drawBehind {
-                // 1. Zemin
                 drawRect(baseColor)
 
-                // 2. Işık Efekti
                 if (shimmerProgress.value > 0f) {
                     val distance = size.width + size.height
-                    val currentOffset = distance * shimmerProgress.value
+                    val currentOffset =
+                        distance * shimmerProgress.value
 
                     val brush = Brush.linearGradient(
-                        colors = listOf(baseColor, shimmerColor, baseColor),
-                        start = Offset(currentOffset - size.width, currentOffset - size.height),
-                        end = Offset(currentOffset, currentOffset),
+                        colors = listOf(
+                            baseColor,
+                            shimmerColor,
+                            baseColor
+                        ),
+                        start = Offset(
+                            currentOffset - size.width,
+                            currentOffset - size.height
+                        ),
+                        end = Offset(
+                            currentOffset,
+                            currentOffset
+                        ),
                         tileMode = TileMode.Clamp
                     )
                     drawRect(brush = brush)
@@ -413,7 +334,7 @@ fun SavedMixCard(
             containerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        elevation = CardDefaults.cardElevation(0.dp),
         border = BorderStroke(1.dp, borderColor)
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
@@ -424,7 +345,6 @@ fun SavedMixCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // SOL TARA (Metinler ve İkonlar)
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = title,
@@ -435,14 +355,17 @@ fun SavedMixCard(
                     )
 
                     Text(
-                        text = "$soundCount Ses • $date",
+                        text = stringResource(
+                            Res.string.saved_mix_metadata,
+                            soundCount,
+                            date
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // MİNİ İKONLAR
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy((-12).dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -465,7 +388,9 @@ fun SavedMixCard(
                                             .size(24.dp)
                                             .padding(2.dp),
                                         contentScale = ContentScale.Fit,
-                                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                                        colorFilter = ColorFilter.tint(
+                                            MaterialTheme.colorScheme.primary
+                                        )
                                     )
                                 }
                             }
@@ -475,7 +400,6 @@ fun SavedMixCard(
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                // SAĞ TARAF (Play Butonu)
                 Surface(
                     onClick = {
                         onPlayClick()
@@ -488,7 +412,9 @@ fun SavedMixCard(
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = Icons.Rounded.PlayArrow,
-                            contentDescription = "Play",
+                            contentDescription = stringResource(
+                                Res.string.action_play
+                            ),
                             tint = MaterialTheme.colorScheme.onSecondaryContainer,
                             modifier = Modifier.size(24.dp)
                         )

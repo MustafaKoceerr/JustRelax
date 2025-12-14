@@ -3,11 +3,15 @@
     <string name="download_complete">Tüm sesler indirildi! 🎉</string>
     <string name="suggestion_hidden">Öneri gizlendi.</string>
     <string name="action_settings">AYARLAR</string>
-
-    <!-- Kategoriler -->
-    <string name="category_water">Water &amp; Rain</string>
-    <string name="category_nature">Nature &amp; Forest</string>
-    <string name="category_air">Wind &amp; Atmosphere</string>
-    <string name="category_city">City &amp; Indoor</string>
-    <string name="category_noise">White Noise &amp; Mechanical</string>
+    <string name="category_water">Su &amp; Yağmur</string>
+    <string name="category_nature">Doğa &amp; Orman</string>
+    <string name="category_air">Rüzgar &amp; Atmosfer</string>
+    <string name="category_city">Şehir &amp; İç Mekan</string>
+    <string name="category_noise">Beyaz Gürültü &amp; Mekanik</string>
+    <string name="download_banner_downloading_progress">Sesler indiriliyor... %1$d%%</string>
+    <string name="download_banner_question_title">Tüm sesleri şimdi indirelim mi?</string>
+    <string name="download_banner_question_description">Kesintisiz bir deneyim için tüm kütüphaneyi cihazına kaydedebilirsin.</string>
+    <string name="action_later">Daha Sonra</string>
+    <string name="action_download">İndir</string>
+    <string name="home_screen_title">Just Relax</string>
 </resources>

@@ -8,6 +8,7 @@ import kotlinx.coroutines.IO
  * Coroutine context'lerini soyutlar.
  * Testlerde 'TestDispatcher' enjekte edebilmek için bu arayüzü kullanırız.
  */
+// Todo: coroutine context'lerini buradan yönetecek bir sisteme geç
 interface DispatcherProvider {
     val main: CoroutineDispatcher
     val io: CoroutineDispatcher

@@ -3,12 +3,8 @@ package com.mustafakoceerr.justrelax.feature.saved
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
@@ -29,10 +25,13 @@ import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesEmptyScre
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesList
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedEffect
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedIntent
+import justrelax.feature.saved.generated.resources.Res
+import justrelax.feature.saved.generated.resources.saved_screen_title
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
-
 data object SavedScreen : AppScreen {
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
@@ -44,14 +43,13 @@ data object SavedScreen : AppScreen {
 
         val snackbarController = koinInject<GlobalSnackbarController>()
 
-        // Animasyon state'leri ve delay logic'i TAMAMEN SİLİNDİ.
-
         LaunchedEffect(Unit) {
             savedViewModel.effect.collect { effect ->
                 when (effect) {
                     is SavedEffect.NavigateToMixer -> {
                         tabNavigator.current = tabProvider.mixerTab
                     }
+
                     is SavedEffect.ShowSnackbar -> {
                         val result = snackbarController.showSnackbar(
                             message = effect.message,
@@ -59,7 +57,9 @@ data object SavedScreen : AppScreen {
                             duration = SnackbarDuration.Short
                         )
                         if (result == SnackbarResult.ActionPerformed) {
-                            savedViewModel.processIntent(SavedIntent.UndoDelete)
+                            savedViewModel.processIntent(
+                                SavedIntent.UndoDelete
+                            )
                         }
                     }
                 }
@@ -69,42 +69,45 @@ data object SavedScreen : AppScreen {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
                 JustRelaxTopBar(
-                    title = "Kayıtlı Mixler",
+                    title = stringResource(
+                        Res.string.saved_screen_title
+                    )
                 )
 
-                Box(modifier = Modifier.weight(1f).fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                ) {
                     if (state.isLoading) {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                    else if (state.mixes.isEmpty()) {
-                        SavedMixesEmptyScreen(
-                            onCreateClick = { savedViewModel.processIntent(SavedIntent.CreateNewMix) }
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
                         )
-                    }
-                    else {
+                    } else if (state.mixes.isEmpty()) {
+                        SavedMixesEmptyScreen(
+                            onCreateClick = {
+                                savedViewModel.processIntent(
+                                    SavedIntent.CreateNewMix
+                                )
+                            }
+                        )
+                    } else {
                         SavedMixesList(
                             mixes = state.mixes,
-                            // currentPlayingId veya justStartedId ARTIK YOK.
                             onMixClick = { mix ->
-                                savedViewModel.processIntent(SavedIntent.PlayMix(mix.id))
+                                savedViewModel.processIntent(
+                                    SavedIntent.PlayMix(mix.id)
+                                )
                             },
                             onMixDelete = { mix ->
-                                savedViewModel.processIntent(SavedIntent.DeleteMix(mix))
+                                savedViewModel.processIntent(
+                                    SavedIntent.DeleteMix(mix)
+                                )
                             }
                         )
                     }
                 }
             }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SavedMixesScreenPreview() {
-    JustRelaxTheme {
-        Surface {
-            SavedScreen.Content()
         }
     }
 }

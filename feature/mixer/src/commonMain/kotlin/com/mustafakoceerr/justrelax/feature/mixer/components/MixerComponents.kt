@@ -29,8 +29,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import justrelax.feature.mixer.generated.resources.Res
+import justrelax.feature.mixer.generated.resources.action_create_mix
+import justrelax.feature.mixer.generated.resources.action_save_mix
+import justrelax.feature.mixer.generated.resources.mix_count_selector_title
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
 
 @Composable
 fun MixNumberChip(
@@ -39,7 +43,6 @@ fun MixNumberChip(
     onSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     FilterChip(
         selected = isSelected,
         onClick = onSelected,
@@ -48,35 +51,30 @@ fun MixNumberChip(
                 text = number.toString(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.fillMaxWidth() // yazının daire içinde olmasını garantiler
+                modifier = Modifier.fillMaxWidth()
             )
         },
         shape = CircleShape,
         colors = FilterChipDefaults.filterChipColors(
-            // Seçiliyken: Arka plan PrimaryContainer (Somon), Yazı onPrimaryContainer (Kahve)
             selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
             selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-
-            // Seçili Değilken: Arka plan SurfaceContainer (Hafif Gri/Bej), Yazı onSurface
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
             labelColor = MaterialTheme.colorScheme.onSurface
         ),
-
-        // kenarlık: seçiliyken primary renkli ince bir çizgi, değilken şeffaf.
         border = FilterChipDefaults.filterChipBorder(
             enabled = true,
             selected = isSelected,
-            borderColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+            borderColor = if (isSelected)
+                MaterialTheme.colorScheme.primary
+            else
+                Color.Transparent,
             borderWidth = 1.dp
         ),
-
-        // İKONU KALDIRMA: Varsayılan tik işaretini null yaparak kaldırıyoruz
         leadingIcon = null,
-
-        modifier = modifier.size(50.dp) // 48-50dp ideal dokunma alanıdır
+        modifier = modifier.size(50.dp)
     )
-
 }
+
 @Composable
 fun MixCountSelector(
     selectedCount: Int,
@@ -84,24 +82,23 @@ fun MixCountSelector(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        // Başlık
         Text(
-            text = "Kaç ses ile mix yapmak istiyorsun?",
+            text = stringResource(Res.string.mix_count_selector_title),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+            modifier = Modifier.padding(
+                start = 16.dp,
+                top = 16.dp,
+                bottom = 16.dp
+            )
         )
 
-        val soundCounts = (2..8).toList() // [2, 3, 4, 5, 6, 7, 8]
+        val soundCounts = (2..8).toList()
 
-        // Liste
         LazyRow(
-            // içerik kenarlara yapışmasın diyee padding
             contentPadding = PaddingValues(horizontal = 16.dp),
-            // elemanlar arası boşluk (8 dp grid kuralı)
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // 2'den 82e kadar olan sayılar.
             items(soundCounts) { number ->
                 MixNumberChip(
                     number = number,
@@ -112,61 +109,55 @@ fun MixCountSelector(
         }
     }
 }
+
 @Composable
 fun CreateMixButton(
     onClick: () -> Unit,
-    isLoading: Boolean, // YENİ PARAMETRE
+    isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
-    //  M3 filled button ( en yüksek vurgu)
     Button(
         onClick = onClick,
         enabled = !isLoading,
         modifier = modifier
-            .fillMaxWidth() // Genişliği doldursun ( padding'i dışarıdan vereceğiz.)
-            .height(50.dp), // Timer butonlarıyla tutarlı yükseklik ( kibar ama basılabilir.)
-
+            .fillMaxWidth()
+            .height(50.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
-            // Disabled olduğunda çok silik görünmemesi için container rengini ayarlayabiliriz
             disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
             disabledContentColor = MaterialTheme.colorScheme.onPrimary
         ),
         shape = MaterialTheme.shapes.extraLarge
-    ){
-        if (isLoading){
+    ) {
+        if (isLoading) {
             LoadingDots(
-                color = MaterialTheme.colorScheme.onPrimary, // Beyaz/Kontrast renk
+                color = MaterialTheme.colorScheme.onPrimary,
                 dotSize = 8.dp,
                 travelDistance = 6.dp
             )
-
-        }else{
+        } else {
             Icon(
                 imageVector = Icons.Rounded.Refresh,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp)
             )
 
-            // Araya boşluk
             Spacer(modifier = Modifier.width(8.dp))
 
-            // Metin
             Text(
-                text = "Mix oluştur", // veya "Create Mix"
-                style = MaterialTheme.typography.titleMedium // Okunaklı, kalın font
+                text = stringResource(Res.string.action_create_mix),
+                style = MaterialTheme.typography.titleMedium
             )
         }
-
     }
 }
+
 @Composable
 fun SaveMixButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
-){
-    // Secondary Action (İkincil Eylem) -> FilledTonalButton
+) {
     FilledTonalButton(
         onClick = onClick,
         modifier = modifier
@@ -176,63 +167,19 @@ fun SaveMixButton(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer
         ),
-        shape = MaterialTheme.shapes.extraLarge // Yuvarlak hatlar
-    ){
+        shape = MaterialTheme.shapes.extraLarge
+    ) {
         Icon(
             imageVector = Icons.Rounded.Save,
             contentDescription = null,
-            modifier= Modifier.size(20.dp)
+            modifier = Modifier.size(20.dp)
         )
 
         Spacer(modifier = Modifier.width(8.dp))
 
         Text(
-            text = "Mix'i Kaydet", // Save Mix
+            text = stringResource(Res.string.action_save_mix),
             style = MaterialTheme.typography.titleMedium
         )
     }
 }
-
-@Preview
-@Composable
-fun MixNumberChipPreview() {
-    JustRelaxTheme {
-        Column {
-            MixNumberChip(
-                5, true, {}
-            )
-
-            MixNumberChip(
-                5, false, {}
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun MixCountSelectorPreview() {
-    JustRelaxTheme {
-        MixCountSelector(
-            6,
-            {}
-        )
-    }
-}
-
-@Preview
-@Composable
-fun CreateMixButtonPreview(){
-    JustRelaxTheme {
-        CreateMixButton({}, false)
-    }
-}
-
-@Preview
-@Composable
-fun SaveMixButtonPreview(){
-    JustRelaxTheme {
-        SaveMixButton({})
-    }
-}
-

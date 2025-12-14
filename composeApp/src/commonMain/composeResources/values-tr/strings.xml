@@ -1,49 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="go_to_settings">Ayarlara Git</string>
+    <string name="go_to_settings">Ayarlar’a Git</string>
 
     <!-- Tema -->
-    <string name="current_theme">Mevcut Tema: %1$s</string>
+    <string name="current_theme">Geçerli Tema: %1$s</string>
     <string name="theme_light">Açık</string>
     <string name="theme_dark">Koyu</string>
     <string name="theme_system">Sistem</string>
 
     <!-- Dil -->
-    <string name="current_language">Mevcut Dil: %1$s</string>
+    <string name="current_language">Geçerli Dil: %1$s</string>
     <string name="language_english">İngilizce</string>
     <string name="language_turkish">Türkçe</string>
 
     <!-- Kategoriler -->
-    <string name="category_water">Water &amp; Rain</string>
-    <string name="category_nature">Nature &amp; Forest</string>
-    <string name="category_air">Wind &amp; Atmosphere</string>
-    <string name="category_city">City &amp; Indoor</string>
-    <string name="category_noise">White Noise &amp; Mechanical</string>
+    <string name="category_water">Su &amp; Yağmur</string>
+    <string name="category_nature">Doğa &amp; Orman</string>
+    <string name="category_air">Rüzgar &amp; Atmosfer</string>
+    <string name="category_city">Şehir &amp; İç Mekan</string>
+    <string name="category_noise">Beyaz Gürültü &amp; Mekanik</string>
 
     <!-- Ses İsimleri -->
-    <string name="sound_rain_light">Light Rain</string>
-    <string name="sound_rain_thunder">Rain &amp; Thunder</string>
-    <string name="sound_ocean">Ocean Waves</string>
-    <string name="sound_forest_birds">Forest Birds</string>
-    <string name="sound_campfire">Campfire</string>
-    <string name="sound_wind">Wind Ambience</string>
-    <string name="sound_cafe">Cafe Ambience</string>
-    <string name="sound_fan">Fan Noise</string>
+    <string name="sound_rain_light">Hafif Yağmur</string>
+    <string name="sound_rain_thunder">Yağmur &amp; Gök Gürültüsü</string>
+    <string name="sound_ocean">Okyanus Dalgaları</string>
+    <string name="sound_forest_birds">Orman Kuşları</string>
+    <string name="sound_campfire">Kamp Ateşi</string>
+    <string name="sound_wind">Rüzgar Ambiyansı</string>
+    <string name="sound_cafe">Kafe Ambiyansı</string>
+    <string name="sound_fan">Vantilatör Sesi</string>
 
-    <!-- Süre birimleri kısaltmaları -->
-    <string name="duration_hour_short">sa</string>   <!-- saat -->
-    <string name="duration_minute_short">dk</string> <!-- dakika -->
-    <string name="duration_second_short">sn</string> <!-- saniye -->
+    <!-- Süre birimleri -->
+    <string name="duration_hour_short">sa</string>
+    <string name="duration_minute_short">dk</string>
+    <string name="duration_second_short">sn</string>
 
+    <!-- Mesajlar -->
     <string name="msg_mix_saved_success">%1$s başarıyla kaydedildi!</string>
-    <string name="error_mix_name_exists">Bu isimde bir mix zaten var.</string>
+    <string name="error_mix_name_exists">Bu isimde bir mix zaten mevcut.</string>
     <string name="error_mix_name_empty">İsim boş olamaz.</string>
     <string name="error_no_sounds">Kaydedilecek ses yok.</string>
 
-    <string name="error_generic">Bir şeyler ters gitti. Lütfen tekrar dene.</string>
+    <string name="error_generic">Bir şeyler ters gitti. Lütfen tekrar deneyin.</string>
     <string name="error_no_sounds_found">Önerilen sesler kütüphanede bulunamadı.</string>
 
     <string name="download_complete">Tüm sesler indirildi! 🎉</string>
     <string name="suggestion_hidden">Öneri gizlendi.</string>
     <string name="action_settings">AYARLAR</string>
+
+    <!-- Sekmeler -->
+    <string name="tab_home">Ana Sayfa</string>
+    <string name="tab_timer">Zamanlayıcı</string>
+    <string name="tab_ai">Yapay Zeka</string>
+    <string name="tab_saved">Kaydedilenler</string>
+    <string name="tab_mixer">Karıştırıcı</string>
 </resources>

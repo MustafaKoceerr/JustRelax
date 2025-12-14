@@ -70,7 +70,7 @@ fun LanguageSelectionItem(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = displayText, // Hesapladğimiz metni basıyoruz
+                text = displayText,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                 )

@@ -39,7 +39,6 @@ import com.mustafakoceerr.justrelax.feature.home.util.icon
 import com.mustafakoceerr.justrelax.feature.home.util.titleRes
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTabRow(
@@ -51,38 +50,34 @@ fun HomeTabRow(
     PrimaryScrollableTabRow(
         selectedTabIndex = categories.indexOf(selectedCategory),
         modifier = modifier,
-        edgePadding = 16.dp, // İlk eleman kenara yapışmasın
-
-        // 1. ŞEFFAFLIK: Arkadaki gradyanı ezmemesi için Transparent yapıyoruz
+        edgePadding = 16.dp,
         containerColor = Color.Transparent,
-
-        // 2. ÇİZGİYİ YOK ET: Varsayılan alt çizgiyi (Indicator) boş bir lambda ile siliyoruz
         indicator = {},
         divider = {}
     ) {
         categories.forEach { category ->
             val isSelected = category == selectedCategory
 
-            // Renk Mantığı (BottomBar ile tutarlı)
-            // Seçiliyse: PrimaryContainer (Renkli), Değilse: Transparent
-            val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent
-            val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+            val backgroundColor =
+                if (isSelected) MaterialTheme.colorScheme.primaryContainer
+                else Color.Transparent
+
+            val contentColor =
+                if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
+                else MaterialTheme.colorScheme.onSurfaceVariant
 
             Tab(
                 selected = isSelected,
-                onClick = { onCategorySelected(category) },
-                // Ripple efektini istersen kapatabilirsin ama varsayılan kalması iyidir.
+                onClick = { onCategorySelected(category) }
             ) {
-                // 3. HAP TASARIMI (Custom Layout)
-                // İkon ve Metni bir Column içine alıp, arka planı buna veriyoruz.
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .padding(vertical = 8.dp, horizontal = 4.dp) // Tablar arası boşluk
-                        .clip(CircleShape) // Veya RoundedCornerShape(16.dp)
-                        .background(backgroundColor) // Seçim rengi burada!
-                        .padding(horizontal = 16.dp, vertical = 12.dp) // Hapın iç dolgunluğu
+                        .padding(vertical = 8.dp, horizontal = 4.dp)
+                        .clip(CircleShape)
+                        .background(backgroundColor)
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
                 ) {
                     Icon(
                         imageVector = category.icon,
@@ -110,12 +105,11 @@ fun HomeTabRow(
 fun SoundCardGrid(
     sounds: List<Sound>,
     activeSounds: Map<String, Float>,
-    downloadingSoundIds: Set<String>, // YENİ: Şu an inenlerin listesi
+    downloadingSoundIds: Set<String>,
     onSoundClick: (Sound) -> Unit,
     onVolumeChange: (String, Float) -> Unit,
     contentPadding: PaddingValues
 ) {
-
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 110.dp),
         contentPadding = contentPadding,
@@ -128,8 +122,6 @@ fun SoundCardGrid(
         ) { sound ->
             val isPlaying = activeSounds.containsKey(sound.id)
             val volume = activeSounds[sound.id] ?: 0.5f
-
-            // Bu ses şu an indirilenler listesinde mi?
             val isDownloading = downloadingSoundIds.contains(sound.id)
 
             SoundCard(
@@ -138,16 +130,13 @@ fun SoundCardGrid(
                 isDownloading = isDownloading,
                 volume = volume,
                 onCardClick = { onSoundClick(sound) },
-                onVolumeChange = { newVol -> onVolumeChange(sound.id, newVol) }
+                onVolumeChange = { newVol ->
+                    onVolumeChange(sound.id, newVol)
+                }
             )
         }
-
     }
 }
-
-
-
-
 
 @Composable
 @Preview
@@ -156,7 +145,3 @@ fun SliderPreview() {
         VolumeSlider(0.3f, {})
     }
 }
-
-
-
-

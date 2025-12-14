@@ -69,7 +69,8 @@ class SavedViewModel(
         screenModelScope.launch {
             lastDeletedMix = uiMix.domainModel
             savedMixRepository.deleteMix(uiMix.id)
-            _effect.send(SavedEffect.ShowSnackbar("${uiMix.title} silindi", "Geri Al"))
+            // Todo global snackbar'a geç ve UiText kullan.
+//            _effect.send(SavedEffect.ShowSnackbar("${uiMix.title} silindi", "Geri Al"))
         }
     }
 

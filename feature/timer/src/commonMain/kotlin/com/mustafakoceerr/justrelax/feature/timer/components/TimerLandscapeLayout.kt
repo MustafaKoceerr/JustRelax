@@ -33,7 +33,11 @@ import com.mustafakoceerr.justrelax.core.audio.TimerStatus
 import com.mustafakoceerr.justrelax.core.common.util.formatTime
 import com.mustafakoceerr.justrelax.feature.timer.util.calculateEndTime
 import com.mustafakoceerr.justrelax.feature.timer.util.formatDurationVerbose
-
+import justrelax.feature.timer.generated.resources.Res
+import justrelax.feature.timer.generated.resources.timer_action_delete
+import justrelax.feature.timer.generated.resources.timer_action_pause
+import justrelax.feature.timer.generated.resources.timer_action_resume
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun TimerTextDisplay(
@@ -46,7 +50,6 @@ fun TimerTextDisplay(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // 1. Satır: Toplam Ayarlanan Süre (Örn: 3 sa 6 dk 13 sn)
         Text(
             text = formatDurationVerbose(totalTimeSeconds),
             style = MaterialTheme.typography.titleMedium,
@@ -55,17 +58,14 @@ fun TimerTextDisplay(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 2. Satır: Kocaman Sayaç (Örn: 03 : 06 : 08)
         Text(
             text = formatTime(timeLeftSeconds),
-            // Yatay modda ekran geniş olduğu için fontu iyice büyütebiliriz
             style = MaterialTheme.typography.displayLarge.copy(fontSize = 80.sp),
             color = MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 3. Satır: Zil ikonu ve Bitiş Saati (Dinamik)
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = Icons.Rounded.Notifications,
@@ -75,7 +75,6 @@ fun TimerTextDisplay(
             )
             Spacer(modifier = Modifier.width(4.dp))
 
-            // DİNAMİK BİTİŞ SAATİ
             Text(
                 text = calculateEndTime(timeLeftSeconds),
                 style = MaterialTheme.typography.bodyMedium,
@@ -95,57 +94,71 @@ fun TimerButtonsRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            // Alttan boşluk
             .padding(bottom = 24.dp),
-        // Eğer ekran çok darsa butonlar birbirine girmesin, araları açılsın
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // --- SOL BUTON: SİL ---
         FilledTonalButton(
             onClick = onCancelClick,
             modifier = Modifier
                 .height(50.dp)
-                // DEFENSIVE 1: Sabit width yerine widthIn.
-                // En az 100dp olsun ama gerekirse uzasın.
                 .widthIn(min = 100.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp) // İç boşluk
+            contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
-            Icon(Icons.Rounded.Close, null, Modifier.size(20.dp))
-            Spacer(Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Rounded.Close,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Sil",
+                text = stringResource(
+                    Res.string.timer_action_delete
+                ),
                 style = MaterialTheme.typography.labelLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
         }
 
-        Spacer(modifier = Modifier.width(32.dp)) // Aradaki boşluk (Biraz kıstım)
+        Spacer(modifier = Modifier.width(32.dp))
 
-        // --- SAĞ BUTON: DURAKLAT / DEVAM ET ---
         val isRunning = status == TimerStatus.RUNNING
+
         Button(
             onClick = onToggleClick,
             modifier = Modifier
                 .height(50.dp)
-                // DEFENSIVE 2: Sabit 140dp yerine widthIn.
-                // "Devam Et" uzun bir yazı, o yüzden min 130dp verelim, sığmazsa uzasın.
                 .widthIn(min = 130.dp),
-            contentPadding = PaddingValues(horizontal = 24.dp), // Yazı kenara yapışmasın
+            contentPadding = PaddingValues(horizontal = 24.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (isRunning) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                containerColor =
+                    if (isRunning)
+                        MaterialTheme.colorScheme.error
+                    else
+                        MaterialTheme.colorScheme.primary
             )
         ) {
             Icon(
-                imageVector = if (isRunning) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
-                null, Modifier.size(20.dp)
+                imageVector =
+                    if (isRunning)
+                        Icons.Rounded.Pause
+                    else
+                        Icons.Rounded.PlayArrow,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
             )
-            Spacer(Modifier.width(8.dp))
-
-            // Metin uzarsa butonu itecek, sığmazsa ... koyacak (Son çare)
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = if (isRunning) "Duraklat" else "Devam Et",
+                text =
+                    if (isRunning)
+                        stringResource(
+                            Res.string.timer_action_pause
+                        )
+                    else
+                        stringResource(
+                            Res.string.timer_action_resume
+                        ),
                 style = MaterialTheme.typography.labelLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -168,14 +181,12 @@ fun TimerLandscapeLayout(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. METİN KISMI
         TimerTextDisplay(
             totalTimeSeconds = totalTimeSeconds,
-            timeLeftSeconds = timeLeftSeconds, // Parametre ismi düzeltildi
+            timeLeftSeconds = timeLeftSeconds,
             modifier = Modifier.weight(1f)
         )
 
-        // 2. BUTON KISMI
         TimerButtonsRow(
             status = status,
             onToggleClick = onToggleClick,

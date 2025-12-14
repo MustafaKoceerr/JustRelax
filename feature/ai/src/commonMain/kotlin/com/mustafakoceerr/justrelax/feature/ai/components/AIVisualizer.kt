@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,10 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-// nefes alan parça
-/**
- * Bu, ekranın kalbi. Lottie veya resim kullanmak yerine, Compose'un çizim yetenekleriyle (Canvas) "Nefes Alan" bir daire yapacağız. Hem çok performanslı hem de senin tema renklerine (Primary) otomatik uyum sağlayacak.
- */
 @Composable
 fun AIVisualizer(
     isThinking: Boolean,

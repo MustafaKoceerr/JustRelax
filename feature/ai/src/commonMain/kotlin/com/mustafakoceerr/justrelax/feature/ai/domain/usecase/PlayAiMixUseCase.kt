@@ -23,7 +23,6 @@ class PlayAiMixUseCase(
             val soundObj = soundRepository.getSoundById(aiSound.id)
 
             // B. Validasyon:
-            // - Ses null olmamalı (Veritabanında var olmalı)
             // - localPath null olmamalı (Ses indirilmiş olmalı)
             if (soundObj != null && soundObj.localPath != null) {
                 // Volume değerini 0.0 ile 1.0 arasına sıkıştır (AI bazen sapıtabilir)

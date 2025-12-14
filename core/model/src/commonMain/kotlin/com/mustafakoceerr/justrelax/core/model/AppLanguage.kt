@@ -11,7 +11,8 @@ enum class AppLanguage(
     SYSTEM("system", null),
 
     ENGLISH("en", "English"),
-    TURKISH("tr", "Türkçe");
+    TURKISH("tr", "Türkçe"),
+    SPANISH("es", "Español");
 
     companion object {
         fun fromCode(code: String?): AppLanguage {

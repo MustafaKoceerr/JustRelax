@@ -8,9 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
 
-// --- YARDIMCI: Basit Veri Modeli ---
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwipableSavedMixItem(

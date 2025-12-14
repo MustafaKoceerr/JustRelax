@@ -4,7 +4,7 @@ import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 
 /**
  * Home modülünün dışarıya çıkmak için ihtiyaç duyduğu ekranlar.
- * Sadece Home'un ihtiyacı olanlar burada tanımlanır.
+ * Sadece Ai'ın ihtiyacı olanlar burada tanımlanır.
  */
 interface AiNavigator {
     fun toSettings(): AppScreen

@@ -29,18 +29,14 @@ class DataSeeder (
             // 1. Kontrol: Daha önce yapıldıysa tekrar yapma
             // Kontrol
             if (settingsRepository.isInitialSeedingDone()) {
-                println("DataSeeder: Zaten yapılmış, atlanıyor.")
                 return@withContext
             }
 
-            println("DataSeeder: İlk kurulum başlıyor...")
             try {
                 // 1. Config Oku
-                println("DataSeeder: initial_config.json okunuyor...")
                 val configBytes = assetReader.readAsset("initial_config.json")
                 val configString = configBytes.decodeToString()
                 val initialSounds = json.decodeFromString<List<RemoteSoundDto>>(configString)
-                println("DataSeeder: Config okundu. ${initialSounds.size} ses bulundu.")
 
                 val soundsDir = storageProvider.getAppDataDir().div("sounds")
                 if (!fileSystem.exists(soundsDir)) {
@@ -51,7 +47,6 @@ class DataSeeder (
                     initialSounds.forEach { dto ->
                         try {
                             val assetFileName = dto.audioUrl.substringAfterLast("/")
-                            println("DataSeeder: Kopyalanıyor -> $assetFileName")
 
                             // Dosyayı Asset'ten oku
                             val audioBytes = assetReader.readAsset(assetFileName)
@@ -73,20 +68,16 @@ class DataSeeder (
                                 localPath = targetFile.toString(),
                                 version = dto.version.toLong()
                             )
-                            println("DataSeeder: Başarılı -> ${dto.id}")
 
                         } catch (e: Exception) {
-                            println("DataSeeder HATASI (${dto.id}): ${e.message}")
                             e.printStackTrace()
                         }
                     }
                 }
 
                 settingsRepository.setInitialSeedingDone(true)
-                println("DataSeeder: Kurulum başarıyla bitti bayrak dikildi.")
 
             } catch (e: Exception) {
-                println("DataSeeder: GENEL HATA!")
                 e.printStackTrace()
             }
         }
