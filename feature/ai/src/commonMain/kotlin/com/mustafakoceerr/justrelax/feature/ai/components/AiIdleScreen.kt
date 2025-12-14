@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.components.DownloadSuggestionCard
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiIntent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,17 +29,20 @@ fun AiIdleScreen(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. Boşluk (Spacer)
-        // Ekranın geri kalanını kaplayıp, AIVisualizer'ı ortalar.
+        // 1. TopBar (Artık ekranın kendi parçası)
+        JustRelaxTopBar(title = "Just Relax AI")
+
+        // 2. Üst Boşluk (Spacer)
+        // TopBar'dan sonraki boşluk. AIVisualizer'ı ortalamak için weight kullanıyoruz.
         Spacer(modifier = Modifier.weight(1f))
 
-        // 2. AIVisualizer
+        // 3. AIVisualizer (Nefes alan daire)
         AIVisualizer(isThinking = isThinking)
 
-        // 3. Boşluk (Spacer)
+        // 4. Alt Boşluk (Spacer)
         Spacer(modifier = Modifier.weight(1f))
 
-        // 4. İndirme Öneri Kartı (Eğer gösterilmesi gerekiyorsa)
+        // 5. İndirme Öneri Kartı
         if (showDownloadSuggestion) {
             DownloadSuggestionCard(
                 onClick = { onIntent(AiIntent.ClickDownloadSuggestion) },
@@ -47,12 +51,12 @@ fun AiIdleScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // 5. AIPromptInput
+        // 6. AIPromptInput
         AIPromptInput(
             text = prompt,
-            // Context butonu sadece ses çalıyorsa görünür olmalı.
             isPlayingSomething = activeSoundsCount > 0,
             isContextEnabled = isContextEnabled,
+            isThinking = isThinking,
             onContextToggle = { onIntent(AiIntent.ToggleContext) },
             onTextChange = { onIntent(AiIntent.UpdatePrompt(it)) },
             onSendClick = { onIntent(AiIntent.GenerateMix) },

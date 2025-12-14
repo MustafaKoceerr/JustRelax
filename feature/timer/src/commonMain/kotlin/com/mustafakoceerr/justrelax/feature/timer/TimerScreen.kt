@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.mustafakoceerr.justrelax.core.audio.TimerStatus
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerLandscapeLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerPortraitLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerSetupScreen
@@ -35,7 +34,6 @@ data object TimerScreen : AppScreen {
         Scaffold(
             containerColor = Color.Transparent,
         ) {
-            JustRelaxBackground {
                 // --- ZOOM GEÇİŞ ANİMASYONU ---
                 AnimatedContent(
                     targetState = state.status == TimerStatus.IDLE,
@@ -124,7 +122,6 @@ data object TimerScreen : AppScreen {
                             }
                         }
                     }
-                }
             }
         }
     }

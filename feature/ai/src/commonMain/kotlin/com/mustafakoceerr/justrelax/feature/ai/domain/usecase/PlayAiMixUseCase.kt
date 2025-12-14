@@ -13,7 +13,7 @@ class PlayAiMixUseCase(
      * AI Cevabını alır, geçerli ve İNDİRİLMİŞ sesleri bulur ve oynatır.
      * Eğer hiç geçerli ses bulunamazsa false döner.
      */
-    suspend operator fun invoke(mixResponse: AiMixResponse): Boolean {
+    suspend operator fun invoke(mixResponse: AiMixResponse): List<Sound>?  {
         // Hedef: SoundManager'ın istediği Map<Sound, Float> yapısını kurmak
         val mixMap = mutableMapOf<Sound, Float>()
 
@@ -35,10 +35,10 @@ class PlayAiMixUseCase(
         // 2. Eğer geçerli (ve çalınabilir) bir mix oluştuysa SoundManager'a gönder
         return if (mixMap.isNotEmpty()) {
             soundManager.setMix(mixMap)
-            true
+            mixMap.keys.toList() // <--- Listeyi geri döndürüyoruz (UI çizsin diye)
         } else {
             // Hiçbir ses bulunamadı veya indirilmemiş (Hata durumu)
-            false
+            null
         }
     }
 }

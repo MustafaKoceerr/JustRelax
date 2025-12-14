@@ -23,7 +23,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.feature.home.components.DownloadBanner
 import com.mustafakoceerr.justrelax.feature.home.components.HomeTabRow
@@ -83,7 +82,6 @@ data object HomeScreen : Screen {
             },
             snackbarHost = { JustRelaxSnackbarHost(snackbarHostState) }
         ) { paddingValues ->
-            JustRelaxBackground {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -123,7 +121,6 @@ data object HomeScreen : Screen {
                             bottom = paddingValues.calculateBottomPadding() + 80.dp // PlayerBar için boşluk
                         )
                     )
-                }
             }
         }
     }

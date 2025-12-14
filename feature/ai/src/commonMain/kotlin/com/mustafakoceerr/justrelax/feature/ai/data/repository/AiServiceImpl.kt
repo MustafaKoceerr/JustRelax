@@ -24,7 +24,8 @@ class AiServiceImpl(
 ) : AiService {
 
     private val API_KEY = BuildConfig.GEMINI_API_KEY
-    private val MODEL_NAME = "gemini-2.5-flash-lite"
+//    private val MODEL_NAME = "gemini-2.5-flash-lite"
+    private val MODEL_NAME = "gemma-3-27b-it"
     private val FULL_URL = "https://generativelanguage.googleapis.com/v1beta/models/$MODEL_NAME:generateContent?key=$API_KEY"
     private val json = Json {
         ignoreUnknownKeys = true

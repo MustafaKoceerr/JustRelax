@@ -2,15 +2,7 @@ package com.mustafakoceerr.justrelax.feature.ai.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -19,34 +11,26 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.rounded.Link
 import androidx.compose.material.icons.rounded.LinkOff
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.SuggestionChipDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
-// --- 2. INPUT ALANI ---
 @Composable
 fun AIPromptInput(
     text: String,
-    isPlayingSomething: Boolean, // Şu an arkada bir ses var mı?
-    isContextEnabled: Boolean,   // Zincir bağlı mı?
-    onContextToggle: () -> Unit, // Zincire tıklama
+    isPlayingSomething: Boolean,
+    isContextEnabled: Boolean,
+    isThinking: Boolean,
+    onContextToggle: () -> Unit,
     onTextChange: (String) -> Unit,
     onSendClick: () -> Unit,
     onSuggestionClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val suggestions = listOf("Yağmurlu Orman", "Derin Uyku", "Kafe Ortamı", "Meditasyon", "Fırtına")
-
 
     Column(modifier = modifier) {
         // 1. Öneriler
@@ -56,11 +40,15 @@ fun AIPromptInput(
         ) {
             items(suggestions) { suggestion ->
                 SuggestionChip(
-                    onClick = { onSuggestionClick(suggestion) },
+                    onClick = { if (!isThinking) onSuggestionClick(suggestion) },
                     label = { Text(suggestion) },
+                    // Yüklenirken hafif silik olsun ama tamamen ölü durmasın
+                    enabled = !isThinking,
                     colors = SuggestionChipDefaults.suggestionChipColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        labelColor = MaterialTheme.colorScheme.onSurface
+                        labelColor = MaterialTheme.colorScheme.onSurface,
+                        disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
+                        disabledLabelColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     ),
                     border = null,
                     shape = CircleShape
@@ -77,22 +65,18 @@ fun AIPromptInput(
                 .padding(horizontal = 16.dp)
                 .height(56.dp)
                 .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
-                .padding(horizontal = 8.dp), // İç padding
+                .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            // --- CONTEXT TOGGLE (Sadece ses çalıyorsa görünür) ---
+            // Context Toggle
             AnimatedVisibility(visible = isPlayingSomething) {
-                IconButton(onClick = onContextToggle) {
+                IconButton(onClick = onContextToggle, enabled = !isThinking) {
                     val icon = if (isContextEnabled) Icons.Rounded.Link else Icons.Rounded.LinkOff
-                    val tint = if (isContextEnabled) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    // Yüklenirken rengi biraz soluklaşsın
+                    val baseTint = if (isContextEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    val tint = if (isThinking) baseTint.copy(alpha = 0.5f) else baseTint
 
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = "Bağlamı Kullan",
-                        tint = tint
-                    )
+                    Icon(imageVector = icon, contentDescription = "Bağlam", tint = tint)
                 }
             }
 
@@ -100,6 +84,11 @@ fun AIPromptInput(
             BasicTextField(
                 value = text,
                 onValueChange = onTextChange,
+                // UX BEST PRACTICE:
+                // enabled = false yaparsak grileşir ve okunmaz (Donmuş hissi).
+                // readOnly = true yaparsak okunur ama klavye açılmaz (İşlem sürüyor hissi).
+                readOnly = isThinking,
+                enabled = true,
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 8.dp),
@@ -109,15 +98,8 @@ fun AIPromptInput(
                 singleLine = true,
                 decorationBox = { innerTextField ->
                     if (text.isEmpty()) {
-                        // Placeholder Mantığı
-                        val placeholderText = if (isPlayingSomething && isContextEnabled) {
-                            "Buraya ne ekleyelim?" // Bağlam açık
-                        } else {
-                            "Hayalindeki ortamı yaz..." // Sıfırdan
-                        }
-
                         Text(
-                            text = placeholderText,
+                            text = if (isPlayingSomething && isContextEnabled) "Buraya ne ekleyelim?" else "Hayalindeki ortamı yaz...",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                         )
@@ -126,24 +108,40 @@ fun AIPromptInput(
                 }
             )
 
-            // Gönder Butonu
-            val isEnabled = text.isNotBlank()
+            // --- GÖNDER BUTONU ---
+            val isInputValid = text.isNotBlank()
+
+            // Butonun tıklanabilirliği: Text dolu olmalı VE yüklenmiyor olmalı
+            val isButtonEnabled = isInputValid && !isThinking
+
             IconButton(
                 onClick = onSendClick,
-                enabled = isEnabled,
+                enabled = isButtonEnabled,
                 modifier = Modifier
                     .size(40.dp)
                     .background(
-                        if (isEnabled) MaterialTheme.colorScheme.primary else Color.Transparent,
-                        CircleShape
+                        // Eğer aktifse Primary renk, değilse Transparent
+                        // Ama yükleniyorsa da Transparent olsun ki Spinner dönsün
+                        color = if (isInputValid && !isThinking) MaterialTheme.colorScheme.primary else Color.Transparent,
+                        shape = CircleShape
                     )
             ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.Send,
-                    contentDescription = "Oluştur",
-                    tint = if (isEnabled) MaterialTheme.colorScheme.onPrimary
-                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
-                )
+                if (isThinking) {
+                    // YÜKLENİYORSA: Dönen Çubuk (Spinner)
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = MaterialTheme.colorScheme.primary,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    // NORMAL DURUM: Send İkonu
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.Send,
+                        contentDescription = "Oluştur",
+                        tint = if (isInputValid) MaterialTheme.colorScheme.onPrimary
+                        else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                    )
+                }
             }
         }
     }

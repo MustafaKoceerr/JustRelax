@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 
 @Composable
 fun LoadingScreen() {
@@ -40,39 +39,37 @@ fun LoadingScreen() {
         )
     }
 
-    JustRelaxBackground {
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-            val maxHeight = maxHeight
-            val maxWidth = maxWidth
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        val maxHeight = maxHeight
+        val maxWidth = maxWidth
 
-            // 1. ARKA PLAN EFEKTLERİ (15 Tane Rastgele İkon)
-            // Her biri kendi bağımsız animasyonuna sahip olacak.
-            repeat(15) {
-                FloatingIcon(
-                    icon = icons.random(),
-                    screenHeight = maxHeight,
-                    screenWidth = maxWidth
-                )
-            }
+        // 1. ARKA PLAN EFEKTLERİ (15 Tane Rastgele İkon)
+        // Her biri kendi bağımsız animasyonuna sahip olacak.
+        repeat(15) {
+            FloatingIcon(
+                icon = icons.random(),
+                screenHeight = maxHeight,
+                screenWidth = maxWidth
+            )
+        }
 
-            // 2. ÖN PLAN (Mesaj ve Spinner)
-            Column(
-                modifier = Modifier.align(Alignment.Center),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Spinner yerine bizim özel LoadingDots'u kullanalım, daha tatlı durur
-                // Veya standart CircularProgressIndicator da olur ama ince ve büyük.
+        // 2. ÖN PLAN (Mesaj ve Spinner)
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Spinner yerine bizim özel LoadingDots'u kullanalım, daha tatlı durur
+            // Veya standart CircularProgressIndicator da olur ama ince ve büyük.
 
-                // Seçim: İkonlar zaten çok hareketli, ortada sade bir spinner olsun.
-                CircularProgressIndicator(
-                    color = MaterialTheme.colorScheme.primary,
-                    strokeWidth = 3.dp
-                )
+            // Seçim: İkonlar zaten çok hareketli, ortada sade bir spinner olsun.
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.primary,
+                strokeWidth = 3.dp
+            )
 
-                Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-                LoadingMessage()
-            }
+            LoadingMessage()
         }
     }
 }

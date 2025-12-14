@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Refresh
@@ -27,39 +24,30 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
-import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
+import com.mustafakoceerr.justrelax.core.audio.controller.SoundListController
+import com.mustafakoceerr.justrelax.core.ui.components.SoundGridSection
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiIntent
-import com.mustafakoceerr.justrelax.feature.ai.mvi.AiState
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiUiState
+
 
 @Composable
 fun AiResultScreen(
-    state: AiState,
-    successUiState: AiUiState.SUCCESS,
+    successUiState: AiUiState.SUCCESS, // İsim, Açıklama ve Ses Listesi burada
+    controller: SoundListController,   // Ses kontrolü burada
     onIntent: (AiIntent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isSaveDialogVisible by remember { mutableStateOf(false) }
-
-    SaveMixDialog(
-        isOpen = isSaveDialogVisible,
-        onDismiss = { isSaveDialogVisible = false },
-        onConfirm = { mixName ->
-            isSaveDialogVisible = false
-            onIntent(AiIntent.ConfirmSaveMix(mixName))
-        }
-    )
+    // Controller'dan aktif sesleri dinliyoruz
+    val activeSoundsMap by controller.activeSoundsState.collectAsState()
 
     Column(
         modifier = modifier
@@ -67,91 +55,64 @@ fun AiResultScreen(
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(24.dp))
 
-        Spacer(modifier = Modifier.height(24.dp)) // Tepeden biraz daha boşluk
-
-        // --- BAŞLIK ALANI (PROMPT + EDIT) ---
-        // Row kullanarak Başlığı ve Kalemi yanyana getiriyoruz
+        // --- 1. BAŞLIK ALANI ---
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                // Tıklanabilir yapıyoruz ki kullanıcı başlığa basınca da düzenleyebilsin
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
-                    indication = null // Ripple olmasın, sadece işlev
+                    indication = null
                 ) { onIntent(AiIntent.EditPrompt) }
         ) {
-            // 1. Prompt (Ana Başlık)
             Text(
-                text = successUiState.mixName, // "Derin Uyku"
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Bold
-                ),
+                text = successUiState.mixName,
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1f, fill = false) // Ortada dursun
+                modifier = Modifier.weight(1f, fill = false)
             )
-
             Spacer(modifier = Modifier.width(8.dp))
-
-            // 2. Kalem İkonu (Daha küçük ve zarif)
             Icon(
                 imageVector = Icons.Rounded.Edit,
                 contentDescription = "Düzenle",
-                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f), // Hafif silik
+                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
                 modifier = Modifier.size(20.dp)
             )
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // --- AÇIKLAMA ---
         Text(
             text = successUiState.mixDescription,
-            style = MaterialTheme.typography.bodyLarge.copy(
-                lineHeight = 24.sp // Satır aralığını açarak okumayı kolaylaştırıyoruz
-            ),
+            style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 24.sp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 24.dp) // Kenarlardan sıkıştır
+            modifier = Modifier.padding(horizontal = 24.dp)
         )
 
-        Spacer(modifier = Modifier.height(32.dp)) // Grid ile başlık arası ferah boşluk
+        Spacer(modifier = Modifier.height(32.dp))
 
-        // --- SES KARTLARI (GRID) ---
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 100.dp),
+        // --- 2. SES KARTLARI ---
+        SoundGridSection(
+            sounds = successUiState.sounds,
+            activeSoundsVolumeMap = activeSoundsMap, // Controller State
+            onSoundClick = { controller.onSoundClicked(it) },
+            onVolumeChange = { id, vol -> controller.onVolumeChanged(id, vol) },
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-            items(successUiState.sounds, key = { it.id }) { sound ->
-                val activeSound = state.activeSoundsInfo.find { it.id == sound.id }
+        )
 
-                SoundCard(
-                    sound = sound,
-                    isPlaying = activeSound != null,
-                    isDownloading = false,
-                    volume = activeSound?.volume ?: 0.5f,
-                    onCardClick = { /* Opsiyonel */ },
-                    onVolumeChange = { newVolume ->
-                        onIntent(AiIntent.UpdateVolume(sound.id, newVolume))
-                    }
-                )
-            }
-        }
-
-        // --- AKSİYON BUTONLARI ---
+        // --- 3. AKSİYON BUTONLARI ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
-            // Yenile
             OutlinedButton(
                 onClick = { onIntent(AiIntent.RegenerateMix) },
                 modifier = Modifier.weight(1f).height(50.dp)
@@ -161,9 +122,8 @@ fun AiResultScreen(
                 Text("Yenile")
             }
 
-            // Kaydet
             Button(
-                onClick = { isSaveDialogVisible = true },
+                onClick = { onIntent(AiIntent.ShowSaveDialog) },
                 modifier = Modifier.weight(1f).height(50.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,

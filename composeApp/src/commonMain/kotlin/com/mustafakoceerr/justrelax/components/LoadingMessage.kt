@@ -31,7 +31,7 @@ fun LoadingMessage(
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(2500) // Okuma süresi
+            delay(2000) // Okuma süresi
 
             // --- RASTGELE SEÇİM MANTIĞI ---
             // Yeni bir mesaj seç, ama eskisiyle aynıysa tekrar seç.

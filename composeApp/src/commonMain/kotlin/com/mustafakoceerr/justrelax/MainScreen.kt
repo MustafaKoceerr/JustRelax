@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
@@ -64,7 +65,9 @@ object MainScreen : AppScreen {
                     LoadingScreen()
                 }
             } else {
+                JustRelaxBackground{
                 Scaffold(
+                    containerColor = Color.Transparent,
                     snackbarHost = {
                         // Daha önce tasarladığımız Custom Snackbar Host'u kullanıyoruz
                         JustRelaxSnackbarHost(hostState = snackbarController.hostState)
@@ -121,6 +124,7 @@ object MainScreen : AppScreen {
                     }
                 }
             }
+            } // just relax background
         }
     }
 }

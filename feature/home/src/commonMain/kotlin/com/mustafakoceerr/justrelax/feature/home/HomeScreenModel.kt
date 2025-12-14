@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+// Todo: Ses açma kapatma ve ses yüksekliğini ayarlama işlerini SoundListController'a verebilirsin.
 class HomeScreenModel(
     private val soundRepository: SoundRepository,
     private val soundManager: SoundManager,
