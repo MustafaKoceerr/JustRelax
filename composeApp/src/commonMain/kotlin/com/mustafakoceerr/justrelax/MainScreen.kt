@@ -56,16 +56,8 @@ object MainScreen : AppScreen {
         TabNavigator(HomeTab) { tabNavigator ->
             val currentTab = tabNavigator.current
 
-            // 1. KURAL: Player hangi tablarda gözükecek?
-            val isPlayerVisibleInThisTab = currentTab in listOf(
-                HomeTab,
-                MixerTab,
-                SavedTab,
-                TimerTab
-            )
-
             // 2. KURAL: Hem müzik çalıyor olmalı (veya liste dolu) HEM DE izin verilen tabda olmalıyız.
-            val shouldShowPlayer = playerState.isVisible && isPlayerVisibleInThisTab
+            val shouldShowPlayer = playerState.isVisible
             // 2. KONTROL: Eğer uygulama henüz hazır değilse, yüklenme ekranı göster.
             if (!isAppInitialized) {
                 JustRelaxBackground { // Arka plan gradyanı yine olsun

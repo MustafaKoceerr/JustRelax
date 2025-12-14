@@ -1,5 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.ai.di
 
+import com.mustafakoceerr.justrelax.core.audio.SoundManager
+import com.mustafakoceerr.justrelax.core.audio.domain.usecase.GetActiveSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.repository.SavedMixRepository
 import com.mustafakoceerr.justrelax.feature.ai.AiViewModel
 import com.mustafakoceerr.justrelax.feature.ai.data.repository.AiServiceImpl
 import com.mustafakoceerr.justrelax.feature.ai.domain.repository.AiService
@@ -19,8 +22,10 @@ val aiModule = module {
     factory {
         AiViewModel(
             aiService = get(),
-            playAiMixUseCase = get(),
-            observeDownloadedSoundsUseCase = get()
+            playAiMixUseCase = get(), // <-- YENİ: Player'ı yönetmek için
+            observeDownloadedSoundsUseCase = get(),
+            soundManager = get(),
+            savedMixRepository = get(),
         )
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -27,66 +28,65 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 /**
  * Bu, ekranın kalbi. Lottie veya resim kullanmak yerine, Compose'un çizim yetenekleriyle (Canvas) "Nefes Alan" bir daire yapacağız. Hem çok performanslı hem de senin tema renklerine (Primary) otomatik uyum sağlayacak.
  */
-
 @Composable
 fun AIVisualizer(
-    isThinking: Boolean, // AI düşünüyorsa animasyon hızlanabilir veya renk değişebilir.
+    isThinking: Boolean,
     modifier: Modifier = Modifier
 ) {
-    // Nefes Alma Animasyonu (Scale & Alpha)
     val infiniteTransition = rememberInfiniteTransition(label = "breathing")
+
+    // Düşünürken hızlı, beklerken yavaş nefes
+    val duration = if (isThinking) 600 else 2000
 
     val scale by infiniteTransition.animateFloat(
         initialValue = 1f,
-        targetValue = if (isThinking) 1.2f else 1.05f, // Düşünürken daha şişkin
+        targetValue = if (isThinking) 1.2f else 1.05f,
         animationSpec = infiniteRepeatable(
-            animation = tween(if (isThinking) 500 else 2000, easing = FastOutSlowInEasing),
+            animation = tween(duration, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "scale"
     )
 
     val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.5f,
-        targetValue = 0.8f,
+        initialValue = 0.3f,
+        targetValue = 0.6f,
         animationSpec = infiniteRepeatable(
-            animation = tween(if (isThinking) 500 else 2000),
+            animation = tween(duration),
             repeatMode = RepeatMode.Reverse
         ),
         label = "alpha"
     )
 
-    // --- BEST PRACTICE: Rengi Temadan Çekmek ---
-    // Primary rengini alıyoruz. Dark modda otomatik değişecek.
     val glowColor = MaterialTheme.colorScheme.primary
 
-
     Box(
-        modifier = modifier.size(200.dp),
+        modifier = modifier.size(240.dp),
         contentAlignment = Alignment.Center
     ) {
-        // Dış halka (Glow efekti)
-        Canvas(modifier = Modifier.fillMaxSize().graphicsLayer {
-            scaleX = scale
-            scaleY = scale
-            this.alpha = alpha
-        }) {
-            drawCircle(
-                color = glowColor.copy(alpha = 0.3f),
-                radius = size.minDimension / 2
-            )
-        }
+        // Dış Halka (Glow)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                    this.alpha = alpha
+                }
+                .background(glowColor.copy(alpha = 0.3f), CircleShape)
+        )
 
-        // İç çekirdek (sabit)
+        // İç Çekirdek
         Surface(
             modifier = Modifier.size(120.dp),
             shape = CircleShape,
             color = MaterialTheme.colorScheme.primaryContainer,
             shadowElevation = 8.dp
         ) {
-            Box(contentAlignment = Alignment.Center){
+            Box(contentAlignment = Alignment.Center) {
+                // ÖZEL GEMINI IKONU
                 Icon(
-                    imageVector = GeminiStarIcon,
+                    imageVector = GeminiStarIcon, // Senin oluşturduğun vektör
                     contentDescription = null,
                     modifier = Modifier.size(48.dp),
                     tint = MaterialTheme.colorScheme.onPrimaryContainer
@@ -95,7 +95,6 @@ fun AIVisualizer(
         }
     }
 }
-
 @Preview
 @Composable
 fun AIVisualizerPreview(){

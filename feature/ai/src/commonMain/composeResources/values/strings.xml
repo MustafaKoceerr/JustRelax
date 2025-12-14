@@ -2,4 +2,8 @@
 <resources>
     <string name="error_generic">Something went wrong. Please try again.</string>
     <string name="error_no_sounds_found">Recommended sounds were not found in the library.</string>
+
+    <string name="error_no_sounds_to_save">No sounds to save.</string>
+    <string name="error_mix_name_exists">A mix with this name already exists.</string>
+    <string name="success_mix_saved">%1$s has been saved successfully!</string>
 </resources>

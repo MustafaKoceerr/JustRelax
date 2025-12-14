@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.ai.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,10 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Send
+import androidx.compose.material.icons.rounded.Link
+import androidx.compose.material.icons.rounded.LinkOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,59 +33,91 @@ import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+// --- 2. INPUT ALANI ---
 @Composable
 fun AIPromptInput(
     text: String,
+    isPlayingSomething: Boolean, // Şu an arkada bir ses var mı?
+    isContextEnabled: Boolean,   // Zincir bağlı mı?
+    onContextToggle: () -> Unit, // Zincire tıklama
     onTextChange: (String) -> Unit,
     onSendClick: () -> Unit,
+    onSuggestionClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val suggestions = listOf("Yağmurlu Orman", "Derin Uyku", "Kafe Ortamı", "Meditasyon")
+    val suggestions = listOf("Yağmurlu Orman", "Derin Uyku", "Kafe Ortamı", "Meditasyon", "Fırtına")
+
 
     Column(modifier = modifier) {
-        // 1. Öneri çipleri (Yatay liste)
+        // 1. Öneriler
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(suggestions.size) { index ->
+            items(suggestions) { suggestion ->
                 SuggestionChip(
-                    onClick = { onTextChange(suggestions[index]) },
-                    label = { Text(suggestions[index]) },
+                    onClick = { onSuggestionClick(suggestion) },
+                    label = { Text(suggestion) },
                     colors = SuggestionChipDefaults.suggestionChipColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                         labelColor = MaterialTheme.colorScheme.onSurface
                     ),
-                    shape = CircleShape,
-                    border = null // Kenarlık olmasın, daha modern.
+                    border = null,
+                    shape = CircleShape
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-        // 2. Metin Kutusu
+
+        // 2. Input Kutusu
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .height(56.dp) // standart yükseklik
-                .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape) // Yuvarlak zemin
-                .padding(horizontal = 16.dp),
+                .height(56.dp)
+                .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
+                .padding(horizontal = 8.dp), // İç padding
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Input
+
+            // --- CONTEXT TOGGLE (Sadece ses çalıyorsa görünür) ---
+            AnimatedVisibility(visible = isPlayingSomething) {
+                IconButton(onClick = onContextToggle) {
+                    val icon = if (isContextEnabled) Icons.Rounded.Link else Icons.Rounded.LinkOff
+                    val tint = if (isContextEnabled) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = "Bağlamı Kullan",
+                        tint = tint
+                    )
+                }
+            }
+
+            // Metin Alanı
             BasicTextField(
                 value = text,
                 onValueChange = onTextChange,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 8.dp),
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
                 singleLine = true,
                 decorationBox = { innerTextField ->
                     if (text.isEmpty()) {
+                        // Placeholder Mantığı
+                        val placeholderText = if (isPlayingSomething && isContextEnabled) {
+                            "Buraya ne ekleyelim?" // Bağlam açık
+                        } else {
+                            "Hayalindeki ortamı yaz..." // Sıfırdan
+                        }
+
                         Text(
-                            "Hayalindeki ortamı ya da bugün nasıl hissettiğini yaz.",
+                            text = placeholderText,
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                         )
@@ -90,7 +126,7 @@ fun AIPromptInput(
                 }
             )
 
-            // Gönder buttonu (Sadece yazı varsa aktifleşsin)
+            // Gönder Butonu
             val isEnabled = text.isNotBlank()
             IconButton(
                 onClick = onSendClick,
@@ -103,24 +139,12 @@ fun AIPromptInput(
                     )
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.Send, // sağa bakan ok
-                    contentDescription = "Oluştur.",
-                    tint = if (isEnabled) MaterialTheme.colorScheme.onPrimary else
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                    imageVector = Icons.AutoMirrored.Rounded.Send,
+                    contentDescription = "Oluştur",
+                    tint = if (isEnabled) MaterialTheme.colorScheme.onPrimary
+                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun AIPromptInputPreview(){
-    JustRelaxTheme {
-        AIPromptInput(
-            "Falan filan",
-            {},
-            {},
-        )
     }
 }

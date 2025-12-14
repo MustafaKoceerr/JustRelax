@@ -2,4 +2,8 @@
 <resources>
     <string name="error_generic">Bir şeyler ters gitti. Lütfen tekrar dene.</string>
     <string name="error_no_sounds_found">Önerilen sesler kütüphanede bulunamadı.</string>
+
+    <string name="error_no_sounds_to_save">Kaydedilecek ses yok.</string>
+    <string name="error_mix_name_exists">Bu isimde bir mix zaten var.</string>
+    <string name="success_mix_saved">%1$s başarıyla kaydedildi!</string>
 </resources>

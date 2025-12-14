@@ -30,7 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mustafakoceerr.justrelax.core.audio.TimerStatus
-import com.mustafakoceerr.justrelax.core.common.formatTime
+import com.mustafakoceerr.justrelax.core.common.util.formatTime
 import com.mustafakoceerr.justrelax.feature.timer.util.calculateEndTime
 import com.mustafakoceerr.justrelax.feature.timer.util.formatDurationVerbose
 

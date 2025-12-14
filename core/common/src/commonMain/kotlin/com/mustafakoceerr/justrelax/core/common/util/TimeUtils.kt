@@ -1,4 +1,4 @@
-package com.mustafakoceerr.justrelax.core.common
+package com.mustafakoceerr.justrelax.core.common.util
 
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number

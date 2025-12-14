@@ -9,11 +9,12 @@ import com.mustafakoceerr.justrelax.feature.ai.data.model.GeminiRequest
 import com.mustafakoceerr.justrelax.feature.ai.data.model.GeminiResponse
 import com.mustafakoceerr.justrelax.feature.ai.domain.repository.AiService
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 
@@ -23,24 +24,31 @@ class AiServiceImpl(
 ) : AiService {
 
     private val API_KEY = BuildConfig.GEMINI_API_KEY
-
-    // DÜZELTME: Listende açıkça görünen "gemini-2.0-flash" modelini kullanıyoruz.
-    // Başındaki "models/" kısmını siliyoruz, sadece isim.
-    private val MODEL_NAME = "gemini-2.0-flash"
-
-    // URL yapısı
+    private val MODEL_NAME = "gemini-2.5-flash-lite"
     private val FULL_URL = "https://generativelanguage.googleapis.com/v1beta/models/$MODEL_NAME:generateContent?key=$API_KEY"
-
-    private val json = Json { ignoreUnknownKeys = true }
+    private val json = Json {
+        ignoreUnknownKeys = true
+        isLenient = true // Gevşek JSON parsing (AI bazen hata yapabilir)
+    }
 
     override suspend fun generateMix(userPrompt: String): Result<AiMixResponse> {
         return try {
-            val allSounds = soundRepository.getSounds().first()
-            val soundInventory = allSounds.joinToString("\n") {
+            println("AI_DEBUG: === AI İSTEĞİ BAŞLIYOR ===")
+            println("AI_DEBUG: Kullanılan Model: $MODEL_NAME")
+
+            val downloadedSounds = soundRepository.getDownloadedSounds().first()
+
+            if (downloadedSounds.isEmpty()) {
+                println("AI_DEBUG: HATA - İndirilmiş ses yok.")
+                throw IllegalStateException("No downloaded sounds available.")
+            }
+
+            val soundInventory = downloadedSounds.joinToString("\n") {
                 "- ID: ${it.id} (Category: ${it.category.name})"
             }
 
-            // PROMPT GÜNCELLENDİ: Örnek JSON formatı eklendi.
+            println("AI_DEBUG: Envanterde ${downloadedSounds.size} ses var.")
+
             val systemPrompt = """
                 You are a professional ambient sound DJ.
                 Your goal is to create a mix based on the user's mood or request.
@@ -66,25 +74,61 @@ class AiServiceImpl(
                 
                 USER REQUEST: "$userPrompt"
             """.trimIndent()
+
             val requestBody = GeminiRequest(
                 contents = listOf(GeminiContent(parts = listOf(GeminiPart(text = systemPrompt))))
             )
 
-            val response: GeminiResponse = client.post(FULL_URL) {
+            // 1. İsteği gönder ama hemen objeye çevirme (bodyAsText kullan)
+            val httpResponse = client.post(FULL_URL) {
                 contentType(ContentType.Application.Json)
                 setBody(requestBody)
-            }.body()
+            }
 
-            val rawJson = response.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text
-                ?: throw Exception("Empty response from AI")
+            val responseStatus = httpResponse.status
+            val rawResponseBody = httpResponse.bodyAsText() // <--- EN ÖNEMLİ KISIM
+
+            println("AI_DEBUG: HTTP Status Code: $responseStatus")
+            println("AI_DEBUG: Raw Response Body: $rawResponseBody")
+
+            // 2. HTTP Hatası var mı?
+            if (!responseStatus.isSuccess()) {
+                throw Exception("API Error ($responseStatus): $rawResponseBody")
+            }
+
+            // 3. JSON Parse İşlemi (GeminiResponse'a çevir)
+            val geminiResponse = try {
+                json.decodeFromString<GeminiResponse>(rawResponseBody)
+            } catch (e: Exception) {
+                println("AI_DEBUG: GeminiResponse Parse Hatası: ${e.message}")
+                throw e
+            }
+
+            val candidate = geminiResponse.candidates?.firstOrNull()
+
+            // Güvenlik veya başka bir sebeple içerik boş mu?
+            if (candidate?.content == null) {
+                println("AI_DEBUG: İçerik BOŞ! FinishReason: ${candidate}")
+                throw Exception("AI returned no content. Reason: ${candidate}")
+            }
+
+            val rawJsonText = candidate.content.parts.firstOrNull()?.text
+                ?: throw Exception("Empty text in AI response")
 
             // Markdown temizliği
-            val cleanJson = rawJson.replace("```json", "").replace("```", "").trim()
+            val cleanJson = rawJsonText.replace("```json", "").replace("```", "").trim()
 
+            println("AI_DEBUG: Temizlenmiş JSON: $cleanJson")
+
+            // 4. Bizim modelimize çevir (AiMixResponse)
             val mixResponse = json.decodeFromString<AiMixResponse>(cleanJson)
+
+            println("AI_DEBUG: === İŞLEM BAŞARILI ===")
             Result.success(mixResponse)
 
         } catch (e: Exception) {
+            println("AI_DEBUG: !!! KRİTİK HATA !!!")
+            println("AI_DEBUG: Hata Mesajı: ${e.message}")
             e.printStackTrace()
             Result.failure(e)
         }
