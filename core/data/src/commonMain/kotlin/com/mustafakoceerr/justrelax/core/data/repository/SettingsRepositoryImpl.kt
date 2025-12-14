@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.core.data.repository
 
+import com.mustafakoceerr.justrelax.core.data.platform.getSystemLanguageCode
 import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
@@ -39,8 +40,10 @@ class SettingsRepositoryImpl (
 
     @OptIn(ExperimentalSettingsApi::class)
     override fun getLanguage(): Flow<AppLanguage> {
+        val systemCode = getSystemLanguageCode() ?: AppLanguage.ENGLISH.code
+
         // 3. ADIM: Bu satır da aynı şekilde çalışacak.
-        return settings.getStringFlow(KEY_LANGUAGE, defaultValue = AppLanguage.ENGLISH.code)
+        return settings.getStringFlow(KEY_LANGUAGE, defaultValue = systemCode)
             .map { code -> AppLanguage.fromCode(code) }
     }
 

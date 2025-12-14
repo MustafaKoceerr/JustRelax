@@ -11,6 +11,7 @@
             android:name="com.mustafakoceerr.justrelax.core.audio.service.JustRelaxService"
             android:enabled="true"
             android:exported="false"
+            android:stopWithTask="true"
             android:foregroundServiceType="mediaPlayback" />
     </application>
 </manifest>

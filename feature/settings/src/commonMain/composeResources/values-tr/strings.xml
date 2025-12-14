@@ -11,7 +11,7 @@
     <string name="settings_language_title">Dil</string>
     <string name="language_selection_title">Dil Seçimi</string>
     <string name="language_settings_title">Dil Ayarları</string>
-    <string name="language_system_default">Sistem varsayılanı</string>
+    <string name="language_system_default">Sistem Varsayılanı</string>
     <string name="current_language">Geçerli dil: %1$s</string>
     <string name="download_all_title">Tüm sesleri indir</string>
     <string name="download_all_completed_title">Kütüphane tamamlandı</string>

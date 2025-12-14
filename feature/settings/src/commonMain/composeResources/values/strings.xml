@@ -11,7 +11,7 @@
     <string name="settings_language_title">Language</string>
     <string name="language_selection_title">Language Selection</string>
     <string name="language_settings_title">Language Settings</string>
-    <string name="language_system_default">System default</string>
+    <string name="language_system_default">System Default</string>
     <string name="current_language">Current language: %1$s</string>
     <string name="download_all_title">Download all sounds</string>
     <string name="download_all_completed_title">Library completed</string>
