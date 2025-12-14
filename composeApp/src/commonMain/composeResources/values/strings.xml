@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="go_to_settings">Go to Settings</string>
-
-    <!-- Theme -->
     <string name="current_theme">Current Theme: %1$s</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_system">System</string>
-
-    <!-- Language -->
     <string name="current_language">Current Language: %1$s</string>
     <string name="language_english">English</string>
     <string name="language_turkish">Turkish</string>
-
-    <!-- Categories -->
     <string name="category_water">Water &amp; Rain</string>
     <string name="category_nature">Nature &amp; Forest</string>
     <string name="category_air">Wind &amp; Atmosphere</string>
     <string name="category_city">City &amp; Indoor</string>
     <string name="category_noise">White Noise &amp; Mechanical</string>
-
-    <!-- Sound Names -->
     <string name="sound_rain_light">Light Rain</string>
     <string name="sound_rain_thunder">Rain &amp; Thunder</string>
     <string name="sound_ocean">Ocean Waves</string>
@@ -29,29 +21,29 @@
     <string name="sound_wind">Wind Ambience</string>
     <string name="sound_cafe">Cafe Ambience</string>
     <string name="sound_fan">Fan Noise</string>
-
-    <!-- Duration unit abbreviations -->
     <string name="duration_hour_short">h</string>
     <string name="duration_minute_short">min</string>
     <string name="duration_second_short">sec</string>
-
-    <!-- Messages -->
     <string name="msg_mix_saved_success">%1$s was saved successfully!</string>
     <string name="error_mix_name_exists">A mix with this name already exists.</string>
     <string name="error_mix_name_empty">Name cannot be empty.</string>
     <string name="error_no_sounds">There are no sounds to save.</string>
-
     <string name="error_generic">Something went wrong. Please try again.</string>
     <string name="error_no_sounds_found">Recommended sounds were not found in the library.</string>
-
     <string name="download_complete">All sounds have been downloaded! 🎉</string>
     <string name="suggestion_hidden">Suggestion hidden.</string>
     <string name="action_settings">SETTINGS</string>
-
-    <!-- Tabs -->
     <string name="tab_home">Home</string>
     <string name="tab_timer">Timer</string>
     <string name="tab_ai">AI</string>
     <string name="tab_saved">Saved</string>
     <string name="tab_mixer">Mixer</string>
+    <string name="loading_message_peace">Preparing your peace...</string>
+    <string name="loading_message_frequency">Tuning frequencies...</string>
+    <string name="loading_message_rain">Gathering rain sounds...</string>
+    <string name="loading_message_wind">Adjusting the wind...</string>
+    <string name="loading_message_fire">Bringing the crackling fire...</string>
+    <string name="loading_message_mind">Clear your mind...</string>
+    <string name="loading_message_nature">Connecting with nature...</string>
+    <string name="loading_message_brand">Just Relax...</string>
 </resources>
