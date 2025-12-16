@@ -4,5 +4,12 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+
+    <!-- EKLENEN KISIM: Arka Planda Ses Çalma İzni -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>audio</string>
+    </array>
+    <!-- BİTİŞ -->
 </dict>
 </plist>

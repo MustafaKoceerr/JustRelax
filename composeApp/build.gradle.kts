@@ -1,51 +1,13 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlin.serialization)
+    kotlin("native.cocoapods")
 }
-
-kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-    
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
-    
-    sourceSets {
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-        }
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-        }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
-    }
-}
-
 android {
     namespace = "com.mustafakoceerr.justrelax"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -57,23 +19,108 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    // ✅ EKLENDİ: Compose'u manuel açıyoruz
+    buildFeatures {
+        compose = true
+    }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+kotlin {
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
+
+    // iOS Hedefleri (Plugin olmadığı için manuel ekliyoruz)
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    cocoapods {
+        summary = "JustRelax Shared App"
+        homepage = "https://example.com/justrelax"
+        version = "1.0.0"
+        ios.deploymentTarget = "16.0"
+        extraSpecAttributes["libraries"] = "'sqlite3'"
+
+        framework {
+            baseName = "ComposeApp"
+            isStatic = true
+
+            // Core UI ve Main Feature'ı dışarı açıyoruz
+            export(project(":core:ui"))
+        }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            // --- MODÜLLER ---
+            implementation(project(":core:common"))
+            implementation(project(":core:model"))
+            implementation(project(":core:ui"))
+            implementation(project(":core:data"))
+            implementation(project(":core:audio"))
+            implementation(project(":core:navigation"))
+
+            implementation(project(":feature:home"))
+            implementation(project(":feature:mixer"))
+            implementation(project(":feature:saved"))
+            implementation(project(":feature:ai"))
+            implementation(project(":feature:timer"))
+            implementation(project(":feature:settings"))
+            implementation(project(":feature:player"))
+
+            // --- Koin ---
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+
+            // --- Compose ---
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.components.uiToolingPreview)
+
+            // Coil (Resim Yükleme)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
+            implementation(libs.coil.svg)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.koin.android)
+            implementation(libs.androidx.activity.compose)
+
+            // Android Ses Motoru (ExoPlayer / Media3)
+            implementation(libs.androidx.media3.exoplayer)
+            implementation(libs.androidx.media3.session)
+            implementation(libs.androidx.media3.common)
+        }
+    }
+}
+
+// --- KRİTİK NOKTA ---
+compose.resources {
+    // Core modülünde: "justrelax.core.generated.resources" demiştik.
+    // Burada FARKLI bir isim olmalı. Genellikle şöyledir:
+    packageOfResClass = "com.mustafakoceerr.justrelax.composeapp.generated.resources"
+
+    // Uygulamanın ana modülü olduğu için public yapmana gerek yok (default false kalabilir)
+    // generateResClass = always
 }
 

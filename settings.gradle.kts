@@ -2,6 +2,9 @@ rootProject.name = "JustRelax"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
+    // Build Logic'i buraya dahil ediyoruz
+    includeBuild("build-logic")
+
     repositories {
         google {
             mavenContent {
@@ -28,4 +31,23 @@ dependencyResolutionManagement {
     }
 }
 
+rootProject.name = "JustRelax"
+
 include(":composeApp")
+include(":core")
+
+include(":core:common")
+include(":core:model")
+include(":core:audio")
+include(":core:data")
+include(":core:ui")
+include(":core:navigation")
+include(":core:domain")
+
+include(":feature:settings")
+include(":feature:player")
+include(":feature:timer")
+include(":feature:ai")
+include(":feature:saved")
+include(":feature:mixer")
+include(":feature:home")

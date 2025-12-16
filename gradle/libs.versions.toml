@@ -1,17 +1,45 @@
 [versions]
-agp = "8.13.1"
+kotlin = "2.2.21"
+agp = "8.11.0"
 android-compileSdk = "36"
-android-minSdk = "24"
+android-minSdk = "29"
 android-targetSdk = "36"
+# Kotlin & Compose
+composeMultiplatform = "1.9.3"
+
+# AndroidX
 androidx-activity = "1.11.0"
 androidx-appcompat = "1.7.1"
 androidx-core = "1.17.0"
+androidx-lifecycle = "2.8.4"      # <-- 2.9.6'dan bilinçli downgrade
+androidx-media = "1.7.0"
 androidx-espresso = "3.7.0"
-androidx-lifecycle = "2.9.5"
 androidx-testExt = "1.3.0"
-composeMultiplatform = "1.9.1"
+# Voyager
+kotlinxDatetime = "0.7.1"
+media3 = "1.8.0"
+voyager = "1.1.0-beta03"          # KMP için oturmuş beta
+
+# DI / Network vs.
+koin = "4.1.1"
+ktor = "3.3.2"
+kotlinx-serialization = "1.9.0"
+multiplatform-settings = "1.3.0"
+sqldelight = "2.2.1"
+
+# Kotlin ekleri
+kotlinx-coroutines = "1.10.2"
+
+# Test / core (senin var olan değerlerin)
 junit = "4.13.2"
-kotlin = "2.2.20"
+runner = "1.5.2"
+core = "1.5.0"
+coreVersion = "1.17.0"
+okio ="3.16.2"
+coil3 = "3.3.0" # Veya en güncel stabil sürüm
+
+buildConfig = "6.0.6"
+
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -25,9 +53,88 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
+# Koin (Dependency Injection)
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-core-coroutines = { module = "io.insert-koin:koin-core-coroutines", version.ref = "koin" }
+# Compose Multiplatform API
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+# Android-specific
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+
+# Voyager (Navigation)
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
+voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+
+# Ktor (Networking)
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+
+# Kotlinx Serialization
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+# Multiplatform Settings (Basit Veri Saklama)
+multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatform-settings" }
+multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatform-settings" }
+
+# SQLDelight (Veritabanı)
+sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight" }
+sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
+
+# Coroutines
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+
+# Extended icons
+core = { group = "androidx.core", name = "core", version.ref = "coreVersion" }
+
+# Media3
+androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
+androidx-media3-session   = { module = "androidx.media3:media3-session", version.ref = "media3" }
+androidx-media3-common    = { module = "androidx.media3:media3-common", version.ref = "media3" }
+
+# Okio ( Path belirleme)
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
+
+# Coil (resim indirme)
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
+coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil3" }
+coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil3" }
+
+
+# --- Build Logic Dependencies (Plugin geliştirmek için gerekli artifactler) ---
+# Android Gradle Plugin (Kod erişimi için)
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+
+# Kotlin Gradle Plugin
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+# Compose Multiplatform Gradle Plugin
+compose-gradlePlugin = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "composeMultiplatform" }
+
+# Compose Compiler Gradle Plugin
+composeCompiler-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+
+androidx-media-session-compat = { module = "androidx.media:media", version.ref = "androidx-media" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+android-lint = { id = "com.android.lint", version.ref = "agp" }
+buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }

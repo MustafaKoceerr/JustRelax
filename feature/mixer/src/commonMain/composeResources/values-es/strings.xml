@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="msg_mix_saved_success">%1$s se guardó correctamente.</string>
+    <string name="error_mix_name_exists">Ya existe un mix con este nombre.</string>
+    <string name="error_mix_name_empty">El nombre no puede estar vacío.</string>
+    <string name="error_no_sounds">No hay sonidos para guardar.</string>
+    <string name="mix_count_selector_title">¿Cuántos sonidos quieres mezclar?</string>
+    <string name="action_create_mix">Crear Mix</string>
+    <string name="action_save_mix">Guardar Mix</string>
+    <string name="mixer_screen_title">Mezclador</string>
+    <string name="mixer_empty_state_message">Elige un número y empieza a mezclar.</string>
+</resources>

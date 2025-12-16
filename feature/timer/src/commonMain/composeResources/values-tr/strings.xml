@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="duration_hour_short">sa</string>
+    <string name="duration_minute_short">dk</string>
+    <string name="duration_second_short">sn</string>
+    <string name="timer_action_delete">Sil</string>
+    <string name="timer_action_pause">Duraklat</string>
+    <string name="timer_action_resume">Devam Et</string>
+    <string name="timer_unit_hour">Saat</string>
+    <string name="timer_unit_minute">Dakika</string>
+    <string name="timer_unit_second">Saniye</string>
+    <string name="timer_action_start">Başlat</string>
+</resources>

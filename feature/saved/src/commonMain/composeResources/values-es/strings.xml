@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="saved_empty_image_cd">Aún no hay mixes guardados</string>
+    <string name="saved_empty_title">Aún No Hay Registros</string>
+    <string name="saved_empty_description">Mezcla tus sonidos favoritos y guárdalos aquí. Empieza a crear tu propia colección de calma.</string>
+    <string name="action_create_new_mix">Crear Nuevo Mix</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="saved_mix_metadata">%1$d Sonidos • %2$s</string>
+    <string name="action_play">Reproducir</string>
+    <string name="action_pause">Pausar</string>
+    <string name="action_more_options">Opciones</string>
+    <string name="action_rename">Renombrar</string>
+    <string name="action_share">Compartir</string>
+    <string name="saved_screen_title">Mixes Guardados</string>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="go_to_settings">Ayarlar’a Git</string>
+    <string name="current_theme">Geçerli Tema: %1$s</string>
+    <string name="theme_light">Açık</string>
+    <string name="theme_dark">Koyu</string>
+    <string name="theme_system">Sistem</string>
+    <string name="current_language">Geçerli Dil: %1$s</string>
+    <string name="language_english">İngilizce</string>
+    <string name="language_turkish">Türkçe</string>
+    <string name="sound_rain_light">Hafif Yağmur</string>
+    <string name="sound_rain_thunder">Yağmur &amp; Gök Gürültüsü</string>
+    <string name="sound_ocean">Okyanus Dalgaları</string>
+    <string name="sound_forest_birds">Orman Kuşları</string>
+    <string name="sound_campfire">Kamp Ateşi</string>
+    <string name="sound_wind">Rüzgar Ambiyansı</string>
+    <string name="sound_cafe">Kafe Ambiyansı</string>
+    <string name="sound_fan">Vantilatör Sesi</string>
+    <string name="download_suggestion_title">Daha fazla ses?</string>
+    <string name="download_suggestion_description">Kütüphaneni tamamla, mixer’ın tadını çıkar.</string>
+    <string name="download_suggestion_action_cd">Görüntüle</string>
+    <string name="save_mix_dialog_title">Mix’i Kaydet</string>
+    <string name="save_mix_dialog_description">Bu karışıma bir isim ver:</string>
+    <string name="save_mix_dialog_name_label">Mix İsmi</string>
+    <string name="save_mix_dialog_name_placeholder">Örn: Uyku Modu, Odaklanma...</string>
+    <string name="save_mix_dialog_name_error">Lütfen bir isim girin</string>
+    <string name="action_save">Kaydet</string>
+    <string name="action_cancel">İptal</string>
+    <string name="sound_action_download">İndir</string>
+</resources>

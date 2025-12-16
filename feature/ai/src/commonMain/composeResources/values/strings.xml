@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_no_sounds_found">Recommended sounds were not found in the library.</string>
+    <string name="error_no_sounds_to_save">No sounds to save.</string>
+    <string name="error_mix_name_exists">A mix with this name already exists.</string>
+    <string name="success_mix_saved">%1$s has been saved successfully!</string>
+    <string name="ai_screen_title">Just Relax AI</string>
+    <string name="ai_suggestion_rainforest">Rainforest</string>
+    <string name="ai_suggestion_deep_sleep">Deep Sleep</string>
+    <string name="ai_suggestion_cafe">Cafe Ambience</string>
+    <string name="ai_suggestion_meditation">Meditation</string>
+    <string name="ai_suggestion_storm">Storm</string>
+    <string name="ai_prompt_placeholder">Describe your ideal environment...</string>
+    <string name="ai_prompt_placeholder_with_context">What should we add here?</string>
+    <string name="ai_context_toggle_cd">Context</string>
+    <string name="ai_action_generate">Generate</string>
+    <string name="ai_action_edit">Edit</string>
+    <string name="ai_action_regenerate">Regenerate</string>
+    <string name="action_save">Save</string>
+</resources>
