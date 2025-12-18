@@ -6,7 +6,13 @@
 [![Architecture](https://img.shields.io/badge/Architecture-MVI%20Inspired-orange.svg)](https://developer.android.com/topic/architecture)
 [![Design](https://img.shields.io/badge/Design-Feature%20Based%20Modules-purple.svg)](https://developer.android.com/guide/app-bundle/play-feature-delivery)
 
-> A modern **Kotlin Multiplatform** relaxation app that allows users to mix ambient sounds, create custom soundscapes, and relax with a minimal, soft-UI driven experience.
+> A modern **Kotlin Multiplatform** relaxation app where users can mix ambient sounds, create custom soundscapes, and relax with a minimal, soft-UI driven experience.
+
+---
+
+## 🎥 Video Demo (Preview)
+
+- 📹 **Just Relax – App Preview:** [Watch on YouTube](https://youtube.com/shorts/WNjl-RuWqtQ)
 
 ---
 
@@ -17,162 +23,208 @@
 - ⏱️ Sleep & focus timer  
 - 💾 Save & manage favorite mixes  
 - 🌗 Light / Dark theme support  
-- 🌍 Multiplatform-ready architecture (Android & iOS)
+- 🌍 Kotlin Multiplatform-ready architecture (Android & iOS)
+
+---
+
+<details>
+  <summary><b>📸 App Gallery (Screenshots)</b></summary>
+
+  <br/>
+
+  ### 📱 Light Theme Screens
+
+  <table>
+    <tr>
+      <th>Home</th>
+      <th>Home (Alt)</th>
+      <th>Mixer</th>
+      <th>Mixer (Alt)</th>
+    </tr>
+    <tr>
+      <td><img src="assets/light_home_1.jpg" height="380"/></td>
+      <td><img src="assets/light_home_2.jpg" height="380"/></td>
+      <td><img src="assets/light_mixer_1.jpg" height="380"/></td>
+      <td><img src="assets/light_mixer_2.jpg" height="380"/></td>
+    </tr>
+  </table>
+
+  <br/>
+
+  <table>
+    <tr>
+      <th>AI Suggestions</th>
+      <th>AI Suggestions (Alt)</th>
+      <th>Saved Mixes</th>
+      <th>Saved Mixes (Alt)</th>
+    </tr>
+    <tr>
+      <td><img src="assets/light_ai_1.jpg" height="380"/></td>
+      <td><img src="assets/light_ai_2.jpg" height="380"/></td>
+      <td><img src="assets/light_saved_1.jpg" height="380"/></td>
+      <td><img src="assets/light_saved_2.jpg" height="380"/></td>
+    </tr>
+  </table>
+
+  <br/>
+
+  <table>
+    <tr>
+      <th>Timer</th>
+      <th>Timer (Alt)</th>
+      <th>Settings</th>
+      <th>Settings (Alt)</th>
+    </tr>
+    <tr>
+      <td><img src="assets/light_timer_1.jpg" height="380"/></td>
+      <td><img src="assets/light_timer_2.jpg" height="380"/></td>
+      <td><img src="assets/light_settings_1.jpg" height="380"/></td>
+      <td><img src="assets/light_settings_2.jpg" height="380"/></td>
+    </tr>
+  </table>
+
+  <br/>
+
+  <table>
+    <tr>
+      <th>Loading</th>
+      <th>Coming Soon</th>
+      <th>Coming Soon</th>
+      <th>Coming Soon</th>
+    </tr>
+    <tr>
+      <td><img src="assets/light_loading_1.jpg" height="380"/></td>
+      <td align="center"><i>New states planned</i></td>
+      <td align="center"><i>New states planned</i></td>
+      <td align="center"><i>New states planned</i></td>
+    </tr>
+  </table>
+
+  ---
+
+  ### 📱 Dark Theme (Preview)
+
+  <table>
+    <tr>
+      <th>Settings (Dark)</th>
+      <th>Palette Update</th>
+      <th>Palette Update</th>
+      <th>Palette Update</th>
+    </tr>
+    <tr>
+      <td><img src="assets/dark_settings_1.jpg" height="380"/></td>
+      <td align="center"><i>Color palette refinement in progress</i></td>
+      <td align="center"><i>Contrast tuning planned</i></td>
+      <td align="center"><i>Additional screens coming soon</i></td>
+    </tr>
+  </table>
+
+</details>
 
 ---
 
 ## 🛠 Tech Stack & Tooling
 
-> Below is a concise overview of the main technologies used in this project, along with **why** they were chosen.
+> Main technologies used in this project, with versions and a short purpose note.
 
 ### Core Language & Platform
-- **Kotlin Multiplatform** `2.2.21`  
-  Shared business logic across Android & iOS with a single codebase.
-- **Android Gradle Plugin** `8.11.0`  
-  Latest tooling for modern Android builds.
-- **Compile SDK / Target SDK** `36` · **Min SDK** `29`  
-  Modern Android API support with reasonable backward compatibility.
+- **Kotlin Multiplatform** `2.2.21` — shared business logic across Android & iOS  
+- **Android Gradle Plugin** `8.11.0` — modern Android build tooling  
+- **Compile SDK / Target SDK** `36` · **Min SDK** `29` — modern API support with sensible backward compatibility  
 
 ### UI
-- **Compose Multiplatform** `1.9.3`  
-  Declarative UI for Android and shared UI foundations.
-- **Material Design 3**  
-  Consistent, modern, and accessible design language.
-- **AndroidX Activity Compose** `1.11.0`  
-  Compose-first activity integration.
+- **Compose Multiplatform** `1.9.3` — declarative UI  
+- **Material Design 3** — consistent design system  
+- **AndroidX Activity Compose** `1.11.0` — Compose-first integration  
 
 ### State & Concurrency
-- **Kotlin Coroutines** `1.10.2`  
-  Structured concurrency and async task handling.
-- **Flow**  
-  Reactive, observable state streams across the app.
+- **Kotlin Coroutines** `1.10.2` — async + structured concurrency  
+- **Flow** — reactive state streams  
 
 ### Navigation
-- **Voyager** `1.1.0-beta03`  
-  Multiplatform-friendly navigation solution, chosen for its simplicity and KMP maturity.
+- **Voyager** `1.1.0-beta03` — KMP-friendly navigation (lightweight & clean)  
 
 ### Dependency Injection
-- **Koin** `4.1.1`  
-  Lightweight, Kotlin-first dependency injection with excellent Compose support.
+- **Koin** `4.1.1` — Kotlin-first DI with Compose support  
 
 ### Networking & Serialization
-- **Ktor Client** `3.3.2`  
-  Multiplatform HTTP client used for API communication.
-- **Kotlinx Serialization** `1.9.0`  
-  Type-safe JSON parsing across platforms.
+- **Ktor Client** `3.3.2` — multiplatform HTTP client  
+- **Kotlinx Serialization** `1.9.0` — type-safe JSON parsing  
 
 ### Persistence
-- **SQLDelight** `2.2.1`  
-  Type-safe, multiplatform database solution.
-- **Multiplatform Settings** `1.3.0`  
-  Simple key-value storage shared between platforms.
+- **SQLDelight** `2.2.1` — type-safe multiplatform database  
+- **Multiplatform Settings** `1.3.0` — shared key-value storage  
 
 ### Media & Assets
-- **Media3 / ExoPlayer** `1.8.0`  
-  Audio playback engine for ambient sounds.
-- **Coil 3** `3.3.0`  
-  Modern, coroutine-based image loading for Compose.
-- **Okio** `3.16.2`  
-  File system and I/O utilities.
+- **Media3 / ExoPlayer** `1.8.0` — audio playback engine  
+- **Coil 3** `3.3.0` — image loading for Compose  
+- **Okio** `3.16.2` — filesystem & I/O utilities  
 
 ---
 
-## 📸 App Gallery
+## 🧩 Modular Architecture (Project Structure)
 
-### 📱 Light Theme Screens
+This project uses a **feature-based modular** architecture to keep the codebase scalable, testable, and easy to maintain.
 
-<table>
-  <tr>
-    <th>Home</th>
-    <th>Home (Alt)</th>
-    <th>Mixer</th>
-    <th>Mixer (Alt)</th>
-  </tr>
-  <tr>
-    <td><img src="assets/light_home_1.jpg" height="380"/></td>
-    <td><img src="assets/light_home_2.jpg" height="380"/></td>
-    <td><img src="assets/light_mixer_1.jpg" height="380"/></td>
-    <td><img src="assets/light_mixer_2.jpg" height="380"/></td>
-  </tr>
-</table>
+```text
+.
+├── build-logic/          # Custom Gradle convention plugins & build tooling
+├── composeApp/           # App entrypoint (Android), app-level DI & UI host
+├── iosApp/               # iOS entrypoint (iOS host)
+├── core/                 # Shared core layer (reusable building blocks)
+│   ├── audio/            # Audio abstractions & playback-related core utilities
+│   ├── common/           # Shared utilities, helpers, extensions
+│   ├── data/             # Data sources, repository implementations, DTOs
+│   ├── domain/           # Use-cases, business rules, repository contracts
+│   ├── model/            # Shared models
+│   ├── navigation/       # Navigation contracts / routes (KMP-friendly)
+│   └── ui/               # Shared UI components, theming, design system
+└── feature/              # Feature modules (UI + state + feature-specific logic)
+    ├── ai/               # AI mix suggestions
+    ├── home/             # Home screen
+    ├── mixer/            # Mixer screen
+    ├── player/           # Global player UI & logic
+    ├── saved/            # Saved mixes
+    ├── settings/         # Settings
+    └── timer/            # Sleep / focus timer
+```
 
-<br/>
+### 🧱 Core vs Feature (Quick Map)
 
-<table>
-  <tr>
-    <th>AI Suggestions</th>
-    <th>AI Suggestions (Alt)</th>
-    <th>Saved Mixes</th>
-    <th>Saved Mixes (Alt)</th>
-  </tr>
-  <tr>
-    <td><img src="assets/light_ai_1.jpg" height="380"/></td>
-    <td><img src="assets/light_ai_2.jpg" height="380"/></td>
-    <td><img src="assets/light_saved_1.jpg" height="380"/></td>
-    <td><img src="assets/light_saved_2.jpg" height="380"/></td>
-  </tr>
-</table>
+**Core modules** — shared, reusable building blocks:
 
-<br/>
+| Core Module | Responsibility |
+|---|---|
+| `core:audio` | Audio abstractions and core playback utilities |
+| `core:common` | Shared helpers, extensions, utilities |
+| `core:data` | Data sources + repository implementations |
+| `core:domain` | Use-cases, contracts, business rules |
+| `core:model` | Shared models (domain models) |
+| `core:navigation` | Navigation contracts/routes (KMP-friendly) |
+| `core:ui` | Shared UI components + theming/design system |
 
-<table>
-  <tr>
-    <th>Timer</th>
-    <th>Timer (Alt)</th>
-    <th>Settings</th>
-    <th>Settings (Alt)</th>
-  </tr>
-  <tr>
-    <td><img src="assets/light_timer_1.jpg" height="380"/></td>
-    <td><img src="assets/light_timer_2.jpg" height="380"/></td>
-    <td><img src="assets/light_settings_1.jpg" height="380"/></td>
-    <td><img src="assets/light_settings_2.jpg" height="380"/></td>
-  </tr>
-</table>
+**Feature modules** — screen-oriented, feature-specific logic (UI + state + integration):
 
-<br/>
+| Feature Module | Responsibility |
+|---|---|
+| `feature:home` | Home experience |
+| `feature:mixer` | Sound mixing workflow |
+| `feature:player` | Global player UI + playback coordination |
+| `feature:saved` | Saved mixes management |
+| `feature:ai` | AI-assisted mix suggestions |
+| `feature:timer` | Sleep/focus timer |
+| `feature:settings` | Preferences & app settings |
 
-<table>
-  <tr>
-    <th>Loading</th>
-    <th>Coming Soon</th>
-    <th>Coming Soon</th>
-    <th>Coming Soon</th>
-  </tr>
-  <tr>
-    <td><img src="assets/light_loading_1.jpg" height="380"/></td>
-    <td align="center"><i>New states planned</i></td>
-    <td align="center"><i>New states planned</i></td>
-    <td align="center"><i>New states planned</i></td>
-  </tr>
-</table>
+### 🛠 build-logic (Convention Plugins)
 
----
+The `build-logic` module contains **custom Gradle convention plugins** that standardize configuration across modules, so each new module stays consistent with minimal Gradle boilerplate.
 
-### 📱 Dark Theme (Preview)
-
-<table>
-  <tr>
-    <th>Settings (Dark)</th>
-    <th>Palette Update</th>
-    <th>Palette Update</th>
-    <th>Palette Update</th>
-  </tr>
-  <tr>
-    <td><img src="assets/dark_settings_1.jpg" height="380"/></td>
-    <td align="center"><i>Color palette refinement in progress</i></td>
-    <td align="center"><i>Contrast tuning planned</i></td>
-    <td align="center"><i>Additional screens coming soon</i></td>
-  </tr>
-</table>
-
----
-
-## 🎥 Feature Demo
-
-Short demo showcasing the overall flow and UX of the application.
-
-- 📹 **Video Demo:** [Watch Just Relax App Preview on YouTube](https://youtube.com/shorts/WNjl-RuWqtQ)
+What it standardizes (high-level):
+- **Shared Android config:** common `compileSdk / minSdk / targetSdk` defaults  
+- **Kotlin / KMP setup:** consistent compiler options and multiplatform target setup  
+- **Compose defaults:** Compose Multiplatform setup applied consistently  
+- **Common dependency patterns:** repeatable “baseline” dependencies per module type  
+- **Build features:** centralized toggles and shared build settings (so modules don’t drift over time)
 
 ---
 
@@ -192,8 +244,6 @@ Designed with **scalability**, **testability**, and **long-term maintainability*
 - Extended offline caching strategies  
 - Further refinement of dark theme palette  
 - Advanced AI-driven personalization  
-
-This project is actively evolving and serves as both a learning-focused and production-ready foundation.
 
 ---
 
