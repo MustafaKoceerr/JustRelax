@@ -31,29 +31,90 @@
 
 ### 📱 Light Theme Screens
 
-| Home | Home (Alt) | Mixer | Mixer (Alt) |
-|------|------------|-------|-------------|
-| ![](assets/light_home_1.jpg) | ![](assets/light_home_2.jpg) | ![](assets/light_mixer_1.jpg) | ![](assets/light_mixer_2.jpg) |
+<table>
+  <tr>
+    <th>Home</th>
+    <th>Home (Alt)</th>
+    <th>Mixer</th>
+    <th>Mixer (Alt)</th>
+  </tr>
+  <tr>
+    <td><img src="assets/light_home_1.jpg" height="380"/></td>
+    <td><img src="assets/light_home_2.jpg" height="380"/></td>
+    <td><img src="assets/light_mixer_1.jpg" height="380"/></td>
+    <td><img src="assets/light_mixer_2.jpg" height="380"/></td>
+  </tr>
+</table>
 
-| AI Suggestions | AI Suggestions (Alt) | Saved Mixes | Saved Mixes (Alt) |
-|----------------|---------------------|-------------|-------------------|
-| ![](assets/light_ai_1.jpg) | ![](assets/light_ai_2.jpg) | ![](assets/light_saved_1.jpg) | ![](assets/light_saved_2.jpg) |
+<br/>
 
-| Timer | Timer (Alt) | Settings | Settings (Alt) |
-|-------|-------------|----------|----------------|
-| ![](assets/light_timer_1.jpg) | ![](assets/light_timer_2.jpg) | ![](assets/light_settings_1.jpg) | ![](assets/light_settings_2.jpg) |
+<table>
+  <tr>
+    <th>AI Suggestions</th>
+    <th>AI Suggestions (Alt)</th>
+    <th>Saved Mixes</th>
+    <th>Saved Mixes (Alt)</th>
+  </tr>
+  <tr>
+    <td><img src="assets/light_ai_1.jpg" height="380"/></td>
+    <td><img src="assets/light_ai_2.jpg" height="380"/></td>
+    <td><img src="assets/light_saved_1.jpg" height="380"/></td>
+    <td><img src="assets/light_saved_2.jpg" height="380"/></td>
+  </tr>
+</table>
 
-| Loading |
-|---------|
-| ![](assets/light_loading_1.jpg) |
+<br/>
+
+<table>
+  <tr>
+    <th>Timer</th>
+    <th>Timer (Alt)</th>
+    <th>Settings</th>
+    <th>Settings (Alt)</th>
+  </tr>
+  <tr>
+    <td><img src="assets/light_timer_1.jpg" height="380"/></td>
+    <td><img src="assets/light_timer_2.jpg" height="380"/></td>
+    <td><img src="assets/light_settings_1.jpg" height="380"/></td>
+    <td><img src="assets/light_settings_2.jpg" height="380"/></td>
+  </tr>
+</table>
+
+<br/>
+
+<table>
+  <tr>
+    <th>Loading</th>
+    <th>Coming Soon</th>
+    <th>Coming Soon</th>
+    <th>Coming Soon</th>
+  </tr>
+  <tr>
+    <td><img src="assets/light_loading_1.jpg" height="380"/></td>
+    <td align="center"><i>New states planned</i></td>
+    <td align="center"><i>New states planned</i></td>
+    <td align="center"><i>New states planned</i></td>
+  </tr>
+</table>
 
 ---
 
-### 📱 Dark Theme Screens
+### 📱 Dark Theme (Preview)
 
-| Settings |
-|----------|
-| ![](assets/dark_settings_1.jpg) |
+<table>
+  <tr>
+    <th>Settings (Dark)</th>
+    <th>Palette Update</th>
+    <th>Palette Update</th>
+    <th>Palette Update</th>
+  </tr>
+  <tr>
+    <td><img src="assets/dark_settings_1.jpg" height="380"/></td>
+    <td align="center"><i>Color palette refinement in progress</i></td>
+    <td align="center"><i>Contrast tuning planned</i></td>
+    <td align="center"><i>Additional screens coming soon</i></td>
+  </tr>
+</table>
 
 ---
 
@@ -61,8 +122,8 @@
 
 Short demo showcasing the overall flow and UX of the application.
 
-- 📹 **Video Demo:** `linkedin.mp4`
-
+- 📹 **Video Demo:** [Watch Just Relax App Preview on YouTube](https://youtube.com/shorts/WNjl-RuWqtQ)
+  
 ---
 
 ## 🧱 Architecture Overview
