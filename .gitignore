@@ -313,3 +313,17 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/kotlin,java,android,androidstudio,gradle,swift
+
+# Created by https://www.toptal.com/developers/gitignore/api/cocoapods,swift,xcode,xcodeinjection
+# Edit at https://www.toptal.com/developers/gitignore?templates=cocoapods,swift,xcode,xcodeinjection
+
+### CocoaPods ###
+## CocoaPods GitIgnore Template
+
+# CocoaPods - Only use to conserve bandwidth / Save time on Pushing
+#           - Also handy if you have a large number of dependant pods
+#           - AS PER https://guides.cocoapods.org/using/using-cocoapods.html NEVER IGNORE THE LOCK FILE
+Pods/
+
+
+/composeApp/src/commonMain/kotlin/com/mustafakoceerr/justrelax/feature/ai/data/ApiKeyConstant.kt

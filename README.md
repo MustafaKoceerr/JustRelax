@@ -1,35 +1,89 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# 🌿 Just Relax – Sound Mixing & Relaxation App
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
-
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
-
-### Build and Run Android Application
-
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
-
-### Build and Run iOS Application
-
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+> A modern **Kotlin Multiplatform** relaxation app that allows users to mix ambient sounds, create custom soundscapes, and relax with a minimal, soft-UI driven experience.
 
 ---
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## ✨ Key Highlights
+
+- 🎧 Custom ambient sound mixer  
+- 🧠 AI-assisted sound mix suggestions  
+- ⏱️ Sleep & focus timer  
+- 💾 Save & manage favorite mixes  
+- 🌗 Light / Dark theme support  
+- 🌍 Multiplatform-ready architecture (Android & iOS)
+
+---
+
+## 🛠 Tech Stack
+
+- **Kotlin Multiplatform (KMP)**
+- **Jetpack Compose / Compose Multiplatform**
+- **Coroutines & Flow**
+- **Koin** (Dependency Injection)
+- **SQLDelight**
+- **Media3 / ExoPlayer**
+- **Material Design 3**
+
+---
+
+## 📸 App Gallery
+
+### 📱 Light Theme Screens
+
+| Home | Home (Alt) | Mixer | Mixer (Alt) |
+|------|------------|-------|-------------|
+| ![](assets/light_home_1.jpg) | ![](assets/light_home_2.jpg) | ![](assets/light_mixer_1.jpg) | ![](assets/light_mixer_2.jpg) |
+
+| AI Suggestions | AI Suggestions (Alt) | Saved Mixes | Saved Mixes (Alt) |
+|----------------|---------------------|-------------|-------------------|
+| ![](assets/light_ai_1.jpg) | ![](assets/light_ai_2.jpg) | ![](assets/light_saved_1.jpg) | ![](assets/light_saved_2.jpg) |
+
+| Timer | Timer (Alt) | Settings | Settings (Alt) |
+|-------|-------------|----------|----------------|
+| ![](assets/light_timer_1.jpg) | ![](assets/light_timer_2.jpg) | ![](assets/light_settings_1.jpg) | ![](assets/light_settings_2.jpg) |
+
+| Loading |
+|---------|
+| ![](assets/light_loading_1.jpg) |
+
+---
+
+### 📱 Dark Theme Screens
+
+| Settings |
+|----------|
+| ![](assets/dark_settings_1.jpg) |
+
+---
+
+## 🎥 Feature Demo
+
+Short demo showcasing the overall flow and UX of the application.
+
+- 📹 **Video Demo:** `linkedin.mp4`
+
+---
+
+## 🧱 Architecture Overview
+
+- MVI-inspired state management  
+- Clear separation of **UI / Domain / Data**  
+- Feature-based modular structure  
+- Shared business logic across platforms  
+
+This structure is designed to be **scalable**, **testable**, and **team-friendly**.
+
+---
+
+## 🚧 Known Limitations & Future Improvements
+
+- Offline caching strategies can be expanded  
+- iOS UI layer still evolving  
+- More AI-driven personalization planned  
+
+This project is actively evolving and serves as both a production-ready base and a learning playground.
+
+---
+
+⭐ *This repository is designed to showcase modern Android & KMP development practices from a junior developer perspective.*

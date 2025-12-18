@@ -6,8 +6,33 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		46E47070D77A6977AC19531C /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 328BB5B9087A51993C17DEF5 /* Pods_iosApp.framework */; };
+		C3356B8D2EEF1552006659C1 /* initial_config.json in Resources */ = {isa = PBXBuildFile; fileRef = C3356B8C2EEF1552006659C1 /* initial_config.json */; };
+		C3F4F3202EE2878B00C8D72C /* nature_campfire.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C3F4F31A2EE2878B00C8D72C /* nature_campfire.mp3 */; };
+		C3F4F3212EE2878B00C8D72C /* city_cafe.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C3F4F3192EE2878B00C8D72C /* city_cafe.mp3 */; };
+		C3F4F3222EE2878B00C8D72C /* water_ocean_light.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C3F4F31D2EE2878B00C8D72C /* water_ocean_light.mp3 */; };
+		C3F4F3232EE2878B00C8D72C /* noise_fan.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C3F4F31C2EE2878B00C8D72C /* noise_fan.mp3 */; };
+		C3F4F3242EE2878B00C8D72C /* air_wind.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C3F4F3182EE2878B00C8D72C /* air_wind.mp3 */; };
+		C3F4F3252EE2878B00C8D72C /* water_rain_light.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C3F4F31E2EE2878B00C8D72C /* water_rain_light.mp3 */; };
+		C3F4F3262EE2878B00C8D72C /* water_rain_thunder.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C3F4F31F2EE2878B00C8D72C /* water_rain_thunder.mp3 */; };
+		C3F4F3272EE2878B00C8D72C /* nature_forest_birds.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C3F4F31B2EE2878B00C8D72C /* nature_forest_birds.mp3 */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		328BB5B9087A51993C17DEF5 /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD7D4F4DD3FEBC808443E1D0 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
+		C3356B8C2EEF1552006659C1 /* initial_config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = initial_config.json; sourceTree = "<group>"; };
+		C3F4F3182EE2878B00C8D72C /* air_wind.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = air_wind.mp3; sourceTree = "<group>"; };
+		C3F4F3192EE2878B00C8D72C /* city_cafe.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = city_cafe.mp3; sourceTree = "<group>"; };
+		C3F4F31A2EE2878B00C8D72C /* nature_campfire.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = nature_campfire.mp3; sourceTree = "<group>"; };
+		C3F4F31B2EE2878B00C8D72C /* nature_forest_birds.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = nature_forest_birds.mp3; sourceTree = "<group>"; };
+		C3F4F31C2EE2878B00C8D72C /* noise_fan.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = noise_fan.mp3; sourceTree = "<group>"; };
+		C3F4F31D2EE2878B00C8D72C /* water_ocean_light.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = water_ocean_light.mp3; sourceTree = "<group>"; };
+		C3F4F31E2EE2878B00C8D72C /* water_rain_light.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = water_rain_light.mp3; sourceTree = "<group>"; };
+		C3F4F31F2EE2878B00C8D72C /* water_rain_thunder.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = water_rain_thunder.mp3; sourceTree = "<group>"; };
 		E64695F014209A8A556C64B3 /* JustRelax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustRelax.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7221FABA494168C0B322082 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.debug.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -41,27 +66,56 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46E47070D77A6977AC19531C /* Pods_iosApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CCB93A5B419645FD9CC5708C = {
-			isa = PBXGroup;
-			children = (
-				FEA4E34882576CDE5A6E18AD /* Configuration */,
-				42477F8E40822E5006D55C36 /* iosApp */,
-				172463CBE56799E5D3B4EB48 /* Products */,
-			);
-			sourceTree = "<group>";
-		};
 		172463CBE56799E5D3B4EB48 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				E64695F014209A8A556C64B3 /* JustRelax.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		730B996D646AF19CB9C518EE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				328BB5B9087A51993C17DEF5 /* Pods_iosApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		90EDD64BDD5C588920F5249C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F7221FABA494168C0B322082 /* Pods-iosApp.debug.xcconfig */,
+				AD7D4F4DD3FEBC808443E1D0 /* Pods-iosApp.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		CCB93A5B419645FD9CC5708C = {
+			isa = PBXGroup;
+			children = (
+				C3356B8C2EEF1552006659C1 /* initial_config.json */,
+				C3F4F3182EE2878B00C8D72C /* air_wind.mp3 */,
+				C3F4F3192EE2878B00C8D72C /* city_cafe.mp3 */,
+				C3F4F31A2EE2878B00C8D72C /* nature_campfire.mp3 */,
+				C3F4F31B2EE2878B00C8D72C /* nature_forest_birds.mp3 */,
+				C3F4F31C2EE2878B00C8D72C /* noise_fan.mp3 */,
+				C3F4F31D2EE2878B00C8D72C /* water_ocean_light.mp3 */,
+				C3F4F31E2EE2878B00C8D72C /* water_rain_light.mp3 */,
+				C3F4F31F2EE2878B00C8D72C /* water_rain_thunder.mp3 */,
+				FEA4E34882576CDE5A6E18AD /* Configuration */,
+				42477F8E40822E5006D55C36 /* iosApp */,
+				172463CBE56799E5D3B4EB48 /* Products */,
+				90EDD64BDD5C588920F5249C /* Pods */,
+				730B996D646AF19CB9C518EE /* Frameworks */,
+			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -71,10 +125,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D7C1B6AF835D4F01A7032EF5 /* Build configuration list for PBXNativeTarget "iosApp" */;
 			buildPhases = (
+				EAA5F902F6A6370EFD22D7B5 /* [CP] Check Pods Manifest.lock */,
 				7CA6028FC3388E4C92D82E84 /* Compile Kotlin Framework */,
 				93ADA2ABEE78973E3E7CBEDB /* Sources */,
 				D388E4DD6F552D2AC18C2DAC /* Frameworks */,
 				E85623CD13DB38A537E706CD /* Resources */,
+				3C3FA03A9BAC304AA4703779 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -84,8 +140,6 @@
 				42477F8E40822E5006D55C36 /* iosApp */,
 			);
 			name = iosApp;
-			packageProductDependencies = (
-			);
 			productName = iosApp;
 			productReference = E64695F014209A8A556C64B3 /* JustRelax.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +165,7 @@
 			knownRegions = (
 				en,
 				Base,
+				tr,
 			);
 			mainGroup = CCB93A5B419645FD9CC5708C;
 			minimizedProjectReferenceProxies = 1;
@@ -129,12 +184,42 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3F4F3202EE2878B00C8D72C /* nature_campfire.mp3 in Resources */,
+				C3F4F3212EE2878B00C8D72C /* city_cafe.mp3 in Resources */,
+				C3F4F3222EE2878B00C8D72C /* water_ocean_light.mp3 in Resources */,
+				C3F4F3232EE2878B00C8D72C /* noise_fan.mp3 in Resources */,
+				C3F4F3242EE2878B00C8D72C /* air_wind.mp3 in Resources */,
+				C3F4F3252EE2878B00C8D72C /* water_rain_light.mp3 in Resources */,
+				C3F4F3262EE2878B00C8D72C /* water_rain_thunder.mp3 in Resources */,
+				C3356B8D2EEF1552006659C1 /* initial_config.json in Resources */,
+				C3F4F3272EE2878B00C8D72C /* nature_forest_birds.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3C3FA03A9BAC304AA4703779 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7CA6028FC3388E4C92D82E84 /* Compile Kotlin Framework */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -154,6 +239,28 @@
 			shellPath = /bin/sh;
 			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :composeApp:embedAndSignAppleFrameworkForXcode\n";
 		};
+		EAA5F902F6A6370EFD22D7B5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-iosApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -167,6 +274,122 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		1F28ED9ADB5D734566E567C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F7221FABA494168C0B322082 /* Pods-iosApp.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iosApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3A1A12860FFD22C148D0DD5A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AD7D4F4DD3FEBC808443E1D0 /* Pods-iosApp.release.xcconfig */;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iosApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		79B4EDB896626883BF7E2AA6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = FEA4E34882576CDE5A6E18AD /* Configuration */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		8C07FEEF41D913C84A07DD13 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = FEA4E34882576CDE5A6E18AD /* Configuration */;
@@ -231,120 +454,6 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
-		};
-		79B4EDB896626883BF7E2AA6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = FEA4E34882576CDE5A6E18AD /* Configuration */;
-			baseConfigurationReferenceRelativePath = Config.xcconfig;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		1F28ED9ADB5D734566E567C5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = arm64;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
-				DEVELOPMENT_TEAM = "${TEAM_ID}";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = iosApp/Info.plist;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		3A1A12860FFD22C148D0DD5A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = arm64;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
-				DEVELOPMENT_TEAM = "${TEAM_ID}";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = iosApp/Info.plist;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
