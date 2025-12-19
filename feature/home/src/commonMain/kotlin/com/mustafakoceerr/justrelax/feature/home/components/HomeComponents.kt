@@ -30,8 +30,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.core.model.Sound
-import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 import com.mustafakoceerr.justrelax.core.ui.components.VolumeSlider
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme

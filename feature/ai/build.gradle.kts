@@ -37,7 +37,6 @@ kotlin {
             implementation(project(":core:model"))
             implementation(project(":core:ui"))
             implementation(project(":core:navigation"))
-            implementation(project(":core:data")) // SoundRepository erişimi için
             implementation(project(":core:audio")) // Mix'i çalmak için (SoundManager)
 
             // --- Compose ---

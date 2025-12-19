@@ -2,7 +2,6 @@ package com.mustafakoceerr.justrelax.core.audio.domain.usecase
 
 import com.mustafakoceerr.justrelax.core.audio.SoundManager
 import com.mustafakoceerr.justrelax.core.domain.manager.SoundDownloader
-import com.mustafakoceerr.justrelax.core.model.Sound
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

@@ -17,8 +17,6 @@ import kotlinx.coroutines.flow.onEach
 import org.koin.compose.koinInject
 import coil3.disk.DiskCache
 import com.mustafakoceerr.justrelax.core.domain.manager.StoragePathProvider
-import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
-import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 
 @Composable

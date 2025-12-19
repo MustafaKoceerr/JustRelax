@@ -16,7 +16,6 @@ kotlin {
             implementation(project(":core:model"))
             implementation(project(":core:ui"))
             implementation(project(":core:navigation"))
-            implementation(project(":core:data")) // Repository erişimi
             implementation(project(":core:audio")) // SoundManager erişimi
 
             // --- Compose ---

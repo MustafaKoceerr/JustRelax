@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.core.audio
 
 import com.mustafakoceerr.justrelax.core.domain.manager.SoundController
-import com.mustafakoceerr.justrelax.core.model.Sound
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

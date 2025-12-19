@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.core.audio.controller
 
 import com.mustafakoceerr.justrelax.core.audio.SoundManager
-import com.mustafakoceerr.justrelax.core.model.Sound
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

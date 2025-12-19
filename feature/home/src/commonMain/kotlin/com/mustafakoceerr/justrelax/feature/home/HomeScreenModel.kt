@@ -4,8 +4,6 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.mustafakoceerr.justrelax.core.audio.SoundManager
 import com.mustafakoceerr.justrelax.core.audio.domain.usecase.ToggleSoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
-import com.mustafakoceerr.justrelax.core.model.BatchDownloadStatus
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeEffect
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeIntent
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeState

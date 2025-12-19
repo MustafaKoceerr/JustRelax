@@ -19,7 +19,6 @@ kotlin {
             // KRİTİK: Ses motoruna erişim
             implementation(project(":core:audio"))
             // Ayrıca indirme işlemi için Data katmanına erişim gerekebilir (SoundDownloader)
-            implementation(project(":core:data"))
 
             // --- Compose ---
             implementation(compose.runtime)

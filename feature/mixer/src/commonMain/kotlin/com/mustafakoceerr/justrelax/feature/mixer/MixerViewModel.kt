@@ -6,8 +6,6 @@ import com.mustafakoceerr.justrelax.core.audio.SoundManager
 import com.mustafakoceerr.justrelax.core.audio.controller.SoundListController
 import com.mustafakoceerr.justrelax.core.audio.domain.usecase.GetDownloadedSoundCountUseCase
 import com.mustafakoceerr.justrelax.core.audio.domain.usecase.ToggleSoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
-import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerEffect
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerIntent

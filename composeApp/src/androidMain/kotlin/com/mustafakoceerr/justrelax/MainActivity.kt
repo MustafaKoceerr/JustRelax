@@ -10,7 +10,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
 import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

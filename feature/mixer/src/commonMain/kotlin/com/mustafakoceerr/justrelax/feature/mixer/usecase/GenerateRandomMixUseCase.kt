@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.mixer.usecase
 
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
-import com.mustafakoceerr.justrelax.core.model.Sound
 import kotlinx.coroutines.flow.first
 import kotlin.random.Random
 

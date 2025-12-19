@@ -4,11 +4,6 @@ import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.mustafakoceerr.justrelax.core.audio.domain.usecase.DownloadAllMissingSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
-import com.mustafakoceerr.justrelax.core.model.AppLanguage
-import com.mustafakoceerr.justrelax.core.model.AppTheme
-import com.mustafakoceerr.justrelax.core.model.BatchDownloadStatus
 import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 import com.mustafakoceerr.justrelax.core.ui.util.SystemLauncher
 import kotlinx.coroutines.channels.Channel

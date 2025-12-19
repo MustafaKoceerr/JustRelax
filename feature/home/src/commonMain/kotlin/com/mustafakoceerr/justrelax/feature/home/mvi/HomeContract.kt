@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.home.mvi
 
-import com.mustafakoceerr.justrelax.core.model.Sound
-import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 data class HomeState(

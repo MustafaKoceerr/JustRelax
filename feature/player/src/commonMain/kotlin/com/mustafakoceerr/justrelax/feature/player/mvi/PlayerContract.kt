@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.player.mvi
 
-import com.mustafakoceerr.justrelax.core.model.Sound
-
 // 1. STATE: UI ne görüyorsa burada olmalı
 data class PlayerState(
     val activeSounds: List<Sound> = emptyList(), // Aktif ses listesi

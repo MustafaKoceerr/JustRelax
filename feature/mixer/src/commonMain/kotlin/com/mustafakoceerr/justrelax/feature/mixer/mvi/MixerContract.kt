@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.mixer.mvi
 
-import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 // 1. STATE

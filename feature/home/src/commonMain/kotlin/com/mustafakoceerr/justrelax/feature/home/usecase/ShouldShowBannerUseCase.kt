@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.home.usecase
 
-import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
-import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.feature.home.BANNER_SHOW_INTERVAL_MS
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime

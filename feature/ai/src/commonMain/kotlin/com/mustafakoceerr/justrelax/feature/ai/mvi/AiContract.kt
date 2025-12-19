@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.ai.mvi
 
-import com.mustafakoceerr.justrelax.core.model.ActiveSoundInfo
-import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 /**
  * AI ekranının tüm olası durumlarını ve olaylarını tanımlayan sözleşme dosyası.

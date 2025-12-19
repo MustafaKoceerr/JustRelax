@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.ai.data.repository
 
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
 import com.mustafakoceerr.justrelax.feature.ai.BuildConfig
 import com.mustafakoceerr.justrelax.feature.ai.data.model.AiMixResponse
 import com.mustafakoceerr.justrelax.feature.ai.data.model.GeminiContent

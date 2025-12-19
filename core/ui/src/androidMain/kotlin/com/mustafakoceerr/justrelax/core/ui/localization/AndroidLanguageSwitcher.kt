@@ -2,7 +2,6 @@ package com.mustafakoceerr.justrelax.core.ui.localization
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 
 class AndroidLanguageSwitcher : LanguageSwitcher {

@@ -1,0 +1,52 @@
+-- Mix'in ana tablosu
+CREATE TABLE savedMix (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    dateEpoch INTEGER NOT NULL
+);
+
+-- Hangi Mix'te, Hangi Ses, Hangi Volume'da?
+CREATE TABLE savedMix_sound (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    mixId INTEGER NOT NULL,
+    soundId TEXT NOT NULL,
+    volume REAL NOT NULL,
+
+    -- HATA BURADAYDI. Kısıtlama, sütun listesi bittikten sonra tanımlanmalı.
+    FOREIGN KEY (mixId) REFERENCES savedMix(id) ON DELETE CASCADE
+);
+
+-- Tüm mixleri getirir
+selectAllMixes:
+SELECT *
+FROM savedMix
+ORDER BY dateEpoch DESC;
+
+-- Bir mix'e ait tüm sesleri getirir
+selectSoundsForMix:
+SELECT *
+FROM savedMix_sound
+WHERE mixId = ?;
+
+-- Yeni bir mix ekler
+insertMix:
+INSERT INTO savedMix(name, dateEpoch)
+VALUES (?, ?);
+
+-- Bir mix'e ses ekler
+insertSoundForMix:
+INSERT INTO savedMix_sound(mixId, soundId, volume)
+VALUES (?, ?, ?);
+
+-- Mix'i siler
+deleteMixById:
+DELETE FROM savedMix
+WHERE id = ?;
+
+-- Bir mix adının zaten var olup olmadığını kontrol eder
+isMixNameExists:
+SELECT EXISTS (SELECT 1 FROM savedMix WHERE name = ?);
+
+-- Son eklenen mix'in ID'sini getiren sorgu
+selectLastInsertRowId:
+SELECT last_insert_rowid() AS lastId;

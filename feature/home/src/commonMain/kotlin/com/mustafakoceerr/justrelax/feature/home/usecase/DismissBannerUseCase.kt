@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.home.usecase
 
-import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 

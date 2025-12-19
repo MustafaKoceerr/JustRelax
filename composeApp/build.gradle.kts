@@ -71,7 +71,7 @@ kotlin {
             implementation(project(":core:common"))
             implementation(project(":core:model"))
             implementation(project(":core:ui"))
-            implementation(project(":core:data"))
+
             implementation(project(":core:audio"))
             implementation(project(":core:navigation"))
 

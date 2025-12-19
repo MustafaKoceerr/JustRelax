@@ -1,0 +1,36 @@
+-- `soundEntity` adını `sound` olarak basitleştiriyoruz.
+-- Tablo adı, içindeki varlığın adıyla aynı olursa daha anlaşılır olur.
+CREATE TABLE sound (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    categoryId TEXT NOT NULL,
+    iconUrl TEXT NOT NULL,
+    remoteUrl TEXT NOT NULL,
+    localPath TEXT -- Eğer indirilmişse dolu, değilse NULL
+);
+
+-- Fonksiyon isimlerini daha standart hale getiriyoruz (selectAll -> selectAllSounds)
+selectAllSounds:
+SELECT *
+FROM sound;
+
+selectSoundById:
+SELECT *
+FROM sound
+WHERE id = ?;
+
+-- Ekle veya Değiştir
+insertOrReplace:
+INSERT OR REPLACE INTO sound(id, name, categoryId, iconUrl, remoteUrl, localPath)
+VALUES (?, ?, ?, ?, ?, ?);
+
+-- İndirme sonrası path güncelleme
+updateLocalPath:
+UPDATE sound
+SET localPath = ?
+WHERE id = ?;
+
+-- ID'ye göre sesi sil
+deleteSoundById:
+DELETE FROM sound
+WHERE id = ?;

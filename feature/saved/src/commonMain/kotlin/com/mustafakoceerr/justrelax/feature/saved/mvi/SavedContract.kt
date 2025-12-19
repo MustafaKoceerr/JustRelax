@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.saved.mvi
 
-import com.mustafakoceerr.justrelax.core.model.SavedMix
-
 data class SavedMixUiModel(
     val id: Long,
     val title: String,

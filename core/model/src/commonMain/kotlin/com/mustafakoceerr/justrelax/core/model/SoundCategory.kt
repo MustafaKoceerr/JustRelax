@@ -3,15 +3,17 @@ package com.mustafakoceerr.justrelax.core.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class SoundCategory(val id: String) {
+enum class SoundCategory(val id: String){
     WATER("WATER"),
     NATURE("NATURE"),
     AIR("AIR"),
     CITY("CITY"),
     NOISE("NOISE");
 
-    companion object {
-        // Güvenli dönüşüm: Bulamazsa varsayılan (örn: NATURE) döner veya null.
+    companion object{
+        // Veritabanından gelen String ID'yi Enum'a çevirir.
+        // Bilinmeyen bir kategori gelirse (örn: backend yeni kategori ekledi ama app eski),
+        // varsayılan olarak NATURE döneriz ki app çökmesin.
         fun fromId(id: String): SoundCategory = entries.find { it.id == id } ?: NATURE
     }
 }

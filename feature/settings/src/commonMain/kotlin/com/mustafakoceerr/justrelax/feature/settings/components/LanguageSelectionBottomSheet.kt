@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import justrelax.feature.settings.generated.resources.Res
 import justrelax.feature.settings.generated.resources.language_selection_title
 import justrelax.feature.settings.generated.resources.language_system_default

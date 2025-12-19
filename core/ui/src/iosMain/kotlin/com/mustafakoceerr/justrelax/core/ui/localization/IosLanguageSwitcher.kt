@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.core.ui.localization
 
-import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
 import platform.Foundation.NSURL
 import platform.UIKit.UIApplication

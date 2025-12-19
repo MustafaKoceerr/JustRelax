@@ -1,5 +1,5 @@
 plugins {
-    id("justrelax.kmp.library")
+    id("justrelax.kmp.library") // Convention plugin
 }
 
 android {
@@ -9,11 +9,13 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(project(":core:common")) // Result, Dispatcher vb.
-            api(project(":core:model"))  // Sound, SavedMix vb.
+            api(project(":core:model"))  // Sound, AppLanguage vb.
+            api(project(":core:common")) // Result, AppError
 
             implementation(libs.findLibrary("kotlinx-coroutines-core").get()) // Flow için
-            implementation(libs.findLibrary("okio").get())
-        }
+
+            // DI
+            implementation(libs.findLibrary("koin-core").get())
     }
+}
 }

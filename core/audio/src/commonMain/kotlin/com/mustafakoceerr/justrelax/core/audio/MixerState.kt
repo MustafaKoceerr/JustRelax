@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.core.audio
 
-import com.mustafakoceerr.justrelax.core.model.Sound
-
 data class MixerState(
     val isMasterPlaying: Boolean = false, // Genel Play/Pause durumu
     val activeSounds: Map<String, ActiveSound> = emptyMap(), // Çalan sesler ve detayları
