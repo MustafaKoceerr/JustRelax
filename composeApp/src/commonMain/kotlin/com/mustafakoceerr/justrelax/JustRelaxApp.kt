@@ -19,18 +19,13 @@ import coil3.disk.DiskCache
 import com.mustafakoceerr.justrelax.core.domain.manager.StoragePathProvider
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.core.ui.util.getAsyncImageLoader
 
 @Composable
 fun JustRelaxApp() {
 // 1. Coil Setup (Aynen kalıyor)
     setSingletonImageLoaderFactory { context ->
-        ImageLoader.Builder(context)
-            .components {
-                add(KtorNetworkFetcherFactory())
-                add(SvgDecoder.Factory())
-            }
-            .crossfade(true)
-            .build()
+        getAsyncImageLoader(context)
     }
 
 // 2. ViewModel ve Tema Yönetimi (BURASI DEĞİŞTİ)

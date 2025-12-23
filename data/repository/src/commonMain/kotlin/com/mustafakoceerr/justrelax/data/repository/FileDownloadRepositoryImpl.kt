@@ -15,8 +15,6 @@ import okio.Path.Companion.toPath
 import okio.SYSTEM
 
 internal class FileDownloadRepositoryImpl(
-    // DEĞİŞİKLİK: HttpClient'ı Koin'den 'get()' ile alacağız,
-    // doğrudan KtorClient'a bağımlı olmayalım.
     private val httpClient: HttpClient,
     private val dispatchers: DispatcherProvider
 ) : FileDownloadRepository {

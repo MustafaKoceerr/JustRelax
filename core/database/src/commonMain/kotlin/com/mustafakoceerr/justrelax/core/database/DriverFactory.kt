@@ -11,9 +11,3 @@ internal expect class DriverFactory {
     fun createDriver(): SqlDriver
 }
 
-// Bu yardımcı fonksiyon, her platformda veritabanını oluşturmak için
-// ortak bir yol sağlar.
-internal fun createDatabase(driverFactory: DriverFactory): JustRelaxDatabase {
-    val driver = driverFactory.createDriver()
-    return JustRelaxDatabase(driver)
-}

@@ -9,14 +9,10 @@ import com.mustafakoceerr.justrelax.core.domain.source.SoundRemoteDataSource
 import com.mustafakoceerr.justrelax.data.repository.mapper.DatabaseSoundMapper
 import kotlinx.coroutines.withContext
 
-/**
- * 'SoundSyncRepository' arayüzünün implementasyonu.
- * Network ve Database katmanları arasında veri senkronizasyonu yapar.
- */
 internal class SoundSyncRepositoryImpl(
     private val remoteDataSource: SoundRemoteDataSource,
     private val database: JustRelaxDatabase,
-    private val soundMapper: DatabaseSoundMapper, // YENİ: Mapper'ı enjekte alıyoruz.
+    private val soundMapper: DatabaseSoundMapper,
     private val dispatchers: DispatcherProvider
 ) : SoundSyncRepository {
 
@@ -29,6 +25,7 @@ internal class SoundSyncRepositoryImpl(
             val localSoundsMap = localDbSounds.associateBy { it.id }
 
             database.transaction {
+                // Silme mantığı aynı
                 val soundsToDelete = localSoundsMap.keys - remoteSoundsMap.keys
                 soundsToDelete.forEach { soundId ->
                     database.soundQueries.deleteSoundById(soundId)
@@ -37,28 +34,29 @@ internal class SoundSyncRepositoryImpl(
                 remoteSounds.forEach { remoteSound ->
                     val localDbSound = localSoundsMap[remoteSound.id]
 
+                    // DEĞİŞİKLİK: 'insertOrReplace' sorgusuna yeni alanları ekliyoruz
                     if (localDbSound == null) {
-                        // ... (Ekleme mantığı aynı)
                         database.soundQueries.insertOrReplace(
                             id = remoteSound.id,
-                            name = remoteSound.name,
+                            names = remoteSound.names, // 'names' Map'ini veriyoruz
                             categoryId = remoteSound.categoryId,
                             iconUrl = remoteSound.iconUrl,
                             remoteUrl = remoteSound.remoteUrl,
-                            localPath = null
+                            localPath = null,
+                            isInitial = remoteSound.isInitial // 'isInitial' flag'ini veriyoruz
                         )
                     } else {
-                        // Karşılaştırma için merkezi Mapper'ı kullanıyoruz.
                         val localModelSound = soundMapper.toModel(localDbSound)
+                        // Karşılaştırma için remoteSound'un da 'isInitial' alanını içermesi lazım
                         if (localModelSound != remoteSound) {
-                            // Güncelleme mantığı
                             database.soundQueries.insertOrReplace(
                                 id = remoteSound.id,
-                                name = remoteSound.name,
+                                names = remoteSound.names,
                                 categoryId = remoteSound.categoryId,
                                 iconUrl = remoteSound.iconUrl,
                                 remoteUrl = remoteSound.remoteUrl,
-                                localPath = localDbSound.localPath // Path'i koru
+                                localPath = localDbSound.localPath, // Path'i koru
+                                isInitial = remoteSound.isInitial
                             )
                         }
                     }

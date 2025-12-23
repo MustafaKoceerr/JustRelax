@@ -16,11 +16,11 @@ internal class SoundMapper {
     fun toModel(networkSound: NetworkSound): Sound {
         return Sound(
             id = networkSound.id,
-            name = networkSound.name,
+            names = networkSound.names,
             categoryId = SoundCategory.fromId(networkSound.category).id,
             iconUrl = networkSound.iconUrl,
             remoteUrl = networkSound.audioUrl,
-            localPath = null // Her zaman null, çünkü bu veri network'ten geliyor.
+            localPath = null
         )
     }
 

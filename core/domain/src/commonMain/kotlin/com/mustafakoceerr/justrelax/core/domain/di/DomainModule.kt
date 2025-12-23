@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.core.domain.di
 
 import com.mustafakoceerr.justrelax.core.domain.usecase.AdjustVolumeUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.DownloadInitialSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.DownloadSoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.GetAppLanguageUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.GetAppThemeUseCase
@@ -11,6 +12,7 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.SetAppThemeUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.StopAllSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.StopSoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.SyncSoundsIfNecessaryUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.SyncSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.TogglePauseResumeUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
@@ -37,4 +39,10 @@ val domainModule = module {
     factoryOf(::SetAppThemeUseCase)
     factoryOf(::GetAppLanguageUseCase)
     factoryOf(::SetAppLanguageUseCase)
+
+    factoryOf(::SyncSoundsIfNecessaryUseCase)
+
+    factoryOf(::SyncSoundsUseCase)
+    factoryOf(::DownloadInitialSoundsUseCase)
+    factoryOf(::DownloadAllSoundsUseCase)
 }

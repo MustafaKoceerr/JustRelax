@@ -1,10 +1,9 @@
 package com.mustafakoceerr.justrelax.data.repository.mapper
 
 // İsim çakışmasını önlemek için veritabanı entity'sine 'DbSound' alias'ı veriyoruz.
-import com.mustafakoceerr.justrelax.core.database.db.Sound as DbSound
 // Domain modelini de import ediyoruz.
+import com.mustafakoceerr.justrelax.core.database.db.Sound as DbSound
 import com.mustafakoceerr.justrelax.core.model.Sound as ModelSound
-
 /**
  * Sorumluluk: Veritabanı katmanından gelen Entity'leri Domain/Model katmanına çevirmek.
  * 'internal' olması, bu mapper'ın sadece bu modülün bir iç detayı olduğunu belirtir.
@@ -17,11 +16,13 @@ internal class DatabaseSoundMapper {
     fun toModel(dbSound: DbSound): ModelSound {
         return ModelSound(
             id = dbSound.id,
-            name = dbSound.name,
+            // DEĞİŞİKLİK: 'names' artık bir Map
+            names = dbSound.names,
             categoryId = dbSound.categoryId,
             iconUrl = dbSound.iconUrl,
             remoteUrl = dbSound.remoteUrl,
-            localPath = dbSound.localPath
+            localPath = dbSound.localPath,
+            isInitial = dbSound.isInitial
         )
     }
 

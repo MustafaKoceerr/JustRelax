@@ -27,6 +27,7 @@ kotlin {
 
             // Koin (DI)
             implementation(libs.findLibrary("koin-core").get())
+            implementation(libs.findLibrary("kotlinx-serialization-json").get())
         }
 
         androidMain.dependencies {

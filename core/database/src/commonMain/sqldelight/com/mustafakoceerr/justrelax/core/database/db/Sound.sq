@@ -1,36 +1,31 @@
 -- `soundEntity` adını `sound` olarak basitleştiriyoruz.
 -- Tablo adı, içindeki varlığın adıyla aynı olursa daha anlaşılır olur.
+import kotlin.String;
+import kotlin.collections.Map;
+import kotlin.Boolean; -- Boolean tipini import et
+
 CREATE TABLE sound (
     id TEXT NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL,
+    names TEXT AS Map<String, String> NOT NULL,
     categoryId TEXT NOT NULL,
     iconUrl TEXT NOT NULL,
     remoteUrl TEXT NOT NULL,
-    localPath TEXT -- Eğer indirilmişse dolu, değilse NULL
+    localPath TEXT,
+    isInitial INTEGER AS Boolean NOT NULL DEFAULT 0 -- YENİ ALAN
 );
-
 -- Fonksiyon isimlerini daha standart hale getiriyoruz (selectAll -> selectAllSounds)
 selectAllSounds:
-SELECT *
-FROM sound;
+SELECT * FROM sound;
 
 selectSoundById:
-SELECT *
-FROM sound
-WHERE id = ?;
+SELECT * FROM sound WHERE id = ?;
 
--- Ekle veya Değiştir
 insertOrReplace:
-INSERT OR REPLACE INTO sound(id, name, categoryId, iconUrl, remoteUrl, localPath)
-VALUES (?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO sound(id, names, categoryId, iconUrl, remoteUrl, localPath, isInitial)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 
--- İndirme sonrası path güncelleme
 updateLocalPath:
-UPDATE sound
-SET localPath = ?
-WHERE id = ?;
+UPDATE sound SET localPath = ? WHERE id = ?;
 
--- ID'ye göre sesi sil
 deleteSoundById:
-DELETE FROM sound
-WHERE id = ?;
+DELETE FROM sound WHERE id = ?;

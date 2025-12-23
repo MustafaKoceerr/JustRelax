@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.core.network.dto
 
-import com.mustafakoceerr.justrelax.core.model.Sound
-import com.mustafakoceerr.justrelax.core.model.SoundCategory
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /*
@@ -13,12 +12,16 @@ Bu ayrımı yönetmek ve API değişikliklerinden UI'ı korumak için DTO (Data 
  * 'internal' olması, bu sınıfın sadece :core:network modülü içinde
  * görünür olmasını sağlar. Dışarıya sızmaz.
  */
+
+
 @Serializable
 internal data class NetworkSound(
     val id: String,
-    val name: String,
-    val category: String, // Sunucudan String olarak geldiğini varsayıyoruz
-    val iconUrl: String,
-    val audioUrl: String
+    // JSON'daki "names" objesini Map olarak karşılıyoruz
+    val names: Map<String, String>,
+    val category: String,
+    @SerialName("icon_url") val iconUrl: String,   // JSON'daki snake_case'i camelCase'e mapledik
+    @SerialName("audio_url") val audioUrl: String, // JSON'daki snake_case'i camelCase'e mapledik
+    val version: Int,
+    @SerialName("is_initial") val isInitial: Boolean = false
 )
-

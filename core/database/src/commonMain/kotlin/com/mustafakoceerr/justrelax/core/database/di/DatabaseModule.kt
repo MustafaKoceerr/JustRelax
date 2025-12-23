@@ -1,31 +1,33 @@
 package com.mustafakoceerr.justrelax.core.database.di
 
-import com.mustafakoceerr.justrelax.core.database.createDatabase
+import com.mustafakoceerr.justrelax.core.database.DriverFactory
+import com.mustafakoceerr.justrelax.core.database.adapter.StringMapAdapter
 import com.mustafakoceerr.justrelax.core.database.db.JustRelaxDatabase
 import org.koin.dsl.module
+import com.mustafakoceerr.justrelax.core.database.db.Sound as DbSound
 
-
-/**
- * Bu modül, uygulamanın ana Koin grafiğine eklenecek olan 'public' modüldür.
- * İçerideki platforma özel modülü de kendi bünyesine dahil eder.
- */
 val databaseModule = module {
-    // Platforma özel (actual) modülü bu modüle dahil et.
-    // Bu, Koin'in 'DriverFactory'yi nasıl oluşturacağını bilmesini sağlar.
+    // Platforma özel (actual) modülü dahil et
     includes(platformDatabaseModule)
 
-    // Şimdi Koin 'DriverFactory'yi bildiğine göre ('get()'),
-    // tam bir 'JustRelaxDatabase' nesnesi oluşturabiliriz.
     single {
-        createDatabase(driverFactory = get())
+        val driver = get<DriverFactory>().createDriver()
+        val stringMapAdapter = StringMapAdapter()
+
+        val soundAdapter = DbSound.Adapter(
+            namesAdapter = stringMapAdapter
+        )
+
+        // ARTIK DOĞRUDAN BURADA OLUŞTURUYORUZ
+        JustRelaxDatabase(
+            driver = driver,
+            soundAdapter = soundAdapter
+        )
     }
-    // 2. Sound Sorguları (SRP)
-    // 'SoundRepository' gibi sınıflar, tüm veritabanını değil,
-    // sadece bu sorgu nesnesini isteyecekler.
-    // okuma yaparken bunlar kullanılacak, yazma yaparken transaction için direkt database kullanıyoruz.
+
+    // Sound Sorguları
     single { get<JustRelaxDatabase>().soundQueries }
 
-    // 3. SavedMix Sorguları (SRP)
-    // 'SavedMixRepository' gibi sınıflar da sadece bunu isteyecek.
+    // SavedMix Sorguları
     single { get<JustRelaxDatabase>().savedMixQueries }
 }
