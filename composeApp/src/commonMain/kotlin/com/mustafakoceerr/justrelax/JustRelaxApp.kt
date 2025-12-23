@@ -17,50 +17,39 @@ import kotlinx.coroutines.flow.onEach
 import org.koin.compose.koinInject
 import coil3.disk.DiskCache
 import com.mustafakoceerr.justrelax.core.domain.manager.StoragePathProvider
+import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 
 @Composable
 fun JustRelaxApp() {
-    // 1. Coil Setup (Resim Yükleyici)
-    val storageProvider: StoragePathProvider = koinInject()
+// 1. Coil Setup (Aynen kalıyor)
     setSingletonImageLoaderFactory { context ->
         ImageLoader.Builder(context)
             .components {
                 add(KtorNetworkFetcherFactory())
                 add(SvgDecoder.Factory())
             }
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(storageProvider.getCacheDir().resolve("icon_cache"))
-                    .maxSizeBytes(50L * 1024 * 1024)
-                    .build()
-            }
             .crossfade(true)
             .build()
     }
 
-    // 2. Tema Ayarları
-    val settingsRepository: SettingsRepository = koinInject()
-    val currentTheme by settingsRepository.getTheme().collectAsState(initial = AppTheme.SYSTEM)
+// 2. ViewModel ve Tema Yönetimi (BURASI DEĞİŞTİ)
+    // Root seviyesinde olduğumuz için koinInject kullanıyoruz.
+    val mainViewModel = koinInject<MainViewModel>()
+    val currentTheme by mainViewModel.currentTheme.collectAsState()
 
-    val useDarkTheme = when (currentTheme) {
-        AppTheme.SYSTEM -> isSystemInDarkTheme()
+    val isDarkTheme = when (currentTheme) {
+        AppTheme.SYSTEM -> isSystemInDarkTheme() // Compose Multiplatform fonksiyonu
         AppTheme.LIGHT -> false
         AppTheme.DARK -> true
     }
 
     // 3. UI Başlatma
-    JustRelaxTheme(darkTheme = useDarkTheme) {
-        val appNavigator: AppNavigator = koinInject()
+    // Temayı burada sarmalıyoruz. Artık Android/iOS fark etmeksizin çalışır.
+    JustRelaxTheme(darkTheme = isDarkTheme) {
 
-        // Voyager Navigator - Başlangıç: MainScreen
+        // Voyager Navigator
         Navigator(screen = MainScreen) { navigator ->
-            // AppNavigator (ViewModel'den gelen emirler) ile Voyager'ı bağlıyoruz
-            LaunchedEffect(navigator) {
-                appNavigator.navigationEvents
-                    .onEach { event -> event(navigator) }
-                    .launchIn(this)
-            }
             FadeTransition(navigator)
         }
     }

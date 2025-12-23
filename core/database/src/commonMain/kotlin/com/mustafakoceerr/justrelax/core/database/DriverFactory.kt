@@ -15,7 +15,5 @@ internal expect class DriverFactory {
 // ortak bir yol sağlar.
 internal fun createDatabase(driverFactory: DriverFactory): JustRelaxDatabase {
     val driver = driverFactory.createDriver()
-    // Şema burada oluşturulur.
-    JustRelaxDatabase.Schema.create(driver)
     return JustRelaxDatabase(driver)
 }

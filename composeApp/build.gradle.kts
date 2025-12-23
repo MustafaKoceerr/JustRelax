@@ -71,17 +71,20 @@ kotlin {
             implementation(project(":core:common"))
             implementation(project(":core:model"))
             implementation(project(":core:ui"))
+            implementation(project(":core:network"))
+            implementation(project(":core:database"))
 
             implementation(project(":core:audio"))
             implementation(project(":core:navigation"))
 
             implementation(project(":feature:home"))
-            implementation(project(":feature:mixer"))
-            implementation(project(":feature:saved"))
-            implementation(project(":feature:ai"))
-            implementation(project(":feature:timer"))
+//            implementation(project(":feature:mixer"))
+//            implementation(project(":feature:saved"))
+//            implementation(project(":feature:ai"))
+//            implementation(project(":feature:timer"))
             implementation(project(":feature:settings"))
             implementation(project(":feature:player"))
+            implementation(project(":data:repository"))
 
             // --- Koin ---
             implementation(libs.koin.core)

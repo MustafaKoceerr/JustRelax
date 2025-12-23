@@ -52,11 +52,20 @@ data object HomeScreen : Screen {
 
         val snackbarHostState = remember { SnackbarHostState() }
 
+        // Effect (Tek seferlik olaylar) Dinleme
         LaunchedEffect(Unit) {
             screenModel.effect.collectLatest { effect ->
                 when (effect) {
                     is HomeEffect.ShowMessage -> {
                         snackbarHostState.showSnackbar(effect.message)
+                    }
+
+                    is HomeEffect.ShowError -> {
+                        // AppError'dan gelen mesajı gösteriyoruz
+                        // İleride buraya hata tipine göre özel mesaj mapping yapılabilir
+                        if (!effect.error.message.isEmpty()) {
+                            snackbarHostState.showSnackbar(effect.error.message)
+                        }
                     }
 
                     HomeEffect.NavigateToSettings -> {
@@ -74,16 +83,12 @@ data object HomeScreen : Screen {
                     actions = {
                         IconButton(
                             onClick = {
-                                screenModel.processIntent(
-                                    HomeIntent.SettingsClicked
-                                )
+                                screenModel.processIntent(HomeIntent.SettingsClicked)
                             }
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Settings,
-                                contentDescription = stringResource(
-                                    Res.string.action_settings
-                                )
+                                contentDescription = stringResource(Res.string.action_settings)
                             )
                         }
                     }
@@ -98,55 +103,50 @@ data object HomeScreen : Screen {
                     .fillMaxSize()
                     .padding(top = paddingValues.calculateTopPadding())
             ) {
+                // 1. Kategoriler
                 HomeTabRow(
                     categories = state.categories,
                     selectedCategory = state.selectedCategory,
                     onCategorySelected = { category ->
-                        screenModel.processIntent(
-                            HomeIntent.SelectCategory(category)
-                        )
+                        screenModel.processIntent(HomeIntent.SelectCategory(category))
                     }
                 )
 
+                // 2. Banner (İndirme Durumu)
                 DownloadBanner(
                     isVisible = state.showDownloadBanner,
                     isDownloading = state.isDownloadingAll,
                     downloadProgress = state.totalDownloadProgress,
                     onConfirm = {
-                        screenModel.processIntent(
-                            HomeIntent.DownloadAllMissing
-                        )
+                        screenModel.processIntent(HomeIntent.DownloadAllMissing)
                     },
                     onDismiss = {
-                        screenModel.processIntent(
-                            HomeIntent.DismissBanner
-                        )
+                        screenModel.processIntent(HomeIntent.DismissBanner)
                     },
-                    modifier = Modifier.padding(
-                        horizontal = 16.dp,
-                        vertical = 8.dp
-                    )
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
 
+                // 3. Ses Listesi
                 SoundCardGrid(
-                    sounds = state.sounds,
-                    activeSounds = state.activeSounds,
+                    // YENİ: ViewModel'in filtrelediği listeyi kullanıyoruz
+                    sounds = state.filteredSounds,
+
+                    // YENİ: Map ve Set olarak ayrılmış durumları veriyoruz
+                    playingSoundIds = state.playingSoundIds,
+                    soundVolumes = state.soundVolumes,
+
                     downloadingSoundIds = state.downloadingSoundIds,
                     onSoundClick = { sound ->
-                        screenModel.processIntent(
-                            HomeIntent.ToggleSound(sound)
-                        )
+                        screenModel.processIntent(HomeIntent.ToggleSound(sound))
                     },
                     onVolumeChange = { id, vol ->
-                        screenModel.processIntent(
-                            HomeIntent.ChangeVolume(id, vol)
-                        )
+                        screenModel.processIntent(HomeIntent.ChangeVolume(id, vol))
                     },
                     contentPadding = PaddingValues(
                         start = 16.dp,
                         end = 16.dp,
                         top = 16.dp,
-                        bottom = paddingValues.calculateBottomPadding() + 80.dp
+                        bottom = paddingValues.calculateBottomPadding() + 80.dp // BottomBar için pay
                     )
                 )
             }

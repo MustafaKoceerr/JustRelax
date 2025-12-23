@@ -28,26 +28,20 @@ import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.mustafakoceerr.justrelax.components.LoadingScreen
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
-import com.mustafakoceerr.justrelax.core.ui.components.PlayerBottomBar
-import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
+import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.player.PlayerScreenModel
+import com.mustafakoceerr.justrelax.feature.player.components.PlayerBottomBar
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerIntent
-import com.mustafakoceerr.justrelax.tabs.AiTab
 import com.mustafakoceerr.justrelax.tabs.HomeTab
-import com.mustafakoceerr.justrelax.tabs.MixerTab
-import com.mustafakoceerr.justrelax.tabs.SavedTab
-import com.mustafakoceerr.justrelax.tabs.TimerTab
-import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 
-@Serializable
 object MainScreen : AppScreen {
     @Composable
     override fun Content() {
-        // 1. MainViewModel'i al ve "Hazır mı?" state'ini dinle.
-        val mainViewModel = koinScreenModel<MainViewModel>()
-        val isAppInitialized by mainViewModel.isInitialized.collectAsState()
+        // 1. ViewModels & Controllers
+//        val mainViewModel = koinScreenModel<MainViewModel>()
+//        val isAppInitialized by mainViewModel.isInitialized.collectAsState()
 
         val playerScreenModel = koinScreenModel<PlayerScreenModel>()
         val playerState by playerScreenModel.state.collectAsState()
@@ -55,79 +49,82 @@ object MainScreen : AppScreen {
         val snackbarController = koinInject<GlobalSnackbarController>()
 
         TabNavigator(HomeTab) { tabNavigator ->
-            val currentTab = tabNavigator.current
 
-            // 2. KURAL: Hem müzik çalıyor olmalı (veya liste dolu) HEM DE izin verilen tabda olmalıyız.
-            val shouldShowPlayer = playerState.isVisible
-            // 2. KONTROL: Eğer uygulama henüz hazır değilse, yüklenme ekranı göster.
-            if (!isAppInitialized) {
-                JustRelaxBackground { // Arka plan gradyanı yine olsun
-                    LoadingScreen()
-                }
-            } else {
-                JustRelaxBackground{
-                Scaffold(
-                    containerColor = Color.Transparent,
-                    snackbarHost = {
-                        // Daha önce tasarladığımız Custom Snackbar Host'u kullanıyoruz
-                        JustRelaxSnackbarHost(hostState = snackbarController.hostState)
-                    },
-                    // Scaffold'un bottomBar'ı içine Column açıyoruz.
-                    // Böylece PlayerBar üstte, NavBar altta olacak şekilde yapışık dururlar.
-                    bottomBar = {
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            // A. Player Bar (Üstte)
-                            // PlayerBottomBar kendi içinde AnimatedVisibility kullandığı için
-                            // shouldShowPlayer false olduğunda yer kaplamaz ve animasyonla kapanır.
-                            PlayerBottomBar(
-                                isVisible = shouldShowPlayer,
-                                activeIcons = playerState.activeIconUrls,
-                                isPlaying = playerState.isMasterPlaying,
-                                onPlayPauseClick = { playerScreenModel.onIntent(PlayerIntent.ToggleMasterPlayPause) },
-                                onStopAllClick = { playerScreenModel.onIntent(PlayerIntent.StopAll) }
-                            )
+            // 2. Player Görünürlük Mantığı
+            // Yeni State yapımızda 'activeSounds' listesi doluysa player görünür.
+            val shouldShowPlayer = playerState.activeSounds.isNotEmpty()
 
-                            // B. Navigation Bar (Altta)
-                            NavigationBar(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                                contentColor = MaterialTheme.colorScheme.primary,
-                            ) {
-                                TabNavigationItem(HomeTab)
-                                TabNavigationItem(TimerTab)
-                                TabNavigationItem(AiTab)
-                                TabNavigationItem(SavedTab)
-                                TabNavigationItem(MixerTab)
+            // 3. Uygulama Yüklenme Durumu
+//            if (!isAppInitialized) {
+//                JustRelaxBackground {
+//                    LoadingScreen()
+//                }
+//            } else {
+                JustRelaxBackground {
+                    Scaffold(
+                        containerColor = Color.Transparent,
+                        snackbarHost = {
+                            JustRelaxSnackbarHost(hostState = snackbarController.hostState)
+                        },
+                        // BottomBar Stacking (Senin özel tasarımın)
+                        bottomBar = {
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                // A. Player Bar (Üstte)
+                                PlayerBottomBar(
+                                    isVisible = shouldShowPlayer,
+                                    // Mapping: Sound objelerinden URL stringlerine çeviriyoruz
+                                    activeIcons = playerState.activeSounds.map { it.iconUrl },
+                                    // Mapping: 'isPaused' durumunu tersine çeviriyoruz
+                                    isPlaying = !playerState.isPaused,
+                                    onPlayPauseClick = {
+                                        playerScreenModel.onIntent(PlayerIntent.ToggleMasterPlayPause)
+                                    },
+                                    onStopAllClick = {
+                                        playerScreenModel.onIntent(PlayerIntent.StopAll)
+                                    }
+                                )
+
+                                // B. Navigation Bar (Altta)
+                                NavigationBar(
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                    contentColor = MaterialTheme.colorScheme.primary,
+                                ) {
+                                    TabNavigationItem(HomeTab)
+                                    // Diğer tablar henüz hazır değilse yorum satırına alabilirsin
+                                    // TabNavigationItem(TimerTab)
+                                    // TabNavigationItem(AiTab)
+                                    // TabNavigationItem(SavedTab)
+                                    // TabNavigationItem(MixerTab)
+                                }
                             }
                         }
-                    }
-                ) { innerPadding ->
-                    // --- YENİ: YAYLI ANİMASYON ---
-                    // Scaffold'un hesapladığı padding aniden değişir (0dp -> 80dp).
-                    // Biz bunu animateDpAsState ile yumuşatıyoruz.
+                    ) { innerPadding ->
 
-                    val animatedBottomPadding by animateDpAsState(
-                        targetValue = innerPadding.calculateBottomPadding(),
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        ),
-                        label = "BottomPaddingAnimation"
-                    )
-
-                    Box(
-                        modifier = Modifier.padding(
-                            top = innerPadding.calculateTopPadding(),
-                            bottom = animatedBottomPadding // Animasyonlu değer
+                        // --- YAYLI ANİMASYON (Senin harika dokunuşun) ---
+                        val animatedBottomPadding by animateDpAsState(
+                            targetValue = innerPadding.calculateBottomPadding(),
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessLow
+                            ),
+                            label = "BottomPaddingAnimation"
                         )
-                    ) {
-                        CurrentTab()
+
+                        Box(
+                            modifier = Modifier.padding(
+                                top = innerPadding.calculateTopPadding(),
+                                bottom = animatedBottomPadding
+                            )
+                        ) {
+                            // Voyager: O anki aktif tab'ı göster
+                            CurrentTab()
+                        }
                     }
                 }
             }
-            } // just relax background
         }
     }
-}
+//}
 
 @Composable
 private fun RowScope.TabNavigationItem(tab: Tab) {

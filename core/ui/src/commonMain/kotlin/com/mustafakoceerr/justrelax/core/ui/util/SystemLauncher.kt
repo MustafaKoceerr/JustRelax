@@ -1,5 +1,11 @@
 package com.mustafakoceerr.justrelax.core.ui.util
 
+/*
+
+Çünkü bunlar İş Mantığı (Business Logic) değil, Platform/Arayüz (UI) aksiyonudur.
+Domain: "Veriyi kaydet", "Hesaplama yap" der. (Data odaklı)
+UI/Common: "Email uygulamasını aç", "Dili değiştir", "Linke git" der. (Aksiyon odaklı)
+ */
 interface SystemLauncher {
     // E-posta uygulamasını açar (Cihaz bilgileriyle birlikte)
     fun sendFeedbackEmail(to: String, subject: String, body: String)
@@ -9,4 +15,6 @@ interface SystemLauncher {
 
     // Gizlilik politikası vb. için tarayıcı açar
     fun openUrl(url: String)
+
+    fun openAppLanguageSettings()
 }

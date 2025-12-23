@@ -2,13 +2,13 @@ package com.mustafakoceerr.justrelax.core.ui.util
 
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
-import  com.mustafakoceerr.justrelax.core.ui.R
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.net.toUri
 
-class AndroidSystemLauncher(
-    private val context: Context
-) : SystemLauncher {
+class AndroidSystemLauncher(private val context: Context) : SystemLauncher {
 
     override fun sendFeedbackEmail(to: String, subject: String, body: String) {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
@@ -21,44 +21,55 @@ class AndroidSystemLauncher(
         try {
             context.startActivity(intent)
         } catch (e: Exception) {
-            Toast.makeText(
-                context,
-                context.getString(R.string.error_email_app_not_found),
-                Toast.LENGTH_SHORT
-            ).show()
+            // Email uygulaması yoksa sessizce yutabilir veya loglayabiliriz.
         }
     }
 
     override fun openStorePage(appId: String?) {
         val packageName = context.packageName
-        val uri = "market://details?id=$packageName".toUri()
-        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+        val intent = Intent(Intent.ACTION_VIEW, "market://details?id=$packageName".toUri()).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         try {
             context.startActivity(intent)
         } catch (e: Exception) {
-            openUrl(
-                context.getString(
-                    R.string.play_store_web_url,
-                    packageName
-                )
-            )
+            // Market yoksa tarayıcıdan aç
+            openUrl("https://play.google.com/store/apps/details?id=$packageName")
         }
     }
 
     override fun openUrl(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, url.toUri()).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
         try {
+            val intent = Intent(Intent.ACTION_VIEW, url.toUri()).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) { /* Tarayıcı yoksa işlem yapma */ }
+    }
+
+    override fun openAppLanguageSettings() {
+        try {
+            val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                // Android 13+ (API 33)
+                // Doğrudan uygulamanın dil ayarlarını açar
+                Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
+                    data = "package:${context.packageName}".toUri()
+                }
+            } else {
+                // Android 12 ve altı (Fallback)
+                // Uygulama detaylarına gider
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = "package:${context.packageName}".toUri()
+                }
+            }
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         } catch (e: Exception) {
-            Toast.makeText(
-                context,
-                context.getString(R.string.error_browser_not_found),
-                Toast.LENGTH_SHORT
-            ).show()
+            // Eğer yukarıdakiler çalışmazsa en genel ayarları aç (Güvenlik ağı)
+            val fallbackIntent = Intent(Settings.ACTION_SETTINGS)
+            fallbackIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(fallbackIntent)
         }
     }
 }

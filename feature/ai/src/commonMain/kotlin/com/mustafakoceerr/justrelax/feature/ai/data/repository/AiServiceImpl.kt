@@ -70,7 +70,6 @@ class AiServiceImpl(
                   "sounds": [
                     { "id": "nature_1", "volume": 0.5 },
                     { "id": "air_1", "volume": 0.3 }
-                  ]
                 }
                 
                 USER REQUEST: "$userPrompt"

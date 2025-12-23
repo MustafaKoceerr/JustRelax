@@ -7,6 +7,7 @@ import androidx.compose.material.icons.rounded.Forest
 import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.WaterDrop
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import justrelax.feature.home.generated.resources.Res
 import justrelax.feature.home.generated.resources.category_air
 import justrelax.feature.home.generated.resources.category_city

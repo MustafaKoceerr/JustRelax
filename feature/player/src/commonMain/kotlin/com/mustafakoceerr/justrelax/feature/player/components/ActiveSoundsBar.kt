@@ -1,4 +1,4 @@
-package com.mustafakoceerr.justrelax.core.ui.components
+package com.mustafakoceerr.justrelax.feature.player.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -152,7 +153,7 @@ private fun SoundIconItem(url: String) {
             .padding(2.dp), // Border efekti için boşluk
         shape = CircleShape,
         color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer) // Arka planla karışmasın diye sınır
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer) // Arka planla karışmasın diye sınır
     ) {
         Box(contentAlignment = Alignment.Center) {
             AsyncImage(

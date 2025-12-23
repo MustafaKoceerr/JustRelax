@@ -34,8 +34,8 @@ kotlin {
             implementation(libs.findLibrary("koin-compose").get())
             implementation(libs.findLibrary("koin-compose-viewmodel").get())
 
-            // --- Voyager (ScreenModel için) ---
-            implementation(libs.findLibrary("voyager-screenmodel").get())
+            // Coil image
+            implementation(libs.findLibrary("coil-compose").get())
         }
     }
 }

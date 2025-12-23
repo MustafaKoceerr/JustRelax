@@ -15,16 +15,30 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(project(":core:domain"))
+            api(project(":core:domain"))
             implementation(project(":core:database"))
             implementation(project(":core:network"))
             implementation(project(":core:common"))
             implementation(project(":core:model"))
 
-            // Datastore 1.1.0 sürümünden sonra KMP desteklemeye başladı.
+            // DataStore
             implementation(libs.findLibrary("androidx-datastore-preferences").get())
             implementation(libs.findLibrary("androidx-datastore").get())
+
             // DI
             implementation(libs.findLibrary("koin-core").get())
+
+            // Ktor & Okio (Az önce eklediklerin)
+            implementation(libs.findLibrary("ktor-client-core").get())
+            implementation(libs.findLibrary("okio").get())
+
+            // --- İŞTE EKSİKLER (BUNLARI EKLE) ---
+
+            // 1. SQLDelight Coroutines (asFlow, mapToList için ŞART)
+            implementation(libs.findLibrary("sqldelight-coroutines-extensions").get())
+
+            // 2. Kotlin Coroutines (Flow, withContext için ŞART)
+            implementation(libs.findLibrary("kotlinx-coroutines-core").get())
         }
     }
 }

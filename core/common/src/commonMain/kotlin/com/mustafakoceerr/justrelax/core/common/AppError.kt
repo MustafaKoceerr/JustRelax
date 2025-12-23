@@ -23,4 +23,10 @@ sealed class AppError(override val message: String, override val cause: Throwabl
 
     // --- Bilinmeyen / Beklenmeyen ---
     class Unknown(cause: Throwable?) : AppError("Beklenmedik bir hata oluştu.", cause)
+
+    // --- Player Hataları ---
+    sealed class Player(message: String, cause: Throwable? = null) : AppError(message, cause) {
+        class LimitExceeded(val limit: Int) : Player("Aynı anda en fazla $limit ses çalınabilir.")
+        class InitializationError(message: String) : Player(message)
+    }
 }

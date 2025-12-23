@@ -9,7 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
  */
 internal object DataConstants {
     // DataStore için kullanılacak dosya adı.
-    const val SETTINGS_DATASTORE_NAME = "justrelax_settings"
+    const val SETTINGS_DATASTORE_NAME = "justrelax_settings.preferences_pb"
 
     // DataStore Anahtarları (Keys)
     val KEY_APP_THEME = stringPreferencesKey("app_theme")

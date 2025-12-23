@@ -1,23 +1,26 @@
 package com.mustafakoceerr.justrelax.feature.player.mvi
 
-// 1. STATE: UI ne görüyorsa burada olmalı
+import com.mustafakoceerr.justrelax.core.model.Sound
+
+// 1. STATE
 data class PlayerState(
-    val activeSounds: List<Sound> = emptyList(), // Aktif ses listesi
-    val isMasterPlaying: Boolean = false,        // Genel oynatma durumu
-    val isLoading: Boolean = false
+    // UI'da ikonlarını göstereceğimiz aktif ses nesneleri
+    val activeSounds: List<Sound> = emptyList(),
+
+    // Master Play/Pause durumu.
+    // (Not: AudioMixer'da 'isPaused' akışı olmadığı için bunu ViewModel'de yerel yöneteceğiz)
+    val isPaused: Boolean = false
 ) {
-    // UI kolayca erişsin diye helper
+    // Helper: Player Bar görünmeli mi?
     val isVisible: Boolean
         get() = activeSounds.isNotEmpty()
-
-    // Sadece ikon URL'lerini UI'a vermek için helper
-    val activeIconUrls: List<String>
-        get() = activeSounds.map { it.iconUrl }
 }
 
-// 2. INTENT: Kullanıcının yaptığı eylemler
+// 2. INTENT
 sealed interface PlayerIntent {
-    data object ToggleMasterPlayPause : PlayerIntent // Play/Pause butonuna basıldı
-    data object StopAll : PlayerIntent               // Çarpı butonuna basıldı
-}
+    // Play/Pause (Toggle)
+    data object ToggleMasterPlayPause : PlayerIntent
 
+    // Hepsini Durdur (Stop All / X Butonu)
+    data object StopAll : PlayerIntent
+}

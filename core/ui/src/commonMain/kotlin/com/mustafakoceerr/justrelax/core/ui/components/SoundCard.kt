@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
 import org.jetbrains.compose.resources.stringResource
@@ -45,6 +46,7 @@ fun SoundCard(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        // --- Kartın Gövdesi ---
         Surface(
             onClick = onCardClick,
             modifier = Modifier.aspectRatio(1f),
@@ -56,9 +58,11 @@ fun SoundCard(
         ) {
             Box(contentAlignment = Alignment.Center) {
 
+                // --- İkon Arka Planı (Daire) ---
                 Surface(
                     modifier = Modifier
                         .size(48.dp)
+                        // İndirilmemişse biraz sönük göster
                         .alpha(if (sound.isDownloaded) 1f else 0.3f),
                     shape = CircleShape,
                     color = if (isPlaying)
@@ -71,6 +75,7 @@ fun SoundCard(
                         MaterialTheme.colorScheme.onSurfaceVariant
                 ) {
                     Box(contentAlignment = Alignment.Center) {
+                        // Coil 3 ile Resim Yükleme
                         AsyncImage(
                             model = sound.iconUrl,
                             contentDescription = sound.name,
@@ -86,7 +91,8 @@ fun SoundCard(
                     }
                 }
 
-                // DURUM KATMANI (İndirme / Spinner)
+                // --- Durum Katmanı (İndirme İkonu veya Spinner) ---
+                // Eğer ses indirilmemişse (localPath == null) burası devreye girer.
                 if (!sound.isDownloaded) {
                     if (isDownloading) {
                         CircularProgressIndicator(
@@ -95,6 +101,7 @@ fun SoundCard(
                             color = MaterialTheme.colorScheme.primary
                         )
                     } else {
+                        // İndirme İkonu Overlay
                         Box(
                             modifier = Modifier
                                 .size(32.dp)
@@ -106,9 +113,7 @@ fun SoundCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.CloudDownload,
-                                contentDescription = stringResource(
-                                    Res.string.sound_action_download
-                                ),
+                                contentDescription = stringResource(Res.string.sound_action_download),
                                 modifier = Modifier.size(20.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
@@ -118,7 +123,7 @@ fun SoundCard(
             }
         }
 
-        // SLIDER veya İSİM
+        // --- Alt Bilgi (Slider veya İsim) ---
         if (isPlaying) {
             VolumeSlider(
                 value = volume,

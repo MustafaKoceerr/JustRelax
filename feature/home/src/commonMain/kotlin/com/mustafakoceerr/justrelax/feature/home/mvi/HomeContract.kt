@@ -1,36 +1,55 @@
 package com.mustafakoceerr.justrelax.feature.home.mvi
 
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
+import com.mustafakoceerr.justrelax.core.common.AppError
+import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.model.SoundCategory
 
+// 1. STATE: Ekranın o anki fotoğrafı.
+// Logic (getter, hesaplama) içermez. Sadece saf veri.
 data class HomeState(
-    // Veriler
+    // --- Data ---
     val categories: List<SoundCategory> = SoundCategory.entries,
     val selectedCategory: SoundCategory = SoundCategory.NATURE,
-    val allSounds: List<Sound> = emptyList(), // Filtrelenmemiş ham liste
 
-    // UI Durumları
-    val activeSounds: Map<String, Float> = emptyMap(), // Çalan sesler ve volumeleri
-    val downloadingSoundIds: Set<String> = emptySet(), // Şu an inmekte olan tekil sesler
+    // Veritabanından gelen ham liste
+    val allSounds: List<Sound> = emptyList(),
 
-    // Banner Durumları
+    // UI'da listelenecek (Filtrelenmiş) liste.
+    // ViewModel bunu hesaplayıp buraya koyacak.
+    val filteredSounds: List<Sound> = emptyList(),
+
+    // --- Player Status ---
+    // Hangi sesler çalıyor? (Mixer'dan gelen Flow ile beslenir)
+    val playingSoundIds: Set<String> = emptySet(),
+
+    // Ses seviyeleri (UI'daki Slider'lar için).
+    // Mixer'dan volume okuyamadığımız için (tek yönlü), UI'daki son değeri burada tutuyoruz.
+    // Key: SoundID, Value: 0.0 - 1.0 arası Float
+    val soundVolumes: Map<String, Float> = emptyMap(),
+
+    // --- Download Status ---
+    // Şu an inmekte olan seslerin ID'leri (Loading spinner göstermek için)
+    val downloadingSoundIds: Set<String> = emptySet(),
+
+    // --- Common ---
+    val isLoading: Boolean = true,
+
+    // --- Banner (Eski yapıdan korundu) ---
     val showDownloadBanner: Boolean = false,
     val isDownloadingAll: Boolean = false,
-    val totalDownloadProgress: Float = 0f,
+    val totalDownloadProgress: Float = 0f
+)
 
-    val isLoading: Boolean = true
-) {
-    // UI'da gösterilecek filtrelenmiş liste (Helper Property)
-    val sounds: List<Sound>
-        get() = allSounds.filter { it.category == selectedCategory }
-}
-
-// 2. Intent: Kullanıcının yapmak istediği eylemler
+// 2. INTENT: Kullanıcı eylemleri
 sealed interface HomeIntent {
     data class SelectCategory(val category: SoundCategory) : HomeIntent
+
+    // Toggle mantığı (Çalıyorsa durdur, duruyorsa çal/indir) ViewModel'de işlenecek.
     data class ToggleSound(val sound: Sound) : HomeIntent
+
     data class ChangeVolume(val soundId: String, val volume: Float) : HomeIntent
 
-    // Banner İşlemleri
+    // Banner
     data object DownloadAllMissing : HomeIntent
     data object DismissBanner : HomeIntent
 
@@ -38,8 +57,13 @@ sealed interface HomeIntent {
     data object SettingsClicked : HomeIntent
 }
 
-// 3. Effect: Tek seferlik olaylar (Navigasyon, toast vb.)
+// 3. EFFECT: Tek seferlik aksiyonlar (One-shot events)
 sealed interface HomeEffect {
+    // Hata mesajlarını UI'a taşımak için (Snackbar/Toast)
+    data class ShowError(val error: AppError) : HomeEffect
+
+    // Basit bilgilendirme mesajları
     data class ShowMessage(val message: String) : HomeEffect
+
     data object NavigateToSettings : HomeEffect
 }

@@ -30,6 +30,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 import com.mustafakoceerr.justrelax.core.ui.components.VolumeSlider
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
@@ -102,8 +104,13 @@ fun HomeTabRow(
 @Composable
 fun SoundCardGrid(
     sounds: List<Sound>,
-    activeSounds: Map<String, Float>,
+    // YENİ: Çalan seslerin ID seti (Mixer'dan gelir)
+    playingSoundIds: Set<String>,
+    // YENİ: Ses seviyeleri (UI State'den gelir)
+    soundVolumes: Map<String, Float>,
+    // İndirilmekte olanlar
     downloadingSoundIds: Set<String>,
+    // Aksiyonlar
     onSoundClick: (Sound) -> Unit,
     onVolumeChange: (String, Float) -> Unit,
     contentPadding: PaddingValues
@@ -116,10 +123,17 @@ fun SoundCardGrid(
     ) {
         items(
             items = sounds,
-            key = { it.id }
+            key = { it.id } // LazyGrid performansı için ID key'i şart
         ) { sound ->
-            val isPlaying = activeSounds.containsKey(sound.id)
-            val volume = activeSounds[sound.id] ?: 0.5f
+
+            // 1. Durum Çözümleme (State Resolution)
+            val isPlaying = playingSoundIds.contains(sound.id)
+
+            // 2. Volume Çözümleme
+            // Eğer map'te varsa onu kullan, yoksa varsayılan 0.5f
+            val volume = soundVolumes[sound.id] ?: 0.5f
+
+            // 3. İndirme Durumu
             val isDownloading = downloadingSoundIds.contains(sound.id)
 
             SoundCard(
