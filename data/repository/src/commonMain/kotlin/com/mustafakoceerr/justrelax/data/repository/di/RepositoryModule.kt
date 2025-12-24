@@ -1,11 +1,11 @@
 package com.mustafakoceerr.justrelax.data.repository.di
 
-import com.mustafakoceerr.justrelax.core.domain.repository.AppSetupRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.DataSourceStateRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.FileDownloadRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundSyncRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.UserPreferencesRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.appsetup.AppSetupRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.sound.DataSourceStateRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.system.FileDownloadRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundSyncRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.settings.UserPreferencesRepository
 import com.mustafakoceerr.justrelax.data.repository.AppSetupRepositoryImpl
 import com.mustafakoceerr.justrelax.data.repository.DataSourceStateRepositoryImpl
 import com.mustafakoceerr.justrelax.data.repository.FileDownloadRepositoryImpl

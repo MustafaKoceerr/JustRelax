@@ -38,7 +38,7 @@ fun LanguageSelectionItem(
     val displayText = if (language == AppLanguage.SYSTEM) {
         stringResource(Res.string.language_system_default) // "Sistem Varsayılanı"
     } else {
-        language.nativeName ?: "" // "Türkçe", "English"
+        language.nativeName // "Türkçe", "English"
     }
     // ---------------------
 

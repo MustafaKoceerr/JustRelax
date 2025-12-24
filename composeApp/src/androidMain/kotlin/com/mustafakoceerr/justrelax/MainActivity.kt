@@ -4,8 +4,13 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
+
+    // KENDİ ÖZEL VIEWMODEL'İNİ KULLANIYOR
+    private val activityViewModel: MainActivityViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -17,4 +22,6 @@ class MainActivity : AppCompatActivity() {
             JustRelaxApp()
         }
     }
+
+
 }

@@ -38,12 +38,4 @@
     <string name="tab_ai">AI</string>
     <string name="tab_saved">Saved</string>
     <string name="tab_mixer">Mixer</string>
-    <string name="loading_message_peace">Preparing your peace...</string>
-    <string name="loading_message_frequency">Tuning frequencies...</string>
-    <string name="loading_message_rain">Gathering rain sounds...</string>
-    <string name="loading_message_wind">Adjusting the wind...</string>
-    <string name="loading_message_fire">Bringing the crackling fire...</string>
-    <string name="loading_message_mind">Clear your mind...</string>
-    <string name="loading_message_nature">Connecting with nature...</string>
-    <string name="loading_message_brand">Just Relax...</string>
 </resources>

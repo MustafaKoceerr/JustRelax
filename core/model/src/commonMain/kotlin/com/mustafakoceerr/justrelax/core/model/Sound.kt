@@ -10,7 +10,8 @@ data class Sound(
     val iconUrl: String,      // İnternet üzerindeki ikon adresi
     val remoteUrl: String,    // İnternet üzerindeki ses dosyası adresi
     val localPath: String? = null, // Eğer indirilmişse cihazdaki yolu, yoksa null
-    val isInitial: Boolean
+    val isInitial: Boolean,
+    val sizeBytes: Long
 ) {
     // Computed Property: Veritabanında tutulmaz, anlık hesaplanır.
     val isDownloaded: Boolean

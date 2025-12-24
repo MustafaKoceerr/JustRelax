@@ -2,10 +2,10 @@ package com.mustafakoceerr.justrelax.feature.player
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
-import com.mustafakoceerr.justrelax.core.domain.usecase.GetPlayingSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.StopAllSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.TogglePauseResumeUseCase
+import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetPlayingSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.StopAllSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.TogglePauseResumeUseCase
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerIntent
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerState
 import kotlinx.coroutines.flow.MutableStateFlow

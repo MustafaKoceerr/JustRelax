@@ -2,14 +2,14 @@ package com.mustafakoceerr.justrelax.feature.settings
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.mustafakoceerr.justrelax.core.domain.usecase.GetAppLanguageUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.GetAppThemeUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.SetAppLanguageUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.SetAppThemeUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppLanguageUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppThemeUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SetAppLanguageUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SetAppThemeUseCase
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
-import com.mustafakoceerr.justrelax.core.ui.util.LanguageSwitcher
-import com.mustafakoceerr.justrelax.core.ui.util.SystemLauncher
+import com.mustafakoceerr.justrelax.core.domain.system.LanguageSwitcher
+import com.mustafakoceerr.justrelax.core.domain.system.SystemLauncher
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsEffect
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsIntent
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsState

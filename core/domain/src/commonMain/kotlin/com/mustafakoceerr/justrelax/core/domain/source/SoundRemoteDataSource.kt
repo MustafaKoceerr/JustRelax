@@ -6,6 +6,7 @@ import com.mustafakoceerr.justrelax.core.model.Sound
  * Sorumluluk: Uzak sunucudan 'Sound' ile ilgili verileri çekmek için bir sözleşme.
  * Repository katmanı bu arayüze bağımlı olacak, implementasyon detayını bilmeyecek (DIP).
  */
+//Sadece Config'leri (Metadata) getirecek.
 interface SoundRemoteDataSource {
 
     /**

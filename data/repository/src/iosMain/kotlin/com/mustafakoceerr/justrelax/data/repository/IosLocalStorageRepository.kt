@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.data.repository
 
 import com.mustafakoceerr.justrelax.core.common.dispatcher.DispatcherProvider
-import com.mustafakoceerr.justrelax.core.domain.repository.LocalStorageRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.system.LocalStorageRepository
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.withContext
 import okio.FileSystem

@@ -44,6 +44,7 @@ include(":core:navigation")
 include(":core:domain")
 include(":core:database")
 include(":core:network")
+include(":core:system")
 
 include(":data:repository")
 
@@ -54,3 +55,5 @@ include(":feature:settings")
 //include(":feature:mixer")
 include(":feature:player")
 include(":feature:home")
+include(":feature:onboarding")
+include(":feature:splash")

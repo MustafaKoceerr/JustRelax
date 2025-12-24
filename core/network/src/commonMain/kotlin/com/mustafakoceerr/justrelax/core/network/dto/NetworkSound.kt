@@ -23,5 +23,6 @@ internal data class NetworkSound(
     @SerialName("icon_url") val iconUrl: String,   // JSON'daki snake_case'i camelCase'e mapledik
     @SerialName("audio_url") val audioUrl: String, // JSON'daki snake_case'i camelCase'e mapledik
     val version: Int,
-    @SerialName("is_initial") val isInitial: Boolean = false
+    @SerialName("is_initial") val isInitial: Boolean = false,
+    @SerialName("size_bytes") val sizeBytes: Long = 0
 )

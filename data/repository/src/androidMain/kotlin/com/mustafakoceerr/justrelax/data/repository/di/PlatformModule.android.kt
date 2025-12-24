@@ -3,7 +3,7 @@ package com.mustafakoceerr.justrelax.data.repository.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.mustafakoceerr.justrelax.core.domain.repository.LocalStorageRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.system.LocalStorageRepository
 import com.mustafakoceerr.justrelax.data.repository.AndroidLocalStorageRepository
 import com.mustafakoceerr.justrelax.data.repository.DataConstants
 import com.mustafakoceerr.justrelax.data.repository.factory.createDataStore

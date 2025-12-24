@@ -73,6 +73,7 @@ kotlin {
             implementation(project(":core:ui"))
             implementation(project(":core:network"))
             implementation(project(":core:database"))
+            implementation(project(":core:system"))
 
             implementation(project(":core:audio"))
             implementation(project(":core:navigation"))
@@ -84,6 +85,8 @@ kotlin {
 //            implementation(project(":feature:timer"))
             implementation(project(":feature:settings"))
             implementation(project(":feature:player"))
+            implementation(project(":feature:onboarding"))
+            implementation(project(":feature:splash"))
             implementation(project(":data:repository"))
 
             // --- Koin ---
@@ -107,6 +110,7 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.koin.android)
+            implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.activity.compose)
 
             // Android Ses Motoru (ExoPlayer / Media3)

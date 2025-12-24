@@ -4,7 +4,7 @@ import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.common.dispatcher.DispatcherProvider
 import com.mustafakoceerr.justrelax.core.database.db.JustRelaxDatabase
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundSyncRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundSyncRepository
 import com.mustafakoceerr.justrelax.core.domain.source.SoundRemoteDataSource
 import com.mustafakoceerr.justrelax.data.repository.mapper.DatabaseSoundMapper
 import kotlinx.coroutines.withContext
@@ -43,7 +43,9 @@ internal class SoundSyncRepositoryImpl(
                             iconUrl = remoteSound.iconUrl,
                             remoteUrl = remoteSound.remoteUrl,
                             localPath = null,
-                            isInitial = remoteSound.isInitial // 'isInitial' flag'ini veriyoruz
+                            isInitial = remoteSound.isInitial, // 'isInitial' flag'ini veriyoruz
+                            sizeBytes = remoteSound.sizeBytes
+
                         )
                     } else {
                         val localModelSound = soundMapper.toModel(localDbSound)
@@ -56,7 +58,8 @@ internal class SoundSyncRepositoryImpl(
                                 iconUrl = remoteSound.iconUrl,
                                 remoteUrl = remoteSound.remoteUrl,
                                 localPath = localDbSound.localPath, // Path'i koru
-                                isInitial = remoteSound.isInitial
+                                isInitial = remoteSound.isInitial,
+                                sizeBytes = remoteSound.sizeBytes
                             )
                         }
                     }

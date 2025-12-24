@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.data.repository
 
 import com.mustafakoceerr.justrelax.core.common.dispatcher.DispatcherProvider
-import com.mustafakoceerr.justrelax.core.domain.repository.FileDownloadRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.system.FileDownloadRepository
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

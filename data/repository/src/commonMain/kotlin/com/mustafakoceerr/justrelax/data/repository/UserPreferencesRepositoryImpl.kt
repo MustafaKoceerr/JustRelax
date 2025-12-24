@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.mustafakoceerr.justrelax.core.common.dispatcher.DispatcherProvider
-import com.mustafakoceerr.justrelax.core.domain.repository.UserPreferencesRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.settings.UserPreferencesRepository
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import kotlinx.coroutines.flow.Flow

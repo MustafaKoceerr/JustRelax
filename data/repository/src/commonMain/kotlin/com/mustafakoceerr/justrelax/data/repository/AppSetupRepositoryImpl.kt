@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.mustafakoceerr.justrelax.core.common.dispatcher.DispatcherProvider
-import com.mustafakoceerr.justrelax.core.domain.repository.AppSetupRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.appsetup.AppSetupRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext

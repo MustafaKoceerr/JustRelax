@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.ui.extensions.displayName
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
 import org.jetbrains.compose.resources.stringResource
@@ -78,7 +79,7 @@ fun SoundCard(
                         // Coil 3 ile Resim Yükleme
                         AsyncImage(
                             model = sound.iconUrl,
-                            contentDescription = sound.name,
+                            contentDescription = sound.displayName(),
                             modifier = Modifier.size(24.dp),
                             contentScale = ContentScale.Fit,
                             colorFilter = ColorFilter.tint(
@@ -134,7 +135,7 @@ fun SoundCard(
             )
         } else {
             Text(
-                text = sound.name,
+                text = sound.displayName(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,

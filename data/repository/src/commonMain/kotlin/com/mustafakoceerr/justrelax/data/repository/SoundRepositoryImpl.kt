@@ -4,7 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.mustafakoceerr.justrelax.core.common.dispatcher.DispatcherProvider
 import com.mustafakoceerr.justrelax.core.database.db.SoundQueries
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.data.repository.mapper.DatabaseSoundMapper
 import kotlinx.coroutines.flow.Flow

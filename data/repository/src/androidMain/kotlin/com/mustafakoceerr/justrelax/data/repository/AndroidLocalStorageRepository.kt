@@ -2,7 +2,7 @@ package com.mustafakoceerr.justrelax.data.repository
 
 import android.content.Context
 import com.mustafakoceerr.justrelax.core.common.dispatcher.DispatcherProvider
-import com.mustafakoceerr.justrelax.core.domain.repository.LocalStorageRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.system.LocalStorageRepository
 import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path

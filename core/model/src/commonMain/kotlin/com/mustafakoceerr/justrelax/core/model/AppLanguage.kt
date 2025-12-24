@@ -5,9 +5,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class AppLanguage(
     val code: String,
-    val nativeName: String? // SYSTEM seçeneği için null olabilir
+    val nativeName: String // SYSTEM seçeneği için null olabilir
 ) {
-    SYSTEM("system", null),
+    SYSTEM("system", "System Default"),
     ENGLISH("en", "English"),
     TURKISH("tr", "Türkçe"),
     SPANISH("es", "Español");

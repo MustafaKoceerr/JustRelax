@@ -11,7 +11,8 @@ CREATE TABLE sound (
     iconUrl TEXT NOT NULL,
     remoteUrl TEXT NOT NULL,
     localPath TEXT,
-    isInitial INTEGER AS Boolean NOT NULL DEFAULT 0 -- YENİ ALAN
+    isInitial INTEGER AS Boolean NOT NULL DEFAULT 0,
+    sizeBytes INTEGER NOT NULL DEFAULT 0
 );
 -- Fonksiyon isimlerini daha standart hale getiriyoruz (selectAll -> selectAllSounds)
 selectAllSounds:
@@ -21,8 +22,8 @@ selectSoundById:
 SELECT * FROM sound WHERE id = ?;
 
 insertOrReplace:
-INSERT OR REPLACE INTO sound(id, names, categoryId, iconUrl, remoteUrl, localPath, isInitial)
-VALUES (?, ?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO sound(id, names, categoryId, iconUrl, remoteUrl, localPath, isInitial, sizeBytes)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 updateLocalPath:
 UPDATE sound SET localPath = ? WHERE id = ?;

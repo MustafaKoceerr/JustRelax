@@ -19,12 +19,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
-import com.mustafakoceerr.justrelax.feature.home.components.DownloadBanner
 import com.mustafakoceerr.justrelax.feature.home.components.HomeTabRow
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.feature.home.components.SoundCardGrid
@@ -38,36 +37,28 @@ import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-data object HomeScreen : Screen {
+data object HomeScreen : AppScreen {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow.parent
-            ?: LocalNavigator.currentOrThrow
-
+        val navigator = LocalNavigator.currentOrThrow.parent ?: LocalNavigator.currentOrThrow
         val homeNavigator = koinInject<HomeNavigator>()
         val screenModel = koinScreenModel<HomeScreenModel>()
         val state by screenModel.state.collectAsState()
-
         val snackbarHostState = remember { SnackbarHostState() }
 
-        // Effect (Tek seferlik olaylar) Dinleme
+        // --- EFFECT HANDLING ---
         LaunchedEffect(Unit) {
             screenModel.effect.collectLatest { effect ->
                 when (effect) {
                     is HomeEffect.ShowMessage -> {
                         snackbarHostState.showSnackbar(effect.message)
                     }
-
                     is HomeEffect.ShowError -> {
-                        // AppError'dan gelen mesajı gösteriyoruz
-                        // İleride buraya hata tipine göre özel mesaj mapping yapılabilir
-                        if (!effect.error.message.isEmpty()) {
-                            snackbarHostState.showSnackbar(effect.error.message)
-                        }
+                        // AppError'dan gelen mesajı göster
+                        snackbarHostState.showSnackbar(effect.error.message)
                     }
-
                     HomeEffect.NavigateToSettings -> {
                         navigator.push(homeNavigator.toSettings())
                     }
@@ -81,11 +72,7 @@ data object HomeScreen : Screen {
                 JustRelaxTopBar(
                     title = stringResource(Res.string.home_screen_title),
                     actions = {
-                        IconButton(
-                            onClick = {
-                                screenModel.processIntent(HomeIntent.SettingsClicked)
-                            }
-                        ) {
+                        IconButton(onClick = { screenModel.processIntent(HomeIntent.SettingsClicked) }) {
                             Icon(
                                 imageVector = Icons.Outlined.Settings,
                                 contentDescription = stringResource(Res.string.action_settings)
@@ -112,29 +99,11 @@ data object HomeScreen : Screen {
                     }
                 )
 
-                // 2. Banner (İndirme Durumu)
-                DownloadBanner(
-                    isVisible = state.showDownloadBanner,
-                    isDownloading = state.isDownloadingAll,
-                    downloadProgress = state.totalDownloadProgress,
-                    onConfirm = {
-                        screenModel.processIntent(HomeIntent.DownloadAllMissing)
-                    },
-                    onDismiss = {
-                        screenModel.processIntent(HomeIntent.DismissBanner)
-                    },
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-
-                // 3. Ses Listesi
+                // 2. Ses Listesi
                 SoundCardGrid(
-                    // YENİ: ViewModel'in filtrelediği listeyi kullanıyoruz
                     sounds = state.filteredSounds,
-
-                    // YENİ: Map ve Set olarak ayrılmış durumları veriyoruz
                     playingSoundIds = state.playingSoundIds,
                     soundVolumes = state.soundVolumes,
-
                     downloadingSoundIds = state.downloadingSoundIds,
                     onSoundClick = { sound ->
                         screenModel.processIntent(HomeIntent.ToggleSound(sound))
@@ -146,7 +115,7 @@ data object HomeScreen : Screen {
                         start = 16.dp,
                         end = 16.dp,
                         top = 16.dp,
-                        bottom = paddingValues.calculateBottomPadding() + 80.dp // BottomBar için pay
+                        bottom = paddingValues.calculateBottomPadding() + 80.dp // BottomBar payı
                     )
                 )
             }

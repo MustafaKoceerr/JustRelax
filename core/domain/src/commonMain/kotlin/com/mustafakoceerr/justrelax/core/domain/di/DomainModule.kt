@@ -1,19 +1,25 @@
 package com.mustafakoceerr.justrelax.core.domain.di
 
-import com.mustafakoceerr.justrelax.core.domain.usecase.AdjustVolumeUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.DownloadInitialSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.DownloadSoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.GetAppLanguageUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.GetAppThemeUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.GetPlayingSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.PlaySoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.SetAppLanguageUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.SetAppThemeUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.StopAllSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.StopSoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.SyncSoundsIfNecessaryUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.SyncSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.TogglePauseResumeUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.AdjustVolumeUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadAllSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadInitialSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSoundUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppLanguageUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppThemeUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetPlayingSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.GetSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SetAppLanguageUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SetAppThemeUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.StopAllSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.StopSoundUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.SyncSoundsIfNecessaryUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.SyncSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.TogglePauseResumeUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.GetAppSetupStatusUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.SetAppSetupFinishedUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.CheckMaxActiveSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SyncLanguageWithSystemUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 /**
@@ -45,4 +51,11 @@ val domainModule = module {
     factoryOf(::SyncSoundsUseCase)
     factoryOf(::DownloadInitialSoundsUseCase)
     factoryOf(::DownloadAllSoundsUseCase)
+
+    // --- YENİ EKLENENLER ---
+    factoryOf(::GetSoundsUseCase)
+    factoryOf(::GetAppSetupStatusUseCase)
+    factoryOf(::SetAppSetupFinishedUseCase)
+    factoryOf(::CheckMaxActiveSoundsUseCase)
+    factoryOf(::SyncLanguageWithSystemUseCase)
 }

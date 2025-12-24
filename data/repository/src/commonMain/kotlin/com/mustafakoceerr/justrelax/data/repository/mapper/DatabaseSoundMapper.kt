@@ -4,6 +4,7 @@ package com.mustafakoceerr.justrelax.data.repository.mapper
 // Domain modelini de import ediyoruz.
 import com.mustafakoceerr.justrelax.core.database.db.Sound as DbSound
 import com.mustafakoceerr.justrelax.core.model.Sound as ModelSound
+
 /**
  * Sorumluluk: Veritabanı katmanından gelen Entity'leri Domain/Model katmanına çevirmek.
  * 'internal' olması, bu mapper'ın sadece bu modülün bir iç detayı olduğunu belirtir.
@@ -22,7 +23,8 @@ internal class DatabaseSoundMapper {
             iconUrl = dbSound.iconUrl,
             remoteUrl = dbSound.remoteUrl,
             localPath = dbSound.localPath,
-            isInitial = dbSound.isInitial
+            isInitial = dbSound.isInitial,
+            sizeBytes = dbSound.sizeBytes
         )
     }
 

@@ -25,7 +25,6 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
-import com.mustafakoceerr.justrelax.components.LoadingScreen
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
@@ -39,10 +38,6 @@ import org.koin.compose.koinInject
 object MainScreen : AppScreen {
     @Composable
     override fun Content() {
-        // 1. ViewModels & Controllers
-//        val mainViewModel = koinScreenModel<MainViewModel>()
-//        val isAppInitialized by mainViewModel.isInitialized.collectAsState()
-
         val playerScreenModel = koinScreenModel<PlayerScreenModel>()
         val playerState by playerScreenModel.state.collectAsState()
 
@@ -50,80 +45,72 @@ object MainScreen : AppScreen {
 
         TabNavigator(HomeTab) { tabNavigator ->
 
-            // 2. Player Görünürlük Mantığı
-            // Yeni State yapımızda 'activeSounds' listesi doluysa player görünür.
-            val shouldShowPlayer = playerState.activeSounds.isNotEmpty()
+            val shouldShowPlayer = playerState.isVisible
 
-            // 3. Uygulama Yüklenme Durumu
-//            if (!isAppInitialized) {
-//                JustRelaxBackground {
-//                    LoadingScreen()
-//                }
-//            } else {
-                JustRelaxBackground {
-                    Scaffold(
-                        containerColor = Color.Transparent,
-                        snackbarHost = {
-                            JustRelaxSnackbarHost(hostState = snackbarController.hostState)
-                        },
-                        // BottomBar Stacking (Senin özel tasarımın)
-                        bottomBar = {
-                            Column(modifier = Modifier.fillMaxWidth()) {
-                                // A. Player Bar (Üstte)
-                                PlayerBottomBar(
-                                    isVisible = shouldShowPlayer,
-                                    // Mapping: Sound objelerinden URL stringlerine çeviriyoruz
-                                    activeIcons = playerState.activeSounds.map { it.iconUrl },
-                                    // Mapping: 'isPaused' durumunu tersine çeviriyoruz
-                                    isPlaying = !playerState.isPaused,
-                                    onPlayPauseClick = {
-                                        playerScreenModel.onIntent(PlayerIntent.ToggleMasterPlayPause)
-                                    },
-                                    onStopAllClick = {
-                                        playerScreenModel.onIntent(PlayerIntent.StopAll)
-                                    }
-                                )
-
-                                // B. Navigation Bar (Altta)
-                                NavigationBar(
-                                    containerColor = MaterialTheme.colorScheme.surface,
-                                    contentColor = MaterialTheme.colorScheme.primary,
-                                ) {
-                                    TabNavigationItem(HomeTab)
-                                    // Diğer tablar henüz hazır değilse yorum satırına alabilirsin
-                                    // TabNavigationItem(TimerTab)
-                                    // TabNavigationItem(AiTab)
-                                    // TabNavigationItem(SavedTab)
-                                    // TabNavigationItem(MixerTab)
+            JustRelaxBackground {
+                Scaffold(
+                    containerColor = Color.Transparent,
+                    snackbarHost = {
+                        JustRelaxSnackbarHost(hostState = snackbarController.hostState)
+                    },
+                    // BottomBar Stacking (Senin özel tasarımın)
+                    bottomBar = {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            // A. Player Bar (Üstte)
+                            PlayerBottomBar(
+                                isVisible = shouldShowPlayer,
+                                // Mapping: Sound objelerinden URL stringlerine çeviriyoruz
+                                activeIcons = playerState.activeSounds.map { it.iconUrl },
+                                // Mapping: 'isPaused' durumunu tersine çeviriyoruz
+                                isPlaying = !playerState.isPaused,
+                                onPlayPauseClick = {
+                                    playerScreenModel.onIntent(PlayerIntent.ToggleMasterPlayPause)
+                                },
+                                onStopAllClick = {
+                                    playerScreenModel.onIntent(PlayerIntent.StopAll)
                                 }
+                            )
+
+                            // B. Navigation Bar (Altta)
+                            NavigationBar(
+                                containerColor = MaterialTheme.colorScheme.surface,
+                                contentColor = MaterialTheme.colorScheme.primary,
+                            ) {
+                                TabNavigationItem(HomeTab)
+                                // Diğer tablar henüz hazır değilse yorum satırına alabilirsin
+                                // TabNavigationItem(TimerTab)
+                                // TabNavigationItem(AiTab)
+                                // TabNavigationItem(SavedTab)
+                                // TabNavigationItem(MixerTab)
                             }
                         }
-                    ) { innerPadding ->
+                    }
+                ) { innerPadding ->
 
-                        // --- YAYLI ANİMASYON (Senin harika dokunuşun) ---
-                        val animatedBottomPadding by animateDpAsState(
-                            targetValue = innerPadding.calculateBottomPadding(),
-                            animationSpec = spring(
-                                dampingRatio = Spring.DampingRatioMediumBouncy,
-                                stiffness = Spring.StiffnessLow
-                            ),
-                            label = "BottomPaddingAnimation"
+                    // --- YAYLI ANİMASYON (Senin harika dokunuşun) ---
+                    val animatedBottomPadding by animateDpAsState(
+                        targetValue = innerPadding.calculateBottomPadding(),
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        ),
+                        label = "BottomPaddingAnimation"
+                    )
+
+                    Box(
+                        modifier = Modifier.padding(
+                            top = innerPadding.calculateTopPadding(),
+                            bottom = animatedBottomPadding
                         )
-
-                        Box(
-                            modifier = Modifier.padding(
-                                top = innerPadding.calculateTopPadding(),
-                                bottom = animatedBottomPadding
-                            )
-                        ) {
-                            // Voyager: O anki aktif tab'ı göster
-                            CurrentTab()
-                        }
+                    ) {
+                        // Voyager: O anki aktif tab'ı göster
+                        CurrentTab()
                     }
                 }
             }
         }
     }
+}
 //}
 
 @Composable
