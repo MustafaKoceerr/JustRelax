@@ -6,32 +6,25 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.sound.SyncSoundsUseCase
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
 
-/**
- * Sadece başlangıç paketi olarak işaretlenmiş sesleri indirir.
- */
-/**
- * Sadece başlangıç paketi olarak işaretlenmiş sesleri indirir.
- */
 class DownloadInitialSoundsUseCase(
-    private val syncSoundsUseCase: SyncSoundsUseCase, // <--- YENİ BAĞIMLILIK
+    private val syncSoundsUseCase: SyncSoundsUseCase,
     private val soundRepository: SoundRepository,
     private val downloadSoundUseCase: DownloadSoundUseCase
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<DownloadStatus> = flow {
-        // 1. ÖNCE SENKRONİZE ET
+        // 1. Sync
         val syncResult = syncSoundsUseCase()
         if (syncResult is Resource.Error) {
             emit(DownloadStatus.Error(syncResult.error.message))
             return@flow
         }
 
-        // 2. ŞİMDİ VERİTABANINDAN OKU (Artık güncel olduğundan eminiz)
+        // 2. Verileri çek ve filtrele (Sadece Initial olanlar)
         val allSounds = soundRepository.getSounds().first()
         val initialSoundsToDownload = allSounds.filter { it.isInitial && !it.isDownloaded }
 
@@ -40,10 +33,12 @@ class DownloadInitialSoundsUseCase(
             return@flow
         }
 
-        // 3. İNDİRMEYİ BAŞLAT (Bu kısım aynı)
-        val flows = initialSoundsToDownload.map { downloadSoundUseCase(it.id) }
-        flows.asFlow().flatMapMerge { it }.collect { status ->
-            emit(status)
+        // 3. Akışları oluştur
+        val downloadFlows = initialSoundsToDownload.map { sound ->
+            downloadSoundUseCase(sound.id)
         }
+
+        // 4. Birleştir ve yay
+        emitAll(downloadFlows.combineToGlobalStatus())
     }
 }

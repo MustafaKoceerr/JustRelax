@@ -27,18 +27,26 @@ class DownloadSoundUseCase(
                 val finalPath = "$soundsDir/$soundId.$extension"
                 tempPath = "$finalPath.tmp"
 
-                if (localStorageRepository.fileExists(tempPath!!)) {
-                    localStorageRepository.deleteFile(tempPath!!)
+                // Eski bir .tmp dosyası kalmışsa silmeyi dene.
+                // Eğer dosya kilitliyse veya silerken "bulunamadı" hatası verirse
+                // uygulamayı çökertme, yut ve devam et. Çünkü amacımız zaten üzerine yazmak.
+                try {
+                    if (localStorageRepository.fileExists(tempPath)) {
+                        localStorageRepository.deleteFile(tempPath)
+                    }
+                } catch (e: Exception) {
+                    // Hata yutuldu: Dosya zaten yokmuş veya silinemedi, sorun değil.
                 }
+                // --- GÜVENLİ TEMİZLİK BİTİŞİ ---
 
-                fileDownloadRepository.downloadFile(sound.remoteUrl, tempPath!!)
+                fileDownloadRepository.downloadFile(sound.remoteUrl, tempPath)
                     .transform { status ->
                         if (status is DownloadStatus.Completed) {
                             // 1. Dosyayı taşı
-                            localStorageRepository.moveFile(tempPath!!, finalPath)
-                            // 2. Veritabanını GÜNCELLE ve BİTMESİNİ BEKLE
+                            localStorageRepository.moveFile(tempPath, finalPath)
+                            // 2. Veritabanını GÜNCELLE
                             soundRepository.updateLocalPath(soundId, finalPath)
-                            // 3. Her şey bittikten sonra "Tamamlandı" sinyalini gönder
+                            // 3. Tamamlandı sinyali
                             emit(DownloadStatus.Completed)
                         } else {
                             emit(status)
@@ -51,8 +59,14 @@ class DownloadSoundUseCase(
                 emit(DownloadStatus.Error(appError.message))
             }
             .onCompletion {
-                if (tempPath != null && localStorageRepository.fileExists(tempPath!!)) {
-                    localStorageRepository.deleteFile(tempPath!!)
+                // Akış bittiğinde (Hata veya İptal durumunda) tmp dosyası kaldıysa temizle.
+                // Burayı da try-catch içine alıyoruz ki kapanışta çökmesin.
+                try {
+                    if (tempPath != null && localStorageRepository.fileExists(tempPath)) {
+                        localStorageRepository.deleteFile(tempPath)
+                    }
+                } catch (e: Exception) {
+                    // Hata yutuldu.
                 }
             }
     }
