@@ -53,16 +53,18 @@ object MainScreen : AppScreen {
                     snackbarHost = {
                         JustRelaxSnackbarHost(hostState = snackbarController.hostState)
                     },
-                    // BottomBar Stacking (Senin özel tasarımın)
                     bottomBar = {
                         Column(modifier = Modifier.fillMaxWidth()) {
                             // A. Player Bar (Üstte)
                             PlayerBottomBar(
                                 isVisible = shouldShowPlayer,
-                                // Mapping: Sound objelerinden URL stringlerine çeviriyoruz
                                 activeIcons = playerState.activeSounds.map { it.iconUrl },
-                                // Mapping: 'isPaused' durumunu tersine çeviriyoruz
-                                isPlaying = !playerState.isPaused,
+
+                                // DÜZELTME BURADA:
+                                // Artık 'isPaused' yok, 'isPlaying' var.
+                                // Direkt state'den gelen değeri veriyoruz.
+                                isPlaying = playerState.isPlaying,
+
                                 onPlayPauseClick = {
                                     playerScreenModel.onIntent(PlayerIntent.ToggleMasterPlayPause)
                                 },
@@ -77,7 +79,6 @@ object MainScreen : AppScreen {
                                 contentColor = MaterialTheme.colorScheme.primary,
                             ) {
                                 TabNavigationItem(HomeTab)
-                                // Diğer tablar henüz hazır değilse yorum satırına alabilirsin
                                 // TabNavigationItem(TimerTab)
                                 // TabNavigationItem(AiTab)
                                 // TabNavigationItem(SavedTab)
@@ -87,7 +88,7 @@ object MainScreen : AppScreen {
                     }
                 ) { innerPadding ->
 
-                    // --- YAYLI ANİMASYON (Senin harika dokunuşun) ---
+                    // --- YAYLI ANİMASYON ---
                     val animatedBottomPadding by animateDpAsState(
                         targetValue = innerPadding.calculateBottomPadding(),
                         animationSpec = spring(
@@ -103,7 +104,6 @@ object MainScreen : AppScreen {
                             bottom = animatedBottomPadding
                         )
                     ) {
-                        // Voyager: O anki aktif tab'ı göster
                         CurrentTab()
                     }
                 }
@@ -111,7 +111,6 @@ object MainScreen : AppScreen {
         }
     }
 }
-//}
 
 @Composable
 private fun RowScope.TabNavigationItem(tab: Tab) {

@@ -115,7 +115,7 @@ kotlin {
 
             // Android Ses Motoru (ExoPlayer / Media3)
             implementation(libs.androidx.media3.exoplayer)
-            implementation(libs.androidx.media3.session)
+            implementation(libs.androidx.media.session.compat)
             implementation(libs.androidx.media3.common)
         }
     }

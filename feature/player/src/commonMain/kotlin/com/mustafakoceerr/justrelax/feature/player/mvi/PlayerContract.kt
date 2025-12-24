@@ -4,14 +4,11 @@ import com.mustafakoceerr.justrelax.core.model.Sound
 
 // 1. STATE
 data class PlayerState(
-    // UI'da ikonlarını göstereceğimiz aktif ses nesneleri
     val activeSounds: List<Sound> = emptyList(),
 
-    // Master Play/Pause durumu.
-    // (Not: AudioMixer'da 'isPaused' akışı olmadığı için bunu ViewModel'de yerel yöneteceğiz)
-    val isPaused: Boolean = false
+    // ARTIK YEREL DEĞİL, MIXER'DAN GELECEK
+    val isPlaying: Boolean = false
 ) {
-    // Helper: Player Bar görünmeli mi?
     val isVisible: Boolean
         get() = activeSounds.isNotEmpty()
 }

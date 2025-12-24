@@ -1,103 +1,124 @@
 package com.mustafakoceerr.justrelax.service
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
+
 import android.app.Service
-import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
-import androidx.core.app.NotificationCompat
-import com.mustafakoceerr.justrelax.R // App Resource'larına erişim
+import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.koin.android.ext.android.inject
 
-/**
- * Uygulamanın ses motorunu (AudioMixer) arka planda hayatta tutan Android Servisi.
- *
- * Görevleri:
- * 1. Foreground Service başlatarak Android'in uygulamayı öldürmesini engellemek.
- * 2. Notification göstermek.
- * 3. Uygulama kapatıldığında (Task kill) kaynakları temizlemek.
- */
 class SoundscapeService : Service() {
 
-    // Koin sayesinde :core:audio modülündeki implementation'ı alıyoruz.
-    // Service, Mixer'ın "Nasıl" çalıştığını bilmez, sadece "Durdur/Temizle" der.
     private val audioMixer: AudioMixer by inject()
+    private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    private lateinit var mediaSessionManager: MediaSessionManager
+    private lateinit var notificationManager: SoundscapeNotificationManager
+    private lateinit var keepAlivePlayer: KeepAlivePlayer
+    private lateinit var mediaController: MediaControllerCompat
+
+    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
-        createNotificationChannel()
-        // Servis başlar başlamaz Foreground moda geçmeli (Android 8+ kuralı)
-        startForeground(NOTIFICATION_ID, createNotification())
+        keepAlivePlayer = KeepAlivePlayer(this)
+        mediaSessionManager = MediaSessionManager(this, audioMixer)
+        notificationManager = SoundscapeNotificationManager(this, mediaSessionManager.getSessionToken())
+
+        keepAlivePlayer.play()
+
+        // 1. MediaSession Callback (Kilit ekranı vs. için)
+        mediaController = MediaControllerCompat(this, mediaSessionManager.getSessionToken())
+        mediaController.registerCallback(object : MediaControllerCompat.Callback() {
+            override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
+                // Burası genelde sistemden gelen değişiklikler içindir,
+                // ama asıl kaynağımız artık Mixer olacak.
+            }
+        })
+
+        // 2. MIXER'I DİNLE: Sesler bitti mi?
+        audioMixer.playingSoundIds
+            .onEach { ids ->
+                if (ids.isEmpty()) {
+                    stopForegroundService()
+                } else {
+                    keepAlivePlayer.play()
+                }
+            }
+            .launchIn(serviceScope)
+
+        // --- EKLENEN KISIM BAŞLANGIÇ ---
+        // 3. MIXER'I DİNLE: Play/Pause durumu değişti mi?
+        // Uygulama içinden (BottomBar) basılınca burası tetiklenir.
+        audioMixer.isPlaying
+            .onEach { isPlaying ->
+                // A. Bildirimi Güncelle
+                updateNotification(isPlaying)
+
+                // B. Kilit Ekranı / Sistem Durumunu Güncelle
+                mediaSessionManager.updateState(isPlaying)
+
+                // C. KeepAlive Yönetimi (Opsiyonel ama iyi olur)
+                if (isPlaying) keepAlivePlayer.play() else keepAlivePlayer.pause()
+            }
+            .launchIn(serviceScope)
+        // --- EKLENEN KISIM BİTİŞ ---
     }
 
-    // Bu servis "Started Service" tipindedir, "Bound Service" değil.
-    // UI ile iletişimi UseCase'ler ve Singleton Mixer üzerinden olduğu için Bind etmeye gerek yok.
-    override fun onBind(intent: Intent?): IBinder? = null
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // Eğer servis bir şekilde ölürse ve sistem tekrar başlatırsa,
-        // intent null gelebilir. Bu durumda tekrar başlatma (START_NOT_STICKY).
-        // Çünkü ses çalmak kullanıcı isteğiyle olmalı, otomatik başlamamalı.
-
         when (intent?.action) {
+            ACTION_PLAY -> {
+                audioMixer.resumeAll()
+                // Not: Buradan updateNotification çağırmaya gerek yok,
+                // çünkü yukarıdaki 'audioMixer.isPlaying' flow'u tetiklenecek ve o yapacak.
+            }
+            ACTION_PAUSE -> {
+                audioMixer.pauseAll()
+            }
             ACTION_STOP -> {
                 audioMixer.stopAll()
-                stopSelf() // Servisi ve Notification'ı öldür
+                stopForegroundService()
             }
-            // İleride buraya ACTION_PAUSE_ALL, ACTION_RESUME_ALL eklenebilir.
+        }
+
+        // Servis ilk başladığında (henüz flow tetiklenmemiş olabilir) bildirimi göster
+        if (intent?.action == null) {
+            updateNotification(isPlaying = true)
         }
 
         return START_NOT_STICKY
     }
 
+    private fun updateNotification(isPlaying: Boolean) {
+        val notification = notificationManager.getNotification(isPlaying)
+        // startForeground, servis çalışırken çağrılırsa sadece bildirimi günceller (titretmez).
+        startForeground(SoundscapeNotificationManager.NOTIFICATION_ID, notification)
+    }
+
+    private fun stopForegroundService() {
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+    }
+
     override fun onDestroy() {
-        // Servis ölürken (Kullanıcı kapattı veya sistem öldürdü)
-        // tüm sesleri durdur ve kaynakları serbest bırak.
-        audioMixer.release()
+        serviceScope.cancel()
+        keepAlivePlayer.release()
+        mediaSessionManager.release()
+        audioMixer.stopAll()
         super.onDestroy()
     }
 
-    // --- Notification Helper Methods ---
-
-    private fun createNotification(): Notification {
-        // Notification tıklandığında uygulamayı açmak için PendingIntent (Best Practice #1)
-        // Not: Burada MainActivity::class.java'ya ihtiyacımız var, o yüzden app modülündeyiz.
-        // val openAppIntent = Intent(this, MainActivity::class.java) ... (İleride eklenecek)
-
-        // Stop Action (Notification üzerindeki Durdur butonu)
-        // val stopIntent = Intent(this, SoundscapeService::class.java).apply { action = ACTION_STOP }
-        // val stopPendingIntent = PendingIntent.getService(...)
-
-        return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Just Relax")
-            .setContentText("Soundscape is playing...")
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // Geçici ikon
-            .setOngoing(true) // Kullanıcı eliyle silemesin (ancak butonla)
-            .setOnlyAlertOnce(true)
-            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            // .addAction(R.drawable.ic_stop, "Stop", stopPendingIntent) // Buton eklenecek
-            .build()
-    }
-
-    private fun createNotificationChannel() {
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            "Soundscape Playback",
-            NotificationManager.IMPORTANCE_LOW // Ses çıkarmasın, sadece görünsün
-        ).apply {
-            description = "Background audio playback controls"
-        }
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.createNotificationChannel(channel)
-    }
-
     companion object {
-        const val NOTIFICATION_ID = 101
-        const val CHANNEL_ID = "soundscape_channel"
+        const val ACTION_PLAY = "com.mustafakoceerr.justrelax.service.PLAY"
+        const val ACTION_PAUSE = "com.mustafakoceerr.justrelax.service.PAUSE"
         const val ACTION_STOP = "com.mustafakoceerr.justrelax.service.STOP"
     }
 }

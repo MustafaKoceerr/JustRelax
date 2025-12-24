@@ -17,7 +17,7 @@ data class SoundConfig(
     val url: String,        // Dosya yolu (Local path)
     val initialVolume: Float = 0.5f,     // Varsayılan ses seviyesi
     val fadeInDurationMs: Long = 800L,   // Başlarken 800ms fade-in
-    val fadeOutDurationMs: Long = 500L   // Dururken 500ms fade-out
+    val fadeOutDurationMs: Long = 250L   // Dururken 250ms fade-out
 )
 
 /**
@@ -31,6 +31,9 @@ interface AudioMixer {
      * UI bu akışı dinleyerek butonların durumunu (Play/Stop ikonu) günceller.
      */
     val playingSoundIds: Flow<Set<String>>
+
+    // YENİ: Genel oynatma durumu (Play/Pause ikonu için)
+    val isPlaying: Flow<Boolean>
 
     /**
      * Sesi başlatır.
