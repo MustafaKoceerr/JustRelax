@@ -1,6 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.mixer.mvi
 
 import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
+
 // 1. STATE
 data class MixerState(
     // "Create Mix" butonu aktif mi? (İşlem sırasında tekrar basılmasın diye)
@@ -43,5 +45,5 @@ sealed interface MixerIntent {
 // 3. EFFECT
 sealed interface MixerEffect {
     // Snackbar göster
-    data class ShowSnackbar(val message: String) : MixerEffect
+    data class ShowSnackbar(val message: UiText) : MixerEffect
 }

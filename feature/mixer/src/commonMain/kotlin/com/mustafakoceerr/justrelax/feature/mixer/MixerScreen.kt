@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
+import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.ui.components.SoundGridSection
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
@@ -44,29 +45,33 @@ data object MixerScreen : AppScreen {
     @Composable
     override fun Content() {
         val snackbarController = koinInject<GlobalSnackbarController>()
+
+        // ScreenModel entegrasyonu
         val mixerScreenModel = koinScreenModel<MixerScreenModel>()
         val mixerState by mixerScreenModel.state.collectAsState()
         val soundControllerState by mixerScreenModel.soundController.state.collectAsState()
 
+        // --- EFFECT HANDLING (UiText Çözümleme) ---
         LaunchedEffect(Unit) {
             mixerScreenModel.effect.collect { effect ->
                 when (effect) {
                     is MixerEffect.ShowSnackbar -> {
-                        snackbarController.showSnackbar(effect.message)
+                        // UiText -> String dönüşümü (suspend)
+                        val messageStr = effect.message.resolve()
+                        snackbarController.showSnackbar(messageStr)
                     }
                 }
             }
         }
 
-        // TODO: SaveMixDialog'u buraya ekle
-        /*
+        // --- DIALOG ---
         SaveMixDialog(
             isOpen = mixerState.isSaveDialogVisible,
             onDismiss = { mixerScreenModel.onIntent(MixerIntent.HideSaveDialog) },
             onConfirm = { name -> mixerScreenModel.onIntent(MixerIntent.SaveCurrentMix(name)) }
         )
-        */
 
+        // --- ANA UI ---
         Scaffold(
             containerColor = Color.Transparent,
             contentWindowInsets = WindowInsets(0.dp),
@@ -79,6 +84,7 @@ data object MixerScreen : AppScreen {
                     .fillMaxSize()
                     .padding(top = innerPadding.calculateTopPadding())
             ) {
+                // Ses Sayısı Seçici
                 MixCountSelector(
                     selectedCount = mixerState.selectedSoundCount,
                     onCountSelected = { count ->
@@ -87,6 +93,7 @@ data object MixerScreen : AppScreen {
                     modifier = Modifier.padding(vertical = 16.dp)
                 )
 
+                // Karıştır Butonu
                 Box(modifier = Modifier.padding(horizontal = 16.dp)) {
                     CreateMixButton(
                         onClick = { mixerScreenModel.onIntent(MixerIntent.GenerateMix) },
@@ -96,6 +103,7 @@ data object MixerScreen : AppScreen {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Ses Izgarası veya Boş Durum
                 if (mixerState.mixedSounds.isNotEmpty()) {
                     SoundGridSection(
                         sounds = mixerState.mixedSounds,
@@ -110,6 +118,7 @@ data object MixerScreen : AppScreen {
                         modifier = Modifier.weight(1f),
                         contentPadding = PaddingValues(16.dp),
                         footerContent = {
+                            // Kaydet Butonu (Listenin en altında)
                             item(span = { GridItemSpan(maxLineSpan) }) {
                                 Box(
                                     modifier = Modifier

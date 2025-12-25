@@ -2,12 +2,21 @@ package com.mustafakoceerr.justrelax.feature.mixer
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.mustafakoceerr.justrelax.core.common.AppError
+import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.controller.SoundController
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.savedmix.SaveCurrentMixUseCase
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerEffect
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerIntent
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerState
 import com.mustafakoceerr.justrelax.feature.mixer.usecase.GenerateRandomMixUseCase
+import justrelax.feature.mixer.generated.resources.Res
+import justrelax.feature.mixer.generated.resources.err_mix_save_empty_name
+import justrelax.feature.mixer.generated.resources.err_mix_save_no_sound
+import justrelax.feature.mixer.generated.resources.err_unknown
+import justrelax.feature.mixer.generated.resources.msg_mix_saved_success
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,9 +28,7 @@ class MixerScreenModel(
     // Mixer'a özel UseCase'ler
     private val generateRandomMixUseCase: GenerateRandomMixUseCase,
     private val setMixUseCase: SetMixUseCase,
-    // TODO: private val saveCurrentMixUseCase: SaveCurrentMixUseCase,
-
-    // Merkezi Ses Kontrolcüsü Fabrikası
+    private val saveCurrentMixUseCase: SaveCurrentMixUseCase, // YENİ: UseCase eklendi
     soundControllerFactory: SoundController.Factory
 ) : ScreenModel {
 
@@ -83,11 +90,41 @@ class MixerScreenModel(
         }
     }
     private fun saveMix(name: String) {
-        // TODO: SaveCurrentMixUseCase implementasyonu
         screenModelScope.launch {
-            _state.update { it.copy(isSaveDialogVisible = false) }
-            _effect.send(MixerEffect.ShowSnackbar("Save feature is not implemented yet."))
+            saveCurrentMixUseCase(name, soundController).collect { result ->
+                when (result) {
+                    is Resource.Loading -> { /* Loading... */ }
+
+                    is Resource.Success -> {
+                        _state.update { it.copy(isSaveDialogVisible = false) }
+
+                        sendEffect(
+                            MixerEffect.ShowSnackbar(
+                                // DÜZELTME BURADA:
+                                // XML'deki %1$s için 'name' değişkenini veriyoruz.
+                                UiText.Resource(
+                                    resId = Res.string.msg_mix_saved_success,
+                                    formatArgs = listOf(name)
+                                )
+                            )
+                        )
+                    }
+
+                    is Resource.Error -> {
+                        _state.update { it.copy(isSaveDialogVisible = false) }
+
+                        val errorText = when (result.error) {
+                            is AppError.SaveMix.EmptyName -> UiText.Resource(Res.string.err_mix_save_empty_name)
+                            is AppError.SaveMix.NoSoundsPlaying -> UiText.Resource(Res.string.err_mix_save_no_sound)
+                            else -> UiText.Resource(Res.string.err_unknown)
+                        }
+                        sendEffect(MixerEffect.ShowSnackbar(errorText))
+                    }
+                }
+            }
         }
     }
-
+    private fun sendEffect(effect: MixerEffect) {
+        screenModelScope.launch { _effect.send(effect) }
+    }
 }

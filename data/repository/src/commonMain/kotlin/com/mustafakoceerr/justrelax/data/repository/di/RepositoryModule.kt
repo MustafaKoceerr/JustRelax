@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.data.repository.di
 
 import com.mustafakoceerr.justrelax.core.domain.repository.appsetup.AppSetupRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMixRepository
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.DataSourceStateRepository
 import com.mustafakoceerr.justrelax.core.domain.repository.system.FileDownloadRepository
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
@@ -9,6 +10,7 @@ import com.mustafakoceerr.justrelax.core.domain.repository.settings.UserPreferen
 import com.mustafakoceerr.justrelax.data.repository.AppSetupRepositoryImpl
 import com.mustafakoceerr.justrelax.data.repository.DataSourceStateRepositoryImpl
 import com.mustafakoceerr.justrelax.data.repository.FileDownloadRepositoryImpl
+import com.mustafakoceerr.justrelax.data.repository.SavedMixRepositoryImpl
 import com.mustafakoceerr.justrelax.data.repository.SoundRepositoryImpl
 import com.mustafakoceerr.justrelax.data.repository.SoundSyncRepositoryImpl
 import com.mustafakoceerr.justrelax.data.repository.UserPreferencesRepositoryImpl
@@ -58,5 +60,9 @@ val repositoryModule = module {
     // HttpClient otomatik inject edilir.
     singleOf(::FileDownloadRepositoryImpl) {
         bind<FileDownloadRepository>()
+    }
+
+    singleOf(::SavedMixRepositoryImpl) {
+        bind<SavedMixRepository>()
     }
 }

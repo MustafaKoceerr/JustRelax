@@ -30,10 +30,10 @@ sealed class AppError(override val message: String, override val cause: Throwabl
         class InitializationError(message: String) : Player(message)
     }
 
-    // --- YENİ: Mix Kaydetme Hataları ---
     sealed class SaveMix(message: String) : AppError(message) {
-        class EmptyName : SaveMix("Mix name cannot be empty.")
-        class NameAlreadyExists : SaveMix("A mix with this name already exists.")
-        class NoSoundsPlaying : SaveMix("There are no sounds currently playing to save.")
+        // Artık 'object' ve constructor'ı burada dolduruyoruz.
+         object EmptyName : SaveMix("Mix name cannot be empty.")
+         object NameAlreadyExists : SaveMix("A mix with this name already exists.")
+         object NoSoundsPlaying : SaveMix("There are no sounds currently playing to save.")
     }
 }

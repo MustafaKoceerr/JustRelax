@@ -51,8 +51,6 @@ val domainModule = module {
     factoryOf(::GetAppLanguageUseCase)
     factoryOf(::SetAppLanguageUseCase)
 
-    factoryOf(::SyncSoundsIfNecessaryUseCase)
-
     factoryOf(::SyncSoundsUseCase)
     factoryOf(::DownloadInitialSoundsUseCase)
     factoryOf(::DownloadAllSoundsUseCase)

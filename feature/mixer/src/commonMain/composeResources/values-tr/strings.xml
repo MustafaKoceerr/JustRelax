@@ -9,4 +9,10 @@
     <string name="action_save_mix">Mix’i Kaydet</string>
     <string name="mixer_screen_title">Mixer</string>
     <string name="mixer_empty_state_message">Bir sayı seç ve karıştır!</string>
+
+
+    <string name="err_mix_save_empty_name">Lütfen bir isim gir</string>
+    <string name="err_mix_save_no_sound">Çalan ses yok</string>
+
+    <string name="err_unknown">Bir şeyler ters gitti</string>
 </resources>

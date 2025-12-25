@@ -9,7 +9,7 @@ import com.mustafakoceerr.justrelax.core.model.Sound as ModelSound
  * Sorumluluk: Veritabanı katmanından gelen Entity'leri Domain/Model katmanına çevirmek.
  * 'internal' olması, bu mapper'ın sadece bu modülün bir iç detayı olduğunu belirtir.
  */
-internal class DatabaseSoundMapper {
+ class DatabaseSoundMapper {
 
     /**
      * Tek bir veritabanı Sound nesnesini (DbSound) domain Sound modeline (ModelSound) dönüştürür.

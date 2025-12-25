@@ -12,4 +12,7 @@
     <string name="action_rename">Rename</string>
     <string name="action_share">Share</string>
     <string name="saved_screen_title">Saved Mixes</string>
+
+    <string name="msg_mix_deleted">Mix deleted</string>
+    <string name="action_undo">Undo</string>
 </resources>

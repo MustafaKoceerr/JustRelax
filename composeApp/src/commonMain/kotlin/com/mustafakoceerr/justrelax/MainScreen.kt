@@ -34,6 +34,7 @@ import com.mustafakoceerr.justrelax.feature.player.components.PlayerBottomBar
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerIntent
 import com.mustafakoceerr.justrelax.tabs.HomeTab
 import com.mustafakoceerr.justrelax.tabs.MixerTab
+import com.mustafakoceerr.justrelax.tabs.SavedTab
 import com.mustafakoceerr.justrelax.tabs.TimerTab
 import org.koin.compose.koinInject
 
@@ -84,7 +85,7 @@ object MainScreen : AppScreen {
                                  TabNavigationItem(TimerTab)
                                 // Todo: aç bunları
                                 // TabNavigationItem(AiTab)
-                                // TabNavigationItem(SavedTab)
+                                 TabNavigationItem(SavedTab)
                                  TabNavigationItem(MixerTab)
                             }
                         }

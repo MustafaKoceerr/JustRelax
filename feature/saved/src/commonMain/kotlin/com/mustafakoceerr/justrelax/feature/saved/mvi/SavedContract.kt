@@ -1,5 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.saved.mvi
 
+import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMix
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
+
 data class SavedMixUiModel(
     val id: Long,
     val title: String,
@@ -8,8 +11,6 @@ data class SavedMixUiModel(
     val domainModel: SavedMix
 )
 
-// State artık tertemiz. Sadece liste ve yükleniyor bilgisi var.
-// Hangi mix çalıyor, hangisi animasyon yapıyor bilgisi TUTULMAZ.
 data class SavedState(
     val isLoading: Boolean = true,
     val mixes: List<SavedMixUiModel> = emptyList()
@@ -25,5 +26,10 @@ sealed interface SavedIntent {
 
 sealed interface SavedEffect {
     data object NavigateToMixer : SavedEffect
-    data class ShowSnackbar(val message: String, val actionLabel: String?) : SavedEffect
-}
+
+    // String yerine UiText kullanıyoruz.
+    // ActionLabel genelde sabittir (UNDO/GERİ AL) ama onu da UiText yapabiliriz.
+    data class ShowDeleteSnackbar(
+        val message: UiText,
+        val actionLabel: UiText? = null
+    ) : SavedEffect}

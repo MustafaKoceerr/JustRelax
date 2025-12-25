@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.core.ui.util
 
 import androidx.compose.runtime.Composable
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
@@ -8,37 +9,39 @@ import org.jetbrains.compose.resources.stringResource
  * ViewModel'den UI'a metin taşımak için kullanılan sarmalayıcı.
  * ViewModel'in Context veya Composable fonksiyon bilmesine gerek kalmaz.
  */
+// Bu mühürlü arayüz sayesinde ViewModel, Context'e ihtiyaç duymadan mesaj taşıyabilir.
+sealed interface UiText {
+    // 1. Düz metin (Örn: API'den gelen dinamik hata mesajı)
+    data class DynamicString(val value: String) : UiText
 
-sealed interface UiText{
-    // 1. Dinamik String (Backend'den gelen hata mesajları vs. için - Nadir kullanılır)
-    data class DynamicString(val value: String): UiText
+    // 2. Resource ID (Örn: strings.xml içindeki çevrilebilir metin)
+    // formatArgs: "%s silindi" gibi dinamik alanlar için
+    data class Resource(
+        val resId: StringResource,
+        val formatArgs: List<Any> = emptyList()
+    ) : UiText
 
-    // 2. Resource String (Bizim kullanacağımız asıl yapı)
-    // args: String içinde parametre varsa (Örn: "%s kaydedildi") onları tutar.
-    class StringResource(
-        val resId: org.jetbrains.compose.resources.StringResource,
-        vararg val args: Any
-    ): UiText
-}
+    // UI tarafında bu fonksiyonu çağırıp String'e çevireceğiz
+    @Composable
+    fun asString(): String {
+        return when (this) {
+            is DynamicString -> value
+            is Resource -> stringResource(resId, *formatArgs.toTypedArray())
+        }
+    }
 
-/**
- * UI tarafında bu sınıfı gerçek String'e çeviren yardımcı fonksiyon.
- * Sadece Composable içinde çağrılabilir.
- */
-@Composable
-fun UiText.asString(): String{
-    return when(this){
-        is UiText.DynamicString -> value
-        is UiText.StringResource -> stringResource(resId, *args)    }
-}
-
-/**
- * YENİ EKLENEN: Coroutine (LaunchedEffect, ViewModel) içinde kullanım için.
- * Örn: Snackbar, Toast, Logging
- */
-suspend fun UiText.asStringSuspend(): String{
-    return when (this) {
-        is UiText.DynamicString -> value
-        is UiText.StringResource -> getString(resId, *args) // 'getString' suspend fonksiyondur
+    // LaunchedEffect veya ViewModel içinde (suspend) kullanmak için
+    suspend fun resolve(): String {
+        return when (this) {
+            is DynamicString -> value
+            is Resource -> {
+                // Eğer argüman yoksa düz getString çağır, varsa formatlı çağır.
+                if (formatArgs.isEmpty()) {
+                    getString(resId)
+                } else {
+                    getString(resId, *formatArgs.toTypedArray())
+                }
+            }
+        }
     }
 }

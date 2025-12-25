@@ -14,6 +14,7 @@ import com.mustafakoceerr.justrelax.feature.home.di.homeModule
 import com.mustafakoceerr.justrelax.feature.mixer.di.mixerModule
 import com.mustafakoceerr.justrelax.feature.onboarding.di.onboardingModule
 import com.mustafakoceerr.justrelax.feature.player.di.playerModule
+import com.mustafakoceerr.justrelax.feature.saved.di.savedModule
 import com.mustafakoceerr.justrelax.feature.settings.di.settingsModule
 import com.mustafakoceerr.justrelax.feature.splash.di.splashModule
 import com.mustafakoceerr.justrelax.feature.timer.di.timerModule
@@ -65,6 +66,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             splashModule,     // EKLENDİ
             timerModule,
             mixerModule,
+            savedModule,
             // mixerModule, aiModule... (İleride eklenecek)
         )
     }
