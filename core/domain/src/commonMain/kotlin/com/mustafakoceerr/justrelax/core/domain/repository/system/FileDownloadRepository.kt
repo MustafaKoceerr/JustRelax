@@ -13,11 +13,10 @@ Bu arayüzün değişmesi için tek sebep: İnternetten dosya çekme yöntemimiz
  * Sadece "Transfer" işini yapar.
  */
 interface FileDownloadRepository {
-
     /**
-     * Verilen URL'deki dosyayı, belirtilen yerel yola indirir.
-     * @param url: İndirilecek dosyanın adresi.
-     * @param destinationPath: Cihazda kaydedileceği tam yol.
+     * Dosyayı indirir ve diske yazar.
+     * @return Başarılıysa true, hata olursa false döner.
+     * Hata detayını loglar ama akışı bozmamak için basit boolean döner.
      */
-    fun downloadFile(url: String, destinationPath: String): Flow<DownloadStatus>
+    suspend fun downloadFile(url: String, destinationPath: String): Boolean
 }

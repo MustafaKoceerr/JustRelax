@@ -98,7 +98,7 @@ class OnboardingViewModel(
         downloadJob = downloadFlow.onEach { status ->
             when (status) {
                 is DownloadStatus.Progress -> {
-                    _state.update { it.copy(downloadProgress = status.progress) }
+                    _state.update { it.copy(downloadProgress = status.percentage) }
                 }
                 is DownloadStatus.Completed -> {
                     finishSetup()
