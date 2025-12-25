@@ -12,15 +12,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.core.ui.components.LoadingDots
+import justrelax.feature.onboarding.generated.resources.Res
+import justrelax.feature.onboarding.generated.resources.loading_config_message
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-/**
- * SRP NOTU: Bu bileşen, sadece "Yükleniyor" durumunu gösterir.
- * Ne yüklendiğini veya ne kadar süreceğini bilmez.
- */
 @Composable
 fun LoadingConfigView(
     modifier: Modifier = Modifier
@@ -28,25 +28,29 @@ fun LoadingConfigView(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(32.dp),
+            .padding(32.dp)
+            // Enterprise: UI Testlerinin bu ekranın açıldığını anlaması için etiket
+            .testTag("LoadingConfigView"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         // --- 1. ANİMASYON ---
-        // Uygulama genelinde kullandığımız zıplayan noktalar
+        // Marka kimliği: Kendi özel LoadingDots bileşenimiz
         LoadingDots(
             color = MaterialTheme.colorScheme.primary,
             dotSize = 12.dp,
             travelDistance = 8.dp
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(24.dp)) // 8dp grid sistemi (3x)
 
         // --- 2. MESAJ ---
+        // Localization: Metin kaynak dosyasına taşındı.
         Text(
-            text = "Kütüphane hazırlanıyor...",
+            text = stringResource(Res.string.loading_config_message),
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -55,9 +59,9 @@ fun LoadingConfigView(
 @Preview(showBackground = true)
 @Composable
 private fun LoadingConfigViewPreview() {
-    JustRelaxTheme {
-        Surface {
-            LoadingConfigView()
-        }
+    // JustRelaxTheme {
+    Surface {
+        LoadingConfigView()
     }
+    // }
 }

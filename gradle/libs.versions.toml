@@ -41,6 +41,9 @@ buildConfig = "6.0.6"
 datastore = "1.2.0"
 openai-kotlin = "4.0.1"
 
+# Mevcut sürümünü kontrol et, şu an stabil/yaygın olan RC sürümleridir
+compottie = "2.0.2"
+
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -129,6 +132,12 @@ androidx-datastore = { group = "androidx.datastore", name = "datastore", version
 # EKLENDİ - OpenAI Kotlin Kütüphanesi (BOM - Bill of Materials)
 openai-bom = { group = "com.aallam.openai", name = "openai-client-bom", version.ref = "openai-kotlin" }
 openai-client = { group = "com.aallam.openai", name = "openai-client" } # Versiyonu BOM'dan alacak
+
+# Lottie animations
+# Ana Lottie Motoru
+compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
+compottie-resources = { module = "io.github.alexzhirkevich:compottie-resources", version.ref = "compottie" }
+compottie-dot = { module = "io.github.alexzhirkevich:compottie-dot", version.ref = "compottie" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

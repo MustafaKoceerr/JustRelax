@@ -19,18 +19,23 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.feature.onboarding.components.DownloadOptionType
 import com.mustafakoceerr.justrelax.feature.onboarding.components.DownloadingView
 import com.mustafakoceerr.justrelax.feature.onboarding.components.LoadingConfigView
 import com.mustafakoceerr.justrelax.feature.onboarding.components.NoInternetView
 import com.mustafakoceerr.justrelax.feature.onboarding.components.OnboardingScreenContent
+import com.mustafakoceerr.justrelax.feature.onboarding.mvi.DownloadOption
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingEffect
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingIntent
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingScreenStatus
+import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingState
 import com.mustafakoceerr.justrelax.feature.onboarding.navigation.OnboardingNavigator
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
+// 1. ROUTE (Stateful): Veri ve Navigasyon Mantığı
 data object OnboardingScreen : AppScreen {
 
     @Composable
@@ -38,21 +43,16 @@ data object OnboardingScreen : AppScreen {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = koinScreenModel<OnboardingViewModel>()
         val state by viewModel.state.collectAsState()
-
-        // DIP: MainScreen'e gitmek için Interface kullanıyoruz
         val onboardingNavigator = koinInject<OnboardingNavigator>()
-
         val snackbarHostState = remember { SnackbarHostState() }
 
-        // --- EFFECT HANDLING ---
+        // Yan Etkiler (Navigasyon, Snackbar)
         LaunchedEffect(Unit) {
             viewModel.effect.collectLatest { effect ->
                 when (effect) {
                     is OnboardingEffect.NavigateToMainScreen -> {
-                        // Kurulum bitti, MainScreen'e geç ve geri dönüşü kapat
                         navigator.replaceAll(onboardingNavigator.toMain())
                     }
-
                     is OnboardingEffect.ShowError -> {
                         snackbarHostState.showSnackbar(effect.message)
                     }
@@ -60,70 +60,104 @@ data object OnboardingScreen : AppScreen {
             }
         }
 
-        JustRelaxBackground {
-            Scaffold(
-                containerColor = Color.Transparent,
-                snackbarHost = { SnackbarHost(snackbarHostState) }
-            ) { padding ->
+        // Saf UI bileşenini çağırıyoruz.
+        OnboardingUi(
+            state = state,
+            snackbarHostState = snackbarHostState,
+            onIntent = viewModel::processIntent
+        )
+    }
+}
 
-                val contentModifier = Modifier.padding(padding)
+// 2. UI (Stateless): Sadece Çizim Yapar, Test Edilebilir
+@Composable
+internal fun OnboardingUi(
+    state: OnboardingState,
+    snackbarHostState: SnackbarHostState,
+    onIntent: (OnboardingIntent) -> Unit
+) {
+    JustRelaxBackground {
+        Scaffold(
+            containerColor = Color.Transparent,
+            snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) }
+        ) { padding ->
+            val contentModifier = Modifier.padding(padding)
 
-                // --- STATE HANDLING ---
-                when (state.status) {
-                    // 1. Config Yükleniyor
-                    OnboardingScreenStatus.LOADING_CONFIG -> {
-                        LoadingConfigView(modifier = contentModifier)
-                    }
+            when (state.status) {
+                OnboardingScreenStatus.LOADING_CONFIG -> {
+                    LoadingConfigView(modifier = contentModifier)
+                }
+                OnboardingScreenStatus.NO_INTERNET -> {
+                    NoInternetView(
+                        onRetryClick = { onIntent(OnboardingIntent.RetryLoadingConfig) },
+                        modifier = contentModifier
+                    )
+                }
+                OnboardingScreenStatus.CHOOSING -> {
+                    var selectedOption by remember { mutableStateOf(DownloadOptionType.STARTER) }
 
-                    // 2. İnternet Yok
-                    OnboardingScreenStatus.NO_INTERNET -> {
-                        NoInternetView(
-                            onRetryClick = { viewModel.processIntent(OnboardingIntent.RetryLoadingConfig) },
-                            modifier = contentModifier
-                        )
-                    }
-
-                    // 3. Seçim Ekranı
-                    OnboardingScreenStatus.CHOOSING -> {
-                        // Geçici UI State (ViewModel'e gitmesine gerek yok)
-                        var selectedOption by remember { mutableStateOf(DownloadOptionType.STARTER) }
-
-                        OnboardingScreenContent(
-                            selectedOption = selectedOption,
-                            state = state, // MB ve Sayı verileri buradan okunur
-                            onOptionSelected = { selectedOption = it },
-                            onConfirmClick = {
-                                val intent = when (selectedOption) {
-                                    DownloadOptionType.STARTER -> OnboardingIntent.DownloadInitial
-                                    DownloadOptionType.FULL -> OnboardingIntent.DownloadAll
-                                }
-                                viewModel.processIntent(intent)
-                            },
-                            modifier = contentModifier
-                        )
-                    }
-
-                    // 4. İndirme Ekranı
-                    OnboardingScreenStatus.DOWNLOADING -> {
-                        DownloadingView(
-                            progress = state.downloadProgress,
-                            modifier = contentModifier
-                        )
-                    }
-
-                    // 5. Tamamlandı (Kısa süreliğine)
-                    OnboardingScreenStatus.COMPLETED -> {
-                        DownloadingView(progress = 1f, modifier = contentModifier)
-                    }
-
-                    // 6. Hata (Fallback)
-                    OnboardingScreenStatus.ERROR -> {
-                        // ViewModel hatayı Effect ile bildirip durumu CHOOSING yapacağı için
-                        // burası anlık bir geçiş olabilir. Güvenlik için Loading.
-                        LoadingConfigView(modifier = contentModifier)
-                    }
+                    OnboardingScreenContent(
+                        selectedOption = selectedOption,
+                        state = state,
+                        onOptionSelected = { selectedOption = it },
+                        onConfirmClick = {
+                            val intent = when (selectedOption) {
+                                DownloadOptionType.STARTER -> OnboardingIntent.DownloadInitial
+                                DownloadOptionType.FULL -> OnboardingIntent.DownloadAll
+                            }
+                            onIntent(intent)
+                        },
+                        modifier = contentModifier
+                    )
+                }
+                OnboardingScreenStatus.DOWNLOADING -> {
+                    DownloadingView(
+                        progress = state.downloadProgress,
+                        modifier = contentModifier
+                    )
+                }
+                OnboardingScreenStatus.COMPLETED -> {
+                    DownloadingView(progress = 1f, modifier = contentModifier)
+                }
+                OnboardingScreenStatus.ERROR -> {
+                    // Hata durumunda kullanıcıya tekrar deneme şansı vermek en iyi UX'tir.
+                    NoInternetView(
+                        onRetryClick = { onIntent(OnboardingIntent.RetryLoadingConfig) },
+                        modifier = contentModifier
+                    )
                 }
             }
         }
     }
+}
+
+// --- PREVIEW ---
+// Artık ViewModel olmadan ekranın farklı durumlarını görebiliriz.
+@Preview
+@Composable
+private fun OnboardingUiChoosingPreview() {
+    val previewState = OnboardingState(
+        status = OnboardingScreenStatus.CHOOSING,
+        initialOption = DownloadOption(totalSizeMb = 35f, soundCount = 12),
+        allOption = DownloadOption(totalSizeMb = 150f, soundCount = 50)
+    )
+    OnboardingUi(
+        state = previewState,
+        snackbarHostState = SnackbarHostState(),
+        onIntent = {}
+    )
+}
+
+@Preview
+@Composable
+private fun OnboardingUiDownloadingPreview() {
+    val previewState = OnboardingState(
+        status = OnboardingScreenStatus.DOWNLOADING,
+        downloadProgress = 0.7f
+    )
+    OnboardingUi(
+        state = previewState,
+        snackbarHostState = SnackbarHostState(),
+        onIntent = {}
+    )
 }

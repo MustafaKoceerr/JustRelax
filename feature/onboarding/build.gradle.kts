@@ -35,6 +35,13 @@ kotlin {
             implementation(libs.findLibrary("koin-compose").get())
             implementation(libs.findLibrary("koin-compose-viewmodel").get())
             implementation(libs.findLibrary("voyager-screenmodel").get())
-            implementation(libs.findLibrary("voyager-navigator").get())        }
+            implementation(libs.findLibrary("voyager-navigator").get())
+
+            // --- Compottie ---
+            implementation(libs.findLibrary("compottie").get())
+            implementation(libs.findLibrary("compottie-resources").get())
+            implementation(libs.findLibrary("compottie-dot").get())
+
+        }
     }
 }
