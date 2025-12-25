@@ -1,80 +1,47 @@
 package com.mustafakoceerr.justrelax.feature.ai.data.repository
 
+import com.aallam.openai.api.chat.ChatCompletionRequest
+import com.aallam.openai.api.chat.ChatMessage
+import com.aallam.openai.api.chat.ChatResponseFormat
+import com.aallam.openai.api.chat.ChatRole
+import com.aallam.openai.api.model.ModelId
+import com.aallam.openai.client.OpenAI
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.feature.ai.BuildConfig
 import com.mustafakoceerr.justrelax.feature.ai.domain.model.AiMixResponse
 import com.mustafakoceerr.justrelax.feature.ai.domain.repository.AiRepository
-import io.ktor.client.HttpClient
-import io.ktor.client.request.header
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
-import io.ktor.http.isSuccess
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-// --- OPENAI DTOs (Private - Sadece bu sınıf bilir) ---
-@Serializable
-private data class OpenAiRequest(
-    val model: String,
-    val messages: List<OpenAiMessage>,
-    @SerialName("response_format") val responseFormat: ResponseFormat = ResponseFormat()
-)
+// --- DEĞİŞİKLİK: HttpClient bağımlılığı kaldırıldı ---
+class OpenAiRepositoryImpl : AiRepository {
 
-@Serializable
-private data class OpenAiMessage(
-    val role: String, // "system" veya "user"
-    val content: String
-)
-
-@Serializable
-private data class ResponseFormat(
-    val type: String = "json_object" // JSON zorlaması için kritik
-)
-
-@Serializable
-private data class OpenAiResponse(
-    val choices: List<OpenAiChoice>
-)
-
-@Serializable
-private data class OpenAiChoice(
-    val message: OpenAiMessage
-)
-
-// --- IMPLEMENTATION ---
-class OpenAiRepositoryImpl(
-    private val client: HttpClient
-) : AiRepository {
-
-    private val apiKey = BuildConfig.OPENAI_API_KEY
+    // 1. OpenAI Client'ı kütüphaneden oluşturuluyor.
+    // API anahtarı ve diğer konfigürasyonlar burada merkezi olarak yönetilir.
+    private val openai = OpenAI(token = BuildConfig.OPENAI_API_KEY)
 
     private val modelName = "gpt-4o-mini"
-    private val endpoint = "https://api.openai.com/v1/chat/completions"
 
+    // 2. JSON parser'ı sadece AI'dan gelen içeriği domain modeline çevirmek için kullanacağız.
     private val json = Json {
         ignoreUnknownKeys = true
         isLenient = true
-        encodeDefaults = true
     }
+
+    // --- ÖNCEKİ DTO'LARIN TAMAMI SİLİNDİ ---
+    // OpenAiRequest, OpenAiMessage, OpenAiResponse gibi sınıflara artık gerek yok.
+    // Kütüphane kendi modellerini sağlıyor.
 
     override suspend fun generateMix(
         prompt: String,
         availableSoundIds: List<String>
     ): Resource<AiMixResponse> {
         return try {
-            // 1. Validasyon
             if (availableSoundIds.isEmpty()) {
                 return Resource.Error(AppError.Ai.NoDownloadedSounds)
             }
 
-            // 2. System Prompt (Kişilik ve Kurallar)
             val inventoryString = availableSoundIds.joinToString(", ")
-
             val systemInstruction = """
                 You are an expert ambient sound DJ.
                 
@@ -84,7 +51,7 @@ class OpenAiRepositoryImpl(
                 ### RULES:
                 1. Create a mix using ONLY the provided IDs based on the user's request.
                 2. If the user request is unrelated, create a generic "Focus Mix".
-                3. Use 2-5 sounds. Volume range: 0.1 to 1.0.
+                3. Use 2-7 sounds. Volume range: 0.1 to 1.0.
                 4. Output STRICT JSON format:
                 {
                   "mix_name": "Name",
@@ -93,45 +60,34 @@ class OpenAiRepositoryImpl(
                 }
             """.trimIndent()
 
-            // 3. İsteği Hazırla
-            val requestBody = OpenAiRequest(
-                model = modelName,
+            // 3. Kütüphanenin kendi modelleriyle istek oluşturuluyor.
+            // Bu, DTO'ları manuel yönetmekten çok daha güvenli ve basittir.
+            val chatRequest = ChatCompletionRequest(
+                model = ModelId(modelName),
                 messages = listOf(
-                    OpenAiMessage(role = "system", content = systemInstruction),
-                    OpenAiMessage(role = "user", content = prompt)
-                )
+                    ChatMessage(role = ChatRole.System, content = systemInstruction),
+                    ChatMessage(role = ChatRole.User, content = prompt)
+                ),
+                // JSON formatında cevap vermeye zorluyoruz.
+                responseFormat = ChatResponseFormat.JsonObject
             )
 
-            // 4. API Çağrısı
-            val response = client.post(endpoint) {
-                header("Authorization", "Bearer $apiKey")
-                contentType(ContentType.Application.Json)
-                setBody(requestBody)
-            }
+            // 4. API çağrısı tek bir fonksiyon ile yapılıyor.
+            val response = openai.chatCompletion(chatRequest)
 
-            val responseBody = response.bodyAsText()
-
-            if (!response.status.isSuccess()) {
-                val errorDetails = "${response.status} - $responseBody"
-                println("OpenAI Error: $errorDetails")
-
-                // DÜZELTME: Parametreyi içeri veriyoruz
-                return Resource.Error(AppError.Ai.ApiError(errorDetails))
-            }
-
-            // 5. Response Parsing
-            val openAiResponse = json.decodeFromString<OpenAiResponse>(responseBody)
-            val contentJson = openAiResponse.choices.firstOrNull()?.message?.content
+            // 5. Cevap doğrudan type-safe bir nesne olarak geliyor.
+            val contentJson = response.choices.firstOrNull()?.message?.content
                 ?: return Resource.Error(AppError.Ai.EmptyResponse)
 
-            // 6. Domain Modeline Çevir
+            // 6. Gelen JSON string'ini kendi domain modelimize parse ediyoruz.
             val aiMixResponse = json.decodeFromString<AiMixResponse>(contentJson)
             Resource.Success(aiMixResponse)
 
         } catch (e: Exception) {
             e.printStackTrace()
-            // JSON parse hatası veya ağ hatası
-            Resource.Error(AppError.Unknown(e))
+            // Kütüphane kendi hata sınıflarını fırlatır (örn: OpenAIAPIException),
+            // ama genel bir Exception yakalamak şimdilik yeterli.
+            Resource.Error(AppError.Ai.ApiError(e.message ?: "Unknown AI Error"))
         }
     }
 }

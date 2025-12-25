@@ -71,6 +71,7 @@ data object AiScreen : Screen {
                         mixDescription = state.generatedMixDescription,
                         soundsInMix = state.generatedSounds,
                         soundControllerState = soundControllerState,
+                        isLoading = state.isLoading,
                         onSoundClick = { sound ->
                             aiScreenModel.soundController.toggleSound(sound)
                         },

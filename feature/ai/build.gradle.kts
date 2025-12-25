@@ -1,4 +1,5 @@
 import java.util.Properties
+
 plugins {
     id("justrelax.kmp.library")
     id("justrelax.android.library.compose")
@@ -48,10 +49,11 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.uiToolingPreview)
 
+            // --- OpenAI (BOM + Client) ---
+            implementation(project.dependencies.platform(libs.findLibrary("openai-bom").get()))
+            implementation(libs.findLibrary("openai-client").get())
+
             // --- Network & Serialization (Gemini API için) ---
-            implementation(libs.findLibrary("ktor-client-core").get())
-            implementation(libs.findLibrary("ktor-client-content-negotiation").get())
-            implementation(libs.findLibrary("ktor-serialization-kotlinx-json").get())
             implementation(libs.findLibrary("kotlinx-serialization-json").get())
 
             // --- Koin & Voyager ---
@@ -59,6 +61,12 @@ kotlin {
             implementation(libs.findLibrary("koin-compose").get())
             implementation(libs.findLibrary("koin-compose-viewmodel").get())
             implementation(libs.findLibrary("voyager-screenmodel").get())
+        }
+        androidMain.dependencies {
+            implementation(libs.findLibrary("ktor-client-okhttp").get())
+        }
+        iosMain.dependencies {
+            implementation(libs.findLibrary("ktor-client-darwin").get())
         }
     }
 }

@@ -33,6 +33,7 @@ fun AiResultScreen(
     mixDescription: String,
     soundsInMix: List<Sound>,
     soundControllerState: SoundControllerState,
+    isLoading: Boolean, // EKLENDİ: Yüklenme durumunu dışarıdan alıyoruz
     onSoundClick: (Sound) -> Unit,
     onVolumeChange: (String, Float) -> Unit,
     onIntent: (AiIntent) -> Unit,
@@ -100,25 +101,35 @@ fun AiResultScreen(
         ) {
             OutlinedButton(
                 onClick = { onIntent(AiIntent.RegenerateMix) },
+                enabled = !isLoading, // DEĞİŞTİ: isLoading değilse aktif
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Rounded.Refresh,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(
-                        Res.string.ai_action_regenerate
+                // DEĞİŞTİ: Yüklenme durumuna göre ikon veya progress göster
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp
                     )
-                )
+                } else {
+                    Icon(
+                        imageVector = Icons.Rounded.Refresh,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(
+                            Res.string.ai_action_regenerate
+                        )
+                    )
+                }
             }
 
             Button(
                 onClick = { onIntent(AiIntent.ShowSaveDialog) },
+                enabled = !isLoading, // DEĞİŞTİ: isLoading değilse aktif
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp)
