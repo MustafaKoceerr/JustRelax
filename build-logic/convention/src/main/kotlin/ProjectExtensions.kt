@@ -29,8 +29,8 @@ internal fun Project.configureAndroid(
 
         compileOptions {
             // Java 11 (Senin composeApp ayarın)
-            sourceCompatibility = org.gradle.api.JavaVersion.VERSION_11
-            targetCompatibility = org.gradle.api.JavaVersion.VERSION_11
+            sourceCompatibility = org.gradle.api.JavaVersion.VERSION_17
+            targetCompatibility = org.gradle.api.JavaVersion.VERSION_17
         }
     }
 }

@@ -9,4 +9,10 @@
     <string name="action_save_mix">Guardar Mix</string>
     <string name="mixer_screen_title">Mezclador</string>
     <string name="mixer_empty_state_message">Elige un número y empieza a mezclar.</string>
+
+
+    <string name="err_mix_save_empty_name">Por favor, introduce un nombre</string>
+    <string name="err_mix_save_no_sound">No hay sonidos reproduciéndose</string>
+
+    <string name="err_unknown">Algo salió mal</string>
 </resources>

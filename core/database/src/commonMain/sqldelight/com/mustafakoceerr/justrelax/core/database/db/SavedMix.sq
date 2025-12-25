@@ -1,0 +1,36 @@
+-- Mix Başlıkları
+CREATE TABLE saved_mixes (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+
+-- Mix İçeriği (İlişki Tablosu)
+CREATE TABLE saved_mix_sounds (
+    mix_id INTEGER NOT NULL,
+    sound_id TEXT NOT NULL,
+    volume REAL NOT NULL,
+    FOREIGN KEY (mix_id) REFERENCES saved_mixes(id) ON DELETE CASCADE,
+    FOREIGN KEY (sound_id) REFERENCES sound(id) ON DELETE CASCADE
+);
+
+-- Ekleme Sorguları
+insertMix:
+INSERT INTO saved_mixes(name, created_at) VALUES (?, ?);
+
+insertMixSound:
+INSERT INTO saved_mix_sounds(mix_id, sound_id, volume) VALUES (?, ?, ?);
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+-- Okuma Sorguları (Hepsini ayrı ayrı çekip Kotlin'de birleştireceğiz)
+selectAllMixes:
+SELECT * FROM saved_mixes ORDER BY created_at DESC;
+
+selectAllRelations:
+SELECT * FROM saved_mix_sounds;
+
+-- Silme Sorgusu
+deleteMixById:
+DELETE FROM saved_mixes WHERE id = ?;

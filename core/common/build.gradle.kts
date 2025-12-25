@@ -1,8 +1,5 @@
 plugins {
-    // Yazdığımız Convention Plugin'i kullanıyoruz!
-    // Bu plugin senin attığın o uzun android/kotlin ayarlarını otomatik yapıyor.
-    id("justrelax.kmp.library")
-    alias(libs.plugins.kotlin.serialization)
+    id("justrelax.kmp.library") // Senin yazdığın convention plugin
 }
 
 android {
@@ -12,10 +9,10 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // Common sadece bunları kullanıyor
+            // Flow ve Coroutine işlemleri için gerekli
             implementation(libs.findLibrary("kotlinx-coroutines-core").get())
-            implementation(libs.findLibrary("kotlinx-datetime").get())
-            implementation(libs.findLibrary("kotlinx-serialization-json").get())
+            // Koin (DI)
+            implementation(libs.findLibrary("koin-core").get())
         }
     }
 }

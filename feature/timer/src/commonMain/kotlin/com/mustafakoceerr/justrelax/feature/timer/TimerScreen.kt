@@ -18,110 +18,90 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.koin.koinScreenModel
-import com.mustafakoceerr.justrelax.core.audio.TimerStatus
+import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerLandscapeLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerPortraitLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerSetupScreen
+import com.mustafakoceerr.justrelax.feature.timer.mvi.TimerIntent
 
 data object TimerScreen : AppScreen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        val viewModel = koinScreenModel<TimerViewModel>()
-        val state by viewModel.state.collectAsState()
+        // ViewModel'i (ScreenModel) alıyoruz
+        val screenModel = koinScreenModel<TimerScreenModel>()
+        val state by screenModel.state.collectAsState()
 
         Scaffold(
             containerColor = Color.Transparent,
         ) {
-                // --- ZOOM GEÇİŞ ANİMASYONU ---
-                AnimatedContent(
-                    targetState = state.status == TimerStatus.IDLE,
-                    transitionSpec = {
-                        val motionDuration = 800 // Hareket süresi (Uzun)
-                        val fadeOutDuration = 200 // Kaybolma süresi (KISA! - Sır burada)
-                        val fadeInDuration = 600 // Belirme süresi
+            // --- SENİN MUHTEŞEM ANİMASYONUN ---
+            AnimatedContent(
+                targetState = state.status == TimerStatus.IDLE,
+                transitionSpec = {
+                    val motionDuration = 800
+                    val fadeOutDuration = 200
+                    val fadeInDuration = 600
 
-                        if (targetState) {
-                            // --- GERİ DÖNÜŞ (İPTAL) ---
-                            // Setup (Giren) kameranın arkasından düşüyor.
-                            // Running (Çıkan) içeri çöküyor.
-
-                            (fadeIn(animationSpec = tween(fadeInDuration, delayMillis = 100)) +
-                                    scaleIn(initialScale = 1.5f, animationSpec = tween(motionDuration)))
-                                .togetherWith(
-                                    fadeOut(animationSpec = tween(fadeOutDuration)) + // HIZLI KAYBOL
-                                            scaleOut(targetScale = 0.5f, animationSpec = tween(motionDuration))
-                                )
-                                .using(SizeTransform(clip = false))
-                                .apply { targetContentZIndex = 1f } // Giren üstte
-
-                        } else {
-                            // --- İLERİ GİTME (BAŞLAT) ---
-                            // Running (Giren) uzaktan geliyor.
-                            // Setup (Çıkan) kameraya çarpıp geçiyor.
-
-                            (fadeIn(animationSpec = tween(fadeInDuration, delayMillis = 100)) +
-                                    scaleIn(initialScale = 0.5f, animationSpec = tween(motionDuration)))
-                                .togetherWith(
-                                    fadeOut(animationSpec = tween(fadeOutDuration)) + // HIZLI KAYBOL
-                                            scaleOut(targetScale = 1.5f, animationSpec = tween(motionDuration))
-                                )
-                                .using(SizeTransform(clip = false))
-                                .apply { targetContentZIndex = -1f } // Giren altta
+                    if (targetState) { // Geri Dönüş (Cancel)
+                        (fadeIn(animationSpec = tween(fadeInDuration, delayMillis = 100)) +
+                                scaleIn(initialScale = 1.5f, animationSpec = tween(motionDuration)))
+                            .togetherWith(
+                                fadeOut(animationSpec = tween(fadeOutDuration)) +
+                                        scaleOut(targetScale = 0.5f, animationSpec = tween(motionDuration))
+                            )
+                            .using(SizeTransform(clip = false))
+                            .apply { targetContentZIndex = 1f }
+                    } else { // İleri Gitme (Start)
+                        (fadeIn(animationSpec = tween(fadeInDuration, delayMillis = 100)) +
+                                scaleIn(initialScale = 0.5f, animationSpec = tween(motionDuration)))
+                            .togetherWith(
+                                fadeOut(animationSpec = tween(fadeOutDuration)) +
+                                        scaleOut(targetScale = 1.5f, animationSpec = tween(motionDuration))
+                            )
+                            .using(SizeTransform(clip = false))
+                            .apply { targetContentZIndex = -1f }
+                    }
+                },
+                label = "TimerTransition"
+            ) { isIdle ->
+                if (isIdle) {
+                    // --- KURULUM EKRANI ---
+                    // Kullanıcı süreyi seçip "Başlat" dediğinde Intent gönderiyoruz.
+                    TimerSetupScreen(
+                        onStartClick = { totalSeconds ->
+                            screenModel.onIntent(TimerIntent.Start(totalSeconds))
                         }
-                    },
-                    label = "TimerTransition"
-                ) { isIdle ->
-                    if (isIdle) {
-                        // SETUP EKRANI
-                        TimerSetupScreen(
-                            onStartClick = { totalSeconds ->
-                                viewModel.processIntent(TimerIntent.StartTimer(totalSeconds))
-                            }
-                        )
-                    } else {
-                        // RUNNING EKRANI
-                        BoxWithConstraints(
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            val isLandscape = maxWidth > maxHeight
+                    )
+                } else {
+                    // --- SAYAÇ EKRANI ---
+                    BoxWithConstraints(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        val isLandscape = maxWidth > maxHeight
+                        val onToggle: () -> Unit = { screenModel.onIntent(TimerIntent.Toggle) }
+                        val onCancel: () -> Unit = { screenModel.onIntent(TimerIntent.Cancel) }
 
-                            if (isLandscape) {
-                                TimerLandscapeLayout(
-                                    totalTimeSeconds = state.totalTimeSeconds,
-                                    timeLeftSeconds = state.timeLeftSeconds,
-                                    status = state.status,
-                                    onToggleClick = {
-                                        if (state.status == TimerStatus.RUNNING) {
-                                            viewModel.processIntent(TimerIntent.PauseTimer)
-                                        } else {
-                                            viewModel.processIntent(TimerIntent.ResumeTimer)
-                                        }
-                                    },
-                                    onCancelClick = {
-                                        viewModel.processIntent(TimerIntent.CancelTimer)
-                                    }
-                                )
-                            } else {
-                                TimerPortraitLayout(
-                                    totalTimeSeconds = state.totalTimeSeconds,
-                                    timeLeftSeconds = state.timeLeftSeconds,
-                                    status = state.status,
-                                    onToggleClick = {
-                                        if (state.status == TimerStatus.RUNNING) {
-                                            viewModel.processIntent(TimerIntent.PauseTimer)
-                                        } else {
-                                            viewModel.processIntent(TimerIntent.ResumeTimer)
-                                        }
-                                    },
-                                    onCancelClick = {
-                                        viewModel.processIntent(TimerIntent.CancelTimer)
-                                    }
-                                )
-                            }
+                        if (isLandscape) {
+                            TimerLandscapeLayout(
+                                totalTimeSeconds = state.totalSeconds,
+                                timeLeftSeconds = state.remainingSeconds,
+                                status = state.status,
+                                onToggleClick = onToggle,
+                                onCancelClick = onCancel
+                            )
+                        } else {
+                            TimerPortraitLayout(
+                                totalTimeSeconds = state.totalSeconds,
+                                timeLeftSeconds = state.remainingSeconds,
+                                status = state.status,
+                                onToggleClick = onToggle, // ViewModel artık Toggle mantığını biliyor
+                                onCancelClick = onCancel
+                            )
                         }
                     }
+                }
             }
         }
     }

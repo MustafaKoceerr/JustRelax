@@ -8,6 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+/**
+ * SoundCard'a özel Slider bileşeni.
+ * İnce ayar (height 24.dp) yapıldığı için ayrı bir fonksiyon olarak burada durması doğrudur.
+ */
 @Composable
 fun VolumeSlider(
     value: Float,
@@ -17,9 +21,8 @@ fun VolumeSlider(
     Slider(
         value = value,
         onValueChange = onValueChange,
-        valueRange = 0f..1f,
-        modifier = modifier
-            .height(24.dp),
+        valueRange = 0f..1f, // AudioMixer 0.0-1.0 arası çalışır
+        modifier = modifier.height(24.dp),
         colors = SliderDefaults.colors(
             thumbColor = MaterialTheme.colorScheme.primary,
             activeTrackColor = MaterialTheme.colorScheme.primary,

@@ -104,7 +104,8 @@ fun HomeTabRow(
 @Composable
 fun SoundCardGrid(
     sounds: List<Sound>,
-    activeSounds: Map<String, Float>,
+    playingSoundIds: Set<String>,
+    soundVolumes: Map<String, Float>,
     downloadingSoundIds: Set<String>,
     onSoundClick: (Sound) -> Unit,
     onVolumeChange: (String, Float) -> Unit,
@@ -120,8 +121,8 @@ fun SoundCardGrid(
             items = sounds,
             key = { it.id }
         ) { sound ->
-            val isPlaying = activeSounds.containsKey(sound.id)
-            val volume = activeSounds[sound.id] ?: 0.5f
+            val isPlaying = playingSoundIds.contains(sound.id)
+            val volume = soundVolumes[sound.id] ?: 0.5f
             val isDownloading = downloadingSoundIds.contains(sound.id)
 
             SoundCard(
@@ -138,10 +139,3 @@ fun SoundCardGrid(
     }
 }
 
-@Composable
-@Preview
-fun SliderPreview() {
-    JustRelaxTheme {
-        VolumeSlider(0.3f, {})
-    }
-}

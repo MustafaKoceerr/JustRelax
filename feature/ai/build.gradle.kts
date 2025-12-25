@@ -1,4 +1,5 @@
 import java.util.Properties
+
 plugins {
     id("justrelax.kmp.library")
     id("justrelax.android.library.compose")
@@ -25,8 +26,8 @@ buildConfig {
     // Key'i tanımlıyoruz
     buildConfigField(
         "String", // Tipi
-        "GEMINI_API_KEY", // Kodda kullanacağımız isim
-        "\"${localProperties.getProperty("GEMINI_API_KEY")}\"" // Değer (Tırnaklara dikkat)
+        "OPENAI_API_KEY", // Kodda kullanacağımız isim
+        "\"${localProperties.getProperty("OPENAI_API_KEY")}\"" // Değer (Tırnaklara dikkat)
     )
 }
 kotlin {
@@ -37,7 +38,6 @@ kotlin {
             implementation(project(":core:model"))
             implementation(project(":core:ui"))
             implementation(project(":core:navigation"))
-            implementation(project(":core:data")) // SoundRepository erişimi için
             implementation(project(":core:audio")) // Mix'i çalmak için (SoundManager)
 
             // --- Compose ---
@@ -49,10 +49,11 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.uiToolingPreview)
 
+            // --- OpenAI (BOM + Client) ---
+            implementation(project.dependencies.platform(libs.findLibrary("openai-bom").get()))
+            implementation(libs.findLibrary("openai-client").get())
+
             // --- Network & Serialization (Gemini API için) ---
-            implementation(libs.findLibrary("ktor-client-core").get())
-            implementation(libs.findLibrary("ktor-client-content-negotiation").get())
-            implementation(libs.findLibrary("ktor-serialization-kotlinx-json").get())
             implementation(libs.findLibrary("kotlinx-serialization-json").get())
 
             // --- Koin & Voyager ---
@@ -60,6 +61,12 @@ kotlin {
             implementation(libs.findLibrary("koin-compose").get())
             implementation(libs.findLibrary("koin-compose-viewmodel").get())
             implementation(libs.findLibrary("voyager-screenmodel").get())
+        }
+        androidMain.dependencies {
+            implementation(libs.findLibrary("ktor-client-okhttp").get())
+        }
+        iosMain.dependencies {
+            implementation(libs.findLibrary("ktor-client-darwin").get())
         }
     }
 }

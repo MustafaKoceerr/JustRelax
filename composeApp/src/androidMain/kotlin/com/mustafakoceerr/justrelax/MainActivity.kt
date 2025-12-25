@@ -5,65 +5,53 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
-import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
-import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import androidx.core.view.WindowCompat
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
-    // İzin sonucunu dinleyen launcher
+    // KENDİ ÖZEL VIEWMODEL'İNİ KULLANIYOR
+    private val activityViewModel: MainActivityViewModel by viewModel()
+
+    // İzin sonucunu dinleyen launcher (Callback)
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            // İzin verildi. Süper.
-            // AMA BURADA SERVİS BAŞLATMIYORUZ!
-            // Servis, kullanıcı "Play" tuşuna basınca AndroidSoundPlayer içinde başlayacak.
+            // İzin verildi. Bildirimler sorunsuz çalışacak.
         } else {
-            // İzin reddedildi.
-            // Sorun değil, uygulama çalışmaya devam eder.
-            // Sadece bildirim çubuğunda player görünmez (Android 13+ kuralı).
+            // İzin reddedildi. Servis çalışır ama bildirim paneli görünmez.
+            // İstersen burada kullanıcıya bir dialog gösterip ikna edebilirsin.
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        // Dil ve Tema ayarlarını yükle
-        val settingsRepository: SettingsRepository by inject()
-        val languageSwitcher: LanguageSwitcher by inject()
+        // Edge-to-Edge deneyimi için
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        lifecycleScope.launch {
-            val savedLanguage = settingsRepository.getLanguage().first()
-            languageSwitcher.updateLanguage(savedLanguage)
-        }
-
-        // SADECE İzin Kontrolü Yap (Servis başlatma yok)
-        checkNotificationPermission()
+        // Uygulama açılır açılmaz izin kontrolü yap ve gerekirse iste
+        askNotificationPermission()
 
         setContent {
             JustRelaxApp()
         }
     }
 
-    private fun checkNotificationPermission() {
-        // Android 13 (Tiramisu) ve üzeri için bildirim izni zorunlu
+    private fun askNotificationPermission() {
+        // Bu izin sadece Android 13 (API 33 - TIRAMISU) ve üzeri için gereklidir.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                // İzin yoksa iste
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            val permission = Manifest.permission.POST_NOTIFICATIONS
+
+            // Zaten izin verilmiş mi kontrol et
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                // Verilmemişse iste
+                requestPermissionLauncher.launch(permission)
             }
         }
     }
-
 }

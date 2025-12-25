@@ -19,7 +19,6 @@ kotlin {
             // KRİTİK: Ses motoruna erişim
             implementation(project(":core:audio"))
             // Ayrıca indirme işlemi için Data katmanına erişim gerekebilir (SoundDownloader)
-            implementation(project(":core:data"))
 
             // --- Compose ---
             implementation(compose.runtime)
@@ -35,8 +34,8 @@ kotlin {
             implementation(libs.findLibrary("koin-compose").get())
             implementation(libs.findLibrary("koin-compose-viewmodel").get())
 
-            // --- Voyager (ScreenModel için) ---
-            implementation(libs.findLibrary("voyager-screenmodel").get())
+            // Coil image
+            implementation(libs.findLibrary("coil-compose").get())
         }
     }
 }

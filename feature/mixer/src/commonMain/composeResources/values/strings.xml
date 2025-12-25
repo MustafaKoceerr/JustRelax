@@ -9,4 +9,9 @@
     <string name="action_save_mix">Save Mix</string>
     <string name="mixer_screen_title">Mixer</string>
     <string name="mixer_empty_state_message">Choose a number and start mixing!</string>
+
+    <string name="err_mix_save_empty_name">Please enter a name</string>
+    <string name="err_mix_save_no_sound">No sounds are playing</string>
+
+    <string name="err_unknown">Something went wrong</string>
 </resources>

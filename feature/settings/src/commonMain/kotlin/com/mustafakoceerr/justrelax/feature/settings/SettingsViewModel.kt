@@ -1,125 +1,123 @@
 package com.mustafakoceerr.justrelax.feature.settings
 
-import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.mustafakoceerr.justrelax.core.audio.domain.usecase.DownloadAllMissingSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppLanguageUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppThemeUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SetAppLanguageUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SetAppThemeUseCase
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
-import com.mustafakoceerr.justrelax.core.model.BatchDownloadStatus
-import com.mustafakoceerr.justrelax.core.ui.localization.LanguageSwitcher
-import com.mustafakoceerr.justrelax.core.ui.util.SystemLauncher
+import com.mustafakoceerr.justrelax.core.domain.system.LanguageSwitcher
+import com.mustafakoceerr.justrelax.core.domain.system.SystemLauncher
+import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsEffect
+import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsIntent
+import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val settingsRepository: SettingsRepository,
-    private val soundRepository: SoundRepository,
-    private val downloadAllUseCase: DownloadAllMissingSoundsUseCase,
-    private val languageSwitcher: LanguageSwitcher,
-    private val systemLauncher: SystemLauncher
+    // Domain UseCases (Business Logic)
+    private val getAppThemeUseCase: GetAppThemeUseCase,
+    private val setAppThemeUseCase: SetAppThemeUseCase,
+    private val getAppLanguageUseCase: GetAppLanguageUseCase,
+    private val setAppLanguageUseCase: SetAppLanguageUseCase,
+    // Platform Helpers (Infrastructure)
+    private val systemLauncher: SystemLauncher,
+    private val languageSwitcher: LanguageSwitcher
 ) : ScreenModel {
+    // Single Source of Truth
+    private val _state = MutableStateFlow(SettingsState())
+    val state: StateFlow<SettingsState> = _state.asStateFlow()
 
-    // --- Data States (Kalıcı veriler) ---
-    val currentTheme = settingsRepository.getTheme()
-        .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), AppTheme.SYSTEM)
-
-    val currentLanguage = settingsRepository.getLanguage()
-        .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), AppLanguage.ENGLISH)
-
-    // --- Download States (Anlık durumlar) ---
-    private val _isDownloading = MutableStateFlow(false)
-    val isDownloading = _isDownloading.asStateFlow()
-
-    private val _downloadProgress = MutableStateFlow(0f)
-    val downloadProgress = _downloadProgress.asStateFlow()
-
-    val isLibraryComplete = soundRepository.getSounds()
-        .combine(_isDownloading) { sounds, isDownloading ->
-            !isDownloading && sounds.isNotEmpty() && sounds.all { it.isDownloaded }
-        }
-        .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), false)
-
-    // --- UI States (Geçici durumlar) ---
-    private val _isLanguageSheetOpen = MutableStateFlow(false)
-    val isLanguageSheetOpen = _isLanguageSheetOpen.asStateFlow()
-
-    // --- Effect Channel (Tek seferlik olaylar) ---
-    private val _effect = Channel<SettingsEffect>()
+    private val _effect = Channel<SettingsEffect>(capacity = Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
+    init {
+        // ViewModel oluşur oluşmaz Domain'den güncel verileri dinlemeye başla
+        observeTheme()
+        observeLanguage()
+    }
 
-    // --- ACTIONS (UI'dan gelen eylemler) ---
+    // MVI Entry Point
+    fun processIntent(intent: SettingsIntent) {
+        when (intent) {
+            is SettingsIntent.ChangeTheme -> changeTheme(intent.theme)
 
-    fun onDownloadAllClicked() {
-        if (_isDownloading.value) return // Zaten iniyorsa tekrar başlatma
+            is SettingsIntent.OpenLanguageSelection -> openLanguageSheet()
+            is SettingsIntent.CloseLanguageSelection -> closeLanguageSheet()
+            is SettingsIntent.ChangeLanguage -> changeLanguage(intent.language)
 
-        // Todo: metinleri UiText'e taşı ayrıca global snackbar kullan.
-        screenModelScope.launch {
-//            _effect.send(SettingsEffect.ShowSnackbar("İndirme başlıyor..."))
-            downloadAllUseCase().collect { status ->
-                when (status) {
-                    is BatchDownloadStatus.Progress -> {
-                        _isDownloading.value = true
-                        _downloadProgress.value = status.percentage
-                    }
-                    BatchDownloadStatus.Completed -> {
-                        _isDownloading.value = false
-                        _downloadProgress.value = 1f
-//                        _effect.send(SettingsEffect.ShowSnackbar("Tüm sesler indirildi!"))
-                    }
-                    is BatchDownloadStatus.Error -> {
-                        _isDownloading.value = false
-//                        _effect.send(SettingsEffect.ShowSnackbar("Hata: İndirme başarısız oldu."))
-                    }
-                }
+            is SettingsIntent.RateApp -> systemLauncher.openStorePage()
+            is SettingsIntent.SendFeedback -> sendFeedback()
+            is SettingsIntent.OpenPrivacyPolicy -> systemLauncher.openUrl("https://justrelax.app/privacy") // Sabit URL config'den gelebilir
+
+            is SettingsIntent.DownloadAllLibrary -> {
+                // TODO: DownloadAllMissingSoundsUseCase implemente edildiğinde burası dolacak.
+                // Şimdilik boş bırakıyoruz (YAGNI prensibi: İhtiyacın olmayan kodu yazma).
             }
         }
     }
 
-    fun onLanguageTileClicked() {
+    private fun observeTheme() {
+        screenModelScope.launch {
+            getAppThemeUseCase().collectLatest { theme ->
+                _state.update { it.copy(currentTheme = theme) }
+            }
+        }
+    }
+
+    private fun observeLanguage() {
+        screenModelScope.launch {
+            getAppLanguageUseCase().collectLatest { language ->
+                _state.update { it.copy(currentLanguage = language) }
+            }
+        }
+    }
+
+    private fun changeTheme(theme: AppTheme) {
+        screenModelScope.launch {
+            setAppThemeUseCase(theme)
+        }
+    }
+
+    private fun openLanguageSheet() {
         if (languageSwitcher.supportsInAppSwitching) {
-            _isLanguageSheetOpen.value = true
+            _state.update { it.copy(isLanguageSheetOpen = true) }
         } else {
-            languageSwitcher.openSystemSettings()
+            // iOS gibi desteklemeyen platformlarda direkt ayarlara yönlendir
+            systemLauncher.openAppLanguageSettings()
         }
     }
 
-    fun onLanguageSelected(language: AppLanguage) {
+    private fun closeLanguageSheet() {
+        _state.update { it.copy(isLanguageSheetOpen = false) }
+    }
+
+    private fun changeLanguage(language: AppLanguage) {
         screenModelScope.launch {
-            settingsRepository.saveLanguage(language)
+            // 1. Kalıcı hafızaya (DataStore) kaydet
+            setAppLanguageUseCase(language)
+
+            // 2. Platform dilini güncelle (Android için recreate tetikler)
             languageSwitcher.updateLanguage(language)
-            dismissLanguageSheet()
+
+            // 3. Sheet'i kapat
+            closeLanguageSheet()
         }
     }
 
-    fun dismissLanguageSheet() {
-        _isLanguageSheetOpen.value = false
-    }
-
-    fun updateTheme(theme: AppTheme) {
-        screenModelScope.launch {
-            settingsRepository.saveTheme(theme)
-        }
-    }
-
-    fun sendFeedback(supportEmail: String, subject: String, body: String) {
-        systemLauncher.sendFeedbackEmail(supportEmail, subject, body)
-    }
-
-    fun rateApp() {
-        systemLauncher.openStorePage()
-    }
-
-    fun openPrivacyPolicy(url: String) {
-        systemLauncher.openUrl(url)
+    private fun sendFeedback() {
+        systemLauncher.sendFeedbackEmail(
+            to = "support@justrelax.app",
+            subject = "Just Relax Feedback",
+            body = ""
+        )
     }
 }

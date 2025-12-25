@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class AppTheme {
-    SYSTEM, LIGHT, DARK
+    SYSTEM, // Cihaz ayarını takip et
+    LIGHT,  // Açık tema
+    DARK    // Koyu tema
 }
-

@@ -15,7 +15,6 @@ kotlin {
             implementation(project(":core:common"))
             implementation(project(":core:model"))
             implementation(project(":core:audio"))
-            implementation(project(":core:data")) // SettingsRepository için
             implementation(project(":core:ui"))   // Theme, LanguageSwitcher için
             implementation(project(":core:navigation")) // AppScreen için
 

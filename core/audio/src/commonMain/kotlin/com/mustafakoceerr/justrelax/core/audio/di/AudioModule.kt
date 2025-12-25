@@ -1,50 +1,38 @@
 package com.mustafakoceerr.justrelax.core.audio.di
 
-import com.mustafakoceerr.justrelax.core.audio.SoundManager
-import com.mustafakoceerr.justrelax.core.audio.TimerManager
-import com.mustafakoceerr.justrelax.core.audio.controller.SoundListController
-import com.mustafakoceerr.justrelax.core.audio.domain.usecase.DownloadAllMissingSoundsUseCase
-import com.mustafakoceerr.justrelax.core.audio.domain.usecase.GetActiveSoundsUseCase
-import com.mustafakoceerr.justrelax.core.audio.domain.usecase.ToggleSoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.manager.SoundController
+import com.mustafakoceerr.justrelax.core.audio.controller.SoundControllerImpl
+import com.mustafakoceerr.justrelax.core.audio.timer.TimerManagerImpl
+import com.mustafakoceerr.justrelax.core.domain.controller.SoundController
+import com.mustafakoceerr.justrelax.core.domain.timer.TimerManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import org.koin.core.module.Module
-import org.koin.dsl.bind
 import org.koin.dsl.module
 
-// 1. Platforma özel tanımları bekliyoruz (SoundPlayer buradan gelecek)
-expect val platformAudioModule: Module
+internal expect val platformAudioCoreModule: Module
 
-val audioModule = module {
-    includes(platformAudioModule)
+val audioCoreModule = module {
 
-    // SoundManager (Service ve UI bunu kullanır)
-    single { SoundManager(get()) } bind SoundController::class
-
-    // Timer
-    single { TimerManager(get()) }
-
-    // UseCase (ViewModel bunu kullanır)
-    factory {
-        ToggleSoundUseCase(
-            soundManager = get(),
-            soundDownloader = get()
+    includes(platformAudioCoreModule)
+    single<TimerManager> {
+        TimerManagerImpl(
+            audioMixer = get(),
+            dispatchers = get(),
+            // Application Scope sağlamak için genelde global bir scope verilir
+            // veya SupervisorJob() + Dispatchers.Main içeren bir scope create edilir.
+            appScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         )
     }
 
-    // EKSİK OLAN PARÇA BURASI
-    factory {
-        DownloadAllMissingSoundsUseCase(
-            repository = get(),
-            soundDownloader = get()
+    // SoundController.Factory'yi tekil (singleton) olarak tanımlıyoruz.
+// ViewModel'ler bu fabrikayı inject edip kendi controller'larını oluşturacaklar.
+    single<SoundController.Factory> {
+        SoundControllerImpl.Factory(
+            getPlayingSoundsUseCase = get(),
+            playSoundUseCase = get(),
+            stopSoundUseCase = get(),
+            adjustVolumeUseCase = get()
         )
     }
-
-    factory {
-        GetActiveSoundsUseCase(
-            get()
-        )
-    }
-
-    single { SoundListController.Factory(soundManager = get()) }
-
 }

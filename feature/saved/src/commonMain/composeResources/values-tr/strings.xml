@@ -12,4 +12,7 @@
     <string name="action_rename">Yeniden Adlandır</string>
     <string name="action_share">Paylaş</string>
     <string name="saved_screen_title">Kayıtlı Mixler</string>
+
+    <string name="msg_mix_deleted">Mix silindi</string>
+    <string name="action_undo">Geri al</string>
 </resources>

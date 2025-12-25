@@ -18,4 +18,13 @@
     <string name="ai_action_edit">Edit</string>
     <string name="ai_action_regenerate">Regenerate</string>
     <string name="action_save">Save</string>
+
+    <!-- Success Messages -->
+    <string name="msg_mix_saved_success">Mix '%1$s' was saved successfully!</string>
+
+    <!-- Error Messages -->
+    <string name="err_ai_no_sounds">No downloaded sounds found. The AI needs sounds to create a mix.</string>
+    <string name="err_ai_empty_response">The AI returned an empty or invalid response. Please try again.</string>
+    <string name="err_unknown">An unexpected error occurred. Please try again later.</string>
+
 </resources>

@@ -22,14 +22,23 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
 
+            implementation(libs.findLibrary("koin-core").get())
+
             // İkonlar (SoundCategory ve Tab'lar için kullanıyorsun)
             implementation(compose.materialIconsExtended)
 
             // Coil (Eğer ortak UI bileşenlerinde resim yüklüyorsan)
             implementation(libs.findLibrary("coil-compose").get())
 
-            implementation(libs.findLibrary("koin-core").get())
+            // Coil Temel
+            implementation(libs.findLibrary("coil-compose").get())
 
+            // 1. Ktor ile internetten resim çekmek için
+            implementation(libs.findLibrary("coil-network").get())
+            // 2. SVG formatını desteklemek için
+            implementation(libs.findLibrary("coil-svg").get())
+            // 3. Ktor Motoru (Coil arka planda Ktor kullanacağı için lazım olabilir)
+            implementation(libs.findLibrary("ktor-client-core").get())
         }
 
         androidMain.dependencies {
@@ -39,10 +48,6 @@ kotlin {
             // Context ve Activity işlemleri için
             implementation(libs.findLibrary("androidx-activity-compose").get())
             implementation(libs.findLibrary("koin-android").get())
-        }
-
-        iosMain.dependencies {
-            // iOS tarafında UIKit vb. zaten default geliyor
         }
     }
 }

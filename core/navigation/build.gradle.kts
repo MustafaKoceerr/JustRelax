@@ -15,10 +15,6 @@ kotlin {
             api(libs.findLibrary("voyager-transitions").get())
             api(libs.findLibrary("voyager-koin").get())
             api(libs.findLibrary("voyager-tab-navigator").get())
-
-            // Coroutines (AppNavigator için)
-            implementation(libs.findLibrary("kotlinx-coroutines-core").get())
-            implementation(libs.findLibrary("koin-core").get())
         }
     }
 }

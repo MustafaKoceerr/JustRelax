@@ -1,36 +1,31 @@
 package com.mustafakoceerr.justrelax.feature.saved.usecase
 
-import com.mustafakoceerr.justrelax.core.common.util.formatEpoch
-import com.mustafakoceerr.justrelax.core.domain.repository.SavedMixRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMixRepository
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-// import com.mustafakoceerr.justrelax.core.common.util.TimeUtils.formatDate (Varsa)
+import kotlinx.coroutines.flow.map
 
+/**
+ * Sorumluluk (SRP):
+ * Veritabanındaki kaydedilmiş mix'leri dinlemek ve bunları UI'ın anlayacağı
+ * bir modele (SavedMixUiModel) dönüştürmek.
+ */
 class ObserveSavedMixesUseCase(
-    private val savedMixRepository: SavedMixRepository,
-    private val soundRepository: SoundRepository
+    private val savedMixRepository: SavedMixRepository
 ) {
     operator fun invoke(): Flow<List<SavedMixUiModel>> {
-        return combine(
-            savedMixRepository.getAllMixes(),
-            soundRepository.getSounds()
-        ) { savedMixes, allSounds ->
-            savedMixes.map { domainMix ->
-                val icons = domainMix.sounds.mapNotNull { savedSound ->
-                    allSounds.find { it.id == savedSound.id }?.iconUrl
+        return savedMixRepository.getSavedMixes()
+            .map { domainMixes ->
+                // Domain modelini (SavedMix) -> UI modeline (SavedMixUiModel) çevir
+                domainMixes.map { domainMix ->
+                    SavedMixUiModel(
+                        id = domainMix.id,
+                        title = domainMix.name,
+                        date = domainMix.createdAt, // Tarih formatlama burada yapılabilir
+                        icons = domainMix.sounds.keys.map { it.iconUrl },
+                        domainModel = domainMix // Orijinal modeli de saklıyoruz (Play/Delete için)
+                    )
                 }
-
-                // 2. Logic: UI Modelini oluştur
-                SavedMixUiModel(
-                    id = domainMix.id,
-                    title = domainMix.name,
-                    date = formatEpoch(domainMix.dateEpoch), // Tarih formatlama burada
-                    icons = icons,
-                    domainModel = domainMix
-                )
             }
-        }
     }
 }

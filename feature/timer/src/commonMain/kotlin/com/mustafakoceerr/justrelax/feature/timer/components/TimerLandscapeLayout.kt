@@ -29,8 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mustafakoceerr.justrelax.core.audio.TimerStatus
-import com.mustafakoceerr.justrelax.core.common.util.formatTime
+import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
 import com.mustafakoceerr.justrelax.feature.timer.util.calculateEndTime
 import com.mustafakoceerr.justrelax.feature.timer.util.formatDurationVerbose
 import justrelax.feature.timer.generated.resources.Res
@@ -38,7 +37,7 @@ import justrelax.feature.timer.generated.resources.timer_action_delete
 import justrelax.feature.timer.generated.resources.timer_action_pause
 import justrelax.feature.timer.generated.resources.timer_action_resume
 import org.jetbrains.compose.resources.stringResource
-
+import com.mustafakoceerr.justrelax.feature.timer.util.formatTime
 @Composable
 fun TimerTextDisplay(
     totalTimeSeconds: Long,

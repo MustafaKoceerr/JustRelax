@@ -1,30 +1,40 @@
 package com.mustafakoceerr.justrelax.feature.home
 
+
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.mustafakoceerr.justrelax.core.audio.SoundManager
-import com.mustafakoceerr.justrelax.core.audio.domain.usecase.ToggleSoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.repository.SoundRepository
-import com.mustafakoceerr.justrelax.core.model.BatchDownloadStatus
+import com.mustafakoceerr.justrelax.core.common.AppError
+import com.mustafakoceerr.justrelax.core.common.Resource
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.AdjustVolumeUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.CheckMaxActiveSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetPlayingSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.StopSoundUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.GetSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSoundUseCase
+import com.mustafakoceerr.justrelax.core.model.DownloadStatus
+import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeEffect
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeIntent
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeState
-import com.mustafakoceerr.justrelax.feature.home.usecase.HomeBannerUseCases
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-// Todo: Ses açma kapatma ve ses yüksekliğini ayarlama işlerini SoundListController'a verebilirsin.
 class HomeScreenModel(
-    private val soundRepository: SoundRepository,
-    private val soundManager: SoundManager,
-    private val toggleSoundUseCase: ToggleSoundUseCase,
-    private val bannerUseCases: HomeBannerUseCases
+    private val getSoundsUseCase: GetSoundsUseCase,
+    private val downloadSoundUseCase: DownloadSoundUseCase,
+    private val playSoundUseCase: PlaySoundUseCase,
+    private val stopSoundUseCase: StopSoundUseCase,
+    private val adjustVolumeUseCase: AdjustVolumeUseCase,
+    private val getPlayingSoundsUseCase: GetPlayingSoundsUseCase,
+    private val checkMaxActiveSoundsUseCase: CheckMaxActiveSoundsUseCase
 ) : ScreenModel {
 
     private val _state = MutableStateFlow(HomeState())
@@ -34,124 +44,112 @@ class HomeScreenModel(
     val effect = _effect.receiveAsFlow()
 
     init {
-        // 1. Veritabanından sesleri dinle
         observeSounds()
-        // 2. SoundManager'dan çalan sesleri dinle
-        observeActiveSounds()
-    }
-
-    private fun observeSounds() {
-        screenModelScope.launch {
-            soundRepository.getSounds().collectLatest { sounds ->
-                // Banner kontrolü (Yeni veri geldiğinde tekrar kontrol et)
-                val shouldShow = bannerUseCases.shouldShow(sounds)
-
-                _state.update {
-                    it.copy(
-                        allSounds = sounds,
-                        showDownloadBanner = shouldShow && !it.isDownloadingAll, // İndiriliyorsa gösterme
-                        isLoading = false
-                    )
-                }
-            }
-        }
-    }
-
-    private fun observeActiveSounds() {
-        screenModelScope.launch {
-            soundManager.state.collectLatest { mixerState ->
-                _state.update { currentState ->
-                    // MixerState -> Map<Id, Volume> dönüşümü
-                    val activeMap = mixerState.activeSounds.mapValues { it.value.targetVolume }
-                    currentState.copy(activeSounds = activeMap)
-                }
-            }
-        }
+        observePlayingState()
     }
 
     fun processIntent(intent: HomeIntent) {
         when (intent) {
-            is HomeIntent.SelectCategory -> {
-                _state.update { it.copy(selectedCategory = intent.category) }
-            }
-
-            is HomeIntent.ToggleSound -> toggleSound(intent)
-
-            is HomeIntent.ChangeVolume -> {
-                soundManager.onVolumeChange(intent.soundId, intent.volume)
-            }
-
-            HomeIntent.DownloadAllMissing -> downloadAllMissing()
-
-            HomeIntent.DismissBanner -> dismissBanner()
-
-            HomeIntent.SettingsClicked -> {
-                screenModelScope.launch { _effect.send(HomeEffect.NavigateToSettings) }
-            }
+            is HomeIntent.SelectCategory -> selectCategory(intent.category)
+            is HomeIntent.ToggleSound -> toggleSound(intent.sound)
+            is HomeIntent.ChangeVolume -> changeVolume(intent.soundId, intent.volume)
+            HomeIntent.SettingsClicked -> sendEffect(HomeEffect.NavigateToSettings)
         }
     }
 
-    private fun toggleSound(intent: HomeIntent.ToggleSound) {
-        screenModelScope.launch {
-            val isDownloading = _state.value.downloadingSoundIds.contains(intent.sound.id)
+    private fun observeSounds() {
+        getSoundsUseCase()
+            .onEach { sounds ->
+                _state.update {
+                    it.copy(
+                        allSounds = sounds,
+                        filteredSounds = sounds.filter { s -> s.categoryId == it.selectedCategory.id },
+                        isLoading = false
+                    )
+                }
+            }
+            .launchIn(screenModelScope)
+    }
 
-            toggleSoundUseCase(intent.sound, isDownloading).collect { result ->
-                when (result) {
-                    is ToggleSoundUseCase.Result.Downloading -> {
-                        _state.update {
-                            val newSet = if (result.isDownloading) {
-                                it.downloadingSoundIds + intent.sound.id
-                            } else {
-                                it.downloadingSoundIds - intent.sound.id
-                            }
-                            it.copy(downloadingSoundIds = newSet)
-                        }
-                    }
-                    is ToggleSoundUseCase.Result.Error -> {
-                        _effect.send(HomeEffect.ShowMessage(result.message))
-                    }
-                    else -> {} // Toggled ve Ignored durumlarında UI zaten güncellenir
+    private fun observePlayingState() {
+        getPlayingSoundsUseCase()
+            .onEach { playingIds ->
+                _state.update { it.copy(playingSoundIds = playingIds) }
+            }
+            .launchIn(screenModelScope)
+    }
+
+    private fun selectCategory(category: com.mustafakoceerr.justrelax.core.model.SoundCategory) {
+        _state.update {
+            it.copy(
+                selectedCategory = category,
+                filteredSounds = it.allSounds.filter { s -> s.categoryId == category.id }
+            )
+        }
+    }
+
+    private fun toggleSound(sound: Sound) {
+        screenModelScope.launch {
+            val isPlaying = _state.value.playingSoundIds.contains(sound.id)
+
+            if (isPlaying) {
+                stopSoundUseCase(sound.id)
+            } else {
+                if (checkMaxActiveSoundsUseCase()) {
+                    val limit = checkMaxActiveSoundsUseCase.getLimit()
+                    sendEffect(HomeEffect.ShowError(AppError.Player.LimitExceeded(limit)))
+                    return@launch
+                }
+
+                if (sound.isDownloaded) {
+                    playSound(sound.id)
+                } else {
+                    downloadAndPlaySound(sound.id)
                 }
             }
         }
     }
 
-    private fun downloadAllMissing() {
+    private fun downloadAndPlaySound(soundId: String) {
         screenModelScope.launch {
-            bannerUseCases.downloadAllMissingSounds().collect { status ->
+            _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds + soundId) }
+
+            downloadSoundUseCase(soundId).collect { status ->
                 when (status) {
-                    is BatchDownloadStatus.Progress -> {
-                        _state.update {
-                            it.copy(
-                                isDownloadingAll = true,
-                                totalDownloadProgress = status.percentage
-                            )
-                        }
+                    is DownloadStatus.Completed -> {
+                        // İndirme bitti, loading'den düş
+                        _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - soundId) }
+                        // ŞİMDİ ÇALMAK GÜVENLİ
+                        playSound(soundId)
                     }
-                    BatchDownloadStatus.Completed -> {
-                        _state.update {
-                            it.copy(
-                                isDownloadingAll = false,
-                                showDownloadBanner = false // İşlem bitti, kapat
-                            )
-                        }
-                        bannerUseCases.dismiss() // Bir daha sorma (Tarih güncelle)
-                        // todo UiText'e geçir.
-//                        _effect.send(HomeEffect.ShowMessage("Tüm sesler indirildi!"))
+                    is DownloadStatus.Error -> {
+                        _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - soundId) }
+                        sendEffect(HomeEffect.ShowMessage(status.message))
                     }
-                    is BatchDownloadStatus.Error -> {
-                        _state.update { it.copy(isDownloadingAll = false) }
-                        _effect.send(HomeEffect.ShowMessage(status.message))
-                    }
+                    else -> {} // Progress vs.
                 }
             }
         }
     }
 
-    private fun dismissBanner() {
-        screenModelScope.launch {
-            bannerUseCases.dismiss()
-            _state.update { it.copy(showDownloadBanner = false) }
+    private suspend fun playSound(soundId: String) {
+        val currentVolume = _state.value.soundVolumes[soundId] ?: 0.5f
+        val result = playSoundUseCase(soundId, volume = currentVolume)
+
+        if (result is Resource.Error) {
+            sendEffect(HomeEffect.ShowError(result.error))
         }
+    }
+
+    private fun changeVolume(soundId: String, volume: Float) {
+        _state.update {
+            val newVolumes = it.soundVolumes.toMutableMap().apply { put(soundId, volume) }
+            it.copy(soundVolumes = newVolumes)
+        }
+        adjustVolumeUseCase(soundId, volume)
+    }
+
+    private fun sendEffect(effect: HomeEffect) {
+        screenModelScope.launch { _effect.send(effect) }
     }
 }

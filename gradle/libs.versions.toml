@@ -35,11 +35,11 @@ junit = "4.13.2"
 runner = "1.5.2"
 core = "1.5.0"
 coreVersion = "1.17.0"
-okio ="3.16.2"
+okio = "3.16.2"
 coil3 = "3.3.0" # Veya en güncel stabil sürüm
-
 buildConfig = "6.0.6"
-
+datastore = "1.2.0"
+openai-kotlin = "4.0.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -77,13 +77,10 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 
 # Kotlinx Serialization
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-
-# Multiplatform Settings (Basit Veri Saklama)
-multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatform-settings" }
-multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatform-settings" }
 
 # SQLDelight (Veritabanı)
 sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight" }
@@ -99,10 +96,10 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 # Extended icons
 core = { group = "androidx.core", name = "core", version.ref = "coreVersion" }
 
-# Media3
+# Media3 & Media legacy
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
-androidx-media3-session   = { module = "androidx.media3:media3-session", version.ref = "media3" }
-androidx-media3-common    = { module = "androidx.media3:media3-common", version.ref = "media3" }
+androidx-media3-common = { module = "androidx.media3:media3-common", version.ref = "media3" }
+androidx-media-session-compat = { module = "androidx.media:media", version.ref = "androidx-media" }
 
 # Okio ( Path belirleme)
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
@@ -111,7 +108,6 @@ okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil3" }
 coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil3" }
-
 
 # --- Build Logic Dependencies (Plugin geliştirmek için gerekli artifactler) ---
 # Android Gradle Plugin (Kod erişimi için)
@@ -126,7 +122,14 @@ compose-gradlePlugin = { module = "org.jetbrains.compose:compose-gradle-plugin",
 # Compose Compiler Gradle Plugin
 composeCompiler-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
-androidx-media-session-compat = { module = "androidx.media:media", version.ref = "androidx-media" }
+# datastore
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
+
+# EKLENDİ - OpenAI Kotlin Kütüphanesi (BOM - Bill of Materials)
+openai-bom = { group = "com.aallam.openai", name = "openai-client-bom", version.ref = "openai-kotlin" }
+openai-client = { group = "com.aallam.openai", name = "openai-client" } # Versiyonu BOM'dan alacak
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }

@@ -1,69 +1,52 @@
 package com.mustafakoceerr.justrelax
+
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.FadeTransition
-import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
-import coil3.network.ktor3.KtorNetworkFetcherFactory
-import coil3.request.crossfade
-import coil3.svg.SvgDecoder
-import com.mustafakoceerr.justrelax.core.navigation.AppNavigator
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import org.koin.compose.koinInject
-import coil3.disk.DiskCache
-import com.mustafakoceerr.justrelax.core.domain.manager.StoragePathProvider
-import com.mustafakoceerr.justrelax.core.domain.repository.SettingsRepository
 import com.mustafakoceerr.justrelax.core.model.AppTheme
+import com.mustafakoceerr.justrelax.core.ui.compositionlocal.LocalLanguageCode
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.core.ui.util.getAsyncImageLoader
+import com.mustafakoceerr.justrelax.feature.splash.SplashScreen
+import org.koin.compose.koinInject
 
 @Composable
 fun JustRelaxApp() {
-    // 1. Coil Setup (Resim Yükleyici)
-    val storageProvider: StoragePathProvider = koinInject()
+// 1. Coil Setup (Aynen kalıyor)
     setSingletonImageLoaderFactory { context ->
-        ImageLoader.Builder(context)
-            .components {
-                add(KtorNetworkFetcherFactory())
-                add(SvgDecoder.Factory())
-            }
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(storageProvider.getCacheDir().resolve("icon_cache"))
-                    .maxSizeBytes(50L * 1024 * 1024)
-                    .build()
-            }
-            .crossfade(true)
-            .build()
+        getAsyncImageLoader(context)
     }
 
-    // 2. Tema Ayarları
-    val settingsRepository: SettingsRepository = koinInject()
-    val currentTheme by settingsRepository.getTheme().collectAsState(initial = AppTheme.SYSTEM)
+// 2. ViewModel ve Tema Yönetimi (BURASI DEĞİŞTİ)
+    // Root seviyesinde olduğumuz için koinInject kullanıyoruz.
+    val mainViewModel = koinInject<MainViewModel>()
+    val currentTheme by mainViewModel.currentTheme.collectAsState()
+    val currentLanguage by mainViewModel.currentLanguage.collectAsState() // <-- DİLİ DE DİNLE
 
-    val useDarkTheme = when (currentTheme) {
-        AppTheme.SYSTEM -> isSystemInDarkTheme()
+    val isDarkTheme = when (currentTheme) {
+        AppTheme.SYSTEM -> isSystemInDarkTheme() // Compose Multiplatform fonksiyonu
         AppTheme.LIGHT -> false
         AppTheme.DARK -> true
     }
 
     // 3. UI Başlatma
-    JustRelaxTheme(darkTheme = useDarkTheme) {
-        val appNavigator: AppNavigator = koinInject()
+    // Temayı burada sarmalıyoruz. Artık Android/iOS fark etmeksizin çalışır.
+    JustRelaxTheme(darkTheme = isDarkTheme) {
 
-        // Voyager Navigator - Başlangıç: MainScreen
-        Navigator(screen = MainScreen) { navigator ->
-            // AppNavigator (ViewModel'den gelen emirler) ile Voyager'ı bağlıyoruz
-            LaunchedEffect(navigator) {
-                appNavigator.navigationEvents
-                    .onEach { event -> event(navigator) }
-                    .launchIn(this)
+        CompositionLocalProvider(
+            LocalLanguageCode provides currentLanguage.code
+        ) {
+            Navigator(
+                screen = SplashScreen,
+                key = currentLanguage.code
+            ) { navigator ->
+                FadeTransition(navigator)
             }
-            FadeTransition(navigator)
         }
     }
 }

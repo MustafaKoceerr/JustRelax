@@ -1,47 +1,41 @@
 package com.mustafakoceerr.justrelax.feature.home.mvi
 
+import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
+// 1. STATE: Ekranın o anki fotoğrafı.
+// Logic (getter, hesaplama) içermez. Sadece saf veri.
+// 1. STATE
 data class HomeState(
-    // Veriler
+    // Data
     val categories: List<SoundCategory> = SoundCategory.entries,
     val selectedCategory: SoundCategory = SoundCategory.NATURE,
-    val allSounds: List<Sound> = emptyList(), // Filtrelenmemiş ham liste
+    val allSounds: List<Sound> = emptyList(),
+    val filteredSounds: List<Sound> = emptyList(),
 
-    // UI Durumları
-    val activeSounds: Map<String, Float> = emptyMap(), // Çalan sesler ve volumeleri
-    val downloadingSoundIds: Set<String> = emptySet(), // Şu an inmekte olan tekil sesler
+    // Player Status
+    val playingSoundIds: Set<String> = emptySet(),
+    val soundVolumes: Map<String, Float> = emptyMap(),
 
-    // Banner Durumları
-    val showDownloadBanner: Boolean = false,
-    val isDownloadingAll: Boolean = false,
-    val totalDownloadProgress: Float = 0f,
+    // Download Status (Tekil indirmeler için)
+    val downloadingSoundIds: Set<String> = emptySet(),
 
+    // UI
     val isLoading: Boolean = true
-) {
-    // UI'da gösterilecek filtrelenmiş liste (Helper Property)
-    val sounds: List<Sound>
-        get() = allSounds.filter { it.category == selectedCategory }
-}
+)
 
-// 2. Intent: Kullanıcının yapmak istediği eylemler
+// 2. INTENT
 sealed interface HomeIntent {
     data class SelectCategory(val category: SoundCategory) : HomeIntent
     data class ToggleSound(val sound: Sound) : HomeIntent
     data class ChangeVolume(val soundId: String, val volume: Float) : HomeIntent
-
-    // Banner İşlemleri
-    data object DownloadAllMissing : HomeIntent
-    data object DismissBanner : HomeIntent
-
-    // Navigasyon
     data object SettingsClicked : HomeIntent
 }
 
-// 3. Effect: Tek seferlik olaylar (Navigasyon, toast vb.)
+// 3. EFFECT
 sealed interface HomeEffect {
+    data class ShowError(val error: AppError) : HomeEffect
     data class ShowMessage(val message: String) : HomeEffect
     data object NavigateToSettings : HomeEffect
 }
