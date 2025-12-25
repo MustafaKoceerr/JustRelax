@@ -15,17 +15,22 @@ import androidx.compose.material.icons.outlined.SelfImprovement
 import androidx.compose.material.icons.outlined.Thunderstorm
 import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material.icons.outlined.Waves
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.core.ui.components.LoadingDots
+
+// Sabit: Ekranda kaç tane uçuşan ikon olsun?
+private const val FLOATING_ICON_COUNT = 15
 
 @Composable
 fun LoadingScreen() {
     // Süzülecek İkon Havuzu
+    // remember içinde tutuyoruz, recomposition'da tekrar liste oluşmasın.
     val icons = remember {
         listOf(
             Icons.Outlined.WaterDrop,
@@ -43,30 +48,32 @@ fun LoadingScreen() {
         val maxHeight = maxHeight
         val maxWidth = maxWidth
 
-        // 1. ARKA PLAN EFEKTLERİ (15 Tane Rastgele İkon)
-        // Her biri kendi bağımsız animasyonuna sahip olacak.
-        repeat(15) {
-            FloatingIcon(
-                icon = icons.random(),
-                screenHeight = maxHeight,
-                screenWidth = maxWidth
-            )
+        // 1. ARKA PLAN EFEKTLERİ
+        // key(index) kullanımı: Compose'un bu elemanları takip etmesini kolaylaştırır.
+        repeat(FLOATING_ICON_COUNT) { index ->
+            key(index) {
+                FloatingIcon(
+                    icon = icons.random(),
+                    screenHeight = maxHeight,
+                    screenWidth = maxWidth
+                )
+            }
         }
 
-        // 2. ÖN PLAN (Mesaj ve Spinner)
+        // 2. ÖN PLAN (Mesaj ve Yükleniyor Animasyonu)
         Column(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Spinner yerine bizim özel LoadingDots'u kullanalım, daha tatlı durur
-            // Veya standart CircularProgressIndicator da olur ama ince ve büyük.
-
-            // Seçim: İkonlar zaten çok hareketli, ortada sade bir spinner olsun.
-            CircularProgressIndicator(
+            // Enterprise Kararı: Standart spinner yerine kendi markamızın bileşeni.
+            // Splash ekranı olduğu için noktaları biraz büyüttük (12dp).
+            LoadingDots(
                 color = MaterialTheme.colorScheme.primary,
-                strokeWidth = 3.dp
+                dotSize = 12.dp,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 
+            // PDF Kuralı: 24dp boşluk (8dp gridin katı)
             Spacer(modifier = Modifier.height(24.dp))
 
             LoadingMessage()
