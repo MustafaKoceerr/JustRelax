@@ -29,4 +29,11 @@ sealed class AppError(override val message: String, override val cause: Throwabl
         class LimitExceeded(val limit: Int) : Player("Aynı anda en fazla $limit ses çalınabilir.")
         class InitializationError(message: String) : Player(message)
     }
+
+    // --- YENİ: Mix Kaydetme Hataları ---
+    sealed class SaveMix(message: String) : AppError(message) {
+        class EmptyName : SaveMix("Mix name cannot be empty.")
+        class NameAlreadyExists : SaveMix("A mix with this name already exists.")
+        class NoSoundsPlaying : SaveMix("There are no sounds currently playing to save.")
+    }
 }

@@ -28,8 +28,9 @@ import com.mustafakoceerr.justrelax.core.model.Sound
 @Composable
 fun SoundGridSection(
     sounds: List<Sound>,
-    activeSoundsVolumeMap: Map<String, Float>,
-    downloadingSoundIds: Set<String> = emptySet(), // Varsayılan boş (Mixer ve AI için)
+    playingSoundIds: Set<String>,      // Hangi seslerin çaldığını SÖYLER.
+    soundVolumes: Map<String, Float>,  // Her sesin ses seviyesini SÖYLER.
+    downloadingSoundIds: Set<String> = emptySet(),
     onSoundClick: (Sound) -> Unit,
     onVolumeChange: (String, Float) -> Unit,
     modifier: Modifier = Modifier,
@@ -44,29 +45,26 @@ fun SoundGridSection(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // 1. Varsa Header
         if (headerContent != null) {
             headerContent()
         }
 
-        // 2. Ses Kartları
         items(sounds, key = { it.id }) { sound ->
-            // Map içinde varsa çalıyor demektir.
-            val volume = activeSoundsVolumeMap[sound.id]
-            val isPlaying = volume != null
+            // Artık çıkarım yapmıyoruz, durumu direkt okuyoruz.
+            val isPlaying = playingSoundIds.contains(sound.id)
+            val volume = soundVolumes[sound.id] ?: 0.5f
             val isDownloading = downloadingSoundIds.contains(sound.id)
 
             SoundCard(
                 sound = sound,
                 isPlaying = isPlaying,
                 isDownloading = isDownloading,
-                volume = volume ?: 0.5f, // Çalmıyorsa varsayılan 0.5 göster
+                volume = volume,
                 onCardClick = { onSoundClick(sound) },
                 onVolumeChange = { newVol -> onVolumeChange(sound.id, newVol) }
             )
         }
 
-        // 3. Varsa Footer
         if (footerContent != null) {
             footerContent()
         }

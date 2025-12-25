@@ -28,13 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.core.ui.extensions.rememberDebouncedOnClick
 import justrelax.feature.mixer.generated.resources.Res
 import justrelax.feature.mixer.generated.resources.action_create_mix
 import justrelax.feature.mixer.generated.resources.action_save_mix
 import justrelax.feature.mixer.generated.resources.mix_count_selector_title
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MixNumberChip(
@@ -93,7 +92,7 @@ fun MixCountSelector(
             )
         )
 
-        val soundCounts = (2..8).toList()
+        val soundCounts = (2..7).toList()
 
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
@@ -116,8 +115,12 @@ fun CreateMixButton(
     isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
+    // YENİ: Debounce'lu onClick lambdasını burada oluşturuyoruz.
+    val debouncedOnClick = rememberDebouncedOnClick(debounceMs = 800L,onClick = onClick)
+
     Button(
-        onClick = onClick,
+        // DÜZELTME: Artık Button'un kendi onClick'ine sarmalanmış lambdayı veriyoruz.
+        onClick = debouncedOnClick,
         enabled = !isLoading,
         modifier = modifier
             .fillMaxWidth()

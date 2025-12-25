@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.extensions.displayName
+import com.mustafakoceerr.justrelax.core.ui.extensions.rememberDebouncedOnClick
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
 import org.jetbrains.compose.resources.stringResource
@@ -53,6 +54,8 @@ fun SoundCard(
     // --- ANİMASYON TANIMLARI ---
     // Renk geçişleri için "animateColorAsState" kullanıyoruz.
     // label parametresi Android Studio Inspector için faydalıdır.
+    // Orijinal onCardClick'i, debounce korumasıyla sarmalıyoruz.
+    val debouncedOnCardClick = rememberDebouncedOnClick(debounceMs = 500, onClick = onCardClick)
 
     val cardContainerColor by animateColorAsState(
         targetValue = if (isPlaying) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -79,7 +82,7 @@ fun SoundCard(
     ) {
         // --- Kartın Gövdesi ---
         Surface(
-            onClick = onCardClick,
+            onClick = debouncedOnCardClick,
             modifier = Modifier.aspectRatio(1f),
             shape = MaterialTheme.shapes.medium,
             color = cardContainerColor // Animasyonlu renk

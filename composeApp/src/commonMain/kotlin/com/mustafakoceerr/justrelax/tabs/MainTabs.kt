@@ -18,6 +18,8 @@ import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_mixer
 import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_saved
 import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_timer
 import com.mustafakoceerr.justrelax.feature.home.HomeScreen
+import com.mustafakoceerr.justrelax.feature.mixer.MixerScreen
+import com.mustafakoceerr.justrelax.feature.timer.TimerScreen
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -45,31 +47,31 @@ object HomeTab : Tab {
     }
 }
 
-///**
-// * 2. TIMER TAB
-// */
-//object TimerTab : Tab {
-//    override val options: TabOptions
-//        @Composable
-//        get() {
-//            val title = stringResource(Res.string.tab_timer)
-//            val icon = rememberVectorPainter(Icons.Rounded.AccessTime)
-//
-//            return remember {
-//                TabOptions(
-//                    index = 1u,
-//                    title = title,
-//                    icon = icon
-//                )
-//            }
-//        }
-//
-//    @Composable
-//    override fun Content() {
-//        TimerScreen.Content()
-//    }
-//}
-//
+/**
+ * 2. TIMER TAB
+ */
+object TimerTab : Tab {
+    override val options: TabOptions
+        @Composable
+        get() {
+            val title = stringResource(Res.string.tab_timer)
+            val icon = rememberVectorPainter(Icons.Rounded.AccessTime)
+
+            return remember {
+                TabOptions(
+                    index = 1u,
+                    title = title,
+                    icon = icon
+                )
+            }
+        }
+
+    @Composable
+    override fun Content() {
+        TimerScreen.Content()
+    }
+}
+
 ///**
 // * 3. AI TAB
 // */
@@ -120,27 +122,27 @@ object HomeTab : Tab {
 //    }
 //}
 //
-///**
-// * 5. MIXER TAB
-// */
-//object MixerTab : Tab {
-//    override val options: TabOptions
-//        @Composable
-//        get() {
-//            val title = stringResource(Res.string.tab_mixer)
-//            val icon = rememberVectorPainter(Icons.Rounded.Tune)
-//
-//            return remember {
-//                TabOptions(
-//                    index = 4u,
-//                    title = title,
-//                    icon = icon
-//                )
-//            }
-//        }
-//
-//    @Composable
-//    override fun Content() {
-//        MixerScreen.Content()
-//    }
-//}
+/**
+ * 5. MIXER TAB
+ */
+object MixerTab : Tab {
+    override val options: TabOptions
+        @Composable
+        get() {
+            val title = stringResource(Res.string.tab_mixer)
+            val icon = rememberVectorPainter(Icons.Rounded.Tune)
+
+            return remember {
+                TabOptions(
+                    index = 4u,
+                    title = title,
+                    icon = icon
+                )
+            }
+        }
+
+    @Composable
+    override fun Content() {
+        MixerScreen.Content()
+    }
+}

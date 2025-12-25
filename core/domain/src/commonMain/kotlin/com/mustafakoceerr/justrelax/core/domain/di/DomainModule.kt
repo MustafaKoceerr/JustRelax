@@ -22,6 +22,8 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.player.CheckMaxActiveSou
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.ObservePlaybackStateUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.PauseAllSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.ResumeAllSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.savedmix.SaveCurrentMixUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SyncLanguageWithSystemUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
@@ -65,4 +67,6 @@ val domainModule = module {
     factoryOf(::PauseAllSoundsUseCase)
     factoryOf(::ResumeAllSoundsUseCase)
     factoryOf(::ObservePlaybackStateUseCase)
+    factoryOf(::SetMixUseCase)
+    factoryOf(::SaveCurrentMixUseCase)
 }

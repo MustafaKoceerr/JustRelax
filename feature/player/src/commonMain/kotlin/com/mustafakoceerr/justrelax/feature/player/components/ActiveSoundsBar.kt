@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.mustafakoceerr.justrelax.core.ui.extensions.rememberDebouncedOnClick
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
@@ -81,6 +82,19 @@ private fun ActiveSoundsBarContent(
     onStopAllClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Play/Pause butonu için 1 saniyelik korumalı bir lambda oluşturuyoruz.
+    val debouncedOnPlayPauseClick = rememberDebouncedOnClick(
+        debounceMs = 500L, // 1 saniye
+        onClick = onPlayPauseClick
+    )
+
+    // Not: onStopAllClick de ağır bir işlem olduğu için ona da debounce eklenebilir.
+    // Şimdilik sadece Play/Pause için ekliyoruz.
+    val debouncedOnStopAllClick = rememberDebouncedOnClick(
+        debounceMs = 1000L,
+        onClick = onStopAllClick
+    )
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -118,7 +132,7 @@ private fun ActiveSoundsBarContent(
             ) {
                 // Play/Pause
                 IconButton(
-                    onClick = onPlayPauseClick,
+                    onClick = debouncedOnPlayPauseClick,
                     modifier = Modifier.size(48.dp) // Dokunma alanı geniş
                 ) {
                     Icon(
@@ -130,7 +144,7 @@ private fun ActiveSoundsBarContent(
 
                 // Stop All
                 IconButton(
-                    onClick = onStopAllClick,
+                    onClick = debouncedOnStopAllClick,
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(

@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.core.domain.player
 
+import com.mustafakoceerr.justrelax.core.model.Sound
 import kotlinx.coroutines.flow.Flow
 
 /*
@@ -71,5 +72,15 @@ interface AudioMixer {
     /**
      * Uygulama tamamen kapandığında kaynakları serbest bırakmak için.
      */
+
+    /**
+     * YENİ İMZA:
+     * Mevcut mix'i durdurup, verilen yeni konfigürasyonları uygular.
+     * @param mixConfigs Anahtar: Sound ID, Değer: O sese ait SoundConfig.
+     */
+
+    // DÜZELTME: Bu fonksiyon artık bir suspend fonksiyonu.
+    // Çağıran taraf, işlemin bitmesini beklemek zorunda kalacak
+     fun setMix(mixConfigs: Map<String, SoundConfig>)
     fun release()
 }

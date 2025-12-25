@@ -33,6 +33,8 @@ import com.mustafakoceerr.justrelax.feature.player.PlayerScreenModel
 import com.mustafakoceerr.justrelax.feature.player.components.PlayerBottomBar
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerIntent
 import com.mustafakoceerr.justrelax.tabs.HomeTab
+import com.mustafakoceerr.justrelax.tabs.MixerTab
+import com.mustafakoceerr.justrelax.tabs.TimerTab
 import org.koin.compose.koinInject
 
 object MainScreen : AppScreen {
@@ -79,10 +81,11 @@ object MainScreen : AppScreen {
                                 contentColor = MaterialTheme.colorScheme.primary,
                             ) {
                                 TabNavigationItem(HomeTab)
-                                // TabNavigationItem(TimerTab)
+                                 TabNavigationItem(TimerTab)
+                                // Todo: aç bunları
                                 // TabNavigationItem(AiTab)
                                 // TabNavigationItem(SavedTab)
-                                // TabNavigationItem(MixerTab)
+                                 TabNavigationItem(MixerTab)
                             }
                         }
                     }

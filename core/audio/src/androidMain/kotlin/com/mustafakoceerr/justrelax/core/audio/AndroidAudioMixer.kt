@@ -8,10 +8,12 @@ import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 
 class AndroidAudioMixer(
@@ -98,6 +100,33 @@ class AndroidAudioMixer(
 
         wrappersToKill.forEach { wrapper ->
             scope.launch { wrapper.kill() }
+        }
+    }
+
+    // DÜZELTME: 'suspend' kaldırıldı. 'scope.launch' geri geldi.
+    override fun setMix(mixConfigs: Map<String, SoundConfig>) {
+        val newMixIds = mixConfigs.keys
+        val currentPlayingIds = _playingSoundIds.value
+
+        // 1. ATOMİK GÜNCELLEME: UI'ı anında yeni duruma geçir.
+        _playingSoundIds.update { newMixIds }
+
+        // 2. Arka planda sesleri değiştir (İşlemin bitmesini bekleme)
+        scope.launch {
+            // Durdurulacak sesler
+            val soundsToStop = currentPlayingIds - newMixIds
+            soundsToStop.forEach { soundId ->
+                // 'stop' fonksiyonu artık callback'li eski haline dönmeli
+                players[soundId]?.stop {
+                    players.remove(soundId)
+                }
+            }
+
+            // Başlatılacak/Güncellenecek sesler
+            // 'playSound' fonksiyonu da 'suspend' olmayan eski haline dönmeli
+            mixConfigs.values.forEach { config ->
+                playSound(config)
+            }
         }
     }
 
