@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
-import com.mustafakoceerr.justrelax.feature.mixer.components.LoadingDots
+import com.mustafakoceerr.justrelax.core.ui.components.LoadingDots
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**

@@ -9,45 +9,72 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JustRelaxTopBar(
     title: String,
-    // Sol tarafta Geri butonu veya ikon olabilir
+    modifier: Modifier = Modifier, // Best Practice: Modifier parametresi
     navigationIcon: @Composable () -> Unit = {},
-    // Sağ tarafta aksiyonlar (Filtre, Ayarlar vs.)
     actions: @Composable RowScope.() -> Unit = {},
-    // Scroll davranışı (İstersen aşağı kaydırınca hafif renk gelsin diye)
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     CenterAlignedTopAppBar(
-        windowInsets = WindowInsets(0), // <-- bunu ekle
+        // NOT: windowInsets parametresini sildim. Varsayılan değer (systemBars)
+        // başlığın status bar (saat/pil) altında kalmasını engeller.
+        // Arka plan Transparent olduğu için gradyan yine en tepeye kadar görünür.
+
+        modifier = modifier,
         title = {
             Text(
                 text = title,
-                // Çok bağırmayan, zarif bir font stili
+                // PDF Kuralı: Tipografi hiyerarşisine sadık kalındı
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface
+                fontWeight = FontWeight.SemiBold, // Biraz daha belirgin
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         },
         navigationIcon = navigationIcon,
         actions = actions,
         scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.topAppBarColors(
-            // İŞTE SİHİR BURADA:
-            // Arka plan tamamen şeffaf. Senin gradyanın görünecek.
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            // Şeffaflık Stratejisi
             containerColor = Color.Transparent,
-            scrolledContainerColor = Color.Transparent, // Kaydırınca da renklenme (veya hafif bir renk verebilirsin)
 
-            // İkon ve Yazı renkleri
+            // Scroll edilince ne olsun?
+            // Transparent kalırsa alttan akan yazılar TopBar yazısıyla karışır.
+            // Eğer "Blur" efekti istersen buraya yarı saydam bir renk verebiliriz.
+            // Şimdilik isteğin üzerine Transparent bırakıyorum.
+            scrolledContainerColor = Color.Transparent, // Veya MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+
             titleContentColor = MaterialTheme.colorScheme.onSurface,
-            actionIconContentColor = MaterialTheme.colorScheme.onSurface,
-            navigationIconContentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        // Status bar'ın üstüne binmemesi için (System Bars Padding)
-        // Scaffold zaten bunu yönetir ama custom yerleşimlerde dikkat etmek gerekir.
-//        modifier = Modifier.padding(top = 8.dp) // Tepeden çok az nefes payı
+            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+            actionIconContentColor = MaterialTheme.colorScheme.onSurface
+        )
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun JustRelaxTopBarPreview() {
+    MaterialTheme {
+        // Arkada bir renk olduğunu simüle etmek için Surface
+        androidx.compose.material3.Surface(color = Color.Cyan) {
+            JustRelaxTopBar(
+                title = "Ana Sayfa",
+                navigationIcon = {
+                    // Önizleme için dummy ikon
+                    // Icon(Icons.Default.ArrowBack, contentDescription = null)
+                }
+            )
+        }
+    }
 }
