@@ -2,6 +2,7 @@ package com.mustafakoceerr.justrelax
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -13,28 +14,18 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
-    // KENDİ ÖZEL VIEWMODEL'İNİ KULLANIYOR
+    // Koin ile ViewModel enjeksiyonu
     private val activityViewModel: MainActivityViewModel by viewModel()
 
-    // İzin sonucunu dinleyen launcher (Callback)
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
-        if (isGranted) {
-            // İzin verildi. Bildirimler sorunsuz çalışacak.
-        } else {
-            // İzin reddedildi. Servis çalışır ama bildirim paneli görünmez.
-            // İstersen burada kullanıcıya bir dialog gösterip ikna edebilirsin.
-        }
+        // İzin mantığı...
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Edge-to-Edge deneyimi için
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        // Uygulama açılır açılmaz izin kontrolü yap ve gerekirse iste
         askNotificationPermission()
 
         setContent {
@@ -42,14 +33,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // --- DÜZELTME BAŞLANGICI ---
+
+    /**
+     * Kullanıcı ayarlardan geri döndüğünde veya uygulama arka plandan öne geldiğinde çalışır.
+     * API 33+ dil değişimi kontrolü için kritik nokta burasıdır.
+     */
+    override fun onResume() {
+        super.onResume()
+        // ViewModel'e "Ben geri geldim, dili kontrol et" diyoruz.
+        activityViewModel.checkSystemLanguage()
+    }
+
+    /**
+     * Eğer AndroidManifest.xml içinde android:configChanges="locale|layoutDirection"
+     * tanımlıysa, Activity yeniden başlatılmaz, bu metod çağrılır.
+     * Bu durumda da dil kontrolünü tetiklemeliyiz.
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        activityViewModel.checkSystemLanguage()
+    }
+
+    // --- DÜZELTME BİTİŞİ ---
+
     private fun askNotificationPermission() {
-        // Bu izin sadece Android 13 (API 33 - TIRAMISU) ve üzeri için gereklidir.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permission = Manifest.permission.POST_NOTIFICATIONS
-
-            // Zaten izin verilmiş mi kontrol et
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                // Verilmemişse iste
                 requestPermissionLauncher.launch(permission)
             }
         }

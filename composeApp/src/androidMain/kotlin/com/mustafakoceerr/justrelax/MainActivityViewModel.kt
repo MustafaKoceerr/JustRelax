@@ -12,19 +12,24 @@ import kotlinx.coroutines.launch
  * Not: Voyager'ın ScreenModel'i yerine standart AndroidX ViewModel kullanıyoruz,
  * çünkü bu bir Screen'e değil, Activity'ye bağlı.
  */
+
 class MainActivityViewModel(
     private val syncLanguageWithSystemUseCase: SyncLanguageWithSystemUseCase
 ) : ViewModel() {
 
     /**
-     * onResume'da çağrılır.
+     * Activity'den manuel olarak çağrılır.
+     * Sistem dili ile App'in bildiği dili senkronize eder.
      */
-    fun onResume() {
+    fun checkSystemLanguage() {
         viewModelScope.launch {
             try {
+                // UseCase, sistemin o anki dili ile DataStore'daki dili karşılaştırır.
+                // Farklıysa DataStore'u günceller.
+                // DataStore güncellenince MainViewModel (Compose tarafı) bunu Flow ile yakalar ve UI güncellenir.
                 syncLanguageWithSystemUseCase()
             } catch (e: Exception) {
-                // Hata olursa logla
+                e.printStackTrace()
             }
         }
     }
