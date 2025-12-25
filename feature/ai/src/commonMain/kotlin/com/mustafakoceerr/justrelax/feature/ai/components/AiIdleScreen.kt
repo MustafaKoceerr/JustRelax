@@ -21,10 +21,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun AiIdleScreen(
     prompt: String,
-    isContextEnabled: Boolean,
-    activeSoundsCount: Int,
     isThinking: Boolean,
-    showDownloadSuggestion: Boolean,
     onIntent: (AiIntent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -32,39 +29,15 @@ fun AiIdleScreen(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. TopBar
-        JustRelaxTopBar(
-            title = stringResource(Res.string.ai_screen_title)
-        )
-
-        // 2. Üst boşluk
+        JustRelaxTopBar(title = stringResource(Res.string.ai_screen_title))
         Spacer(modifier = Modifier.weight(1f))
-
-        // 3. AI Visualizer
         AIVisualizer(isThinking = isThinking)
-
-        // 4. Alt boşluk
         Spacer(modifier = Modifier.weight(1f))
 
-        // 5. Download Suggestion
-        if (showDownloadSuggestion) {
-            DownloadSuggestionCard(
-                onClick = { onIntent(AiIntent.ClickDownloadSuggestion) },
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        // 6. Prompt Input
         AIPromptInput(
-            text = prompt,
-            isPlayingSomething = activeSoundsCount > 0,
-            isContextEnabled = isContextEnabled,
+            prompt = prompt,
             isThinking = isThinking,
-            onContextToggle = { onIntent(AiIntent.ToggleContext) },
-            onTextChange = { onIntent(AiIntent.UpdatePrompt(it)) },
-            onSendClick = { onIntent(AiIntent.GenerateMix) },
-            onSuggestionClick = { onIntent(AiIntent.SelectSuggestion(it)) }
+            onIntent = onIntent
         )
 
         Spacer(modifier = Modifier.height(16.dp))

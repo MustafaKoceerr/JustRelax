@@ -18,4 +18,13 @@
     <string name="ai_action_edit">Düzenle</string>
     <string name="ai_action_regenerate">Yenile</string>
     <string name="action_save">Kaydet</string>
+
+    <!-- Başarı Mesajları -->
+    <string name="msg_mix_saved_success">Mix '%1$s' başarıyla kaydedildi!</string>
+
+    <!-- Hata Mesajları -->
+    <string name="err_ai_no_sounds">İndirilen ses bulunamadı. Yapay zekânın bir mix oluşturabilmesi için seslere ihtiyacı var.</string>
+    <string name="err_ai_empty_response">Yapay zekâ boş veya geçersiz bir yanıt döndürdü. Lütfen tekrar deneyin.</string>
+    <string name="err_unknown">Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.</string>
+
 </resources>

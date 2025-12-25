@@ -18,4 +18,12 @@
     <string name="ai_action_edit">Editar</string>
     <string name="ai_action_regenerate">Regenerar</string>
     <string name="action_save">Guardar</string>
+
+    <!-- Mensajes de éxito -->
+    <string name="msg_mix_saved_success">¡La mezcla '%1$s' se guardó correctamente!</string>
+
+    <!-- Mensajes de error -->
+    <string name="err_ai_no_sounds">No se encontraron sonidos descargados. La IA necesita sonidos para crear una mezcla.</string>
+    <string name="err_ai_empty_response">La IA devolvió una respuesta vacía o no válida. Inténtalo de nuevo.</string>
+    <string name="err_unknown">Se produjo un error inesperado. Inténtalo de nuevo más tarde.</string>
 </resources>

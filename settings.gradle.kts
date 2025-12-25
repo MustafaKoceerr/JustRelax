@@ -50,7 +50,7 @@ include(":data:repository")
 
 include(":feature:settings")
 include(":feature:timer")
-//include(":feature:ai")
+include(":feature:ai")
 include(":feature:saved")
 include(":feature:mixer")
 include(":feature:player")

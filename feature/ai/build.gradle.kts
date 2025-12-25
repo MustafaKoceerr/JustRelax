@@ -25,8 +25,8 @@ buildConfig {
     // Key'i tanımlıyoruz
     buildConfigField(
         "String", // Tipi
-        "GEMINI_API_KEY", // Kodda kullanacağımız isim
-        "\"${localProperties.getProperty("GEMINI_API_KEY")}\"" // Değer (Tırnaklara dikkat)
+        "OPENAI_API_KEY", // Kodda kullanacağımız isim
+        "\"${localProperties.getProperty("OPENAI_API_KEY")}\"" // Değer (Tırnaklara dikkat)
     )
 }
 kotlin {

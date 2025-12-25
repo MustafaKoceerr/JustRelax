@@ -32,6 +32,7 @@ import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.player.PlayerScreenModel
 import com.mustafakoceerr.justrelax.feature.player.components.PlayerBottomBar
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerIntent
+import com.mustafakoceerr.justrelax.tabs.AiTab
 import com.mustafakoceerr.justrelax.tabs.HomeTab
 import com.mustafakoceerr.justrelax.tabs.MixerTab
 import com.mustafakoceerr.justrelax.tabs.SavedTab
@@ -83,8 +84,7 @@ object MainScreen : AppScreen {
                             ) {
                                 TabNavigationItem(HomeTab)
                                  TabNavigationItem(TimerTab)
-                                // Todo: aç bunları
-                                // TabNavigationItem(AiTab)
+                                 TabNavigationItem(AiTab)
                                  TabNavigationItem(SavedTab)
                                  TabNavigationItem(MixerTab)
                             }

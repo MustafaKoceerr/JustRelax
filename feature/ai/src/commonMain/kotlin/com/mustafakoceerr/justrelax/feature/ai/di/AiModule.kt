@@ -1,33 +1,20 @@
 package com.mustafakoceerr.justrelax.feature.ai.di
 
-import com.mustafakoceerr.justrelax.core.audio.SoundManager
-import com.mustafakoceerr.justrelax.core.audio.domain.usecase.GetActiveSoundsUseCase
-import com.mustafakoceerr.justrelax.feature.ai.AiViewModel
-import com.mustafakoceerr.justrelax.feature.ai.data.repository.AiServiceImpl
-import com.mustafakoceerr.justrelax.feature.ai.domain.repository.AiService
-import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.ObserveActiveContextUseCase
-import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.ObserveDownloadedSoundsUseCase
-import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.PlayAiMixUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
+import com.mustafakoceerr.justrelax.feature.ai.AiScreenModel
+import com.mustafakoceerr.justrelax.feature.ai.data.repository.OpenAiRepositoryImpl
+import com.mustafakoceerr.justrelax.feature.ai.domain.repository.AiRepository
+import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.GenerateAiMixUseCase
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val aiModule = module {
-    // Service Implementation
-    single<AiService> { AiServiceImpl(get(), get()) }
-
-    // UseCases
-    factory { PlayAiMixUseCase(get(), get()) }
-    factory { ObserveDownloadedSoundsUseCase(get()) }
-    factory { ObserveActiveContextUseCase(get()) }
-
-    // ViewModel
-    factory {
-        AiViewModel(
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-        )
+    // --- Data Katmanı ---
+    // Single: AiRepository'nin durumu (state) yoktur, tek bir instance yeterlidir.
+    single<AiRepository> {
+        OpenAiRepositoryImpl(client = get())
     }
+
+    factoryOf(::GenerateAiMixUseCase)
+    factoryOf(::AiScreenModel)
 }
