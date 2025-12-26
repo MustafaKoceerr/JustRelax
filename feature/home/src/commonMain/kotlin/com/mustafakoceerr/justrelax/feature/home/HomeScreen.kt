@@ -29,6 +29,7 @@ import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.feature.home.components.HomeTabRow
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
+import com.mustafakoceerr.justrelax.core.ui.permission.RequestNotificationPermission
 import com.mustafakoceerr.justrelax.feature.home.components.SoundCardGrid
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeEffect
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeIntent
@@ -52,6 +53,8 @@ data object HomeScreen : AppScreen {
         val screenModel = koinScreenModel<HomeScreenModel>()
         val state by screenModel.state.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }
+
+        RequestNotificationPermission()
 
         // --- EFFECT HANDLING ---
         LaunchedEffect(Unit) {

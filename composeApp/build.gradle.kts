@@ -22,9 +22,30 @@ android {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            // 1. KOD KÜÇÜLTME (R8)
+            // Kullanılmayan class'ları, fonksiyonları ve DEĞİŞKENLERİ siler.
+            // Kodunuzu 'a.b.c' gibi isimlendirerek şifreler (Obfuscation).
+            isMinifyEnabled = true
+
+            // 2. KAYNAK KÜÇÜLTME
+            // Kullanılmayan resim, xml ve layout dosyalarını siler.
+            isShrinkResources = true
+
+            // 3. PROGUARD DOSYALARI
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            // Opsiyonel: Debuggable false olmalı (Zaten default false'tur ama garanti olsun)
+            isDebuggable = false
         }
-    }
+
+        // Geliştirme yaparken hızlı derlensin diye debug'da kapalı kalsın
+        getByName("debug") {
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
+        }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -35,6 +56,8 @@ android {
     buildFeatures {
         compose = true
     }
+
+
 }
 
 kotlin {

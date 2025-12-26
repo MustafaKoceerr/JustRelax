@@ -29,6 +29,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.CurrentTab
@@ -48,6 +49,7 @@ import com.mustafakoceerr.justrelax.tabs.MixerTab
 import com.mustafakoceerr.justrelax.tabs.SavedTab
 import com.mustafakoceerr.justrelax.tabs.TimerTab
 import org.koin.compose.koinInject
+
 object MainScreen : AppScreen {
     @Composable
     override fun Content() {
@@ -78,33 +80,33 @@ object MainScreen : AppScreen {
 
 
                             Column(modifier = Modifier.fillMaxWidth()) {
-                            // A. Player Bar (Üstte)
-                            PlayerBottomBar(
-                                isVisible = shouldShowPlayer,
-                                activeIcons = playerState.activeSounds.map { it.iconUrl },
-                                isPlaying = playerState.isPlaying,
+                                // A. Player Bar (Üstte)
+                                PlayerBottomBar(
+                                    isVisible = shouldShowPlayer,
+                                    activeIcons = playerState.activeSounds.map { it.iconUrl },
+                                    isPlaying = playerState.isPlaying,
 
-                                onPlayPauseClick = {
-                                    playerScreenModel.onIntent(PlayerIntent.ToggleMasterPlayPause)
-                                },
-                                onStopAllClick = {
-                                    playerScreenModel.onIntent(PlayerIntent.StopAll)
+                                    onPlayPauseClick = {
+                                        playerScreenModel.onIntent(PlayerIntent.ToggleMasterPlayPause)
+                                    },
+                                    onStopAllClick = {
+                                        playerScreenModel.onIntent(PlayerIntent.StopAll)
+                                    }
+                                )
+
+                                // B. Navigation Bar (Altta)
+                                NavigationBar(
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                    contentColor = MaterialTheme.colorScheme.primary,
+                                ) {
+                                    TabNavigationItem(HomeTab)
+                                    TabNavigationItem(TimerTab)
+                                    TabNavigationItem(AiTab)
+                                    TabNavigationItem(SavedTab)
+                                    TabNavigationItem(MixerTab)
                                 }
-                            )
-
-                            // B. Navigation Bar (Altta)
-                            NavigationBar(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                                contentColor = MaterialTheme.colorScheme.primary,
-                            ) {
-                                TabNavigationItem(HomeTab)
-                                 TabNavigationItem(TimerTab)
-                                 TabNavigationItem(AiTab)
-                                 TabNavigationItem(SavedTab)
-                                 TabNavigationItem(MixerTab)
                             }
                         }
-                    }
                     }
                 ) { innerPadding ->
 
@@ -144,7 +146,13 @@ private fun RowScope.TabNavigationItem(tab: Tab) {
                 Icon(painter = it, contentDescription = tab.options.title)
             }
         },
-        label = { Text(text = tab.options.title) },
+        label = {
+            Text(
+                text = tab.options.title,
+                style = MaterialTheme.typography.labelSmall, // Metin boyutu küçültüldü
+                textAlign = TextAlign.Center
+            )
+        },
         colors = NavigationBarItemDefaults.colors(
             selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
             selectedTextColor = MaterialTheme.colorScheme.primary,

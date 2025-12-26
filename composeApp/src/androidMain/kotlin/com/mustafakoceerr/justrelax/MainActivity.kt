@@ -17,16 +17,9 @@ class MainActivity : AppCompatActivity() {
     // Koin ile ViewModel enjeksiyonu
     private val activityViewModel: MainActivityViewModel by viewModel()
 
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        // İzin mantığı...
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        askNotificationPermission()
 
         setContent {
             JustRelaxApp()
@@ -55,14 +48,4 @@ class MainActivity : AppCompatActivity() {
         activityViewModel.checkSystemLanguage()
     }
 
-    // --- DÜZELTME BİTİŞİ ---
-
-    private fun askNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permission = Manifest.permission.POST_NOTIFICATIONS
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissionLauncher.launch(permission)
-            }
-        }
-    }
 }
