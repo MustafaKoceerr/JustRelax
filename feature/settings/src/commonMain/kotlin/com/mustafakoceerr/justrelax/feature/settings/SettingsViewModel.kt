@@ -10,6 +10,7 @@ import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.domain.system.LanguageSwitcher
 import com.mustafakoceerr.justrelax.core.domain.system.SystemLauncher
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetLegalUrlUseCase
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsEffect
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsIntent
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsState
@@ -30,7 +31,8 @@ class SettingsViewModel(
     private val setAppLanguageUseCase: SetAppLanguageUseCase,
     // Platform Helpers (Infrastructure)
     private val systemLauncher: SystemLauncher,
-    private val languageSwitcher: LanguageSwitcher
+    private val languageSwitcher: LanguageSwitcher,
+    private val getLegalUrlUseCase: GetLegalUrlUseCase, // Yeni UseCase eklendi
 ) : ScreenModel {
     // Single Source of Truth
     private val _state = MutableStateFlow(SettingsState())
@@ -56,12 +58,27 @@ class SettingsViewModel(
 
             is SettingsIntent.RateApp -> systemLauncher.openStorePage()
             is SettingsIntent.SendFeedback -> sendFeedback()
-            is SettingsIntent.OpenPrivacyPolicy -> systemLauncher.openUrl("https://justrelax.app/privacy") // Sabit URL config'den gelebilir
 
             is SettingsIntent.DownloadAllLibrary -> {
                 // TODO: DownloadAllMissingSoundsUseCase implemente edildiğinde burası dolacak.
                 // Şimdilik boş bırakıyoruz (YAGNI prensibi: İhtiyacın olmayan kodu yazma).
             }
+            // Yasal metinler artık UseCase üzerinden dinamik URL alıyor
+            is SettingsIntent.OpenPrivacyPolicy -> openPrivacyPolicy()
+            is SettingsIntent.OpenTermsAndConditions -> openTermsAndConditions()
+        }
+    }
+    private fun openPrivacyPolicy() {
+        screenModelScope.launch {
+            val url = getLegalUrlUseCase.getPrivacyPolicy()
+            systemLauncher.openUrl(url)
+        }
+    }
+
+    private fun openTermsAndConditions() {
+        screenModelScope.launch {
+            val url = getLegalUrlUseCase.getTermsAndConditions()
+            systemLauncher.openUrl(url)
         }
     }
 

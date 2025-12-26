@@ -23,6 +23,7 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.player.PauseAllSoundsUse
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.ResumeAllSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.savedmix.SaveCurrentMixUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetLegalUrlUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SyncLanguageWithSystemUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadBatchSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSingleSoundUseCase
@@ -75,6 +76,6 @@ val domainModule = module {
 
     factoryOf(::SaveCurrentMixUseCase)
     factoryOf(::SaveCurrentMixUseCase)
-
+    factoryOf(::GetLegalUrlUseCase)
 
 }
