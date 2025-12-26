@@ -3,4 +3,7 @@
     <!-- Compose yüklenene kadar görünecek zemin renkleri -->
     <color name="window_background_light">#FFFFFF</color>
     <color name="window_background_dark">#121212</color> <!-- Standart Dark Mode Siyahı -->
+
+    <color name="notification_brand_color">#88511D</color>
+
 </resources>

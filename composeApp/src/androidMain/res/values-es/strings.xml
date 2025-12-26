@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">JustRelax</string>
+    <!-- ... diğerleri ... -->
+    <string name="notification_title">Sonidos relajantes</string>
+    <string name="notification_subtitle">Disfruta el momento con Just Relax</string>
+    <string name="action_play">Reproducir</string>
+    <string name="action_pause">Pausar</string>
+    <string name="action_stop">Detener</string>
+</resources>

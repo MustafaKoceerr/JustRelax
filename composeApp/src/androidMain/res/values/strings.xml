@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">JustRelax</string>
     <!-- ... diğerleri ... -->
-
+    <!-- Bildirim için Yeni Metinler -->
+    <string name="notification_title">Calming Sounds</string>
+    <string name="notification_subtitle">Enjoy the moment with Just Relax</string>
+    <string name="action_play">Play</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_stop">Stop</string>
 </resources>
