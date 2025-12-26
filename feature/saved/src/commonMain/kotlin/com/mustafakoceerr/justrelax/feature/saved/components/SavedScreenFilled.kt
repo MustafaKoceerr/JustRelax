@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.saved.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -18,35 +19,20 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Sort
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Headset
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.Share
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -58,203 +44,20 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.TileMode
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
+import com.mustafakoceerr.justrelax.feature.saved.util.formatIsoDate
 import justrelax.feature.saved.generated.resources.Res
-import justrelax.feature.saved.generated.resources.action_delete
-import justrelax.feature.saved.generated.resources.action_more_options
-import justrelax.feature.saved.generated.resources.action_pause
 import justrelax.feature.saved.generated.resources.action_play
-import justrelax.feature.saved.generated.resources.action_rename
-import justrelax.feature.saved.generated.resources.action_share
+import justrelax.feature.saved.generated.resources.date_format_short
 import justrelax.feature.saved.generated.resources.saved_mix_metadata
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-@Composable
-fun SavedMixInfo(
-    title: String,
-    soundCount: Int,
-    date: String,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = modifier) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = stringResource(
-                Res.string.saved_mix_metadata,
-                soundCount,
-                date
-            ),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1
-        )
-    }
-}
-
-@Composable
-fun SavedMixIcons(
-    icons: List<ImageVector>,
-    modifier: Modifier = Modifier
-) {
-    LazyRow(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        items(icons.size) { index ->
-            Icon(
-                imageVector = icons[index],
-                contentDescription = null,
-                modifier = Modifier.size(20.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-            )
-        }
-    }
-}
-
-@Composable
-fun SavedMixPlayButton(
-    isPlaying: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    FilledTonalIconButton(
-        onClick = onClick,
-        modifier = modifier.size(48.dp),
-        colors = IconButtonDefaults.filledTonalIconButtonColors(
-            containerColor =
-                if (isPlaying)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.secondaryContainer,
-            contentColor =
-                if (isPlaying)
-                    MaterialTheme.colorScheme.onPrimary
-                else
-                    MaterialTheme.colorScheme.onSecondaryContainer
-        )
-    ) {
-        Icon(
-            imageVector =
-                if (isPlaying)
-                    Icons.Rounded.Pause
-                else
-                    Icons.Rounded.PlayArrow,
-            contentDescription =
-                stringResource(
-                    if (isPlaying)
-                        Res.string.action_pause
-                    else
-                        Res.string.action_play
-                ),
-            modifier = Modifier.size(24.dp)
-        )
-    }
-}
-
-@Composable
-fun SavedMixMenu(
-    onRenameClick: () -> Unit,
-    onShareClick: () -> Unit,
-    onDeleteClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Box(modifier = modifier) {
-        IconButton(
-            onClick = { expanded = true },
-            modifier = Modifier.size(32.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(
-                    Res.string.action_more_options
-                ),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            DropdownMenuItem(
-                text = {
-                    Text(
-                        text = stringResource(
-                            Res.string.action_rename
-                        )
-                    )
-                },
-                onClick = {
-                    expanded = false
-                    onRenameClick()
-                },
-                leadingIcon = {
-                    Icon(Icons.Rounded.Edit, null)
-                }
-            )
-
-            DropdownMenuItem(
-                text = {
-                    Text(
-                        text = stringResource(
-                            Res.string.action_share
-                        )
-                    )
-                },
-                onClick = {
-                    expanded = false
-                    onShareClick()
-                },
-                leadingIcon = {
-                    Icon(Icons.Rounded.Share, null)
-                }
-            )
-
-            DropdownMenuItem(
-                text = {
-                    Text(
-                        text = stringResource(
-                            Res.string.action_delete
-                        ),
-                        color = MaterialTheme.colorScheme.error
-                    )
-                },
-                onClick = {
-                    expanded = false
-                    onDeleteClick()
-                },
-                leadingIcon = {
-                    Icon(
-                        Icons.Rounded.Delete,
-                        null,
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                }
-            )
-        }
-    }
-}
 
 @Composable
 fun SavedMixCard(
@@ -263,164 +66,191 @@ fun SavedMixCard(
     soundCount: Int,
     icons: List<String>,
     onPlayClick: () -> Unit,
-    onRenameClick: () -> Unit = {},
-    onShareClick: () -> Unit = {},
-    onDeleteClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(16.dp)
 ) {
+    // Shimmer efekti için tetikleyici
+    var clickTrigger by remember { mutableIntStateOf(0) }
+
+    // Tema renkleri
     val baseColor = MaterialTheme.colorScheme.surfaceContainer
-    val shimmerColor =
-        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f)
-    val borderColor =
-        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+    val shimmerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f)
+    val borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
 
-    val cardShape = RoundedCornerShape(16.dp)
-
-    val shimmerProgress = remember { Animatable(0f) }
-    var clickTrigger by remember { mutableStateOf(0) }
-
-    LaunchedEffect(clickTrigger) {
-        if (clickTrigger > 0) {
-            shimmerProgress.snapTo(0f)
-            shimmerProgress.animateTo(
-                targetValue = 2f,
-                animationSpec = tween(
-                    durationMillis = 1000,
-                    easing = LinearEasing
-                )
-            )
-            shimmerProgress.snapTo(0f)
-        }
+    // 1. Adım: String kaynağından format desenini al.
+    val dateFormatPattern = stringResource(Res.string.date_format_short)
+// 2. Adım: Yeni formatlama fonksiyonunu çağır.
+    // remember kullanarak gereksiz hesaplamaları önlüyoruz.
+    val formattedDate = remember(date, dateFormatPattern) {
+        formatIsoDate(date, dateFormatPattern)
     }
 
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clip(cardShape)
+            .clip(shape)
             .clickable {
                 onPlayClick()
                 clickTrigger++
             }
-            .drawBehind {
-                drawRect(baseColor)
-
-                if (shimmerProgress.value > 0f) {
-                    val distance = size.width + size.height
-                    val currentOffset =
-                        distance * shimmerProgress.value
-
-                    val brush = Brush.linearGradient(
-                        colors = listOf(
-                            baseColor,
-                            shimmerColor,
-                            baseColor
-                        ),
-                        start = Offset(
-                            currentOffset - size.width,
-                            currentOffset - size.height
-                        ),
-                        end = Offset(
-                            currentOffset,
-                            currentOffset
-                        ),
-                        tileMode = TileMode.Clamp
-                    )
-                    drawRect(brush = brush)
-                }
-            },
-        shape = cardShape,
+            .clickShimmerEffect(
+                trigger = clickTrigger,
+                baseColor = baseColor,
+                shimmerColor = shimmerColor
+            ),
+        shape = shape,
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent,
+            containerColor = Color.Transparent, // Rengi drawBehind yönetiyor
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.cardElevation(0.dp),
         border = BorderStroke(1.dp, borderColor)
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Row(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Sol Taraf
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
 
-                    Text(
-                        text = stringResource(
-                            Res.string.saved_mix_metadata,
-                            soundCount,
-                            date
-                        ),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                Text(
+                    text = stringResource(Res.string.saved_mix_metadata, soundCount, formattedDate),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy((-12).dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        items(icons.size) { index ->
-                            Surface(
-                                shape = CircleShape,
-                                border = BorderStroke(
-                                    width = 2.dp,
-                                    color = MaterialTheme.colorScheme.primary
-                                ),
-                                modifier = Modifier.size(36.dp),
-                                color = MaterialTheme.colorScheme.surface
-                            ) {
-                                Box(contentAlignment = Alignment.Center) {
-                                    AsyncImage(
-                                        model = icons[index],
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .size(24.dp)
-                                            .padding(2.dp),
-                                        contentScale = ContentScale.Fit,
-                                        colorFilter = ColorFilter.tint(
-                                            MaterialTheme.colorScheme.primary
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
+                // Animasyonlu İkon Listesi
+                MixIconsRow(icons)
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // Sağ Taraf: Play Butonu
+            PlayButton(
+                onClick = {
+                    onPlayClick()
+                    clickTrigger++
                 }
+            )
+        }
+    }
+}
 
-                Spacer(modifier = Modifier.width(16.dp))
+@Composable
+private fun MixIconsRow(icons: List<String>) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy((-12).dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        icons.forEachIndexed { index, iconUrl ->
+            // Her ikon için görünürlük durumu
+            var isVisible by remember { mutableStateOf(false) }
 
+            // Kademeli gecikme (Cascade effect)
+            LaunchedEffect(Unit) {
+                delay(index * 100L) // Her öğe 100ms gecikmeli gelir
+                isVisible = true
+            }
+
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = fadeIn(tween(300)) + scaleIn(
+                    animationSpec = tween(300),
+                    initialScale = 0.5f
+                )
+            ) {
                 Surface(
-                    onClick = {
-                        onPlayClick()
-                        clickTrigger++
-                    },
                     shape = CircleShape,
-                    color = MaterialTheme.colorScheme.secondaryContainer,
-                    modifier = Modifier.size(48.dp)
+                    border = BorderStroke(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.surfaceContainer // Kart zeminine uyumlu
+                    ),
+                    modifier = Modifier.size(36.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = Icons.Rounded.PlayArrow,
-                            contentDescription = stringResource(
-                                Res.string.action_play
-                            ),
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                            modifier = Modifier.size(24.dp)
+                        AsyncImage(
+                            model = iconUrl,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .padding(2.dp),
+                            contentScale = ContentScale.Fit,
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
                         )
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun PlayButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        onClick = onClick,
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        modifier = modifier.size(48.dp) // MD3 Touch Target (48dp)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                imageVector = Icons.Rounded.PlayArrow,
+                contentDescription = stringResource(Res.string.action_play),
+                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun Modifier.clickShimmerEffect(
+    trigger: Int,
+    baseColor: Color,
+    shimmerColor: Color
+): Modifier {
+    val shimmerProgress = remember { Animatable(0f) }
+
+    LaunchedEffect(trigger) {
+        if (trigger > 0) {
+            shimmerProgress.snapTo(0f)
+            shimmerProgress.animateTo(
+                targetValue = 2f,
+                animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
+            )
+            shimmerProgress.snapTo(0f)
+        }
+    }
+
+    return this.drawBehind {
+        drawRect(baseColor)
+        if (shimmerProgress.value > 0f) {
+            val distance = size.width + size.height
+            val currentOffset = distance * shimmerProgress.value
+            val brush = Brush.linearGradient(
+                colors = listOf(baseColor, shimmerColor, baseColor),
+                start = Offset(currentOffset - size.width, currentOffset - size.height),
+                end = Offset(currentOffset, currentOffset),
+                tileMode = TileMode.Clamp
+            )
+            drawRect(brush = brush)
         }
     }
 }

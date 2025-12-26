@@ -28,7 +28,7 @@ data class HomeState(
 // 2. INTENT
 sealed interface HomeIntent {
     data class SelectCategory(val category: SoundCategory) : HomeIntent
-    data class ToggleSound(val sound: Sound) : HomeIntent
+    data class ToggleSound(val soundId: String) : HomeIntent
     data class ChangeVolume(val soundId: String, val volume: Float) : HomeIntent
     data object SettingsClicked : HomeIntent
 }

@@ -8,14 +8,13 @@ plugins {
 android {
     namespace = "com.mustafakoceerr.justrelax.core.network"
 }
-// BU BLOĞU EKLE:
+
 buildConfig {
     // Üretilecek BuildConfig.kt dosyasının paket adı
     packageName("com.mustafakoceerr.justrelax.core.network")
 
     // Release ve debug sürümleri farklı olabilir. kullanılan url'ler farklı olabilir.
-    // bu yüzden buildconfig'den yönetiyoruz. release'e çıkarken remoteConfig'e alacağız.
-    buildConfigField("String", "SOUNDS_URL", "\"https://pub-728a358af0b143fcbf9aa1e060e0dfa9.r2.dev/config.json\"")
+    buildConfigField("String", "CDN_BASE_URL", "\"https://cdn.mustafakoceerr.com/\"")
 }
 
 kotlin {

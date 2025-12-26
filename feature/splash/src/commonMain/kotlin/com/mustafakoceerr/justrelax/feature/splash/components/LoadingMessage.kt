@@ -16,12 +16,17 @@ import justrelax.feature.splash.generated.resources.loading_message_peace
 import justrelax.feature.splash.generated.resources.loading_message_rain
 import justrelax.feature.splash.generated.resources.loading_message_wind
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+
+// Sabit: Mesaj değişim hızı (Milisaniye)
+private const val MESSAGE_CHANGE_DELAY = 2000L
 
 @Composable
 fun LoadingMessage(
     modifier: Modifier = Modifier
 ) {
+    // Mesaj listesi
     val messages = remember {
         listOf(
             Res.string.loading_message_peace,
@@ -35,35 +40,43 @@ fun LoadingMessage(
         )
     }
 
+    // Başlangıç mesajını rastgele seçiyoruz
     var currentMessage by remember {
         mutableStateOf(messages.random())
     }
 
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(2000)
+    // Timer Döngüsü
+    LaunchedEffect(messages) { // messages key olarak verildi
+        // Güvenlik Önlemi: Eğer listede 1 veya daha az eleman varsa döngüye girme (Sonsuz döngüden kaçış)
+        if (messages.size > 1) {
+            while (true) {
+                delay(MESSAGE_CHANGE_DELAY)
 
-            var newMessage = messages.random()
-            while (newMessage == currentMessage) {
-                newMessage = messages.random()
+                // Aynı mesajın art arda gelmesini engelleme mantığı
+                var newMessage: StringResource
+                do {
+                    newMessage = messages.random()
+                } while (newMessage == currentMessage)
+
+                currentMessage = newMessage
             }
-
-            currentMessage = newMessage
         }
     }
 
     AnimatedContent(
         targetState = currentMessage,
         transitionSpec = {
-            (fadeIn() + slideInVertically { height -> height }) togetherWith
-                    (fadeOut() + slideOutVertically { height -> -height })
+            // Aşağıdan yukarıya kayarak değişim (Slide Up Effect)
+            // Metin yukarı doğru çıkıp kaybolur, yenisi alttan gelir.
+            (fadeIn() + slideInVertically { height -> height })
+                .togetherWith(fadeOut() + slideOutVertically { height -> -height })
         },
         label = "loadingText"
     ) { messageRes ->
         Text(
             text = stringResource(messageRes),
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.onSurface, // Kontrast için onSurface daha güvenli
             textAlign = TextAlign.Center,
             modifier = modifier
         )

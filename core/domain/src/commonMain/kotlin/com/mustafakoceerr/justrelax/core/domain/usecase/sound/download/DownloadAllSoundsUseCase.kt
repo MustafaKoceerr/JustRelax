@@ -13,19 +13,20 @@ import kotlinx.coroutines.flow.flow
 class DownloadAllSoundsUseCase(
     private val syncSoundsUseCase: SyncSoundsUseCase,
     private val soundRepository: SoundRepository,
-    private val downloadSoundUseCase: DownloadSoundUseCase
+    private val downloadBatchSoundsUseCase: DownloadBatchSoundsUseCase
 ) {
-    @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<DownloadStatus> = flow {
-        // 1. Sync
+        // 1. Önce sunucuyla senkronize ol (Metadata güncelle)
         val syncResult = syncSoundsUseCase()
         if (syncResult is Resource.Error) {
-            emit(DownloadStatus.Error(syncResult.error.message))
+            emit(DownloadStatus.Error(syncResult.error.message ?: "Sync failed"))
             return@flow
         }
 
-        // 2. Veritabanından verileri çek
+        // 2. Veritabanından tüm sesleri çek
         val allSounds = soundRepository.getSounds().first()
+
+        // 3. Sadece indirilmemiş olanları filtrele
         val soundsToDownload = allSounds.filter { !it.isDownloaded }
 
         if (soundsToDownload.isEmpty()) {
@@ -33,13 +34,7 @@ class DownloadAllSoundsUseCase(
             return@flow
         }
 
-        // 3. Her ses için bir indirme akışı oluştur
-        val downloadFlows = soundsToDownload.map { sound ->
-            downloadSoundUseCase(sound.id)
-        }
-
-        // 4. Akışları birleştir ve genel durumu yay (YENİ MANTIK)
-        // Artık tek tek emit etmiyoruz, birleştirilmiş sonucu emit ediyoruz.
-        emitAll(downloadFlows.combineToGlobalStatus())
+        // 4. İşi "Beyin"e (Batch Engine) devret
+        emitAll(downloadBatchSoundsUseCase(soundsToDownload))
     }
 }

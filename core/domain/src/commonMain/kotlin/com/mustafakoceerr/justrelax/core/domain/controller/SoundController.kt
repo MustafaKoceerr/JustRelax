@@ -20,7 +20,7 @@ interface SoundController {
     val state: StateFlow<SoundControllerState>
 
     // UI'dan gelen komutlar
-    fun toggleSound(sound: Sound)
+    fun toggleSound(soundId: String)
     fun changeVolume(soundId: String, volume: Float)
 
     // YENİ: Controller'ın volüm haritasını dışarıdan güncellemek için.

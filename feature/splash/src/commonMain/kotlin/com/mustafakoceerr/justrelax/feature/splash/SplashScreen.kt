@@ -11,16 +11,20 @@ import com.mustafakoceerr.justrelax.feature.splash.components.LoadingScreen
 import com.mustafakoceerr.justrelax.feature.splash.mvi.SplashEffect
 import com.mustafakoceerr.justrelax.feature.splash.navigation.SplashNavigator
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
-object SplashScreen : AppScreen {
+// 1. ROUTE (Stateful): Navigasyon ve Logic Sorumlusu
+data object SplashScreen : AppScreen {
 
     @Composable
     override fun Content() {
+        // Dependency Injection
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = koinScreenModel<SplashViewModel>()
+        val viewModel = koinScreenModel<SplashViewModel>() // Voyager standardı
         val splashNavigator = koinInject<SplashNavigator>()
 
+        // Side Effects (Navigasyon Kararları)
         LaunchedEffect(Unit) {
             viewModel.effect.collectLatest { effect ->
                 when (effect) {
@@ -35,8 +39,19 @@ object SplashScreen : AppScreen {
             }
         }
 
-        JustRelaxBackground {
-            LoadingScreen()
-        }
+        SplashScreenContent()
     }
+}
+
+@Composable
+fun SplashScreenContent() {
+    JustRelaxBackground {
+        LoadingScreen()
+    }
+}
+
+@Preview
+@Composable
+private fun SplashScreenPreview() {
+    SplashScreenContent()
 }

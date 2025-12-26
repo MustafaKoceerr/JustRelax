@@ -1,12 +1,19 @@
 package com.mustafakoceerr.justrelax
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,8 +25,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
@@ -47,6 +58,12 @@ object MainScreen : AppScreen {
 
         val snackbarController = koinInject<GlobalSnackbarController>()
 
+        // --- KMP UYUMLU KLAVYE KONTROLÜ ---
+        val density = LocalDensity.current
+        // WindowInsets.ime, hem iOS hem Android'de ortaktır.
+        // Eğer klavyenin alt yüksekliği 0'dan büyükse, klavye açıktır.
+        val isKeyboardOpen = WindowInsets.ime.getBottom(density) > 0
+
         TabNavigator(HomeTab) { tabNavigator ->
 
             val shouldShowPlayer = playerState.isVisible
@@ -58,35 +75,36 @@ object MainScreen : AppScreen {
                         JustRelaxSnackbarHost(hostState = snackbarController.hostState)
                     },
                     bottomBar = {
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            // A. Player Bar (Üstte)
-                            PlayerBottomBar(
-                                isVisible = shouldShowPlayer,
-                                activeIcons = playerState.activeSounds.map { it.iconUrl },
+                        // Klavye açık DEĞİLSE BottomBar'ı göster
+                        if (!isKeyboardOpen) {
 
-                                // DÜZELTME BURADA:
-                                // Artık 'isPaused' yok, 'isPlaying' var.
-                                // Direkt state'den gelen değeri veriyoruz.
-                                isPlaying = playerState.isPlaying,
 
-                                onPlayPauseClick = {
-                                    playerScreenModel.onIntent(PlayerIntent.ToggleMasterPlayPause)
-                                },
-                                onStopAllClick = {
-                                    playerScreenModel.onIntent(PlayerIntent.StopAll)
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                // A. Player Bar (Üstte)
+                                PlayerBottomBar(
+                                    isVisible = shouldShowPlayer,
+                                    activeIcons = playerState.activeSounds.map { it.iconUrl },
+                                    isPlaying = playerState.isPlaying,
+
+                                    onPlayPauseClick = {
+                                        playerScreenModel.onIntent(PlayerIntent.ToggleMasterPlayPause)
+                                    },
+                                    onStopAllClick = {
+                                        playerScreenModel.onIntent(PlayerIntent.StopAll)
+                                    }
+                                )
+
+                                // B. Navigation Bar (Altta)
+                                NavigationBar(
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                    contentColor = MaterialTheme.colorScheme.primary,
+                                ) {
+                                    TabNavigationItem(HomeTab)
+                                    TabNavigationItem(TimerTab)
+                                    TabNavigationItem(AiTab)
+                                    TabNavigationItem(SavedTab)
+                                    TabNavigationItem(MixerTab)
                                 }
-                            )
-
-                            // B. Navigation Bar (Altta)
-                            NavigationBar(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                                contentColor = MaterialTheme.colorScheme.primary,
-                            ) {
-                                TabNavigationItem(HomeTab)
-                                 TabNavigationItem(TimerTab)
-                                 TabNavigationItem(AiTab)
-                                 TabNavigationItem(SavedTab)
-                                 TabNavigationItem(MixerTab)
                             }
                         }
                     }
@@ -105,7 +123,7 @@ object MainScreen : AppScreen {
                     Box(
                         modifier = Modifier.padding(
                             top = innerPadding.calculateTopPadding(),
-                            bottom = animatedBottomPadding
+                            bottom = animatedBottomPadding.coerceAtLeast(0.dp)
                         )
                     ) {
                         CurrentTab()
@@ -128,7 +146,13 @@ private fun RowScope.TabNavigationItem(tab: Tab) {
                 Icon(painter = it, contentDescription = tab.options.title)
             }
         },
-        label = { Text(text = tab.options.title) },
+        label = {
+            Text(
+                text = tab.options.title,
+                style = MaterialTheme.typography.labelSmall, // Metin boyutu küçültüldü
+                textAlign = TextAlign.Center
+            )
+        },
         colors = NavigationBarItemDefaults.colors(
             selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
             selectedTextColor = MaterialTheme.colorScheme.primary,

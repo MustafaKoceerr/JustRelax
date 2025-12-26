@@ -31,7 +31,8 @@ class SoundscapeService : Service() {
         super.onCreate()
         keepAlivePlayer = KeepAlivePlayer(this)
         mediaSessionManager = MediaSessionManager(this, audioMixer)
-        notificationManager = SoundscapeNotificationManager(this, mediaSessionManager.getSessionToken())
+        notificationManager =
+            SoundscapeNotificationManager(this, mediaSessionManager.getSessionToken())
 
         keepAlivePlayer.play()
 
@@ -80,9 +81,11 @@ class SoundscapeService : Service() {
                 // Not: Buradan updateNotification çağırmaya gerek yok,
                 // çünkü yukarıdaki 'audioMixer.isPlaying' flow'u tetiklenecek ve o yapacak.
             }
+
             ACTION_PAUSE -> {
                 audioMixer.pauseAll()
             }
+
             ACTION_STOP -> {
                 audioMixer.stopAll()
                 stopForegroundService()
@@ -114,6 +117,12 @@ class SoundscapeService : Service() {
         mediaSessionManager.release()
         audioMixer.stopAll()
         super.onDestroy()
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        // Uygulama swipe edilince servisi tamamen durdurur
+        stopForegroundService()
     }
 
     companion object {

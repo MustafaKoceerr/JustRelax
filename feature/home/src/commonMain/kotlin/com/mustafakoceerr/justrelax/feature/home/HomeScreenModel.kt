@@ -11,8 +11,7 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetPlayingSoundsU
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.StopSoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.GetSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSoundUseCase
-import com.mustafakoceerr.justrelax.core.model.DownloadStatus
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSingleSoundUseCase
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeEffect
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeIntent
@@ -29,7 +28,7 @@ import kotlinx.coroutines.launch
 
 class HomeScreenModel(
     private val getSoundsUseCase: GetSoundsUseCase,
-    private val downloadSoundUseCase: DownloadSoundUseCase,
+    private val downloadSingleSoundUseCase: DownloadSingleSoundUseCase, // DEĞİŞTİ
     private val playSoundUseCase: PlaySoundUseCase,
     private val stopSoundUseCase: StopSoundUseCase,
     private val adjustVolumeUseCase: AdjustVolumeUseCase,
@@ -51,7 +50,7 @@ class HomeScreenModel(
     fun processIntent(intent: HomeIntent) {
         when (intent) {
             is HomeIntent.SelectCategory -> selectCategory(intent.category)
-            is HomeIntent.ToggleSound -> toggleSound(intent.sound)
+            is HomeIntent.ToggleSound -> toggleSound(intent.soundId)
             is HomeIntent.ChangeVolume -> changeVolume(intent.soundId, intent.volume)
             HomeIntent.SettingsClicked -> sendEffect(HomeEffect.NavigateToSettings)
         }
@@ -88,23 +87,28 @@ class HomeScreenModel(
         }
     }
 
-    private fun toggleSound(sound: Sound) {
+    private fun toggleSound(soundId: String) {
         screenModelScope.launch {
-            val isPlaying = _state.value.playingSoundIds.contains(sound.id)
+            val isPlaying = _state.value.playingSoundIds.contains(soundId)
 
             if (isPlaying) {
-                stopSoundUseCase(sound.id)
-            } else {
-                if (checkMaxActiveSoundsUseCase()) {
-                    val limit = checkMaxActiveSoundsUseCase.getLimit()
-                    sendEffect(HomeEffect.ShowError(AppError.Player.LimitExceeded(limit)))
-                    return@launch
-                }
+                stopSoundUseCase(soundId)
+                return@launch
+            }
 
-                if (sound.isDownloaded) {
-                    playSound(sound.id)
+            if (checkMaxActiveSoundsUseCase()) {
+                val limit = checkMaxActiveSoundsUseCase.getLimit()
+                sendEffect(HomeEffect.ShowError(AppError.Player.LimitExceeded(limit)))
+                return@launch
+            }
+
+            // soundId -> Sound (state’ten bul)
+            val sound = _state.value.allSounds.firstOrNull { it.id == soundId }
+            sound?.let {
+                if (it.isDownloaded) {
+                    playSound(soundId)
                 } else {
-                    downloadAndPlaySound(sound.id)
+                    downloadAndPlaySound(soundId)
                 }
             }
         }
@@ -112,22 +116,25 @@ class HomeScreenModel(
 
     private fun downloadAndPlaySound(soundId: String) {
         screenModelScope.launch {
+            // 1. İndirme için Sound objesine (URL'e) ihtiyacımız var.
+            // Bunu zaten yüklü olan listeden ID ile buluyoruz.
+            val sound = _state.value.allSounds.find { it.id == soundId } ?: return@launch
+
+            // 2. Loading durumuna al
             _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds + soundId) }
 
-            downloadSoundUseCase(soundId).collect { status ->
-                when (status) {
-                    is DownloadStatus.Completed -> {
-                        // İndirme bitti, loading'den düş
-                        _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - soundId) }
-                        // ŞİMDİ ÇALMAK GÜVENLİ
-                        playSound(soundId)
-                    }
-                    is DownloadStatus.Error -> {
-                        _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - soundId) }
-                        sendEffect(HomeEffect.ShowMessage(status.message))
-                    }
-                    else -> {} // Progress vs.
-                }
+            // 3. İndirmeyi başlat
+            val isSuccess = downloadSingleSoundUseCase(sound)
+
+            // 4. Loading'den çıkar
+            _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - soundId) }
+
+            if (isSuccess) {
+                // 5. Başarılıysa çal
+                playSound(soundId)
+            } else {
+                // 6. Hata varsa bildir
+                sendEffect(HomeEffect.ShowMessage("Download failed. Please check your connection."))
             }
         }
     }

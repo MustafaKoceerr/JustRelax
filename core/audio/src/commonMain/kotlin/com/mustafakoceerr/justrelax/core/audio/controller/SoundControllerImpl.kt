@@ -20,23 +20,21 @@ import kotlinx.coroutines.launch
  * SoundController arayüzünün gerçek implementasyonu.
  * Sesle ilgili tüm UseCase'leri bir araya getirir ve tek bir state sunar.
  */
+
 class SoundControllerImpl(
-    // Bu controller'ın yaşayacağı CoroutineScope (ViewModel'den gelecek)
     private val scope: CoroutineScope,
-    // Gerekli UseCase'ler
     private val getPlayingSoundsUseCase: GetPlayingSoundsUseCase,
     private val playSoundUseCase: PlaySoundUseCase,
     private val stopSoundUseCase: StopSoundUseCase,
     private val adjustVolumeUseCase: AdjustVolumeUseCase
 ) : SoundController {
-    // Bu, controller'ın kendi içindeki ses seviyesi bilgisidir.
-    // UI'dan gelen değişiklikleri burada tutarız.
+
     private val _soundVolumes = MutableStateFlow<Map<String, Float>>(emptyMap())
 
-    // Dışarıya sunulan birleşik state
+    // combine operatörü ile iki farklı veri kaynağını (Source of Truth) birleştiriyoruz.
     override val state: StateFlow<SoundControllerState> = combine(
-        getPlayingSoundsUseCase(), // 1. Hangi sesler çalıyor? (Mixer'dan gelir)
-        _soundVolumes              // 2. Ses seviyeleri ne? (UI'dan gelir)
+        getPlayingSoundsUseCase(),
+        _soundVolumes
     ) { playingIds, volumes ->
         SoundControllerState(
             playingSoundIds = playingIds,
@@ -48,34 +46,39 @@ class SoundControllerImpl(
         initialValue = SoundControllerState()
     )
 
-    override fun toggleSound(sound: Sound) {
+    override fun toggleSound(soundId: String) {
         scope.launch {
-            if (state.value.playingSoundIds.contains(sound.id)) {
-                stopSoundUseCase(sound.id) // Bu çağrı artık beklenecek
+            // State'e erişim thread-safe'dir.
+            val isPlaying = state.value.playingSoundIds.contains(soundId)
+
+            if (isPlaying) {
+                stopSoundUseCase(soundId)
             } else {
-                // Oynatırken, daha önce ayarlanmış veya varsayılan ses seviyesini kullan
-                val volume = state.value.soundVolumes[sound.id] ?: 0.5f
-                playSoundUseCase(sound.id, volume)
+                // Eğer ses seviyesi daha önce ayarlanmamışsa varsayılan 0.5f (veya 1.0f) olsun.
+                // Best Practice: Magic Number yerine bir sabit (constant) kullanmak daha iyidir.
+                val currentVolume = state.value.soundVolumes[soundId] ?: DEFAULT_VOLUME
+
+                // DİKKAT: PlaySoundUseCase artık sadece ID ile çalışabilmelidir.
+                // Repository katmanı bu ID'ye karşılık gelen dosya yolunu (URI/Path) bilmelidir.
+                playSoundUseCase(soundId, currentVolume)
             }
         }
     }
 
     override fun changeVolume(soundId: String, volume: Float) {
-        // 1. UI'ın anında tepki vermesi için kendi state'imizi güncelle (Optimistic Update)
-        _soundVolumes.update { it + (soundId to volume) }
-
-        // 2. Arka planda Mixer'a emri gönder (Fire-and-Forget)
+        // Optimistic Update: UI anında güncellenir.
+        _soundVolumes.update { currentMap ->
+            currentMap + (soundId to volume)
+        }
+        // Asıl iş mantığı (Business Logic) UseCase'e devredilir.
         adjustVolumeUseCase(soundId, volume)
     }
 
-    // YENİ: Gelen volümleri direkt state'e basıyoruz.
     override fun setVolumes(volumes: Map<String, Float>) {
         _soundVolumes.update { volumes }
     }
 
-    /**
-     * Koin'in bu sınıfı dinamik olarak (farklı scope'larla) oluşturmasını sağlayan Factory.
-     */
+    // Factory implementation...
     class Factory(
         private val getPlayingSoundsUseCase: GetPlayingSoundsUseCase,
         private val playSoundUseCase: PlaySoundUseCase,
@@ -84,14 +87,16 @@ class SoundControllerImpl(
     ) : SoundController.Factory {
         override fun create(scope: CoroutineScope): SoundController {
             return SoundControllerImpl(
-                scope = scope,
-                getPlayingSoundsUseCase = getPlayingSoundsUseCase,
-                playSoundUseCase = playSoundUseCase,
-                stopSoundUseCase = stopSoundUseCase,
-                adjustVolumeUseCase = adjustVolumeUseCase
+                scope,
+                getPlayingSoundsUseCase,
+                playSoundUseCase,
+                stopSoundUseCase,
+                adjustVolumeUseCase
             )
         }
     }
+
+    companion object {
+        private const val DEFAULT_VOLUME = 0.5f
+    }
 }
-
-

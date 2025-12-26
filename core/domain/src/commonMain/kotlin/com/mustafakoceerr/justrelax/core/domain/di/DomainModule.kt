@@ -3,7 +3,6 @@ package com.mustafakoceerr.justrelax.core.domain.di
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.AdjustVolumeUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadAllSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadInitialSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppLanguageUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppThemeUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetPlayingSoundsUseCase
@@ -24,9 +23,13 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.player.PauseAllSoundsUse
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.ResumeAllSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.savedmix.SaveCurrentMixUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetLegalUrlUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SyncLanguageWithSystemUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadBatchSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSingleSoundUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
+
 /**
  * Bu modül, domain katmanındaki UseCase'leri Koin'e sağlar.
  */
@@ -34,7 +37,6 @@ val domainModule = module {
     // --- Data & Sync ---
     // UseCase'ler stateless olduğu için 'factory' (her çağrıda yeni nesne) kullanıyoruz.
     factoryOf(::SyncSoundsIfNecessaryUseCase)
-    factoryOf(::DownloadSoundUseCase)
 
     // --- Player / Audio ---
     // UI katmanı AudioMixer'a sadece bu UseCase'ler üzerinden erişir.
@@ -67,4 +69,13 @@ val domainModule = module {
     factoryOf(::ObservePlaybackStateUseCase)
     factoryOf(::SetMixUseCase)
     factoryOf(::SaveCurrentMixUseCase)
+
+    // 2. Beyin (Batch Engine)
+    factoryOf(::DownloadSingleSoundUseCase)
+    factoryOf(::DownloadBatchSoundsUseCase)
+
+    factoryOf(::SaveCurrentMixUseCase)
+    factoryOf(::SaveCurrentMixUseCase)
+    factoryOf(::GetLegalUrlUseCase)
+
 }

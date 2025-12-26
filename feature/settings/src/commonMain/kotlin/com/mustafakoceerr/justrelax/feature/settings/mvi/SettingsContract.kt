@@ -33,6 +33,7 @@ sealed interface SettingsIntent {
     data object RateApp : SettingsIntent
     data object SendFeedback : SettingsIntent
     data object OpenPrivacyPolicy : SettingsIntent
+    data object OpenTermsAndConditions : SettingsIntent
 
     // İndirme
     data object DownloadAllLibrary : SettingsIntent

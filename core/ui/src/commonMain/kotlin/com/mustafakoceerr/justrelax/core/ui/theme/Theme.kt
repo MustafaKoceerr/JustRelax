@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 
 
 internal val LightColorScheme = lightColorScheme(
@@ -85,7 +86,6 @@ internal val DarkColorScheme = darkColorScheme(
 )
 
 
-
 // 1. EXPECT: Her platformun bu fonksiyonu sağlamasını bekliyoruz.
 // YENİ İMZA: Artık 'isHighContrast' parametresini alıyor.
 
@@ -104,12 +104,11 @@ fun JustRelaxTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = rememberPlatformColorScheme(darkTheme, dynamicColor)
-    // Tipografiyi buradan alıyoruz
-    val typography = getAppTypography()
+    val typography = getAppTypography() // Mevcut hali kalsın, Type.kt'yi optimize edeceğiz.
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = typography, // <-- BURAYA EKLE
+        typography = typography,
         content = content
     )
 }

@@ -26,4 +26,9 @@
     <string name="support_email">kocerlabs@gmail.com</string>
     <string name="about_title">About</string>
     <string name="privacy_policy_url">https://www.google.com</string>
+
+    <!-- values/strings.xml (en) -->
+    <string name="section_support_legal">Support &amp; Legal</string>
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="terms_conditions_title">Terms &amp; Conditions</string>
 </resources>

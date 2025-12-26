@@ -33,145 +33,93 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
 @Composable
 fun SettingsTile(
     icon: ImageVector,
     title: String,
     subtitle: String? = null,
-    onClick:()-> Unit,
-    // sağ tarafta ne olacak? (ok işareti, switch veya boş)
-    trailingContent: @Composable (()-> Unit)? = {
+    onClick: () -> Unit,
+    trailingContent: @Composable (() -> Unit)? = {
         Icon(
             imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
     },
-    color: Color = MaterialTheme.colorScheme.secondaryContainer // kart rengi
-){
+    color: Color = MaterialTheme.colorScheme.secondaryContainer
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(color)
-            .clickable{onClick()}
+            .clickable { onClick() }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 1. Sol İkon (renkli bir kutu içinde)
-        Surface(
-            shape = RoundedCornerShape(12.dp),
-            color = MaterialTheme.colorScheme.primaryContainer,
-            modifier = Modifier.size(40.dp)
-        ){
-            Box(contentAlignment = Alignment.Center){
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
-        }
+        // SRP: İkon mantığı kendi Composable'ına taşındı.
+        SettingsTileIcon(icon = icon)
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        // 2. metinler
-        Column(modifier = Modifier.weight(1f)){
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                color= MaterialTheme.colorScheme.onSurface
-            )
+        // SRP: Metin mantığı kendi Composable'ına taşındı.
+        SettingsTileText(
+            title = title,
+            subtitle = subtitle,
+            modifier = Modifier.weight(1f)
+        )
 
-            if (subtitle!=null){
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color= MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-
-        // 3. Sağ taraf opsiyonel.
-        if (trailingContent != null){
+        // Sağ taraf opsiyonel içeriği
+        if (trailingContent != null) {
             Spacer(modifier = Modifier.width(8.dp))
             trailingContent()
         }
     }
 }
 
-@Preview(
-    name = "Light – Default",
-    showBackground = true
-)
+/**
+ * SettingsTile'ın sol tarafındaki, arka planı renkli ikonu çizer.
+ */
 @Composable
-private fun SettingsTileLightPreview_Default() {
-    JustRelaxTheme(darkTheme = false) {
-        SettingsTile(
-            icon = Icons.Rounded.Language,
-            title = "Dil",
-            subtitle = "Türkçe",
-            onClick = {}
-        )
+private fun SettingsTileIcon(icon: ImageVector) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = MaterialTheme.colorScheme.primaryContainer,
+        modifier = Modifier.size(40.dp)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
     }
 }
 
-@Preview(
-    name = "Light – No Subtitle",
-    showBackground = true
-)
+/**
+ * SettingsTile'ın ortasındaki başlık ve opsiyonel altyazıyı çizer.
+ */
 @Composable
-private fun SettingsTileLightPreview_NoSubtitle() {
-    JustRelaxTheme(darkTheme = false) {
-        SettingsTile(
-            icon = Icons.Rounded.Palette,
-            title = "Tema",
-            subtitle = null,
-            onClick = {}
+private fun SettingsTileText(
+    title: String,
+    subtitle: String?,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface
         )
-    }
-}
-
-@Preview(
-    name = "Light – Switch",
-    showBackground = true
-)
-@Composable
-private fun SettingsTileLightPreview_Switch() {
-    JustRelaxTheme(darkTheme = false) {
-        val checked = remember { mutableStateOf(true) }
-
-        SettingsTile(
-            icon = Icons.Rounded.Notifications,
-            title = "Bildirimler",
-            subtitle = "Bildirimleri aç / kapat",
-            onClick = {},
-            trailingContent = {
-                Switch(
-                    checked = checked.value,
-                    onCheckedChange = { checked.value = it }
-                )
-            }
-        )
-    }
-}
-
-@Preview(
-    name = "Light – No Trailing",
-    showBackground = true
-)
-@Composable
-private fun SettingsTileLightPreview_NoTrailing() {
-    JustRelaxTheme(darkTheme = false) {
-        SettingsTile(
-            icon = Icons.Rounded.Language,
-            title = "Uygulama Sürümü",
-            subtitle = "1.0.0",
-            onClick = {},
-            trailingContent = null
-        )
+        if (subtitle != null) {
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
