@@ -26,6 +26,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiIntent
 import justrelax.feature.ai.generated.resources.Res
@@ -53,6 +54,9 @@ fun AIPromptInput(
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        // 1. Klavye denetleyicisini al.
+        val keyboardController = LocalSoftwareKeyboardController.current
+
         TextField(
             value = prompt,
             onValueChange = { onIntent(AiIntent.UpdatePrompt(it)) },
@@ -74,7 +78,9 @@ fun AIPromptInput(
                 SendPromptButton(
                     isLoading = isThinking,
                     isEnabled = prompt.isNotBlank() && !isThinking,
-                    onClick = { onIntent(AiIntent.GenerateMix) }
+                    onClick = {
+                        keyboardController?.hide()
+                        onIntent(AiIntent.GenerateMix) }
                 )
             }
         )
