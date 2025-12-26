@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.saved
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,7 @@ import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesEmptyScre
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesList
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedEffect
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedIntent
+import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedState
 import justrelax.feature.saved.generated.resources.Res
 import justrelax.feature.saved.generated.resources.saved_screen_title
 import org.jetbrains.compose.resources.stringResource
@@ -35,14 +37,10 @@ data object SavedScreen : AppScreen {
     override fun Content() {
         val tabNavigator = LocalTabNavigator.current
         val tabProvider = koinInject<TabProvider>()
-
-        // Not: ViewModel isimlendirmesi ScreenModel ile eşleşmeli
         val savedViewModel = koinScreenModel<SavedScreenModel>()
         val state by savedViewModel.state.collectAsState()
-
         val snackbarController = koinInject<GlobalSnackbarController>()
 
-        // --- EFFECT HANDLING (UiText Çözümleme Burası) ---
         LaunchedEffect(Unit) {
             savedViewModel.effect.collect { effect ->
                 when (effect) {
@@ -51,18 +49,13 @@ data object SavedScreen : AppScreen {
                     }
 
                     is SavedEffect.ShowDeleteSnackbar -> {
-                        // 1. UiText -> String dönüşümü (Asenkron/Suspend)
                         val messageStr = effect.message.resolve()
                         val actionStr = effect.actionLabel?.resolve()
-
-                        // 2. Snackbar Gösterimi
                         val result = snackbarController.showSnackbar(
                             message = messageStr,
                             actionLabel = actionStr,
                             duration = SnackbarDuration.Short
                         )
-
-                        // 3. Aksiyon Kontrolü
                         if (result == SnackbarResult.ActionPerformed) {
                             savedViewModel.onIntent(SavedIntent.UndoDelete)
                         }
@@ -71,37 +64,67 @@ data object SavedScreen : AppScreen {
             }
         }
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                JustRelaxTopBar(
-                    title = stringResource(Res.string.saved_screen_title)
-                )
+        // --- UI (İSKELET) ---
+        // Ana iskelet sadeleştirildi. İçerik mantığı aşağıya taşındı.
+        Column(modifier = Modifier.fillMaxSize()) {
+            JustRelaxTopBar(
+                title = stringResource(Res.string.saved_screen_title)
+            )
 
+            SavedScreenContent(
+                state = state,
+                onIntent = savedViewModel::onIntent, // Intent'leri doğrudan iletiyoruz
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
+
+
+// --- İÇERİK YÖNETİMİ (YENİ COMPOSABLE) ---
+// SRP & Okunabilirlik için ayrıldı.
+@Composable
+private fun SavedScreenContent(
+    state: SavedState,
+    onIntent: (SavedIntent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    // Crossfade animasyonu korunuyor.
+    Crossfade(
+        targetState = state,
+        modifier = modifier.fillMaxSize(),
+        label = "SavedScreenContentCrossfade"
+    ) { currentState ->
+        // 2. Sorun Düzeltmesi: when bloğu artık hizalamayı doğru yönetiyor.
+        when {
+            currentState.isLoading -> {
+                // Yükleniyor durumu ortada kalmalı.
                 Box(
-                    modifier = Modifier.weight(1f).fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    if (state.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    } else if (state.mixes.isEmpty()) {
-                        SavedMixesEmptyScreen(
-                            onCreateClick = {
-                                savedViewModel.onIntent(SavedIntent.CreateNewMix)
-                            }
-                        )
-                    } else {
-                        SavedMixesList(
-                            mixes = state.mixes,
-                            onMixClick = { mix ->
-                                savedViewModel.onIntent(SavedIntent.PlayMix(mix.id))
-                            },
-                            onMixDelete = { mix ->
-                                savedViewModel.onIntent(SavedIntent.DeleteMix(mix))
-                            }
-                        )
-                    }
+                    CircularProgressIndicator()
                 }
+            }
+            currentState.mixes.isEmpty() -> {
+                // Boş ekran durumu da ortada olabilir veya yukarıdan başlayabilir.
+                // Tasarıma göre ortada kalması daha şık.
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    SavedMixesEmptyScreen(
+                        onCreateClick = { onIntent(SavedIntent.CreateNewMix) }
+                    )
+                }
+            }
+            else -> {
+                // Liste yukarıdan başlamalı. Box'a gerek yok.
+                SavedMixesList(
+                    mixes = currentState.mixes,
+                    onMixClick = { mix -> onIntent(SavedIntent.PlayMix(mix.id)) },
+                    onMixDelete = { mix -> onIntent(SavedIntent.DeleteMix(mix)) }
+                )
             }
         }
     }

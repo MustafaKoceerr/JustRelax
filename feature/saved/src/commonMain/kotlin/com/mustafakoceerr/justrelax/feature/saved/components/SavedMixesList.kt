@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.saved.components
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
 
+@OptIn(ExperimentalFoundationApi::class) // Bu anotasyon animateItemPlacement için gerekli
 @Composable
 fun SavedMixesList(
     mixes: List<SavedMixUiModel>,
@@ -18,19 +21,20 @@ fun SavedMixesList(
 ) {
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        // Listenin üst ve alt boşlukları için (TopBar'a yapışmasın)
+        contentPadding = PaddingValues(vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp) // Kartlar arası dikey boşluk
     ) {
         items(
             items = mixes,
-            key = { it.id } // Animasyon için ID şart
+            // 1. ADIM: Her öğeye benzersiz bir anahtar (key) veriyoruz.
+            // Bu, Compose'un hangi öğenin hangisi olduğunu bilmesini sağlar.
+            key = { mix -> mix.id }
         ) { mix ->
             SwipableSavedMixItem(
                 mix = mix,
                 onPlayClick = { onMixClick(mix) },
                 onDelete = { onMixDelete(mix) },
-                onRename = { /* İleride */ },
-                onShare = { /* İleride */ },
             )
         }
     }

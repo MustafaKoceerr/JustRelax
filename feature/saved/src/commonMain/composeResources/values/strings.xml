@@ -15,4 +15,7 @@
 
     <string name="msg_mix_deleted">Mix deleted</string>
     <string name="action_undo">Undo</string>
+
+    <string name="date_format_short">MM/dd/yyyy</string>
+
 </resources>

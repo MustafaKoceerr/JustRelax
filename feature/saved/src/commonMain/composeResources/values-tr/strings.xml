@@ -15,4 +15,9 @@
 
     <string name="msg_mix_deleted">Mix silindi</string>
     <string name="action_undo">Geri al</string>
+
+    <string name="date_format_short">dd.MM.yyyy</string>
+
+
+
 </resources>
