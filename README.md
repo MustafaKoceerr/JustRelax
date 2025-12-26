@@ -248,3 +248,13 @@ Designed with **scalability**, **testability**, and **long-term maintainability*
 ---
 
 ⭐ *This repository is crafted to demonstrate modern Android & Kotlin Multiplatform development practices with a strong emphasis on architecture, UI consistency, and thoughtful technology choices.*
+
+---
+
+## 📄 License
+
+Licensed under the **Apache License, Version 2.0**. See the [LICENSE](LICENSE) file for details.
+
+## 🔔 Notice
+
+See the [NOTICE](NOTICE) file for attribution and additional information.
