@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.extensions.displayName
-import com.mustafakoceerr.justrelax.core.ui.extensions.rememberDebouncedOnClick
+import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
 import org.jetbrains.compose.resources.stringResource
@@ -64,7 +64,7 @@ fun SoundCard(
 ) {
     // Debounce işlemi (yardımcı fonksiyonun var olduğunu varsayıyoruz)
     // Eğer yoksa basit bir clickable kullanılabilir ama bu daha güvenli.
-    val debouncedClick = rememberDebouncedOnClick(debounceMs = 500, onClick = onCardClick)
+    val debouncedClick = rememberThrottledOnClick(throttleMs = 500, onClick = onCardClick)
 
     // Renk Animasyonları
     val cardContainerColor by animateColorAsState(

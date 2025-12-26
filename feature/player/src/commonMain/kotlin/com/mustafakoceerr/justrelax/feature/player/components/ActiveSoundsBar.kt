@@ -35,7 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.mustafakoceerr.justrelax.core.ui.extensions.rememberDebouncedOnClick
+import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
@@ -83,15 +83,15 @@ private fun ActiveSoundsBarContent(
     modifier: Modifier = Modifier
 ) {
     // Play/Pause butonu için 1 saniyelik korumalı bir lambda oluşturuyoruz.
-    val debouncedOnPlayPauseClick = rememberDebouncedOnClick(
-        debounceMs = 500L, // 1 saniye
+    val debouncedOnPlayPauseClick = rememberThrottledOnClick(
+        throttleMs = 500L, // 1 saniye
         onClick = onPlayPauseClick
     )
 
     // Not: onStopAllClick de ağır bir işlem olduğu için ona da debounce eklenebilir.
     // Şimdilik sadece Play/Pause için ekliyoruz.
-    val debouncedOnStopAllClick = rememberDebouncedOnClick(
-        debounceMs = 1000L,
+    val debouncedOnStopAllClick = rememberThrottledOnClick(
+        throttleMs = 1000L,
         onClick = onStopAllClick
     )
 

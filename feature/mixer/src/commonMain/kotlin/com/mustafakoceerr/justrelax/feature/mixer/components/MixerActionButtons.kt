@@ -19,7 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.core.ui.extensions.rememberDebouncedOnClick
+import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import justrelax.feature.mixer.generated.resources.Res
 import justrelax.feature.mixer.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -37,7 +37,7 @@ fun CreateMixButton(
     isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val debouncedOnClick = rememberDebouncedOnClick(onClick = onClick)
+    val debouncedOnClick = rememberThrottledOnClick(throttleMs = 1000L, onClick = onClick)
 
     Button(
         onClick = debouncedOnClick,
