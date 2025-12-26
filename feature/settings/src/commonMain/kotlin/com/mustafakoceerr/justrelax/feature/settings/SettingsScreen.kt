@@ -24,6 +24,7 @@ import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.settings.components.*
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsEffect
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsIntent
+import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsState
 import justrelax.feature.settings.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
@@ -34,21 +35,16 @@ data object SettingsScreen : AppScreen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
+        // --- BAĞIMLILIKLAR, STATE, EFFECT KISIMLARI AYNI KALIYOR ---
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = koinScreenModel<SettingsViewModel>()
         val state by screenModel.state.collectAsState()
-
-        // Yerel Snackbar (Global Controller yerine ekran bazlı yönetim daha izoledir)
-        // Ama istersen GlobalSnackbarController da kullanabilirsin.
         val snackbarHostState = remember { SnackbarHostState() }
 
-        // Effect Handling
         LaunchedEffect(Unit) {
             screenModel.effect.collectLatest { effect ->
                 when (effect) {
-                    is SettingsEffect.ShowMessage -> {
-                        snackbarHostState.showSnackbar(effect.message)
-                    }
+                    is SettingsEffect.ShowMessage -> snackbarHostState.showSnackbar(effect.message)
                 }
             }
         }
@@ -61,47 +57,50 @@ data object SettingsScreen : AppScreen {
                         title = stringResource(Res.string.settings_title),
                         navigationIcon = {
                             IconButton(onClick = { navigator.pop() }) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                                    contentDescription = "Back"
-                                )
+                                Icon(Icons.AutoMirrored.Rounded.ArrowBack, "Back")
                             }
                         }
                     )
                 },
-                snackbarHost = {
-                    JustRelaxSnackbarHost(hostState = snackbarHostState)
-                }
-            ) { padding ->
-                // İçerik bileşenimiz padding'i kendi içinde yönetiyor olabilir
-                // ama Scaffold padding'ini dışarıdan vermek daha güvenlidir.
-                // SettingsContent içinde Modifier.padding(padding) eklemeliyiz veya Box ile sarmalıyız.
-                // Burada SettingsContent'in modifier parametresi olmadığı için,
-                // SettingsContent'i bir Box içine alıp padding verelim.
-
-                Box(
-                    modifier = Modifier.padding(padding)
-                ) {
-                    SettingsContent(
-                        state = state,
-                        onIntent = screenModel::processIntent
-                    )
-                }
-            }
-
-            // Bottom Sheet (Hibrit Yöntem)
-            if (state.isLanguageSheetOpen) {
-                LanguageSelectionBottomSheet(
-                    availableLanguages = AppLanguage.entries,
-                    currentLanguageCode = state.currentLanguage.code,
-                    onDismissRequest = {
-                        screenModel.processIntent(SettingsIntent.CloseLanguageSelection)
-                    },
-                    onLanguageSelected = { language ->
-                        screenModel.processIntent(SettingsIntent.ChangeLanguage(language))
-                    }
+                snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) }
+            ) { innerPadding ->
+                // SRP: Tüm UI içeriği ve BottomSheet yönetimi ayrı bir Composable'a taşındı.
+                SettingsScreenLayout(
+                    state = state,
+                    onIntent = screenModel::processIntent,
+                    modifier = Modifier.padding(innerPadding)
                 )
             }
+        }
+    }
+}
+
+/**
+ * Settings ekranının ana düzenini ve BottomSheet'in görünürlüğünü yönetir.
+ */
+@Composable
+private fun SettingsScreenLayout(
+    state: SettingsState,
+    onIntent: (SettingsIntent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier.fillMaxSize()) {
+        SettingsContent(
+            state = state,
+            onIntent = onIntent
+        )
+
+        if (state.isLanguageSheetOpen) {
+            LanguageSelectionBottomSheet(
+                availableLanguages = AppLanguage.entries,
+                currentLanguageCode = state.currentLanguage.code,
+                onDismissRequest = {
+                    onIntent(SettingsIntent.CloseLanguageSelection)
+                },
+                onLanguageSelected = { language ->
+                    onIntent(SettingsIntent.ChangeLanguage(language))
+                }
+            )
         }
     }
 }

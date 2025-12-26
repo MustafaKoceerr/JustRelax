@@ -31,7 +31,6 @@ import justrelax.feature.settings.generated.resources.section_content
 import justrelax.feature.settings.generated.resources.section_support
 import justrelax.feature.settings.generated.resources.settings_language_title
 import org.jetbrains.compose.resources.stringResource
-
 @Composable
 fun SettingsContent(
     state: SettingsState,
@@ -42,6 +41,7 @@ fun SettingsContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
+        // Ana bölümler arasındaki boşluk
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         // 1. TEMA SEÇİMİ
@@ -51,6 +51,7 @@ fun SettingsContent(
         )
 
         // 2. İÇERİK (İndirme & Dil)
+        // İYİLEŞTİRME: İçindeki Spacer'lar kaldırıldı.
         SectionGroup(title = stringResource(Res.string.section_content)) {
             DownloadAllCard(
                 isDownloaded = state.isLibraryComplete,
@@ -58,9 +59,6 @@ fun SettingsContent(
                 progress = state.downloadProgress,
                 onClick = { onIntent(SettingsIntent.DownloadAllLibrary) }
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
             SettingsTile(
                 icon = Icons.Rounded.Language,
                 title = stringResource(Res.string.settings_language_title),
@@ -70,6 +68,7 @@ fun SettingsContent(
         }
 
         // 3. DESTEK & HAKKINDA
+        // İYİLEŞTİRME: İçindeki Spacer'lar kaldırıldı.
         SectionGroup(title = stringResource(Res.string.section_support)) {
             SettingsTile(
                 icon = Icons.Rounded.StarRate,
@@ -77,25 +76,16 @@ fun SettingsContent(
                 subtitle = stringResource(Res.string.rate_app_subtitle),
                 onClick = { onIntent(SettingsIntent.RateApp) }
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Resource'ları burada çekip Intent'e parametre olarak vermek yerine
-            // ViewModel içinde sabit tutmak veya buradan sadece "SendFeedback" sinyali göndermek daha temizdir.
-            // ViewModel zaten mail adresini ve şablonu biliyor olmalı (veya Config'den almalı).
             SettingsTile(
                 icon = Icons.Rounded.Mail,
                 title = stringResource(Res.string.feedback_title),
                 subtitle = stringResource(Res.string.feedback_subtitle),
                 onClick = { onIntent(SettingsIntent.SendFeedback) }
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
             SettingsTile(
                 icon = Icons.Rounded.Info,
                 title = stringResource(Res.string.about_title),
-                subtitle = "v1.0.0", // TODO: BuildKonfig entegrasyonu
+                subtitle = "v1.0.0",
                 onClick = { onIntent(SettingsIntent.OpenPrivacyPolicy) }
             )
         }
@@ -104,15 +94,28 @@ fun SettingsContent(
     }
 }
 
+/**
+ * Başlığı olan ve içeriğindeki elemanların arasına otomatik boşluk ekleyen
+ * akıllı bir bölüm grubu.
+ */
 @Composable
-private fun SectionGroup(title: String, content: @Composable ColumnScope.() -> Unit) {
-    Column {
+private fun SectionGroup(
+    title: String,
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(modifier = modifier) {
         Text(
             text = title,
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
         )
-        content()
+        // İYİLEŞTİRME: Bu iç Column, çocukları arasına 12.dp boşluk ekler.
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            content()
+        }
     }
 }

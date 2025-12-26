@@ -1,5 +1,10 @@
 package com.mustafakoceerr.justrelax.feature.settings.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,6 +25,8 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +39,9 @@ import justrelax.feature.settings.generated.resources.download_all_title
 import justrelax.feature.settings.generated.resources.download_progress
 import org.jetbrains.compose.resources.stringResource
 
+// KOD TEMİZLİĞİ: Karmaşık if/else'leri yönetmek için basit bir durum enum'u.
+private enum class DownloadCardState { IDLE, DOWNLOADING, COMPLETED }
+
 @Composable
 fun DownloadAllCard(
     isDownloaded: Boolean,
@@ -39,37 +49,58 @@ fun DownloadAllCard(
     progress: Float,
     onClick: () -> Unit
 ) {
-    val backgroundColor =
-        if (isDownloaded) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.tertiaryContainer
-    val contentColor =
-        if (isDownloaded) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onTertiaryContainer
+    // KOD OKUNABİLİRLİĞİ: İki boolean yerine tek bir state'i yönetiyoruz.
+    val cardState = remember(isDownloaded, isDownloading) {
+        when {
+            isDownloaded -> DownloadCardState.COMPLETED
+            isDownloading -> DownloadCardState.DOWNLOADING
+            else -> DownloadCardState.IDLE
+        }
+    }
+
+    // ANİMASYON: Renk geçişlerini yumuşatıyoruz.
+    val backgroundColor by animateColorAsState(
+        targetValue = if (cardState == DownloadCardState.COMPLETED) MaterialTheme.colorScheme.secondaryContainer
+        else MaterialTheme.colorScheme.tertiaryContainer,
+        animationSpec = tween(durationMillis = 400),
+        label = "CardBackgroundColor"
+    )
+    val contentColor by animateColorAsState(
+        targetValue = if (cardState == DownloadCardState.COMPLETED) MaterialTheme.colorScheme.onSecondaryContainer
+        else MaterialTheme.colorScheme.onTertiaryContainer,
+        animationSpec = tween(durationMillis = 400),
+        label = "CardContentColor"
+    )
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(backgroundColor)
-            .clickable(enabled = !isDownloaded && !isDownloaded){onClick()}
+            // HATA DÜZELTME: Tıklama mantığı düzeltildi ve state'e bağlandı.
+            .clickable(enabled = cardState == DownloadCardState.IDLE, onClick = onClick)
             .padding(16.dp)
-    ){
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                imageVector = if(isDownloaded) Icons.Rounded.CheckCircle else
-                    Icons.Rounded.CloudDownload,
+                imageVector = if (cardState == DownloadCardState.COMPLETED) Icons.Rounded.CheckCircle
+                else Icons.Rounded.CloudDownload,
                 contentDescription = null,
                 tint = contentColor,
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
 
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = if (isDownloaded) stringResource(Res.string.download_all_completed_title) else stringResource(Res.string.download_all_title),
+                    text = if (cardState == DownloadCardState.COMPLETED) stringResource(Res.string.download_all_completed_title)
+                    else stringResource(Res.string.download_all_title),
                     style = MaterialTheme.typography.titleMedium,
                     color = contentColor
                 )
 
-                if (!isDownloaded && isDownloading){
+                // MANTIK DÜZELTME: Altyazı, indirilmediği sürece her zaman görünür.
+                if (cardState != DownloadCardState.COMPLETED) {
                     Text(
                         text = stringResource(Res.string.download_all_subtitle_recommended),
                         style = MaterialTheme.typography.bodySmall,
@@ -79,26 +110,29 @@ fun DownloadAllCard(
             }
         }
 
-        if (isDownloading){
-            Spacer(modifier = Modifier.height(16.dp))
-            LinearProgressIndicator(
-                progress = {progress},
-                modifier = Modifier.fillMaxWidth().height(6.dp),
-                color = contentColor,
-                trackColor = contentColor.copy(alpha = 0.3f),
-                strokeCap = StrokeCap.Round
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = stringResource(
-                    Res.string.download_progress,
-                    (progress * 100).toInt()
-                ),
-                style = MaterialTheme.typography.labelSmall,
-                color= contentColor,
-                modifier = Modifier.align(Alignment.End)
+        // ANİMASYON: Progress bar alanı zarifçe açılıp kapanır.
+        AnimatedVisibility(
+            visible = cardState == DownloadCardState.DOWNLOADING,
+            enter = expandVertically(animationSpec = tween(400)),
+            exit = shrinkVertically(animationSpec = tween(400))
+        ) {
+            Column {
+                Spacer(modifier = Modifier.height(16.dp))
+                LinearProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier.fillMaxWidth().height(6.dp),
+                    color = contentColor,
+                    trackColor = contentColor.copy(alpha = 0.3f),
+                    strokeCap = StrokeCap.Round
                 )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(Res.string.download_progress, (progress * 100).toInt()),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = contentColor,
+                    modifier = Modifier.align(Alignment.End)
+                )
+            }
         }
     }
 }
