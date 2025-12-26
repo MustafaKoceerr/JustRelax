@@ -13,7 +13,7 @@ data class MixerState(
 sealed interface MixerIntent {
     data class SelectSoundCount(val count: Int) : MixerIntent
     data object GenerateMix : MixerIntent
-    data class ToggleSound(val sound: Sound) : MixerIntent
+    data class ToggleSound(val soundId: String) : MixerIntent
     data class ChangeVolume(val soundId: String, val volume: Float) : MixerIntent
     data object ShowSaveDialog : MixerIntent
     data object HideSaveDialog : MixerIntent

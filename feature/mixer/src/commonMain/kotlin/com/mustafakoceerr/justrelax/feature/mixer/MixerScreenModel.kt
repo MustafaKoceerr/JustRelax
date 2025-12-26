@@ -52,7 +52,7 @@ class MixerScreenModel(
 
             // --- DELEGE EDİLEN GÖREVLER ---
             // Bu intent'ler geldiğinde, ViewModel düşünmez, sadece işi Controller'a paslar.
-            is MixerIntent.ToggleSound -> soundController.toggleSound(intent.sound)
+            is MixerIntent.ToggleSound -> soundController.toggleSound(intent.soundId)
             is MixerIntent.ChangeVolume -> soundController.changeVolume(
                 intent.soundId,
                 intent.volume

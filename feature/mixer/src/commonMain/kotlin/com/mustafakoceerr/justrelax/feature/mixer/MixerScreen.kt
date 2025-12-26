@@ -119,7 +119,6 @@ private fun MixerScreenContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         // --- İçerik Alanı (Animasyonsuz) ---
-        // Crossfade kaldırıldı, basit if/else bloğu kullanılıyor.
         if (mixerState.mixedSounds.isNotEmpty()) {
             SoundGridSection(
                 sounds = mixerState.mixedSounds,

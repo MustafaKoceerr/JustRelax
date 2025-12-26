@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.ai.components
 
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -27,33 +28,76 @@ import justrelax.feature.ai.generated.resources.ai_action_edit
 import justrelax.feature.ai.generated.resources.ai_action_regenerate
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * AI tarafından oluşturulan miksin sonuçlarını gösteren ana ekran bileşeni.
+ */
 @Composable
 fun AiResultScreen(
     mixName: String,
     mixDescription: String,
     soundsInMix: List<Sound>,
     soundControllerState: SoundControllerState,
-    isLoading: Boolean, // EKLENDİ: Yüklenme durumunu dışarıdan alıyoruz
-    onSoundClick: (Sound) -> Unit,
+    isLoading: Boolean,
+    onSoundClick: (String) -> Unit, // PERFORMANS: Artık String (ID) alıyor
     onVolumeChange: (String, Float) -> Unit,
     onIntent: (AiIntent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.fillMaxSize().padding(horizontal = 16.dp),
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // SRP: Başlık ve açıklama mantığı kendi Composable'ına taşındı.
+        MixHeader(
+            mixName = mixName,
+            mixDescription = mixDescription,
+            onEditClick = { onIntent(AiIntent.EditPrompt) }
+        )
+
+        SoundGridSection(
+            sounds = soundsInMix,
+            playingSoundIds = soundControllerState.playingSoundIds,
+            soundVolumes = soundControllerState.soundVolumes,
+            onSoundClick = onSoundClick, // Doğrudan geçiyoruz
+            onVolumeChange = onVolumeChange,
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
+        )
+
+        // SRP: Aksiyon butonları kendi Composable'ına taşındı.
+        ResultActionButtons(
+            isLoading = isLoading,
+            onRegenerateClick = { onIntent(AiIntent.RegenerateMix) },
+            onSaveClick = { onIntent(AiIntent.ShowSaveDialog) }
+        )
+    }
+}
+
+/**
+ * Miks başlığını, açıklamasını ve düzenleme butonunu gösterir.
+ */
+@Composable
+private fun MixHeader(
+    mixName: String,
+    mixDescription: String,
+    onEditClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.height(24.dp))
-
-        // --- BAŞLIK ---
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth().clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = { onIntent(AiIntent.EditPrompt) }
-            )
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onEditClick
+                )
         ) {
             Text(
                 text = mixName,
@@ -77,75 +121,52 @@ fun AiResultScreen(
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Spacer(Modifier.height(32.dp))
+    }
+}
 
-        // --- SES KARTLARI ---
-        SoundGridSection(
-            sounds = soundsInMix,
-            playingSoundIds = soundControllerState.playingSoundIds,
-            soundVolumes = soundControllerState.soundVolumes,
-            onSoundClick = onSoundClick,
-            onVolumeChange = onVolumeChange,
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        )
-
-        // --- AKSİYON BUTONLARI ---
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(
-                16.dp,
-                Alignment.CenterHorizontally
-            )
+/**
+ * "Yeniden Oluştur" ve "Kaydet" aksiyon butonlarını içerir.
+ */
+@Composable
+private fun ResultActionButtons(
+    isLoading: Boolean,
+    onRegenerateClick: () -> Unit,
+    onSaveClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        OutlinedButton(
+            onClick = onRegenerateClick,
+            enabled = !isLoading,
+            modifier = Modifier.weight(1f).height(50.dp)
         ) {
-            OutlinedButton(
-                onClick = { onIntent(AiIntent.RegenerateMix) },
-                enabled = !isLoading, // DEĞİŞTİ: isLoading değilse aktif
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp)
-            ) {
-                // DEĞİŞTİ: Yüklenme durumuna göre ikon veya progress göster
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp
-                    )
+            // ANİMASYON: Yüklenme durumu geçişini yumuşatır.
+            Crossfade(targetState = isLoading, label = "RegenerateButtonCrossfade") { loading ->
+                if (loading) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
                 } else {
-                    Icon(
-                        imageVector = Icons.Rounded.Refresh,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(
-                            Res.string.ai_action_regenerate
-                        )
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Rounded.Refresh, null, Modifier.size(20.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(Res.string.ai_action_regenerate))
+                    }
                 }
             }
+        }
 
-            Button(
-                onClick = { onIntent(AiIntent.ShowSaveDialog) },
-                enabled = !isLoading, // DEĞİŞTİ: isLoading değilse aktif
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Save,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(
-                        Res.string.action_save
-                    )
-                )
-            }
+        Button(
+            onClick = onSaveClick,
+            enabled = !isLoading,
+            modifier = Modifier.weight(1f).height(50.dp)
+        ) {
+            Icon(Icons.Rounded.Save, null, Modifier.size(20.dp))
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(Res.string.action_save))
         }
     }
 }

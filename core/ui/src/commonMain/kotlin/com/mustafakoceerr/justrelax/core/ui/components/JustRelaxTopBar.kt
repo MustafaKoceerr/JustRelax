@@ -25,10 +25,6 @@ fun JustRelaxTopBar(
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     CenterAlignedTopAppBar(
-        // NOT: windowInsets parametresini sildim. Varsayılan değer (systemBars)
-        // başlığın status bar (saat/pil) altında kalmasını engeller.
-        // Arka plan Transparent olduğu için gradyan yine en tepeye kadar görünür.
-
         modifier = modifier,
         title = {
             Text(

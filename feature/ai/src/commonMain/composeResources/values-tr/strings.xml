@@ -26,5 +26,6 @@
     <string name="err_ai_no_sounds">İndirilen ses bulunamadı. Yapay zekânın bir mix oluşturabilmesi için seslere ihtiyacı var.</string>
     <string name="err_ai_empty_response">Yapay zekâ boş veya geçersiz bir yanıt döndürdü. Lütfen tekrar deneyin.</string>
     <string name="err_unknown">Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.</string>
+    <string name="action_back">Geri</string>
 
 </resources>

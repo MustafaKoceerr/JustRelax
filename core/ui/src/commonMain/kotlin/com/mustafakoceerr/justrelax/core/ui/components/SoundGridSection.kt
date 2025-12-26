@@ -39,7 +39,7 @@ fun SoundGridSection(
     sounds: List<Sound>,
     playingSoundIds: Set<String>,
     soundVolumes: Map<String, Float>,
-    onSoundClick: (Sound) -> Unit,
+    onSoundClick: (String) -> Unit,
     onVolumeChange: (String, Float) -> Unit,
     modifier: Modifier = Modifier,
     downloadingSoundIds: Set<String> = emptySet(),
@@ -94,7 +94,7 @@ fun SoundGridSection(
                     isPlaying = isPlaying,
                     isDownloading = isDownloading,
                     volume = volume,
-                    onCardClick = { onSoundClick(sound) },
+                    onCardClick = { onSoundClick(sound.id) },
                     onVolumeChange = { newVol -> onVolumeChange(sound.id, newVol) }
                 )
             }
