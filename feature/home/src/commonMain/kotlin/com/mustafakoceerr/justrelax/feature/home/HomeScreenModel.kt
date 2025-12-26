@@ -50,7 +50,7 @@ class HomeScreenModel(
     fun processIntent(intent: HomeIntent) {
         when (intent) {
             is HomeIntent.SelectCategory -> selectCategory(intent.category)
-            is HomeIntent.ToggleSound -> toggleSound(intent.sound)
+            is HomeIntent.ToggleSound -> toggleSound(intent.soundId)
             is HomeIntent.ChangeVolume -> changeVolume(intent.soundId, intent.volume)
             HomeIntent.SettingsClicked -> sendEffect(HomeEffect.NavigateToSettings)
         }
@@ -87,23 +87,28 @@ class HomeScreenModel(
         }
     }
 
-    private fun toggleSound(sound: Sound) {
+    private fun toggleSound(soundId: String) {
         screenModelScope.launch {
-            val isPlaying = _state.value.playingSoundIds.contains(sound.id)
+            val isPlaying = _state.value.playingSoundIds.contains(soundId)
 
             if (isPlaying) {
-                stopSoundUseCase(sound.id)
-            } else {
-                if (checkMaxActiveSoundsUseCase()) {
-                    val limit = checkMaxActiveSoundsUseCase.getLimit()
-                    sendEffect(HomeEffect.ShowError(AppError.Player.LimitExceeded(limit)))
-                    return@launch
-                }
+                stopSoundUseCase(soundId)
+                return@launch
+            }
 
-                if (sound.isDownloaded) {
-                    playSound(sound.id)
+            if (checkMaxActiveSoundsUseCase()) {
+                val limit = checkMaxActiveSoundsUseCase.getLimit()
+                sendEffect(HomeEffect.ShowError(AppError.Player.LimitExceeded(limit)))
+                return@launch
+            }
+
+            // soundId -> Sound (state’ten bul)
+            val sound = _state.value.allSounds.firstOrNull { it.id == soundId }
+            sound?.let {
+                if (it.isDownloaded) {
+                    playSound(soundId)
                 } else {
-                    downloadAndPlaySound(sound.id)
+                    downloadAndPlaySound(soundId)
                 }
             }
         }

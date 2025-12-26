@@ -37,7 +37,7 @@ fun CreateMixButton(
     isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val debouncedOnClick = rememberThrottledOnClick(throttleMs = 1000L, onClick = onClick)
+    val debouncedOnClick = rememberThrottledOnClick(throttleMs = 800L, onClick = onClick)
 
     Button(
         onClick = debouncedOnClick,
