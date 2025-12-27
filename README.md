@@ -10,12 +10,6 @@
 
 ---
 
-## 🎥 Video Demo (Preview)
-
-- 📹 **Just Relax – App Preview:** [Watch on YouTube](https://youtube.com/shorts/WNjl-RuWqtQ)
-
----
-
 ## ✨ Key Highlights
 
 - 🎧 Custom ambient sound mixer  
@@ -27,14 +21,11 @@
 
 ---
 
-<details>
-  <summary><b>📸 App Gallery (Screenshots)</b></summary>
+## 🖼️ App Gallery (Screenshots)
 
-  <br/>
+### 📱 Light Theme Screens
 
-  ### 📱 Light Theme Screens
-
-  <table>
+<table>
     <tr>
       <th>Home</th>
       <th>Home (Alt)</th>
