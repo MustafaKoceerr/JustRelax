@@ -9,14 +9,9 @@ import com.mustafakoceerr.justrelax.tabs.TimerTab
 
 class TabProviderImpl : TabProvider {
     override val homeTab = HomeTab
-    override val mixerTab = MixerTab // TODO: MixerTab yap
-    override val savedTab = SavedTab // TODO: SavedTab yap
-    override val aiTab = AiTab    // TODO: AiTab yap
+    override val mixerTab = MixerTab
+    override val savedTab = SavedTab
+    override val aiTab = AiTab
     override val timerTab = TimerTab
-
-//    override val mixerTab = MixerTab
-//    override val savedTab = SavedTab
-//    override val aiTab = AiTab
-//    override val timerTab = TimerTab
 }
 

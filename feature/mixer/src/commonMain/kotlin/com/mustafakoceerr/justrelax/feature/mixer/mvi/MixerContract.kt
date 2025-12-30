@@ -3,23 +3,36 @@ package com.mustafakoceerr.justrelax.feature.mixer.mvi
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
-data class MixerState(
-    val isGenerating: Boolean = false,
-    val selectedSoundCount: Int = 4,
-    val mixedSounds: List<Sound> = emptyList(),
-    val isSaveDialogVisible: Boolean = false
-)
+interface MixerContract {
 
-sealed interface MixerIntent {
-    data class SelectSoundCount(val count: Int) : MixerIntent
-    data object GenerateMix : MixerIntent
-    data class ToggleSound(val soundId: String) : MixerIntent
-    data class ChangeVolume(val soundId: String, val volume: Float) : MixerIntent
-    data object ShowSaveDialog : MixerIntent
-    data object HideSaveDialog : MixerIntent
-    data class SaveCurrentMix(val name: String) : MixerIntent
-}
+    /**
+     * UI'ın anlık durumunu tutar.
+     */
+    data class State(
+        val isGenerating: Boolean = false,
+        val selectedSoundCount: Int = 4,
+        val mixedSounds: List<Sound> = emptyList(),
+        // 'isSaveDialogVisible' kaldırıldı (Player'a taşındı)
+    )
 
-sealed interface MixerEffect {
-    data class ShowSnackbar(val message: UiText) : MixerEffect
+    /**
+     * Kullanıcı etkileşimleri (Event).
+     */
+    sealed interface Event {
+        data class SelectSoundCount(val count: Int) : Event
+
+        data object GenerateMix : Event
+
+        data class ToggleSound(val soundId: String) : Event
+
+        data class ChangeVolume(val soundId: String, val volume: Float) : Event
+
+    }
+
+    /**
+     * Tek seferlik yan etkiler (Side Effects).
+     */
+    sealed interface Effect {
+        data class ShowSnackbar(val message: UiText) : Effect
+    }
 }
