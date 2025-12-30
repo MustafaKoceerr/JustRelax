@@ -1,13 +1,13 @@
 package com.mustafakoceerr.justrelax
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
@@ -26,14 +26,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
@@ -55,13 +53,12 @@ import org.koin.compose.koinInject
 object MainScreen : AppScreen {
     @Composable
     override fun Content() {
-        // 1. ViewModel ve State
+        // 1. State & Dependencies
         val playerViewModel = koinScreenModel<PlayerViewModel>()
         val playerState by playerViewModel.state.collectAsState()
-
         val snackbarController = koinInject<GlobalSnackbarController>()
 
-        // 2. Effect Handling (Snackbar Gösterimi)
+        // 2. Side Effects
         LaunchedEffect(Unit) {
             playerViewModel.effect.collect { effect ->
                 when (effect) {
@@ -71,81 +68,74 @@ object MainScreen : AppScreen {
                 }
             }
         }
+        // 3. Dialogs
+        if (playerState.isSaveDialogVisible) {
+            SaveMixDialog(
+                isOpen = true,
+                onDismiss = { playerViewModel.onEvent(PlayerContract.Event.DismissSaveDialog) },
+                onConfirm = { name -> playerViewModel.onEvent(PlayerContract.Event.SaveMix(name)) }
+            )
+        }
 
-        // 3. Save Dialog (Global)
-        SaveMixDialog(
-            isOpen = playerState.isSaveDialogVisible,
-            onDismiss = { playerViewModel.onEvent(PlayerContract.Event.DismissSaveDialog) },
-            onConfirm = { name -> playerViewModel.onEvent(PlayerContract.Event.SaveMix(name)) }
+        // 4. UI Layout
+        MainScreenLayout(
+            playerState = playerState,
+            onPlayerEvent = playerViewModel::onEvent,
+            snackbarHostState = snackbarController.hostState
         )
+    }
+}
 
-        // 4. Klavye Kontrolü
-        val density = LocalDensity.current
-        val isKeyboardOpen = WindowInsets.ime.getBottom(density) > 0
+@Composable
+private fun MainScreenLayout(
+    playerState: PlayerContract.State,
+    onPlayerEvent: (PlayerContract.Event) -> Unit,
+    snackbarHostState: androidx.compose.material3.SnackbarHostState
+) {
+    val density = LocalDensity.current
+    val isKeyboardOpen = WindowInsets.ime.getBottom(density) > 0
 
-        TabNavigator(HomeTab) { tabNavigator ->
-
-            val shouldShowPlayer = playerState.isVisible
-
-            JustRelaxBackground {
-                Scaffold(
-                    containerColor = Color.Transparent,
-                    snackbarHost = {
-                        JustRelaxSnackbarHost(hostState = snackbarController.hostState)
-                    },
-                    bottomBar = {
-                        // Klavye açık DEĞİLSE BottomBar'ı göster
-                        if (!isKeyboardOpen) {
-                            Column(modifier = Modifier.fillMaxWidth()) {
-                                // A. Player Bar (Üstte)
-                                PlayerBottomBar(
-                                    isVisible = shouldShowPlayer,
-                                    activeIcons = playerState.activeSounds.map { it.iconUrl },
-                                    isPlaying = playerState.isPlaying,
-                                    onPlayPauseClick = {
-                                        playerViewModel.onEvent(PlayerContract.Event.ToggleMasterPlayPause)
-                                    },
-                                    onStopAllClick = {
-                                        playerViewModel.onEvent(PlayerContract.Event.StopAll)
-                                    },
-                                    onSaveClick = {
-                                        playerViewModel.onEvent(PlayerContract.Event.OpenSaveDialog)
-                                    }
-                                )
-
-                                // B. Navigation Bar (Altta)
-                                NavigationBar(
-                                    containerColor = MaterialTheme.colorScheme.surface,
-                                    contentColor = MaterialTheme.colorScheme.primary,
-                                ) {
-                                    TabNavigationItem(HomeTab)
-                                    TabNavigationItem(TimerTab)
-                                    TabNavigationItem(AiTab)
-                                    TabNavigationItem(SavedTab)
-                                    TabNavigationItem(MixerTab)
-                                }
-                            }
-                        }
-                    }
-                ) { innerPadding ->
-
-                    // --- YAYLI ANİMASYON ---
-                    val animatedBottomPadding by animateDpAsState(
-                        targetValue = innerPadding.calculateBottomPadding(),
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        ),
-                        label = "BottomPaddingAnimation"
-                    )
-
-                    Box(
-                        modifier = Modifier.padding(
-                            top = innerPadding.calculateTopPadding(),
-                            bottom = animatedBottomPadding.coerceAtLeast(0.dp)
+    TabNavigator(HomeTab) { tabNavigator ->
+        JustRelaxBackground {
+            Scaffold(
+                containerColor = Color.Transparent,
+                snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) },
+                bottomBar = {
+                    if (!isKeyboardOpen) {
+                        MainBottomBarContent(
+                            playerState = playerState,
+                            onPlayerEvent = onPlayerEvent
                         )
-                    ) {
-                        CurrentTab()
+                    }
+                }
+            ) { innerPadding ->
+                // Klavye açılıp kapanırken padding'i yumuşat
+                val animatedBottomPadding by animateDpAsState(
+                    targetValue = innerPadding.calculateBottomPadding(),
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ),
+                    label = "BottomPaddingAnimation"
+                )
+
+                Box(
+                    modifier = Modifier.padding(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = animatedBottomPadding.coerceAtLeast(0.dp)
+                    )
+                ) {
+                    // --- TAB ANİMASYONU BURADA ---
+                    // CurrentTab() yerine AnimatedContent kullanıyoruz.
+                    AnimatedContent(
+                        targetState = tabNavigator.current,
+                        transitionSpec = {
+                            fadeIn(animationSpec = tween(300)) togetherWith
+                                    fadeOut(animationSpec = tween(300))
+                        },
+                        label = "TabTransition"
+                    ) { tab ->
+                        tab.Content()
                     }
                 }
             }
@@ -154,11 +144,40 @@ object MainScreen : AppScreen {
 }
 
 @Composable
+private fun MainBottomBarContent(
+    playerState: PlayerContract.State,
+    onPlayerEvent: (PlayerContract.Event) -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        PlayerBottomBar(
+            isVisible = playerState.isVisible,
+            activeIcons = playerState.activeSounds.map { it.iconUrl },
+            isPlaying = playerState.isPlaying,
+            onPlayPauseClick = { onPlayerEvent(PlayerContract.Event.ToggleMasterPlayPause) },
+            onStopAllClick = { onPlayerEvent(PlayerContract.Event.StopAll) },
+            onSaveClick = { onPlayerEvent(PlayerContract.Event.OpenSaveDialog) }
+        )
+
+        NavigationBar(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.primary,
+        ) {
+            TabNavigationItem(HomeTab)
+            TabNavigationItem(TimerTab)
+            TabNavigationItem(AiTab)
+            TabNavigationItem(SavedTab)
+            TabNavigationItem(MixerTab)
+        }
+    }
+}
+
+@Composable
 private fun RowScope.TabNavigationItem(tab: Tab) {
     val tabNavigator = LocalTabNavigator.current
+    val isSelected = tabNavigator.current == tab
 
     NavigationBarItem(
-        selected = tabNavigator.current == tab,
+        selected = isSelected,
         onClick = { tabNavigator.current = tab },
         icon = {
             tab.options.icon?.let {

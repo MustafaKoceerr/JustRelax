@@ -46,7 +46,7 @@ fun JustRelaxApp() {
                 screen = SplashScreen,
                 key = currentLanguage.code
             ) { navigator ->
-                FadeTransition(navigator)
+                SlideTransition(navigator)
             }
         }
     }
