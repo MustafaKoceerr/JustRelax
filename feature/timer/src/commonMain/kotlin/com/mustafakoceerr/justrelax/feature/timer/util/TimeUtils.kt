@@ -3,18 +3,26 @@ package com.mustafakoceerr.justrelax.feature.timer.util
 // Common modülü sadece tanımı bilir, içeriği bilmez.
 expect fun calculateEndTime(timeLeftSeconds: Long): String
 
-fun formatTime(totalSeconds: Long): String {
-    // 1. Matematiği yapalım
-    val hours = totalSeconds / 3600
-    val minutes = (totalSeconds % 3600) / 60
-    val seconds = totalSeconds % 60
+/**
+ * Saniye cinsinden süreyi "HH:MM:SS" veya "MM:SS" formatına çevirir.
+ * Örnek:
+ * 65L.toFormattedTime() -> "01:05"
+ * 3665L.toFormattedTime() -> "01:01:05"
+ */
+internal fun Long.toFormattedTime(): String {
+    // Negatif değer koruması
+    if (this < 0) return "00:00"
 
-    // 2. Formatlama (Saf Kotlin - KMM Uyumlu)
-    // padStart(2, '0') -> Sayı tek haneliyle başına 0 koyar (5 -> 05)
-    val hh = hours.toString().padStart(2, '0')
-    val mm = minutes.toString().padStart(2, '0')
-    val ss = seconds.toString().padStart(2, '0')
+    val hours = this / 3600
+    val minutes = (this % 3600) / 60
+    val seconds = this % 60
 
-    // 3. Görseldeki gibi aralıklı dönüş
-    return "$hh : $mm : $ss"
+    // Helper function for padding
+    fun Long.pad(): String = this.toString().padStart(2, '0')
+
+    return if (hours > 0) {
+        "${hours.pad()}:${minutes.pad()}:${seconds.pad()}"
+    } else {
+        "${minutes.pad()}:${seconds.pad()}"
+    }
 }

@@ -10,7 +10,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -20,111 +19,66 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.koin.koinScreenModel
-import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
-import com.mustafakoceerr.justrelax.feature.timer.components.TimerLandscapeLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerPortraitLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerSetupScreen
-import com.mustafakoceerr.justrelax.feature.timer.mvi.TimerIntent
-import com.mustafakoceerr.justrelax.feature.timer.mvi.TimerState
+import com.mustafakoceerr.justrelax.feature.timer.mvi.TimerContract
 
 // 1. ROUTE (Stateful): Sadece veri ve olay yönetimi yapar.
-data object TimerScreen : AppScreen {
+object TimerScreen : AppScreen {
     @Composable
     override fun Content() {
-        // Dependency Injection
-        val screenModel = koinScreenModel<TimerScreenModel>()
-        val state by screenModel.state.collectAsState()
+        val viewModel = koinScreenModel<TimerViewModel>()
+        val state by viewModel.state.collectAsState()
 
-        // UI'a sadece veriyi ve fonksiyon referanslarını paslıyoruz.
         TimerScreenContent(
             state = state,
-            onIntent = screenModel::onIntent
+            onEvent = viewModel::onEvent
         )
     }
 }
 
-// 2. CONTENT (Stateless): Sadece çizim yapar. Preview edilebilir.
 @Composable
 fun TimerScreenContent(
-    state: TimerState,
-    onIntent: (TimerIntent) -> Unit
+    state: TimerContract.State,
+    onEvent: (TimerContract.Event) -> Unit
 ) {
     Scaffold(
         containerColor = Color.Transparent,
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
-        // Scaffold padding'i yutmamak için modifier'a ekliyoruz veya içeri aktarıyoruz.
 
         AnimatedContent(
-            targetState = state.status == TimerStatus.IDLE,
+            targetState = state.isSetupMode,
             transitionSpec = { timerTransitionSpec() },
             label = "TimerTransition",
             modifier = Modifier.padding(paddingValues)
-        ) { isIdle ->
-            if (isIdle) {
-                // --- A) KURULUM EKRANI ---
+        ) { isSetup ->
+            if (isSetup) {
                 TimerSetupScreen(
                     onStartClick = { totalSeconds ->
-                        onIntent(TimerIntent.Start(totalSeconds))
+                        onEvent(TimerContract.Event.StartTimer(totalSeconds))
                     }
                 )
             } else {
-                // --- B) SAYAÇ EKRANI (Running / Paused) ---
-                TimerRunningLayout(
-                    state = state,
-                    onIntent = onIntent
+                TimerPortraitLayout(
+                    totalTimeSeconds = state.totalSeconds,
+                    timeLeftSeconds = state.remainingSeconds,
+                    isPaused = state.isPaused, // isPaused boolean'ını paslıyoruz
+                    onToggleClick = { onEvent(TimerContract.Event.ToggleTimer) },
+                    onCancelClick = { onEvent(TimerContract.Event.CancelTimer) }
                 )
             }
         }
     }
 }
 
-// 3. SUB-LAYOUT (Yardımcı): Orientation kontrolünü ana akıştan ayırdık.
-@Composable
-private fun TimerRunningLayout(
-    state: TimerState,
-    onIntent: (TimerIntent) -> Unit
-) {
-    BoxWithConstraints(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        // Responsive Karar Mekanizması
-        val isLandscape = maxWidth > maxHeight
-
-        // Lambda referanslarını hazırlıyoruz
-        val onToggle = { onIntent(TimerIntent.Toggle) }
-        val onCancel = { onIntent(TimerIntent.Cancel) }
-
-        if (isLandscape) {
-            TimerLandscapeLayout(
-                totalTimeSeconds = state.totalSeconds,
-                timeLeftSeconds = state.remainingSeconds,
-                status = state.status,
-                onToggleClick = onToggle,
-                onCancelClick = onCancel
-            )
-        } else {
-            TimerPortraitLayout(
-                totalTimeSeconds = state.totalSeconds,
-                timeLeftSeconds = state.remainingSeconds,
-                status = state.status,
-                onToggleClick = onToggle,
-                onCancelClick = onCancel
-            )
-        }
-    }
-}
-
-// 4. ANIMATION SPEC: Kodu kirleten o koca bloğu buraya hapsettik.
 private fun AnimatedContentTransitionScope<Boolean>.timerTransitionSpec(): ContentTransform {
     val motionDuration = 800
     val fadeOutDuration = 200
     val fadeInDuration = 600
 
-    return if (targetState) {
-        // Geri Dönüş (Running -> Setup / Cancel)
-        // Kart küçülerek kaybolur, Setup ekranı büyüyerek gelir.
+    return if (targetState) { // Geri Dönüş (Running -> Setup)
         (fadeIn(animationSpec = tween(fadeInDuration, delayMillis = 100)) +
                 scaleIn(initialScale = 1.5f, animationSpec = tween(motionDuration)))
             .togetherWith(
@@ -133,9 +87,7 @@ private fun AnimatedContentTransitionScope<Boolean>.timerTransitionSpec(): Conte
             )
             .using(SizeTransform(clip = false))
             .apply { targetContentZIndex = 1f }
-    } else {
-        // İleri Gitme (Setup -> Start)
-        // Setup ekranı arkaya düşer, Sayaç öne doğru büyüyerek gelir.
+    } else { // İleri Gitme (Setup -> Running)
         (fadeIn(animationSpec = tween(fadeInDuration, delayMillis = 100)) +
                 scaleIn(initialScale = 0.5f, animationSpec = tween(motionDuration)))
             .togetherWith(

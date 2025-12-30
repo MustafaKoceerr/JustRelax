@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.saved.components
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,14 +8,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
+import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedContract
 
 @OptIn(ExperimentalFoundationApi::class) // Bu anotasyon animateItemPlacement için gerekli
 @Composable
 fun SavedMixesList(
-    mixes: List<SavedMixUiModel>,
-    onMixClick: (SavedMixUiModel) -> Unit,
-    onMixDelete: (SavedMixUiModel) -> Unit,
+    mixes: List<SavedContract.SavedMixUiModel>,
+    onMixClick: (SavedContract.SavedMixUiModel) -> Unit,
+    onMixDelete: (SavedContract.SavedMixUiModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(

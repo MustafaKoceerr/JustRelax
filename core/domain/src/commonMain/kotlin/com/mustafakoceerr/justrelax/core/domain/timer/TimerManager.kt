@@ -1,17 +1,18 @@
 package com.mustafakoceerr.justrelax.core.domain.timer
 
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Uygulamanın zamanlayıcısını yöneten sözleşme (Contract).
  * Bu arayüz Domain katmanındadır, implementation'ı Data/Audio katmanında olacaktır.
  */
+// 3. CONTRACT (INTERFACE)
 interface TimerManager {
-    // UI'ın dinleyeceği anlık durum (Saniye saniye güncellenir)
-    val state: Flow<TimerState>
-
-    // Timer şu an aktif mi? (Running veya Paused)
-    val isRunning: Flow<Boolean>
+    /**
+     * UI'ın dinleyeceği tek gerçeklik kaynağı.
+     * Flow yerine StateFlow kullanıyoruz ki UI açıldığında son durumu (örn: 12:45 kaldı) anında görsün.
+     */
+    val state: StateFlow<TimerState>
 
     /**
      * Sayacı başlatır.
@@ -20,7 +21,7 @@ interface TimerManager {
     fun startTimer(seconds: Long)
 
     /**
-     * Sayacı duraklatır (Süre akmaz).
+     * Sayacı duraklatır.
      */
     fun pauseTimer()
 
@@ -30,7 +31,7 @@ interface TimerManager {
     fun resumeTimer()
 
     /**
-     * Sayacı tamamen iptal eder ve sıfırlar (IDLE).
+     * Sayacı tamamen iptal eder ve sıfırlar.
      */
     fun cancelTimer()
 }

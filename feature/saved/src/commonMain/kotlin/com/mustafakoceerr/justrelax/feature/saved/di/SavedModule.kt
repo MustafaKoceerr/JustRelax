@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.saved.di
 
-import com.mustafakoceerr.justrelax.feature.saved.SavedScreenModel
+import com.mustafakoceerr.justrelax.feature.saved.SavedViewModel
 import com.mustafakoceerr.justrelax.feature.saved.usecase.DeleteSavedMixUseCase
 import com.mustafakoceerr.justrelax.feature.saved.usecase.ObserveSavedMixesUseCase
 import com.mustafakoceerr.justrelax.feature.saved.usecase.PlaySavedMixUseCase
@@ -16,5 +16,5 @@ val savedModule = module {
     factoryOf(::RestoreSavedMixUseCase) // YENİ
 
     // ScreenModel
-    factoryOf(::SavedScreenModel)
+    factoryOf(::SavedViewModel)
 }

@@ -17,5 +17,6 @@
     <string name="action_undo">Undo</string>
 
     <string name="date_format_short">MM/dd/yyyy</string>
+    <string name="err_unknown">An unexpected error occurred.</string>
 
 </resources>

@@ -2,19 +2,19 @@ package com.mustafakoceerr.justrelax.feature.saved
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMix
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedEffect
-import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedIntent
-import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
-import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedState
+import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedContract
 import com.mustafakoceerr.justrelax.feature.saved.usecase.DeleteSavedMixUseCase
 import com.mustafakoceerr.justrelax.feature.saved.usecase.ObserveSavedMixesUseCase
 import com.mustafakoceerr.justrelax.feature.saved.usecase.PlaySavedMixUseCase
 import com.mustafakoceerr.justrelax.feature.saved.usecase.RestoreSavedMixUseCase
 import justrelax.feature.saved.generated.resources.Res
 import justrelax.feature.saved.generated.resources.action_undo
+import justrelax.feature.saved.generated.resources.err_unknown
 import justrelax.feature.saved.generated.resources.msg_mix_deleted
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,82 +23,121 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SavedScreenModel(
+class SavedViewModel(
     private val observeSavedMixesUseCase: ObserveSavedMixesUseCase,
     private val playSavedMixUseCase: PlaySavedMixUseCase,
-    private val deleteSavedMixUseCase: DeleteSavedMixUseCase,   // YENİ
-    private val restoreSavedMixUseCase: RestoreSavedMixUseCase  // YENİ
+    private val deleteSavedMixUseCase: DeleteSavedMixUseCase,
+    private val restoreSavedMixUseCase: RestoreSavedMixUseCase
 ) : ScreenModel {
 
-    private val _state = MutableStateFlow(SavedState())
+    // 1. STATE & EFFECT
+    private val _state = MutableStateFlow(SavedContract.State())
     val state = _state.asStateFlow()
 
-    private val _effect = Channel<SavedEffect>()
+    private val _effect = Channel<SavedContract.Effect>()
     val effect = _effect.receiveAsFlow()
 
-    // Undo için geçici hafıza
+    // 2. LOGIC VARIABLES
     private var lastDeletedMix: SavedMix? = null
+
+    // CRITICAL: Oynatma işini takip eden Job.
+    // Kullanıcı hızlıca başka bir mix'e basarsa, önceki işi iptal etmek için kullanılır.
+    private var playbackJob: Job? = null
 
     init {
         observeMixes()
     }
 
-    fun onIntent(intent: SavedIntent) {
-        when (intent) {
-            is SavedIntent.LoadMixes -> observeMixes()
-            is SavedIntent.PlayMix -> playMix(intent.mixId)
-            is SavedIntent.DeleteMix -> deleteMix(intent.mix)
-            is SavedIntent.UndoDelete -> undoDelete()
-            is SavedIntent.CreateNewMix -> sendEffect(SavedEffect.NavigateToMixer)
+    fun onEvent(event: SavedContract.Event) {
+        when (event) {
+            is SavedContract.Event.LoadMixes -> observeMixes()
+            is SavedContract.Event.PlayMix -> playMix(event.mixId)
+            is SavedContract.Event.DeleteMix -> deleteMix(event.mix)
+            is SavedContract.Event.UndoDelete -> undoDelete()
+            is SavedContract.Event.CreateNewMix -> sendEffect(SavedContract.Effect.NavigateToMixer)
         }
     }
 
     private fun observeMixes() {
         screenModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            observeSavedMixesUseCase().collectLatest { uiMixes ->
+
+            // UseCase artık List<SavedMix> (Domain) döndürüyor.
+            observeSavedMixesUseCase().collectLatest { domainMixes ->
+
+                // MAPPING: Domain Model -> UI Model dönüşümü burada yapılıyor.
+                val uiMixes = domainMixes.map { domainMix ->
+                    SavedContract.SavedMixUiModel(
+                        id = domainMix.id,
+                        title = domainMix.name,
+                        date = domainMix.createdAt, // İleride formatlanabilir
+                        // Map'in anahtarlarından (Sound nesneleri) ikonları çekiyoruz
+                        icons = domainMix.sounds.keys.map { it.iconUrl },
+                        domainModel = domainMix
+                    )
+                }
+
                 _state.update { it.copy(mixes = uiMixes, isLoading = false) }
             }
         }
     }
 
     private fun playMix(mixId: Long) {
+        // 1. Önceki oynatma işlemini İPTAL ET (Race Condition Koruması)
+        playbackJob?.cancel()
+
         val mixToPlay = _state.value.mixes.find { it.id == mixId }?.domainModel ?: return
-        screenModelScope.launch {
-            playSavedMixUseCase(mixToPlay)
+
+        // 2. Yeni işi başlat ve referansını tut
+        playbackJob = screenModelScope.launch {
+            try {
+                playSavedMixUseCase(mixToPlay)
+            } catch (e: Exception) {
+                // Hata Yönetimi: Uygulamanın çökmesini engelle
+                val errorMsg = if (e is AppError) e.message else "Failed to play mix"
+                sendEffect(
+                    SavedContract.Effect.ShowDeleteSnackbar(
+                        message = UiText.DynamicString(errorMsg ?: "Unknown error")
+                    )
+                )
+            }
         }
     }
 
-    private fun deleteMix(uiMix: SavedMixUiModel) {
+    private fun deleteMix(uiMix: SavedContract.SavedMixUiModel) {
         screenModelScope.launch {
-            lastDeletedMix = uiMix.domainModel
-            deleteSavedMixUseCase(uiMix.id)
+            try {
+                lastDeletedMix = uiMix.domainModel
+                deleteSavedMixUseCase(uiMix.id)
 
-            sendEffect(
-                SavedEffect.ShowDeleteSnackbar(
-                    // Resource kullanıyoruz ve argüman olarak başlığı veriyoruz
-                    message = UiText.Resource(
-                        resId = Res.string.msg_mix_deleted,
-                        formatArgs = listOf(uiMix.title)
-                    ),
-                    // Buton metni
-                    actionLabel = UiText.Resource(Res.string.action_undo)
+                sendEffect(
+                    SavedContract.Effect.ShowDeleteSnackbar(
+                        message = UiText.Resource(
+                            resId = Res.string.msg_mix_deleted,
+                            formatArgs = listOf(uiMix.title)
+                        ),
+                        actionLabel = UiText.Resource(Res.string.action_undo)
+                    )
                 )
-            )
+            } catch (e: Exception) {
+                sendEffect(SavedContract.Effect.ShowDeleteSnackbar(UiText.Resource(Res.string.err_unknown)))
+            }
         }
     }
 
     private fun undoDelete() {
         val mixToRestore = lastDeletedMix ?: return
         screenModelScope.launch {
-            // UseCase üzerinden geri yükleme işlemi
-            restoreSavedMixUseCase(mixToRestore)
-
-            lastDeletedMix = null
+            try {
+                restoreSavedMixUseCase(mixToRestore)
+                lastDeletedMix = null
+            } catch (e: Exception) {
+                sendEffect(SavedContract.Effect.ShowDeleteSnackbar(UiText.Resource(Res.string.err_unknown)))
+            }
         }
     }
 
-    private fun sendEffect(effect: SavedEffect) {
+    private fun sendEffect(effect: SavedContract.Effect) {
         screenModelScope.launch {
             _effect.send(effect)
         }
