@@ -4,6 +4,7 @@ import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatResponseFormat
 import com.aallam.openai.api.chat.ChatRole
+import com.aallam.openai.api.exception.OpenAIAPIException
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.mustafakoceerr.justrelax.core.common.AppError
@@ -38,7 +39,7 @@ class OpenAiRepositoryImpl : AiRepository {
     ): Resource<AiMixResponse> {
         return try {
             if (availableSoundIds.isEmpty()) {
-                return Resource.Error(AppError.Ai.NoDownloadedSounds)
+                return Resource.Error(AppError.Ai.NoDownloadedSounds())
             }
 
             val inventoryString = availableSoundIds.joinToString(", ")
@@ -77,17 +78,27 @@ class OpenAiRepositoryImpl : AiRepository {
 
             // 5. Cevap doğrudan type-safe bir nesne olarak geliyor.
             val contentJson = response.choices.firstOrNull()?.message?.content
-                ?: return Resource.Error(AppError.Ai.EmptyResponse)
+                ?: return Resource.Error(AppError.Ai.EmptyResponse())
 
             // 6. Gelen JSON string'ini kendi domain modelimize parse ediyoruz.
             val aiMixResponse = json.decodeFromString<AiMixResponse>(contentJson)
             Resource.Success(aiMixResponse)
 
+        } catch (e: OpenAIAPIException) {
+            val code = e.statusCode ?: -1   // veya e.code / e.httpStatus
+            Resource.Error(
+                AppError.Ai.ApiError(
+                    code = code,
+                    details = e.message ?: "Unknown AI Error"
+                )
+            )
         } catch (e: Exception) {
-            e.printStackTrace()
-            // Kütüphane kendi hata sınıflarını fırlatır (örn: OpenAIAPIException),
-            // ama genel bir Exception yakalamak şimdilik yeterli.
-            Resource.Error(AppError.Ai.ApiError(e.message ?: "Unknown AI Error"))
+            Resource.Error(
+                AppError.Ai.ApiError(
+                    code = -1,
+                    details = e.message ?: "Unknown AI Error"
+                )
+            )
         }
     }
 }
