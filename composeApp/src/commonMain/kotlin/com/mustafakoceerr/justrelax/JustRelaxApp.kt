@@ -7,6 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.FadeTransition
+import cafe.adriel.voyager.transitions.SlideTransition
 import coil3.compose.setSingletonImageLoaderFactory
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.ui.compositionlocal.LocalLanguageCode
