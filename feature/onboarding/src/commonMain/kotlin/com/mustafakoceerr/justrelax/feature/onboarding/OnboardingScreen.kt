@@ -2,6 +2,8 @@ package com.mustafakoceerr.justrelax.feature.onboarding
 
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -53,6 +55,7 @@ data object OnboardingScreen : AppScreen {
                     is OnboardingEffect.NavigateToMainScreen -> {
                         navigator.replaceAll(onboardingNavigator.toMain())
                     }
+
                     is OnboardingEffect.ShowError -> {
                         snackbarHostState.showSnackbar(effect.message)
                     }
@@ -87,14 +90,17 @@ internal fun OnboardingUi(
                 OnboardingScreenStatus.LOADING_CONFIG -> {
                     LoadingConfigView(modifier = contentModifier)
                 }
+
                 OnboardingScreenStatus.NO_INTERNET -> {
                     NoInternetView(
                         onRetryClick = { onIntent(OnboardingIntent.RetryLoadingConfig) },
                         modifier = contentModifier
                     )
                 }
+
                 OnboardingScreenStatus.CHOOSING -> {
                     var selectedOption by remember { mutableStateOf(DownloadOptionType.STARTER) }
+                    val scrollState = rememberScrollState()
 
                     OnboardingScreenContent(
                         selectedOption = selectedOption,
@@ -108,17 +114,21 @@ internal fun OnboardingUi(
                             onIntent(intent)
                         },
                         modifier = contentModifier
+                            .verticalScroll(scrollState)
                     )
                 }
+
                 OnboardingScreenStatus.DOWNLOADING -> {
                     DownloadingView(
                         progress = state.downloadProgress,
                         modifier = contentModifier
                     )
                 }
+
                 OnboardingScreenStatus.COMPLETED -> {
                     DownloadingView(progress = 1f, modifier = contentModifier)
                 }
+
                 OnboardingScreenStatus.ERROR -> {
                     // Hata durumunda kullanıcıya tekrar deneme şansı vermek en iyi UX'tir.
                     NoInternetView(
