@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,6 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Icon
@@ -49,6 +51,7 @@ fun PlayerBottomBar(
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
     onStopAllClick: () -> Unit,
+    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
@@ -69,7 +72,8 @@ fun PlayerBottomBar(
             activeIcons = activeIcons,
             isPlaying = isPlaying,
             onPlayPauseClick = onPlayPauseClick,
-            onStopAllClick = onStopAllClick
+            onStopAllClick = onStopAllClick,
+            onSaveClick = onSaveClick // İçeriye pasla
         )
     }
 }
@@ -80,12 +84,17 @@ private fun ActiveSoundsBarContent(
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
     onStopAllClick: () -> Unit,
+    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Play/Pause butonu için 1 saniyelik korumalı bir lambda oluşturuyoruz.
     val debouncedOnPlayPauseClick = rememberThrottledOnClick(
         throttleMs = 500L, // 1 saniye
         onClick = onPlayPauseClick
+    )
+    val debouncedOnSaveClick = rememberThrottledOnClick(
+        throttleMs = 1000L,
+        onClick = onSaveClick
     )
 
     // Not: onStopAllClick de ağır bir işlem olduğu için ona da debounce eklenebilir.
@@ -99,7 +108,10 @@ private fun ActiveSoundsBarContent(
         modifier = modifier
             .fillMaxWidth()
             .height(80.dp) // Yükseklik biraz artırıldı, padding için pay
-            .padding(horizontal = 16.dp, vertical = 8.dp), // Kenarlardan boşluk (Floating hissi için)
+            .padding(
+                horizontal = 16.dp,
+                vertical = 8.dp
+            ), // Kenarlardan boşluk (Floating hissi için)
         shape = RoundedCornerShape(24.dp), // Daha yuvarlak hatlar
         color = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -113,11 +125,11 @@ private fun ActiveSoundsBarContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // SOL: Aktif İkonlar
+            // SOL: Aktif İkonlar (Weight azaltıldı ki butonlara yer kalsın)
             LazyRow(
-                modifier = Modifier.weight(1f),
-                horizontalArrangement = Arrangement.spacedBy((-8).dp), // İkonlar hafif iç içe geçsin (Avatar group gibi)
-                contentPadding = PaddingValues(end = 16.dp),
+                modifier = Modifier.weight(0.8f), // Biraz yer açtık
+                horizontalArrangement = Arrangement.spacedBy((-8).dp),
+                contentPadding = PaddingValues(end = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items(activeIcons) { iconUrl ->
@@ -126,32 +138,56 @@ private fun ActiveSoundsBarContent(
             }
 
             // SAĞ: Kontroller
+            // Row içinde butonları grupluyoruz
             Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.spacedBy(0.dp), // Araları sıkı tutalım
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(0.6f, fill = false) // İhtiyacı kadar yer kaplasın
             ) {
-                // Play/Pause
+
+                // 1. SAVE BUTONU (YENİ)
+                // Kullanıcıya "Bunu beğendim" hissi vermek için Kalp ikonu
+                IconButton(
+                    onClick = debouncedOnSaveClick,
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Icon(
+                        // Dolu veya boş kalp durumu state'den de gelebilir ama şimdilik standart
+                        imageVector = Icons.Rounded.FavoriteBorder,
+                        contentDescription = "Save Mix",
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary // Vurgulu renk
+                    )
+                }
+
+                // 2. PLAY/PAUSE (En Büyük ve Ortada)
                 IconButton(
                     onClick = debouncedOnPlayPauseClick,
-                    modifier = Modifier.size(48.dp) // Dokunma alanı geniş
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = CircleShape
+                        ) // Play butonunu arkasına renk atarak vurguladım
                 ) {
                     Icon(
                         imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
                         contentDescription = "Play/Pause",
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(28.dp),
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
 
-                // Stop All
+                // 3. STOP ALL (En Sağda, biraz daha sönük)
                 IconButton(
                     onClick = debouncedOnStopAllClick,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(40.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Close,
                         contentDescription = "Close all",
-                        modifier = Modifier.size(28.dp),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f) // Kapatma olduğu için hafif kırmızımsı olabilir veya gri
                     )
                 }
             }
@@ -167,7 +203,10 @@ private fun SoundIconItem(url: String) {
             .padding(2.dp), // Border efekti için boşluk
         shape = CircleShape,
         color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer) // Arka planla karışmasın diye sınır
+        border = BorderStroke(
+            2.dp,
+            MaterialTheme.colorScheme.primaryContainer
+        ) // Arka planla karışmasın diye sınır
     ) {
         Box(contentAlignment = Alignment.Center) {
             AsyncImage(
@@ -177,30 +216,5 @@ private fun SoundIconItem(url: String) {
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
             )
         }
-    }
-}
-
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
-@Composable
-fun ActiveSoundsBarPreview() {
-    MaterialTheme {
-        PlayerBottomBar(
-            isVisible = true,
-            activeIcons = listOf(
-                "https://example.com/icon1.png",
-                "https://example.com/icon2.png",
-                "https://example.com/icon3.png",
-                "https://example.com/icon4.png",
-                "https://example.com/icon5.png",
-                "https://example.com/icon6.png"
-            ),
-            isPlaying = true,
-            onPlayPauseClick = {},
-            onStopAllClick = {},
-            modifier = Modifier
-        )
     }
 }

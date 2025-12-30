@@ -1,12 +1,20 @@
 package com.mustafakoceerr.justrelax.core.audio
 
 /**
- * :core:audio modülü, SoundscapeService sınıfını tanımaz (Circular Dependency olmaması için).
- * Bu yüzden servisi başlatma işini bu arayüz üzerinden talep eder.
+ * AudioMixer'ın, Android Service'i başlatma ve durdurma taleplerini
+ * iletmek için kullanacağı sözleşme.
  *
- * DIP (Dependency Inversion): Mixer, Service'e değil, bu arayüze bağımlıdır.
+ * Bu arayüz, core:audio modülünün Android Service sınıfına doğrudan
+ * bağımlı olmasını engeller (Dependency Inversion Principle).
  */
 interface AudioServiceController {
+    /**
+     * Arka plan ses servisini başlatır.
+     */
     fun start()
+
+    /**
+     * Arka plan ses servisini durdurur.
+     */
     fun stop()
 }

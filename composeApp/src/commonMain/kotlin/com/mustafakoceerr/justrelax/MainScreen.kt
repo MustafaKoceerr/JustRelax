@@ -23,6 +23,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -39,10 +40,11 @@ import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
+import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
-import com.mustafakoceerr.justrelax.feature.player.PlayerScreenModel
+import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
 import com.mustafakoceerr.justrelax.feature.player.components.PlayerBottomBar
-import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerIntent
+import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerContract
 import com.mustafakoceerr.justrelax.tabs.AiTab
 import com.mustafakoceerr.justrelax.tabs.HomeTab
 import com.mustafakoceerr.justrelax.tabs.MixerTab
@@ -53,15 +55,32 @@ import org.koin.compose.koinInject
 object MainScreen : AppScreen {
     @Composable
     override fun Content() {
-        val playerScreenModel = koinScreenModel<PlayerScreenModel>()
-        val playerState by playerScreenModel.state.collectAsState()
+        // 1. ViewModel ve State
+        val playerViewModel = koinScreenModel<PlayerViewModel>()
+        val playerState by playerViewModel.state.collectAsState()
 
         val snackbarController = koinInject<GlobalSnackbarController>()
 
-        // --- KMP UYUMLU KLAVYE KONTROLÜ ---
+        // 2. Effect Handling (Snackbar Gösterimi)
+        LaunchedEffect(Unit) {
+            playerViewModel.effect.collect { effect ->
+                when (effect) {
+                    is PlayerContract.Effect.ShowSnackbar -> {
+                        snackbarController.showSnackbar(effect.message.resolve())
+                    }
+                }
+            }
+        }
+
+        // 3. Save Dialog (Global)
+        SaveMixDialog(
+            isOpen = playerState.isSaveDialogVisible,
+            onDismiss = { playerViewModel.onEvent(PlayerContract.Event.DismissSaveDialog) },
+            onConfirm = { name -> playerViewModel.onEvent(PlayerContract.Event.SaveMix(name)) }
+        )
+
+        // 4. Klavye Kontrolü
         val density = LocalDensity.current
-        // WindowInsets.ime, hem iOS hem Android'de ortaktır.
-        // Eğer klavyenin alt yüksekliği 0'dan büyükse, klavye açıktır.
         val isKeyboardOpen = WindowInsets.ime.getBottom(density) > 0
 
         TabNavigator(HomeTab) { tabNavigator ->
@@ -77,20 +96,20 @@ object MainScreen : AppScreen {
                     bottomBar = {
                         // Klavye açık DEĞİLSE BottomBar'ı göster
                         if (!isKeyboardOpen) {
-
-
                             Column(modifier = Modifier.fillMaxWidth()) {
                                 // A. Player Bar (Üstte)
                                 PlayerBottomBar(
                                     isVisible = shouldShowPlayer,
                                     activeIcons = playerState.activeSounds.map { it.iconUrl },
                                     isPlaying = playerState.isPlaying,
-
                                     onPlayPauseClick = {
-                                        playerScreenModel.onIntent(PlayerIntent.ToggleMasterPlayPause)
+                                        playerViewModel.onEvent(PlayerContract.Event.ToggleMasterPlayPause)
                                     },
                                     onStopAllClick = {
-                                        playerScreenModel.onIntent(PlayerIntent.StopAll)
+                                        playerViewModel.onEvent(PlayerContract.Event.StopAll)
+                                    },
+                                    onSaveClick = {
+                                        playerViewModel.onEvent(PlayerContract.Event.OpenSaveDialog)
                                     }
                                 )
 
@@ -149,7 +168,7 @@ private fun RowScope.TabNavigationItem(tab: Tab) {
         label = {
             Text(
                 text = tab.options.title,
-                style = MaterialTheme.typography.labelSmall, // Metin boyutu küçültüldü
+                style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center
             )
         },

@@ -1,0 +1,19 @@
+<resources>
+    <!-- Save Mix Dialog -->
+    <string name="save_mix_dialog_title">Save Current Mix</string>
+    <string name="save_mix_dialog_description">Give a name to your current sound combination to play it easily later.</string>
+    <string name="save_mix_dialog_name_label">Mix Name</string>
+    <string name="save_mix_dialog_name_placeholder">e.g., Deep Focus</string>
+    <string name="save_mix_dialog_name_error">Name cannot be empty</string>
+
+    <!-- Actions -->
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+
+    <!-- Messages & Errors -->
+    <string name="msg_mix_saved_success">Mix \'%1$s\' saved successfully!</string>
+    <string name="err_mix_save_empty_name">Mix name cannot be empty.</string>
+    <string name="err_mix_save_name_exists">A mix with this name already exists.</string>
+    <string name="err_mix_save_no_sound">There are no sounds playing to save.</string>
+    <string name="err_unknown">An unexpected error occurred.</string>
+</resources>

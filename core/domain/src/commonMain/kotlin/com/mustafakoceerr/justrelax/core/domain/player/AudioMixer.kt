@@ -1,86 +1,82 @@
 package com.mustafakoceerr.justrelax.core.domain.player
 
-import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.common.Resource
 import kotlinx.coroutines.flow.Flow
-
-/*
-SRP ve Cohesion (Bağlılık): :core:model modülü genellikle uygulamanın "Veri Varlıklarını" (Entity) tutar (Örn: Sound, User, AppTheme). Bunlar veritabanından veya ağdan gelen saf verilerdir.
-Kullanım Amacı: SoundConfig ise bir veri değil, bir komut argümanıdır. AudioMixer'a "Bunu şu ayarlarla çal" demek için kullanılır. Sadece ve sadece AudioMixer arayüzü ile anlamlıdır.
-Kirlilik: Eğer her metodun parametre sınıfını :core:model'e atarsak, orası çöplüğe döner. SoundConfig, AudioMixer arayüzünün bir parçasıdır, o yüzden onun yanında (:core:domain) durması mimari açıdan çok daha temizdir.
- */
+import kotlinx.coroutines.flow.StateFlow
 
 /**
- * Bir sesin çalınması için gerekli operasyonel konfigürasyon.
- * AudioMixer arayüzünün bir parçasıdır (Contract parameter).
+ * Sesin yapılandırma verisi.
+ * FadeOut parametresi kaldırıldı.
  */
 data class SoundConfig(
-    val id: String,         // Sesin ID'si
-    val url: String,        // Dosya yolu (Local path)
-    val initialVolume: Float = 0.5f,     // Varsayılan ses seviyesi
-    val fadeInDurationMs: Long = 800L,   // Başlarken 800ms fade-in
-    val fadeOutDurationMs: Long = 250L   // Dururken 250ms fade-out
+    val id: String,
+    val url: String,
+    val   initialVolume: Float = 0.5f,
+    val fadeInDurationMs: Long = 1000L, // Varsayılan 1 saniye yumuşak giriş
 )
 
 /**
- * Uygulamanın ses motoru arayüzü.
- * Bu arayüz; UI, UseCase ve Service arasındaki tek iletişim noktasıdır.
+ * Tüm sistemin (UI, Service, Notification) dinleyeceği TEK ve GLOBAL durum nesnesi.
+ * Feature modülündeki state ile karışmaması için ismi özelleştirildi.
+ */
+data class GlobalMixerState(
+    val isPlaying: Boolean = false,          // Genel olarak sistem çalıyor mu?
+    val activeSounds: List<SoundConfig> = emptyList(), // Şu an aktif (çalmakta olan) sesler
+    val error: String? = null                // Hata mesajı
+)
+
+/**
+ * Uygulamanın ses motoru sözleşmesi.
+ * Platform bağımsızdır (Common Main).
  */
 interface AudioMixer {
 
+    // Tek gerçeklik kaynağı
+    val state: StateFlow<GlobalMixerState>
+
     /**
-     * YENİ: Şu an çalmakta olan seslerin ID listesini verir.
-     * UI bu akışı dinleyerek butonların durumunu (Play/Stop ikonu) günceller.
+     * Tek bir ses ekler/başlatır.
+     * @return Result: Başarılıysa Unit, başarısızsa hata döner.
      */
-    val playingSoundIds: Flow<Set<String>>
-
-    // YENİ: Genel oynatma durumu (Play/Pause ikonu için)
-    val isPlaying: Flow<Boolean>
+    suspend fun playSound(config: SoundConfig): Resource<Unit>
 
     /**
-     * Sesi başlatır.
-     * Config içinde verilen 'fadeInDurationMs' süresi boyunca sesi 0'dan 'initialVolume'a kadar açar.
+     * Belirtilen sesi anında durdurur.
      */
-    fun playSound(config: SoundConfig)
+    suspend fun stopSound(soundId: String)
 
     /**
-     * Sesi durdurur.
-     * Config içinde verilen 'fadeOutDurationMs' süresi boyunca sesi kısıp sonra player'ı yok eder.
+     * Mixer ekranı için: Mevcut çalanları temizle ve yeni listeyi çal.
      */
-    fun stopSound(soundId: String)
+    suspend fun setMix(configs: List<SoundConfig>)
 
     /**
-     * Sesi anlık olarak değiştirir.
+     * Sadece ses seviyesini değiştirir.
      */
     fun setVolume(soundId: String, volume: Float)
 
     /**
-     * Tüm sesleri "Fade Out" yapmadan anında dondurur (Service Notification/Pause All).
+     * Tüm sesleri geçici olarak duraklatır (Pause).
      */
-    fun pauseAll()
+    suspend fun pauseAll()
 
     /**
-     * Tüm sesleri kaldığı yerden devam ettirir.
+     * Duraklatılan sesleri devam ettirir (Resume).
      */
-    fun resumeAll()
+    suspend fun resumeAll()
 
     /**
-     * Her şeyi durdurur (gerekirse fade-out yaparak) ve kaynakları temizler.
-     * (Timer bittiğinde veya Stop butonuna basıldığında)
+     * Her şeyi durdurur ve listeyi temizler (Stop).
      */
-    fun stopAll()
+    suspend fun stopAll()
 
     /**
-     * Uygulama tamamen kapandığında kaynakları serbest bırakmak için.
+     * Kaynakları serbest bırakır.
      */
-
-    /**
-     * YENİ İMZA:
-     * Mevcut mix'i durdurup, verilen yeni konfigürasyonları uygular.
-     * @param mixConfigs Anahtar: Sound ID, Değer: O sese ait SoundConfig.
-     */
-
-    // DÜZELTME: Bu fonksiyon artık bir suspend fonksiyonu.
-    // Çağıran taraf, işlemin bitmesini beklemek zorunda kalacak
-     fun setMix(mixConfigs: Map<String, SoundConfig>)
     fun release()
+
+    /**
+     * UI hatayı gösterdikten sonra state'teki error'u temizlemek için çağırır.
+     */
+    fun clearError()
 }

@@ -2,38 +2,36 @@ package com.mustafakoceerr.justrelax.core.domain.usecase.savedmix
 
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.common.asResource
-import com.mustafakoceerr.justrelax.core.domain.controller.SoundController
 import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMixRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetGlobalMixerStateUseCase
 
 /**
- * Sorumluluk (SRP):
- * O an çalmakta olan sesleri ve onların ses seviyelerini, verilen isimle
- * doğrulamadan geçirerek kaydeder.
+ * O an global olarak çalmakta olan sesleri kalıcı hafızaya bir "Mix" olarak kaydeder.
  */
 class SaveCurrentMixUseCase(
-    private val savedMixRepository: SavedMixRepository
+    private val savedMixRepository: SavedMixRepository,
+    private val getGlobalMixerStateUseCase: GetGlobalMixerStateUseCase
 ) {
-    // SoundController'ı buraya parametre olarak ekledik 👇
-    operator fun invoke(name: String, soundController: SoundController): Flow<Resource<Unit>> = flow {
-        if (name.isBlank()) throw AppError.SaveMix.EmptyName
-
-        // Parametre olarak gelen controller'dan durumu al
-        val currentState = soundController.state.first()
-        val playingIds = currentState.playingSoundIds
-        val volumes = currentState.soundVolumes
-
-        if (playingIds.isEmpty()) throw AppError.SaveMix.NoSoundsPlaying
-
-        val soundsToSave = playingIds.associateWith { id ->
-            volumes[id] ?: 0.5f
+    suspend operator fun invoke(name: String): Resource<Unit> {
+        if (name.isBlank()) {
+            return Resource.Error(AppError.SaveMix.EmptyName()) // Hata artık bir class, () ile oluşturulmalı
         }
 
-        savedMixRepository.saveMix(name, soundsToSave)
+        val activeSounds = getGlobalMixerStateUseCase().value.activeSounds
 
-        emit(Unit)
-    }.asResource()
+        if (activeSounds.isEmpty()) {
+            return Resource.Error(AppError.SaveMix.NoSoundsPlaying()) // Hata artık bir class, () ile oluşturulmalı
+        }
+
+        val soundsToSave = activeSounds.associate { config ->
+            config.id to config.initialVolume
+        }
+
+        return try {
+            savedMixRepository.saveMix(name, soundsToSave)
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            Resource.Error(AppError.Database.SaveFailed(e.message))
+        }
+    }
 }

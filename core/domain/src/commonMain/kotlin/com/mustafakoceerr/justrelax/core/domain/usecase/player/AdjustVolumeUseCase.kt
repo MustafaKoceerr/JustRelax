@@ -3,19 +3,20 @@ package com.mustafakoceerr.justrelax.core.domain.usecase.player
 import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
 
 /**
- * Sorumluluk: Çalan bir sesin ses seviyesini değiştirmek.
- * Slider değişimlerinde anlık olarak çağrılır.
+ * Belirli bir sesin seviyesini ayarlar.
+ * Bu bir 'fire-and-forget' işlemidir, anlık tepki verir ve suspend değildir.
+ * Slider gibi hızlı güncellenen UI bileşenleri için idealdir.
  */
 class AdjustVolumeUseCase(
     private val audioMixer: AudioMixer
 ) {
     /**
-     * @param volume: 0.0f ile 1.0f arasında olmalıdır.
+     * @param soundId Sesin kimliği.
+     * @param volume Ayarlanacak yeni ses seviyesi (0.0f ile 1.0f arasında).
      */
     operator fun invoke(soundId: String, volume: Float) {
-        // UI'dan 0-100 arası geliyorsa burada 0.0-1.0'a çevirebiliriz.
-        // Ama genelde Slider 0.0-1.0 verir.
-        // Güvenlik kontrolü (Mixer da yapabilir ama UseCase de filtreleyebilir)
+        // Güvenlik katmanı: UI'dan gelebilecek geçersiz değerleri (örn: -0.1f veya 1.1f)
+        // engeller ve ses motoruna daima 0.0f-1.0f aralığında bir değer gönderir.
         val safeVolume = volume.coerceIn(0f, 1f)
         audioMixer.setVolume(soundId, safeVolume)
     }

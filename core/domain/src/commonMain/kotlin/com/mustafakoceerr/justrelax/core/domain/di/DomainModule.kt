@@ -5,7 +5,6 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadA
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadInitialSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppLanguageUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppThemeUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetPlayingSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.GetSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SetAppLanguageUseCase
@@ -17,8 +16,7 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.sound.SyncSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.TogglePauseResumeUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.GetAppSetupStatusUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.SetAppSetupFinishedUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.CheckMaxActiveSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.ObservePlaybackStateUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetGlobalMixerStateUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.PauseAllSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.ResumeAllSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
@@ -45,7 +43,6 @@ val domainModule = module {
     factoryOf(::StopAllSoundsUseCase)
     factoryOf(::AdjustVolumeUseCase)
     factoryOf(::TogglePauseResumeUseCase)
-    factoryOf(::GetPlayingSoundsUseCase)
 
     // Settings UseCases
     factoryOf(::GetAppThemeUseCase)
@@ -61,12 +58,11 @@ val domainModule = module {
     factoryOf(::GetSoundsUseCase)
     factoryOf(::GetAppSetupStatusUseCase)
     factoryOf(::SetAppSetupFinishedUseCase)
-    factoryOf(::CheckMaxActiveSoundsUseCase)
     factoryOf(::SyncLanguageWithSystemUseCase)
+    factoryOf(::GetGlobalMixerStateUseCase)
 
     factoryOf(::PauseAllSoundsUseCase)
     factoryOf(::ResumeAllSoundsUseCase)
-    factoryOf(::ObservePlaybackStateUseCase)
     factoryOf(::SetMixUseCase)
     factoryOf(::SaveCurrentMixUseCase)
 

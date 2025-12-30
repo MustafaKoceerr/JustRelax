@@ -8,52 +8,54 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 import kotlinx.coroutines.delay
 
-// Gerekli importlar...
 
+/**
+ * Ses kartlarını animasyonlu bir ızgara (grid) içinde gösterir.
+ * Bu Composable "aptaldır"; sadece kendisine verilen veriyi çizer ve event'leri yukarı iletir.
+ */
 @Composable
 fun SoundCardGrid(
     sounds: List<Sound>,
     playingSoundIds: Set<String>,
     soundVolumes: Map<String, Float>,
     downloadingSoundIds: Set<String>,
-    onSoundClick: (String) -> Unit,
+    onSoundClick: (Sound) -> Unit, // Değişiklik: ID yerine tam Sound nesnesi istiyoruz.
     onVolumeChange: (String, Float) -> Unit,
-    contentPadding: PaddingValues
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 110.dp),
+        modifier = modifier,
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // 'items' yerine 'itemsIndexed' kullanarak her bir kartın sırasını (index) alıyoruz.
-        itemsIndexed(
+        items(
             items = sounds,
-            key = { _, sound -> sound.id } // Key'i doğru şekilde tanımlıyoruz
-        ) { index, sound ->
-            // Her kartın kendi görünürlük durumunu yönetmesi için bir state
+            key = { sound -> sound.id }
+        ) { sound ->
+            // Animasyon için her kartın kendi görünürlük state'i
             var isVisible by remember { mutableStateOf(false) }
-
-            // Kart ekrana ilk geldiğinde animasyonu tetiklemek için LaunchedEffect
             LaunchedEffect(Unit) {
-                // Her karta index'ine göre artan bir gecikme veriyoruz (cascade efekti)
-                delay(index * 50L)
+                delay(50L) // Küçük bir gecikme, animasyonun akıcı başlaması için
                 isVisible = true
             }
 
-            // Kartı AnimatedVisibility ile sarmalıyoruz
             AnimatedVisibility(
                 visible = isVisible,
                 enter = slideInVertically(
                     animationSpec = tween(durationMillis = 400),
-                    initialOffsetY = { it / 2 } // Aşağıdan yukarı doğru kayacak
+                    initialOffsetY = { it / 2 }
                 ) + fadeIn(
                     animationSpec = tween(durationMillis = 300)
                 )
@@ -67,8 +69,8 @@ fun SoundCardGrid(
                     isPlaying = isPlaying,
                     isDownloading = isDownloading,
                     volume = volume,
-                    onCardClick = { onSoundClick(sound.id) },
-                    onVolumeChange = { newVol -> onVolumeChange(sound.id, newVol) }
+                    onCardClick = { onSoundClick(sound) }, // Tıklandığında Sound nesnesini yukarı gönder
+                    onVolumeChange = { newVolume -> onVolumeChange(sound.id, newVolume) }
                 )
             }
         }
