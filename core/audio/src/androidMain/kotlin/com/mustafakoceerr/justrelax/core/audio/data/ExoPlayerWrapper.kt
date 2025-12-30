@@ -1,8 +1,11 @@
 package com.mustafakoceerr.justrelax.core.audio.data
 
 import android.content.Context
+import android.os.Looper
+import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
@@ -20,9 +23,10 @@ internal class ExoPlayerWrapper(
 ) {
 
     private var exoPlayer: ExoPlayer? = null
+    private var targetVolume: Float = AudioDefaults.BASE_VOLUME
+
 
     // O anki hedef ses seviyesi (AudioDefaults'tan alınıyor)
-    private var targetVolume: Float = AudioDefaults.BASE_VOLUME
 
     /**
      * Sesi hazırlar ve çalmaya başlar (Fade-In ile).
@@ -115,5 +119,40 @@ internal class ExoPlayerWrapper(
         if (exoPlayer != null) {
             exoPlayer?.volume = targetVolume
         }
+    }
+
+    @OptIn(UnstableApi::class)
+    suspend fun prepare(config: SoundConfig) {
+        // A. İNŞAAT (IO Thread): Ağır nesne oluşturma işi burada.
+        val player = withContext(Dispatchers.IO) {
+            ExoPlayer.Builder(context)
+                .setLooper(Looper.getMainLooper()) // KRİTİK NOKTA: Main Thread beyni takıyoruz.
+                .build()
+        }
+
+        // B. KURULUM (Main Thread): Player ayarları ve dosya yükleme.
+        // Looper Main olduğu için bu metodları Main thread'de çağırmalıyız.
+        withContext(Dispatchers.Main) {
+            // Önceki varsa temizle (Safety)
+            releasePlayer()
+
+            exoPlayer = player.apply {
+                repeatMode = Player.REPEAT_MODE_ONE
+                setMediaItem(MediaItem.fromUri(config.url))
+                volume = 0f // Fade-in için sessiz başla
+                prepare() // Asenkron hazırlığı başlat
+            }
+
+            targetVolume = config.initialVolume
+        }
+    }
+
+    /**
+     * 2. AŞAMA: OYNATMA (Hafif İşlem)
+     * Hazır olan player'ı oynatır ve fade-in yapar.
+     */
+    suspend fun playFadeIn(fadeInDurationMs: Long) = withContext(Dispatchers.Main) {
+        exoPlayer?.play()
+        fadeIn(fadeInDurationMs)
     }
 }

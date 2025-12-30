@@ -46,7 +46,7 @@ internal class AndroidAudioMixer(
     private val mutex = Mutex()
 
     override suspend fun playSound(config: SoundConfig): Resource<Unit> {
-        // 1. Hızlı Kontrol (Kilitli): Zaten var mı?
+        // 1. Hızlı Kontrol
         mutex.withLock {
             if (players.containsKey(config.id)) return Resource.Success(Unit)
             if (players.size >= AudioDefaults.MAX_CONCURRENT_SOUNDS) {
@@ -56,57 +56,47 @@ internal class AndroidAudioMixer(
             }
         }
 
-        // 2. Ağır İşlem (Kilitsiz): Player'ı oluştur.
-        // Bu işlem sırasında UI donmaz ve diğer threadler kilitlenmez.
+        // 2. Arka Planda Hazırlık (IO Thread)
+        // Wrapper oluşturulur ve Player inşa edilir. UI Thread serbesttir.
         val newWrapper = try {
-            ExoPlayerWrapper(context)
+            val wrapper = ExoPlayerWrapper(context)
+            wrapper.prepare(config) // Bu fonksiyon artık suspend ve IO-safe
+            wrapper
         } catch (e: Exception) {
             return Resource.Error(AppError.Player.InitializationError(e.message ?: "Unknown"))
         }
 
-        // 3. Ekleme ve Başlatma (Kilitli):
+        // 3. Ekleme ve Başlatma (Main Thread + Mutex)
         return mutex.withLock {
-            // Race Condition Kontrolü: Biz player'ı hazırlarken kullanıcı "StopAll" demiş olabilir.
-            // Veya başka bir işlem araya girmiş olabilir.
             if (players.containsKey(config.id)) {
-                newWrapper.stop() // Boşa oluşturduğumuzu temizle
+                newWrapper.stop()
                 return@withLock Resource.Success(Unit)
             }
 
-            // İlk ses ise servisi başlat
             if (players.isEmpty()) {
                 serviceController.start()
             }
 
             players[config.id] = newWrapper
 
-            // State güncelle
             _state.update {
                 it.copy(isPlaying = true, activeSounds = it.activeSounds + config)
             }
 
-            // Çalmaya başla (Wrapper içinde async çalışır)
-            scope.launch { newWrapper.play(config) }
+            // Sadece "Play" komutu verilir (Hafif işlem)
+            scope.launch { newWrapper.playFadeIn(config.fadeInDurationMs) }
 
             Resource.Success(Unit)
         }
     }
 
-
     override suspend fun stopSound(soundId: String) = mutex.withLock {
         players.remove(soundId)?.stop()
-
         _state.update { currentState ->
             val newActiveSounds = currentState.activeSounds.filterNot { it.id == soundId }
-            currentState.copy(
-                activeSounds = newActiveSounds,
-                isPlaying = newActiveSounds.isNotEmpty()
-            )
+            currentState.copy(activeSounds = newActiveSounds, isPlaying = newActiveSounds.isNotEmpty())
         }
-
-        if (players.isEmpty()) {
-            serviceController.stop()
-        }
+        if (players.isEmpty()) serviceController.stop()
     }
 
     override suspend fun stopAll() = mutex.withLock {
@@ -119,69 +109,54 @@ internal class AndroidAudioMixer(
     }
 
     override suspend fun setMix(configs: List<SoundConfig>) {
-        // 1. Analiz (Kilitli): Hangileri kalacak, hangileri gidecek, hangileri yeni?
+        // 1. Analiz
         val (toRemove, toAdd) = mutex.withLock {
             val currentIds = players.keys.toSet()
             val newIds = configs.map { it.id }.toSet()
-
-            val removeList = currentIds - newIds
-            val addList = configs.filter { !currentIds.contains(it.id) }
-
-            Pair(removeList, addList)
+            Pair(currentIds - newIds, configs.filter { !currentIds.contains(it.id) })
         }
 
-        // 2. Temizlik (Kilitli): Gereksizleri durdur ve sil
+        // 2. Temizlik
         if (toRemove.isNotEmpty()) {
             mutex.withLock {
-                toRemove.forEach { id ->
-                    players.remove(id)?.stop()
-                }
+                toRemove.forEach { players.remove(it)?.stop() }
             }
         }
 
-        // 3. Paralel Hazırlık (Kilitsiz & Async):
-        // 7 ses varsa 7'si aynı anda hazırlanır.
+        // 3. Paralel Hazırlık (IO Thread - ASYNC)
+        // 7 ses varsa 7'si de IO thread'inde, Main Looper'a bağlı olarak oluşturulur.
         if (toAdd.isNotEmpty()) {
-            val newPlayersMap = withContext(Dispatchers.Main) {
+            val newPlayersMap = withContext(Dispatchers.IO) {
                 toAdd.map { config ->
                     async {
-                        val player = ExoPlayerWrapper(context)
-                        config to player
+                        val wrapper = ExoPlayerWrapper(context)
+                        wrapper.prepare(config) // Ağır iş burada
+                        config to wrapper
                     }
-                }.awaitAll().toMap() // Hepsinin bitmesini bekle
+                }.awaitAll().toMap()
             }
 
-            // 4. Toplu Ekleme (Kilitli):
+            // 4. Toplu Başlatma (Main Thread)
             mutex.withLock {
-                // Servis kontrolü
                 if (players.isEmpty() && newPlayersMap.isNotEmpty()) {
                     serviceController.start()
                 }
 
-                newPlayersMap.forEach { (config, player) ->
-                    players[config.id] = player
-                    // Hazır olanları çalmaya başlat
-                    scope.launch { player.play(config) }
+                newPlayersMap.forEach { (config, wrapper) ->
+                    players[config.id] = wrapper
+                    scope.launch { wrapper.playFadeIn(config.fadeInDurationMs) }
                 }
             }
         }
 
-        // 5. State Güncelleme (Son Durum)
+        // 5. State Güncelleme
         mutex.withLock {
             _state.update {
-                it.copy(
-                    isPlaying = configs.isNotEmpty(),
-                    activeSounds = configs
-                )
+                it.copy(isPlaying = configs.isNotEmpty(), activeSounds = configs)
             }
-
-            // Eğer liste boşaldıysa servisi durdur
-            if (players.isEmpty()) {
-                serviceController.stop()
-            }
+            if (players.isEmpty()) serviceController.stop()
         }
     }
-
 
     override suspend fun pauseAll() = mutex.withLock {
         if (players.isEmpty() || !_state.value.isPlaying) return@withLock
