@@ -2,10 +2,7 @@ package com.mustafakoceerr.justrelax.feature.onboarding
 
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,14 +24,12 @@ import com.mustafakoceerr.justrelax.feature.onboarding.components.DownloadingVie
 import com.mustafakoceerr.justrelax.feature.onboarding.components.LoadingConfigView
 import com.mustafakoceerr.justrelax.feature.onboarding.components.NoInternetView
 import com.mustafakoceerr.justrelax.feature.onboarding.components.OnboardingScreenContent
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.DownloadOption
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingEffect
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingIntent
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingScreenStatus
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingState
 import com.mustafakoceerr.justrelax.feature.onboarding.navigation.OnboardingNavigator
 import kotlinx.coroutines.flow.collectLatest
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 // 1. ROUTE (Stateful): Veri ve Navigasyon Mantığı
@@ -100,7 +95,6 @@ internal fun OnboardingUi(
 
                 OnboardingScreenStatus.CHOOSING -> {
                     var selectedOption by remember { mutableStateOf(DownloadOptionType.STARTER) }
-                    val scrollState = rememberScrollState()
 
                     OnboardingScreenContent(
                         selectedOption = selectedOption,
@@ -114,7 +108,6 @@ internal fun OnboardingUi(
                             onIntent(intent)
                         },
                         modifier = contentModifier
-                            .verticalScroll(scrollState)
                     )
                 }
 
@@ -139,35 +132,4 @@ internal fun OnboardingUi(
             }
         }
     }
-}
-
-// --- PREVIEW ---
-// Artık ViewModel olmadan ekranın farklı durumlarını görebiliriz.
-@Preview
-@Composable
-private fun OnboardingUiChoosingPreview() {
-    val previewState = OnboardingState(
-        status = OnboardingScreenStatus.CHOOSING,
-        initialOption = DownloadOption(totalSizeMb = 35f, soundCount = 12),
-        allOption = DownloadOption(totalSizeMb = 150f, soundCount = 50)
-    )
-    OnboardingUi(
-        state = previewState,
-        snackbarHostState = SnackbarHostState(),
-        onIntent = {}
-    )
-}
-
-@Preview
-@Composable
-private fun OnboardingUiDownloadingPreview() {
-    val previewState = OnboardingState(
-        status = OnboardingScreenStatus.DOWNLOADING,
-        downloadProgress = 0.7f
-    )
-    OnboardingUi(
-        state = previewState,
-        snackbarHostState = SnackbarHostState(),
-        onIntent = {}
-    )
 }
