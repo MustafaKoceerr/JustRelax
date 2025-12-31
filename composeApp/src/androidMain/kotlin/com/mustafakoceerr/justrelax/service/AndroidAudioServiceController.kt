@@ -22,11 +22,16 @@ class AndroidAudioServiceController(
 
     override fun stop() {
         // Servise "kendini durdur" komutunu gönderiyoruz.
-        // Servis zaten çalışmıyorsa bu komutun bir zararı olmaz.
         val intent = Intent(context, SoundscapeService::class.java).apply {
             action = SoundscapeService.ACTION_STOP
         }
-        ContextCompat.startForegroundService(context, intent)
+        try {
+            context.startService(intent)
+        } catch (e: Exception) {
+            // Servis zaten ölmüşse veya arka planda başlatma kısıtlaması varsa
+            // burası patlayabilir ama stop işlemi olduğu için kritik değil.
+            e.printStackTrace()
+        }
     }
 
 }
