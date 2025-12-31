@@ -77,6 +77,13 @@ class SoundscapeService : Service() {
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
+        // HOTFIX: Uygulama görev yöneticisinden atıldığında (Swipe),
+        // AudioMixer Singleton olduğu için yaşamaya devam ediyor.
+        // Servis ölmeden önce ses motorunu manuel olarak susturmamız lazım.
+        serviceScope.launch {
+            audioMixer.stopAll()
+        }
+
         // Uygulama görev yöneticisinden kaydırıldığında servisi durdur.
         stopService()
         super.onTaskRemoved(rootIntent)

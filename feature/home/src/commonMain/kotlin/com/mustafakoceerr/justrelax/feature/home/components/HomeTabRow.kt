@@ -77,32 +77,3 @@ fun HomeTabRow(
     }
 }
 
-@Composable
-private fun CategoryTabContent(
-    category: SoundCategory,
-    backgroundColor: Color,
-    contentColor: Color
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(vertical = 8.dp)
-            .background(backgroundColor, CircleShape)
-            .padding(horizontal = 16.dp, vertical = 12.dp)
-    ) {
-        Icon(
-            imageVector = category.icon,
-            contentDescription = null,
-            tint = contentColor,
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = stringResource(category.titleRes),
-            style = MaterialTheme.typography.labelLarge,
-            color = contentColor,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
