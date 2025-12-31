@@ -27,4 +27,7 @@
     <string name="action_save">Kaydet</string>
     <string name="action_cancel">İptal</string>
     <string name="sound_action_download">İndir</string>
+
+    <string name="action_dismiss">Kapat</string>
+
 </resources>

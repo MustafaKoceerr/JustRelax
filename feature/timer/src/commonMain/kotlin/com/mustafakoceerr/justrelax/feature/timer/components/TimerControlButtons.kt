@@ -25,17 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
 import justrelax.feature.timer.generated.resources.Res
 import justrelax.feature.timer.generated.resources.timer_action_delete
 import justrelax.feature.timer.generated.resources.timer_action_pause
 import justrelax.feature.timer.generated.resources.timer_action_resume
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
 fun TimerControlButtons(
-    status: TimerStatus,
+    isPaused: Boolean,
     onToggleClick: () -> Unit,
     onCancelClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -43,15 +41,14 @@ fun TimerControlButtons(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 24.dp), // Ekran altından boşluk
+            .padding(bottom = 24.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // İptal Butonu
         FilledTonalButton(
             onClick = onCancelClick,
             modifier = Modifier
-                .height(50.dp) // Dokunma hedefi için iyi
+                .height(50.dp)
                 .widthIn(min = 100.dp),
             contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
@@ -69,10 +66,9 @@ fun TimerControlButtons(
             )
         }
 
-        Spacer(modifier = Modifier.width(32.dp)) // İki buton arası geniş boşluk
+        Spacer(modifier = Modifier.width(32.dp))
 
-        // Başlat/Durdur Mantığı
-        val isRunning = status == TimerStatus.RUNNING
+        val isRunning = !isPaused
         val toggleContainerColor = if (isRunning) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
         val toggleIcon = if (isRunning) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
         val toggleText = if (isRunning) Res.string.timer_action_pause else Res.string.timer_action_resume

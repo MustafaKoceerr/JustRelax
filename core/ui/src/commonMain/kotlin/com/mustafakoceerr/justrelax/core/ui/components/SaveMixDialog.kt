@@ -32,6 +32,7 @@ import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_name_label
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_name_placeholder
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_title
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.job
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -41,22 +42,16 @@ fun SaveMixDialog(
     isOpen: Boolean,
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
-    modifier: Modifier = Modifier // Modifier parametresi eklendi
+    modifier: Modifier = Modifier
 ) {
-    // Parent "isOpen" dediği an bu blok render edilir.
-    // Ancak Dialog'un state resetlemesi için if bloğunu koruyoruz.
     if (isOpen) {
-        // State'ler sadece dialog açıkken yaşar, kapanınca ölür.
         var mixName by remember { mutableStateOf("") }
         var isError by remember { mutableStateOf(false) }
-
-        // UX İyileştirmesi: Otomatik Klavye Açılışı
         val focusRequester = remember { FocusRequester() }
 
-        // Dialog görünür olduğunda klavyeyi aç
+        // Klavye açılışını garantiye almak için ufak bir gecikme
         LaunchedEffect(Unit) {
-            // Animasyonların bitmesini beklemek gerekebilir, safe bir delay veya awaitFrame
-            this.coroutineContext.job.join()
+            delay(100) // UI çizimi tamamlansın diye kısa bir bekleme
             focusRequester.requestFocus()
         }
 
@@ -82,25 +77,20 @@ fun SaveMixDialog(
                         value = mixName,
                         onValueChange = {
                             mixName = it
-                            if (isError) isError = false // Yazmaya başlayınca hatayı sil
+                            if (isError) isError = false
                         },
-                        label = {
-                            Text(stringResource(Res.string.save_mix_dialog_name_label))
-                        },
-                        placeholder = {
-                            Text(stringResource(Res.string.save_mix_dialog_name_placeholder))
-                        },
+                        label = { Text(stringResource(Res.string.save_mix_dialog_name_label)) },
+                        placeholder = { Text(stringResource(Res.string.save_mix_dialog_name_placeholder)) },
                         singleLine = true,
                         isError = isError,
                         supportingText = {
-                            // Sadece hata varsa yer kaplasın
                             if (isError) {
                                 Text(stringResource(Res.string.save_mix_dialog_name_error))
                             }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .focusRequester(focusRequester), // Focus bağlandı
+                            .focusRequester(focusRequester),
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences,
                             imeAction = ImeAction.Done
@@ -135,18 +125,6 @@ fun SaveMixDialog(
                     Text(stringResource(Res.string.action_cancel))
                 }
             }
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun SaveMixDialogPreview() {
-    MaterialTheme {
-        SaveMixDialog(
-            isOpen = true,
-            onDismiss = {},
-            onConfirm = {}
         )
     }
 }

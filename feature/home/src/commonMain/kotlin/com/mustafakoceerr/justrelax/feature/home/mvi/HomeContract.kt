@@ -1,41 +1,48 @@
 package com.mustafakoceerr.justrelax.feature.home.mvi
 
-import com.mustafakoceerr.justrelax.core.common.AppError
+import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
-// 1. STATE: Ekranın o anki fotoğrafı.
-// Logic (getter, hesaplama) içermez. Sadece saf veri.
-// 1. STATE
-data class HomeState(
-    // Data
-    val categories: List<SoundCategory> = SoundCategory.entries,
-    val selectedCategory: SoundCategory = SoundCategory.NATURE,
-    val allSounds: List<Sound> = emptyList(),
-    val filteredSounds: List<Sound> = emptyList(),
+/**
+ * Home ekranı için MVI sözleşmesi.
+ * State, sadece UI'ın kalıcı durumunu içerir.
+ * Effect, tek seferlik olayları yönetir.
+ */
+interface HomeContract {
 
-    // Player Status
-    val playingSoundIds: Set<String> = emptySet(),
-    val soundVolumes: Map<String, Float> = emptyMap(),
+    /**
+     * Home ekranının kalıcı durumunu temsil eder.
+     * İçinde geçici (event-like) alanlar bulunmaz.
+     */
+    data class State(
+        val isLoading: Boolean = true,
+        val categories: Map<SoundCategory, List<Sound>> = emptyMap(),
+        val playerState: GlobalMixerState = GlobalMixerState(),
+        val downloadingSoundIds: Set<String> = emptySet(),
+        // YENİ: O anda hangi kategorinin seçili olduğunu tutar.
+        val selectedCategory: SoundCategory? = null,
+        // 'error' alanı buradan kaldırıldı.
+    )
 
-    // Download Status (Tekil indirmeler için)
-    val downloadingSoundIds: Set<String> = emptySet(),
+    /**
+     * Kullanıcının UI üzerinde yapabileceği eylemler.
+     */
+    sealed interface Event {
+        // YENİ: Kullanıcı bir kategoriye tıkladığında bu event gönderilir.
+        data class OnCategorySelected(val category: SoundCategory) : Event
+        data class OnSoundClick(val sound: Sound) : Event
+        data class OnVolumeChange(val soundId: String, val volume: Float) : Event
+        data object OnSettingsClick : Event
+    }
 
-    // UI
-    val isLoading: Boolean = true
-)
-
-// 2. INTENT
-sealed interface HomeIntent {
-    data class SelectCategory(val category: SoundCategory) : HomeIntent
-    data class ToggleSound(val soundId: String) : HomeIntent
-    data class ChangeVolume(val soundId: String, val volume: Float) : HomeIntent
-    data object SettingsClicked : HomeIntent
-}
-
-// 3. EFFECT
-sealed interface HomeEffect {
-    data class ShowError(val error: AppError) : HomeEffect
-    data class ShowMessage(val message: String) : HomeEffect
-    data object NavigateToSettings : HomeEffect
+    /**
+     * ViewModel'den UI'a gönderilen tek seferlik komutlar.
+     * UI bu olayları bir `LaunchedEffect` içinde dinler.
+     */
+    sealed interface Effect {
+        data object NavigateToSettings : Effect
+        data class ShowSnackbar(val message: UiText) : Effect
+    }
 }

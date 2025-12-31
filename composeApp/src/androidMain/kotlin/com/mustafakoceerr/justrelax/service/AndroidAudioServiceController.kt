@@ -1,31 +1,32 @@
 package com.mustafakoceerr.justrelax.service
 
-
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.mustafakoceerr.justrelax.core.audio.AudioServiceController
 
-class AndroidServiceController(
+/**
+ * AudioServiceController arayüzünün Android'e özel implementasyonu.
+ * SoundscapeService'i başlatmak ve durdurmak için Intent'leri kullanır.
+ */
+class AndroidAudioServiceController(
     private val context: Context
 ) : AudioServiceController {
 
-    private companion object {
-        const val TAG = "AndroidServiceController"
-    }
-
     override fun start() {
-        Log.i(TAG, "start() called. Sending Intent to SoundscapeService.")
+        // Servisi ön planda (foreground) başlatmak için bu metodu kullanıyoruz.
+        // Android 8 ve üzeri için bu zorunludur.
         val intent = Intent(context, SoundscapeService::class.java)
         ContextCompat.startForegroundService(context, intent)
     }
 
     override fun stop() {
-        Log.i(TAG, "stop() called. Sending ACTION_STOP to SoundscapeService.")
+        // Servise "kendini durdur" komutunu gönderiyoruz.
+        // Servis zaten çalışmıyorsa bu komutun bir zararı olmaz.
         val intent = Intent(context, SoundscapeService::class.java).apply {
             action = SoundscapeService.ACTION_STOP
         }
         ContextCompat.startForegroundService(context, intent)
     }
+
 }

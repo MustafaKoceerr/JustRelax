@@ -1,13 +1,17 @@
 package com.mustafakoceerr.justrelax.core.ui.components
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -18,7 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_dismiss
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Uygulamanın genelinde kullanılacak Snackbar Host.
@@ -27,47 +33,44 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun JustRelaxSnackbarHost(
     hostState: SnackbarHostState,
-    modifier: Modifier = Modifier // Best Practice: Dışarıdan müdahale edilebilir olmalı
+    modifier: Modifier = Modifier
 ) {
     SnackbarHost(
         hostState = hostState,
         modifier = modifier
     ) { data ->
-        // Veriyi UI bileşenine dönüştürüyoruz (Adapter Pattern)
+        // SnackbarData'yı bizim esnek UI bileşenimize adapte ediyoruz.
         JustRelaxSnackbar(
             message = data.visuals.message,
             actionLabel = data.visuals.actionLabel,
-            onActionClick = { data.performAction() },
+            // Sadece bir aksiyon varsa tıklandığında performAction'ı çağır.
+            onActionClick = if (data.visuals.actionLabel != null) { { data.performAction() } } else { null },
+            // Kapatma butonu her zaman dismiss'i tetikler.
             onDismiss = { data.dismiss() }
         )
     }
 }
 
-/**
- * Saf UI Bileşeni (Stateless).
- * SnackbarData yerine String alır, böylece Preview ve Test edilebilir.
- * Private veya Internal olabilir, çünkü genelde sadece Host içinden çağrılır.
- */
 @Composable
 private fun JustRelaxSnackbar(
     message: String,
-    actionLabel: String?,
-    onActionClick: () -> Unit,
-    onDismiss: () -> Unit, // Gerekirse dismiss aksiyonu için (Swipe desteği Host'tadır ama buton eklenebilir)
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    actionLabel: String? = null,
+    onActionClick: (() -> Unit)? = null,
+    onDismiss: (() -> Unit)? = null
 ) {
     Surface(
         modifier = modifier
-            .padding(16.dp) // Ekran kenarlarından boşluk
+            .padding(16.dp)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp), // PDF Kuralı: Standart shape kullanımı
+        shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.inverseSurface,
         contentColor = MaterialTheme.colorScheme.inverseOnSurface,
         shadowElevation = 6.dp,
         tonalElevation = 2.dp
     ) {
         Row(
-            modifier = Modifier.padding(16.dp), // İçerik boşluğu
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -75,53 +78,44 @@ private fun JustRelaxSnackbar(
             Text(
                 text = message,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f, fill = false)
             )
 
-            // Aksiyon Butonu (Varsa)
-            if (actionLabel != null) {
-                Spacer(modifier = Modifier.width(16.dp))
-                TextButton(
-                    onClick = onActionClick,
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.inversePrimary
-                    )
-                ) {
-                    Text(
-                        text = actionLabel,
-                        style = MaterialTheme.typography.labelLarge
-                    )
+            // Butonları sağda gruplamak için bir Row
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // Aksiyon Butonu (Sadece label ve click varsa gösterilir)
+                if (actionLabel != null && onActionClick != null) {
+                    TextButton(
+                        onClick = onActionClick,
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.inversePrimary
+                        )
+                    ) {
+                        Text(
+                            text = actionLabel,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                }
+
+                // Kapatma Butonu (Sadece onDismiss varsa gösterilir)
+                if (onDismiss != null) {
+                    IconButton(
+                        onClick = onDismiss,
+                        colors = IconButtonDefaults.iconButtonColors(
+                            contentColor = MaterialTheme.colorScheme.inverseOnSurface
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Close,
+                            contentDescription = stringResource(Res.string.action_dismiss)
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-// --- PREVIEW ---
-// Artık Snackbar'ı host olmadan, data mocklamadan görebiliriz.
-
-@Preview
-@Composable
-private fun JustRelaxSnackbarPreview() {
-    MaterialTheme {
-        JustRelaxSnackbar(
-            message = "İndirme işlemi tamamlandı.",
-            actionLabel = "GÖRÜNTÜLE",
-            onActionClick = {},
-            onDismiss = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun JustRelaxSnackbarNoActionPreview() {
-    MaterialTheme {
-        JustRelaxSnackbar(
-            message = "Bağlantı hatası oluştu.",
-            actionLabel = null,
-            onActionClick = {},
-            onDismiss = {}
-        )
     }
 }

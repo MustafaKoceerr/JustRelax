@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.ai.di
 
-import com.mustafakoceerr.justrelax.feature.ai.AiScreenModel
+import com.mustafakoceerr.justrelax.feature.ai.AiViewModel
 import com.mustafakoceerr.justrelax.feature.ai.data.repository.OpenAiRepositoryImpl
 import com.mustafakoceerr.justrelax.feature.ai.domain.repository.AiRepository
 import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.GenerateAiMixUseCase
@@ -15,5 +15,5 @@ val aiModule = module {
     }
 
     factoryOf(::GenerateAiMixUseCase)
-    factoryOf(::AiScreenModel)
+    factoryOf(::AiViewModel)
 }

@@ -24,13 +24,6 @@ private val GRID_SPACING = 12.dp // 8dp'nin 1.5 katı (Medium Spacing)
 
 /**
  * Tüm uygulamada kullanılan standart Ses Listesi Izgarası.
- * Home, Mixer ve AI ekranlarının hepsi görsel olarak bu yapıyı kullanır.
- *
- * @param emptyContent: Eğer liste boşsa gösterilecek özel bileşen (Slot API).
- */
-
-/**
- * Tüm uygulamada kullanılan standart Ses Listesi Izgarası.
  * Artık ekleme/çıkarma ve filtreleme işlemlerinde 'animateItem' sayesinde
  * Native kalitesinde animasyonlara sahip.
  */

@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,7 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,143 +28,150 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
-import com.mustafakoceerr.justrelax.core.domain.controller.SoundControllerState
+import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
-import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
-import com.mustafakoceerr.justrelax.core.ui.components.SoundGridSection
+import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixCountSelector
-import com.mustafakoceerr.justrelax.feature.mixer.components.SaveMixButton
-import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerEffect
-import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerIntent
-import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerState
+import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerContract
 import justrelax.feature.mixer.generated.resources.Res
 import justrelax.feature.mixer.generated.resources.mixer_empty_state_message
 import justrelax.feature.mixer.generated.resources.mixer_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-data object MixerScreen : AppScreen {
+
+object MixerScreen : AppScreen {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        // --- BAĞIMLILIKLAR VE STATE YÖNETİMİ ---
+        // --- BAĞIMLILIKLAR ---
         val snackbarController = koinInject<GlobalSnackbarController>()
-        val mixerScreenModel = koinScreenModel<MixerScreenModel>()
-        val mixerState by mixerScreenModel.state.collectAsState()
-        val soundControllerState by mixerScreenModel.soundController.state.collectAsState()
+        val viewModel = koinScreenModel<MixerViewModel>()
+
+        val mixerState by viewModel.state.collectAsState()
+        // Global State (SoundController üzerinden)
+        val soundControllerState by viewModel.soundController.state.collectAsState()
 
         // --- EFFECT HANDLING ---
         LaunchedEffect(Unit) {
-            mixerScreenModel.effect.collect { effect ->
+            viewModel.effect.collect { effect ->
                 when (effect) {
-                    is MixerEffect.ShowSnackbar -> {
-                        val messageStr = effect.message.resolve()
-                        snackbarController.showSnackbar(messageStr)
+                    is MixerContract.Effect.ShowSnackbar -> {
+                        snackbarController.showSnackbar(effect.message.resolve())
                     }
                 }
             }
         }
 
-        // --- DIALOG ---
-        SaveMixDialog(
-            isOpen = mixerState.isSaveDialogVisible,
-            onDismiss = { mixerScreenModel.onIntent(MixerIntent.HideSaveDialog) },
-            onConfirm = { name -> mixerScreenModel.onIntent(MixerIntent.SaveCurrentMix(name)) }
-        )
-
-        // --- ANA UI İSKELETİ ---
+        // --- UI ---
         Scaffold(
             containerColor = Color.Transparent,
             contentWindowInsets = WindowInsets(0.dp),
             topBar = {
                 JustRelaxTopBar(title = stringResource(Res.string.mixer_screen_title))
+            },
+            snackbarHost = {
+                JustRelaxSnackbarHost(hostState = snackbarController.hostState)
             }
         ) { innerPadding ->
             MixerScreenContent(
                 mixerState = mixerState,
                 soundControllerState = soundControllerState,
-                onIntent = mixerScreenModel::onIntent,
+                onEvent = viewModel::onEvent,
                 modifier = Modifier.padding(innerPadding)
             )
         }
     }
 }
 
-/**
- * Mixer ekranının ana içerik alanını çizen, state-driven bir Composable.
- */
 @Composable
 private fun MixerScreenContent(
-    mixerState: MixerState,
-    soundControllerState: SoundControllerState,
-    onIntent: (MixerIntent) -> Unit,
+    mixerState: MixerContract.State,
+    soundControllerState: GlobalMixerState,
+    onEvent: (MixerContract.Event) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        // Ses Sayısı Seçici
-        MixCountSelector(
-            selectedCount = mixerState.selectedSoundCount,
-            onCountSelected = { count -> onIntent(MixerIntent.SelectSoundCount(count)) },
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
+    // LazyVerticalGrid: Hem listeyi hem de grid'i tek bir kaydırılabilir yapıda birleştirir.
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 110.dp), // SoundCard ile uyumlu boyut
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp), // SoundGridSection ile aynı spacing
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
 
-        // Karıştır Butonu
-        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-            CreateMixButton(
-                onClick = { onIntent(MixerIntent.GenerateMix) },
-                isLoading = mixerState.isGenerating
-            )
+        // 1. BÖLÜM: KONTROLLER (Header)
+        // span = { GridItemSpan(maxLineSpan) } sayesinde tüm genişliği kaplar.
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Ses Sayısı Seçici
+                MixCountSelector(
+                    selectedCount = mixerState.selectedSoundCount,
+                    onCountSelected = { count -> onEvent(MixerContract.Event.SelectSoundCount(count)) }
+                )
+
+                // Karıştır Butonu
+                CreateMixButton(
+                    onClick = { onEvent(MixerContract.Event.GenerateMix) },
+                    isLoading = mixerState.isGenerating
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // --- İçerik Alanı (Animasyonsuz) ---
+        // 2. BÖLÜM: SES LİSTESİ (Grid)
         if (mixerState.mixedSounds.isNotEmpty()) {
-            SoundGridSection(
-                sounds = mixerState.mixedSounds,
-                playingSoundIds = soundControllerState.playingSoundIds,
-                soundVolumes = soundControllerState.soundVolumes,
-                onSoundClick = { sound -> onIntent(MixerIntent.ToggleSound(sound)) },
-                onVolumeChange = { id, vol -> onIntent(MixerIntent.ChangeVolume(id, vol)) },
-                // Kalan dikey alanı doldurması için weight modifier'ı burada olmalı.
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(16.dp),
-                footerContent = {
-                    // Kaydet Butonu (Listenin en altında)
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Box(
-                            modifier = Modifier
-                                .padding(top = 24.dp, bottom = 16.dp)
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            SaveMixButton(
-                                onClick = { onIntent(MixerIntent.ShowSaveDialog) },
-                                modifier = Modifier.fillMaxWidth(0.6f)
-                            )
-                        }
+            items(
+                items = mixerState.mixedSounds,
+                key = { it.id } // Performans için unique key
+            ) { sound ->
+                // Global State'den bu sesin durumunu buluyoruz
+                val activeConfig = soundControllerState.activeSounds.find { it.id == sound.id }
+                val isPlaying = activeConfig != null && soundControllerState.isPlaying
+                val volume = activeConfig?.initialVolume ?: 0.5f
+
+                SoundCard(
+                    sound = sound,
+                    isPlaying = isPlaying,
+                    isDownloading = false, // Mixer sadece indirilmiş sesleri gösterir
+                    volume = volume,
+                    onCardClick = { onEvent(MixerContract.Event.ToggleSound(sound.id)) },
+                    onVolumeChange = { newVol ->
+                        onEvent(MixerContract.Event.ChangeVolume(sound.id, newVol))
                     }
-                }
-            )
-        } else {
-            // Boş Durum
-            Box(
-                // Kalan dikey alanı doldurması için weight modifier'ı burada da olmalı.
-                modifier = Modifier.weight(1f).fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(Res.string.mixer_empty_state_message),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 32.dp)
                 )
             }
+        } else {
+            // 3. BÖLÜM: BOŞ DURUM (Footer)
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 48.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(Res.string.mixer_empty_state_message),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+
+        // Listenin en altına biraz boşluk bırakalım ki PlayerBar'ın altında kalmasın
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

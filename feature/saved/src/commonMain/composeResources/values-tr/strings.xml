@@ -18,6 +18,5 @@
 
     <string name="date_format_short">dd.MM.yyyy</string>
 
-
-
+    <string name="err_unknown">Beklenmedik bir hata oluştu.</string>
 </resources>

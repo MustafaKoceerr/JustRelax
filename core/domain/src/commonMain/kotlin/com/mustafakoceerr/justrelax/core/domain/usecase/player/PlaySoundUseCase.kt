@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.core.domain.usecase.player
 
 import com.mustafakoceerr.justrelax.core.common.AppError
+import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
 import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
@@ -23,59 +24,35 @@ class PlaySoundUseCase(
 ) {
 
     /**
-     * @param soundId Çalınacak sesin ID'si.
-     * @param volume Opsiyonel ses seviyesi. Belirtilmezse varsayılan (0.5f) veya config kullanılır.
-     * @param fadeInMs Opsiyonel fade-in süresi. Belirtilmezse SoundConfig varsayılanı (800ms) kullanılır.
+     * @param soundId Çalınacak sesin kimliği.
+     * @param initialVolume Opsiyonel başlangıç ses seviyesi. Belirtilmezse varsayılan kullanılır.
+     * @return Başarılıysa Resource.Success, hata varsa Resource.Error döner.
      */
     suspend operator fun invoke(
         soundId: String,
-        volume: Float? = null,
-        fadeInMs: Long? = null
+        initialVolume: Float = AudioDefaults.BASE_VOLUME
     ): Resource<Unit> {
-        return try {
-            // 1. Validasyon: ID boş mu?
-            if (soundId.isBlank()) {
-                return Resource.Error(AppError.Unknown(IllegalArgumentException("Sound ID cannot be empty")))
-            }
 
-            // 2. Veriyi Getir: Repository'den ses detayını al.
-            // Flow kullandığımız için o anki güncel veriyi almak adına .first() kullanıyoruz.
-            val sound = soundRepository.getSound(soundId).first()
-                ?: return Resource.Error(AppError.Storage.FileNotFound())
+        // 1. Veriyi Getir: Repository'den ses detayını al.
+        val sound = soundRepository.getSound(soundId).first()
+            ?: return Resource.Error(AppError.Storage.FileNotFound())
 
-            // 3. Kontrol: Ses indirilmiş mi? (Local Path var mı?)
-            val localPath = sound.localPath
-            if (localPath.isNullOrBlank()) {
-                // Eğer indirilmemişse çalınamaz.
-                // Not: Otomatik indirme başlatmak bu UseCase'in sorumluluğu DEĞİLDİR.
-                // O işi UI, DownloadUseCase'i çağırarak yapmalıdır.
-                return Resource.Error(AppError.Storage.FileNotFound())
-            }
-
-            // 4. Konfigürasyon: AudioMixer için gerekli paketi hazırla.
-            // Eğer parametre olarak özel değerler (volume, fade) gelmişse onları kullan,
-            // yoksa SoundConfig veri sınıfındaki default değerler (0.5f, 800ms) devreye girer.
-            val config = SoundConfig(
-                id = sound.id,
-                url = localPath,
-                initialVolume = volume
-                    ?: 0.5f, // SoundConfig default'u ile aynı, burayı parametrik yaptık.
-                fadeInDurationMs = fadeInMs ?: 800L,
-                fadeOutDurationMs = 500L // Standart fade-out
-            )
-
-            // 5. Aksiyon: Mixer'a ilet.
-            // Mixer hata fırlatırsa (örn: Limit doldu), aşağıdaki catch bloğuna düşer.
-            audioMixer.playSound(config)
-
-            Resource.Success(Unit)
-
-        } catch (e: AppError) {
-            // Zaten bizim tanımladığımız bir hataysa direkt döndür.
-            Resource.Error(e)
-        } catch (e: Exception) {
-            // Beklenmeyen bir hataysa Unknown olarak paketle.
-            Resource.Error(AppError.Unknown(e))
+        // 2. Kontrol: Ses indirilmiş mi? (Local Path var mı?)
+        val localPath = sound.localPath
+        if (localPath.isNullOrBlank()) {
+            return Resource.Error(AppError.Storage.FileNotFound())
         }
+
+        // 3. Konfigürasyon: AudioMixer için gerekli paketi hazırla.
+        val config = SoundConfig(
+            id = sound.id,
+            url = localPath,
+            initialVolume = initialVolume.coerceIn(0f, 1f), // Gelen değeri güvenli aralığa çek
+            fadeInDurationMs = AudioDefaults.FADE_IN_MS
+        )
+
+        // 4. Aksiyon: Mixer'a ilet.
+        // Artık try-catch'e gerek yok, çünkü playSound() zaten Resource dönüyor.
+        return audioMixer.playSound(config)
     }
 }

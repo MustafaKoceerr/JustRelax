@@ -3,15 +3,17 @@ package com.mustafakoceerr.justrelax.core.domain.usecase.player
 import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
 
 /**
- * Sorumluluk: Belirli bir sesi durdurmak.
- * Bu UseCase çok basittir, iş mantığı (Business Logic) gerektirmez
- * ama UI'ın doğrudan AudioMixer'a erişmesini engellemek için "Proxy" görevi görür.
+ * Belirtilen tek bir sesi durdurur.
  */
 class StopSoundUseCase(
     private val audioMixer: AudioMixer
 ) {
-    operator fun invoke(soundId: String) {
-        // Burada ileride loglama veya analytics eklenebilir.
+    /**
+     * @param soundId Durdurulacak sesin kimliği.
+     * Bu bir suspend fonksiyonudur ve bir CoroutineScope içinden çağrılmalıdır.
+     */
+    suspend operator fun invoke(soundId: String) {
+        // Gelecekte buraya loglama veya analytics eklenebilir.
         // Örn: Analytics.logEvent("sound_stopped", soundId)
         audioMixer.stopSound(soundId)
     }

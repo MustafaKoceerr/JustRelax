@@ -9,19 +9,23 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-
-val GeminiStarIcon: ImageVector
+/**
+ * Google Gemini tarzı 4 köşeli yıldız ikonu.
+ * Bu ikon AI özelliklerini temsil etmek için kullanılacak.
+ * Singleton pattern ile oluşturulur (bir kez üretilir).
+ */
+val GeminiIcon: ImageVector
     get() {
-        if (_geminiStar != null) return _geminiStar!!
-        _geminiStar = ImageVector.Builder(
-            name = "GeminiStar",
+        if (_geminiIcon != null) return _geminiIcon!!
+        _geminiIcon = ImageVector.Builder(
+            name = "GeminiIcon",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
             viewportHeight = 24f
         ).apply {
             path(
-                fill = SolidColor(Color.Black), // Rengi tint ile değiştireceğiz
+                fill = SolidColor(Color.Black), // Tint ile rengi dışarıdan yönetilebilir
                 fillAlpha = 1f,
                 stroke = null,
                 strokeAlpha = 1f,
@@ -31,27 +35,25 @@ val GeminiStarIcon: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                // DÜZELTME: 'cubicTo' yerine 'curveTo' kullanıyoruz.
-                // Mantık aynı: (x1, y1, x2, y2, x3, y3)
-
+                // Merkezden dışa doğru kavisli 4 köşe mantığı
                 moveTo(12.0f, 0.0f)
 
-                // Sağ Üst Köşe
+                // Sağ Üst
                 curveTo(12.0f, 6.627f, 17.373f, 12.0f, 24.0f, 12.0f)
 
-                // Sağ Alt Köşe
+                // Sağ Alt
                 curveTo(17.373f, 12.0f, 12.0f, 17.373f, 12.0f, 24.0f)
 
-                // Sol Alt Köşe
+                // Sol Alt
                 curveTo(12.0f, 17.373f, 6.627f, 12.0f, 0.0f, 12.0f)
 
-                // Sol Üst Köşe
+                // Sol Üst
                 curveTo(6.627f, 12.0f, 12.0f, 6.627f, 12.0f, 0.0f)
 
                 close()
             }
         }.build()
-        return _geminiStar!!
+        return _geminiIcon!!
     }
 
-private var _geminiStar: ImageVector? = null
+private var _geminiIcon: ImageVector? = null

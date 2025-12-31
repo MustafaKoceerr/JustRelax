@@ -2,14 +2,15 @@ package com.mustafakoceerr.justrelax.feature.onboarding.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.DownloadForOffline
@@ -25,9 +26,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
- import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingState
+import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingState
 import justrelax.feature.onboarding.generated.resources.Res
-import justrelax.feature.onboarding.generated.resources.*
+import justrelax.feature.onboarding.generated.resources.onboarding_action_download_and_start
+import justrelax.feature.onboarding.generated.resources.onboarding_data_usage_info
+import justrelax.feature.onboarding.generated.resources.onboarding_full_library_title
+import justrelax.feature.onboarding.generated.resources.onboarding_starter_pack_title
+import justrelax.feature.onboarding.generated.resources.onboarding_subtitle
+import justrelax.feature.onboarding.generated.resources.onboarding_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -38,32 +44,50 @@ fun OnboardingScreenContent(
     onConfirmClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    // LazyColumn: İçerik sığmazsa otomatik kaydırır.
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(24.dp), // Kenar boşlukları
+        horizontalAlignment = Alignment.CenterHorizontally, // Her şeyi ortala
+        verticalArrangement = Arrangement.spacedBy(16.dp) // Elemanlar arası varsayılan boşluk
     ) {
-        OnboardingHeader()
-        Spacer(modifier = Modifier.height(48.dp))
-        OnboardingSelectionArea(
-            state = state,
-            selectedOption = selectedOption,
-            onOptionSelected = onOptionSelected
-        )
-        Spacer(modifier = Modifier.weight(1f))
+        // 1. Başlık Bölümü
+        item {
+            OnboardingHeader()
+        }
 
-        // --- YENİ BİLGİLENDİRME BÖLÜMÜ (Her zaman görünür) ---
-        DataUsageInfo()
-        Spacer(modifier = Modifier.height(16.dp))
+        item {
+            Spacer(modifier = Modifier.height(32.dp))
+        }
 
-        OnboardingConfirmButton(
-            onClick = onConfirmClick,
-            enabled = state.initialOption != null && state.allOption != null
-        )
+        // 2. Seçim Kartları
+        item {
+            OnboardingSelectionArea(
+                state = state,
+                selectedOption = selectedOption,
+                onOptionSelected = onOptionSelected
+            )
+        }
+
+        // 3. Alt Boşluk (Görsel ayrım için)
+        item {
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+
+        // 4. Bilgilendirme Metni
+        item {
+            DataUsageInfo()
+        }
+
+        // 5. Onay Butonu
+        item {
+            OnboardingConfirmButton(
+                onClick = onConfirmClick,
+                enabled = state.initialOption != null && state.allOption != null
+            )
+        }
     }
 }
-
 // --- Private Alt Bileşenler ---
 
 @Composable

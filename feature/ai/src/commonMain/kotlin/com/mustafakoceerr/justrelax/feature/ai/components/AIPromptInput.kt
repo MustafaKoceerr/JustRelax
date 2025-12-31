@@ -1,23 +1,27 @@
 package com.mustafakoceerr.justrelax.feature.ai.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
@@ -27,136 +31,120 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.feature.ai.mvi.AiIntent
 import justrelax.feature.ai.generated.resources.Res
-import justrelax.feature.ai.generated.resources.ai_action_generate
 import justrelax.feature.ai.generated.resources.ai_prompt_placeholder
-import justrelax.feature.ai.generated.resources.ai_suggestion_cafe
-import justrelax.feature.ai.generated.resources.ai_suggestion_deep_sleep
-import justrelax.feature.ai.generated.resources.ai_suggestion_meditation
-import justrelax.feature.ai.generated.resources.ai_suggestion_rainforest
-import justrelax.feature.ai.generated.resources.ai_suggestion_storm
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AIPromptInput(
+fun AiPromptInput(
     prompt: String,
     isThinking: Boolean,
-    onIntent: (AiIntent) -> Unit,
+    suggestions: List<String>,
+    onPromptChange: (String) -> Unit,
+    onSendClick: () -> Unit,
+    onSuggestionClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
-        PromptSuggestions(
-            isEnabled = !isThinking,
-            onSuggestionClick = { suggestion -> onIntent(AiIntent.SelectSuggestion(suggestion)) }
-        )
+    val keyboardController = LocalSoftwareKeyboardController.current
 
-        Spacer(modifier = Modifier.height(12.dp))
+    Column(modifier = modifier.fillMaxWidth()) {
 
-        // 1. Klavye denetleyicisini al.
-        val keyboardController = LocalSoftwareKeyboardController.current
+        // 1. Öneriler Listesi (Sadece düşünmüyorken görünür)
+        // AnimatedVisibility ile yumuşakça açılıp kapanır.
+        AnimatedVisibility(
+            visible = !isThinking && suggestions.isNotEmpty(),
+            enter = fadeIn() + expandVertically(),
+            exit = fadeOut() + shrinkVertically()
+        ) {
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(bottom = 12.dp)
+            ) {
+                items(suggestions) { suggestion ->
+                    SuggestionChip(
+                        onClick = { onSuggestionClick(suggestion) },
+                        label = { Text(suggestion) },
+                        shape = CircleShape
+                    )
+                }
+            }
+        }
 
+        // 2. Metin Giriş Alanı
         TextField(
             value = prompt,
-            onValueChange = { onIntent(AiIntent.UpdatePrompt(it)) },
+            onValueChange = onPromptChange,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            readOnly = isThinking,
-            placeholder = { Text(stringResource(Res.string.ai_prompt_placeholder)) },
-            shape = CircleShape,
+            placeholder = {
+                Text(
+                    text = stringResource(Res.string.ai_prompt_placeholder),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                )
+            },
+            enabled = !isThinking, // Düşünürken kilitli
             singleLine = true,
+            shape = CircleShape, // Tam yuvarlak kapsül
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            ),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+            keyboardActions = KeyboardActions(
+                onSend = {
+                    if (prompt.isNotBlank()) {
+                        keyboardController?.hide()
+                        onSendClick()
+                    }
+                }
             ),
             trailingIcon = {
-                SendPromptButton(
+                SendButton(
                     isLoading = isThinking,
                     isEnabled = prompt.isNotBlank() && !isThinking,
                     onClick = {
                         keyboardController?.hide()
-                        onIntent(AiIntent.GenerateMix) }
+                        onSendClick()
+                    }
                 )
             }
         )
     }
 }
 
-/**
- * AI için öneri istemlerini gösteren yatay ve animasyonlu liste.
- */
-/**
- * AI için öneri istemlerini gösteren yatay liste. (Animasyonsuz)
- */
 @Composable
-private fun PromptSuggestions(
-    isEnabled: Boolean,
-    onSuggestionClick: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val suggestions = listOf(
-        stringResource(Res.string.ai_suggestion_rainforest),
-        stringResource(Res.string.ai_suggestion_deep_sleep),
-        stringResource(Res.string.ai_suggestion_cafe),
-        stringResource(Res.string.ai_suggestion_meditation),
-        stringResource(Res.string.ai_suggestion_storm)
-    )
-
-    LazyRow(
-        modifier = modifier,
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        // 'itemsIndexed' yerine basit 'items' kullanıyoruz.
-        // Animasyonla ilgili tüm kodlar kaldırıldı.
-        items(suggestions) { suggestion ->
-            SuggestionChip(
-                onClick = { onSuggestionClick(suggestion) },
-                label = { Text(suggestion) },
-                enabled = isEnabled,
-                shape = CircleShape
-            )
-        }
-    }
-}
-
-/**
- * Prompt gönderme butonu. Yüklenme ve aktif/pasif durumlarını yönetir.
- */
-@Composable
-private fun SendPromptButton(
+private fun SendButton(
     isLoading: Boolean,
     isEnabled: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onClick: () -> Unit
 ) {
+    // Butonun kendisi
     FilledIconButton(
         onClick = onClick,
-        enabled = isEnabled,
-        modifier = modifier,
-        colors = IconButtonDefaults.filledIconButtonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        enabled = isEnabled || isLoading, // Loading iken de görünür kalsın ama tıklanmasın (içerik değişecek)
+        modifier = Modifier.size(40.dp).padding(4.dp) // Biraz padding ile içeriden küçültelim
     ) {
-        Crossfade(targetState = isLoading, label = "SendButtonCrossfade") { loading ->
+        // İçerik değişimi animasyonu (Icon <-> Loading)
+        Crossfade(targetState = isLoading, label = "SendButtonState") { loading ->
             if (loading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    color = MaterialTheme.colorScheme.primary,
-                    strokeWidth = 2.dp
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             } else {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.Send,
-                    contentDescription = stringResource(Res.string.ai_action_generate),
-                    tint = if (isEnabled) MaterialTheme.colorScheme.onPrimary
-                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    contentDescription = "Send",
+                    modifier = Modifier.size(20.dp)
                 )
             }
         }

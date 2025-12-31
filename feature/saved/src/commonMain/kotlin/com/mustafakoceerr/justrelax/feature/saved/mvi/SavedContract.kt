@@ -3,33 +3,52 @@ package com.mustafakoceerr.justrelax.feature.saved.mvi
 import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMix
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
-data class SavedMixUiModel(
-    val id: Long,
-    val title: String,
-    val date: String,
-    val icons: List<String>,
-    val domainModel: SavedMix
-)
+/**
+ * Saved (Kayıtlılar) ekranı için MVI sözleşmesi.
+ * Diğer modüllerle standart yapıdadır.
+ */
+interface SavedContract {
 
-data class SavedState(
-    val isLoading: Boolean = true,
-    val mixes: List<SavedMixUiModel> = emptyList()
-)
+    /**
+     * UI'da listelenecek her bir kartın modeli.
+     * Domain modelini (SavedMix) UI ihtiyaçlarına göre sarmalar.
+     */
+    data class SavedMixUiModel(
+        val id: Long,
+        val title: String,
+        val date: String,
+        val icons: List<String>,
+        val domainModel: SavedMix // Silme/Oynatma işlemleri için orijinal veriyi tutuyoruz
+    )
 
-sealed interface SavedIntent {
-    data object LoadMixes : SavedIntent
-    data class PlayMix(val mixId: Long) : SavedIntent
-    data class DeleteMix(val mix: SavedMixUiModel) : SavedIntent
-    data object UndoDelete : SavedIntent
-    data object CreateNewMix : SavedIntent
+    /**
+     * Ekranın anlık durumu.
+     */
+    data class State(
+        val isLoading: Boolean = true,
+        val mixes: List<SavedMixUiModel> = emptyList()
+    )
+
+    /**
+     * Kullanıcı etkileşimleri (Event).
+     */
+    sealed interface Event {
+        data object LoadMixes : Event
+        data class PlayMix(val mixId: Long) : Event
+        data class DeleteMix(val mix: SavedMixUiModel) : Event
+        data object UndoDelete : Event
+        data object CreateNewMix : Event
+    }
+
+    /**
+     * Tek seferlik yan etkiler (Side Effects).
+     */
+    sealed interface Effect {
+        data object NavigateToMixer : Effect
+
+        data class ShowDeleteSnackbar(
+            val message: UiText,
+            val actionLabel: UiText? = null
+        ) : Effect
+    }
 }
-
-sealed interface SavedEffect {
-    data object NavigateToMixer : SavedEffect
-
-    // String yerine UiText kullanıyoruz.
-    // ActionLabel genelde sabittir (UNDO/GERİ AL) ama onu da UiText yapabiliriz.
-    data class ShowDeleteSnackbar(
-        val message: UiText,
-        val actionLabel: UiText? = null
-    ) : SavedEffect}

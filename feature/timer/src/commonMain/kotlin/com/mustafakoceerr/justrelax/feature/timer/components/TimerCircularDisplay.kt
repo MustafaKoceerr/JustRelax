@@ -32,9 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mustafakoceerr.justrelax.feature.timer.util.calculateEndTime
 import com.mustafakoceerr.justrelax.feature.timer.util.formatDurationVerbose
-import com.mustafakoceerr.justrelax.feature.timer.util.formatTime
-
-// import com.mustafakoceerr.justrelax.core.util.* (Format fonksiyonları)
+import com.mustafakoceerr.justrelax.feature.timer.util.toFormattedTime
 
 @Composable
 fun TimerCircularDisplay(
@@ -106,7 +104,7 @@ fun TimerCircularDisplay(
 
             // Ana Sayaç
             Text(
-                text = formatTime(timeLeftSeconds),
+                text = timeLeftSeconds.toFormattedTime(),
                 style = MaterialTheme.typography.displayLarge.copy(fontSize = 48.sp),
                 color = MaterialTheme.colorScheme.onSurface
             )

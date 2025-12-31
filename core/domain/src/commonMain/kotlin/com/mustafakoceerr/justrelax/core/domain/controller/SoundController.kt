@@ -1,32 +1,41 @@
 package com.mustafakoceerr.justrelax.core.domain.controller
 
-import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * UI katmanının seslerle etkileşimini yöneten merkezi kontrolcü için sözleşme.
- * Bu sınıf, ViewModel'ler tarafından kullanılır ve sesle ilgili tüm state ve action'ları içerir.
+ * Mixer ve AI gibi "sadece indirilmiş seslerle" çalışan ekranların
+ * ses motoruyla etkileşimini basitleştiren bir arayüz (Facade).
  */
-
-// Controller'ın UI'a sunacağı anlık durum
-data class SoundControllerState(
-    val playingSoundIds: Set<String> = emptySet(),
-    val soundVolumes: Map<String, Float> = emptyMap()
-)
-
 interface SoundController {
-    // UI'ın dinleyeceği state
-    val state: StateFlow<SoundControllerState>
+    /**
+     * UI'ın dinleyeceği tek gerçeklik kaynağı.
+     * Artık GlobalMixerState'i doğrudan yansıtıyoruz.
+     */
+    val state: StateFlow<GlobalMixerState>
 
-    // UI'dan gelen komutlar
-    fun toggleSound(soundId: String)
+    /**
+     * Bir sesin çalma durumunu tersine çevirir (Play/Stop).
+     * Bu bir suspend fonksiyonudur ve CoroutineScope içinden çağrılmalıdır.
+     */
+    suspend fun toggleSound(soundId: String)
+
+    /**
+     * Bir sesin volümünü anlık olarak değiştirir. Suspend değildir.
+     */
     fun changeVolume(soundId: String, volume: Float)
 
-    // YENİ: Controller'ın volüm haritasını dışarıdan güncellemek için.
+    /**
+     * Bir mix'i (preset) yüklerken birden çok sesin volümünü
+     * tek seferde ayarlamak için kullanılır.
+     */
     fun setVolumes(volumes: Map<String, Float>)
 
-    // Bu controller'ı oluşturacak olan fabrika arayüzü
+    /**
+     * Bu controller'ı, belirli bir CoroutineScope'a (örn: screenModelScope)
+     * bağlı olarak oluşturan fabrika arayüzü.
+     */
     interface Factory {
         fun create(scope: CoroutineScope): SoundController
     }

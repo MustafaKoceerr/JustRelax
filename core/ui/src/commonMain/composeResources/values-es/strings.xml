@@ -27,4 +27,6 @@
     <string name="action_save">Guardar</string>
     <string name="action_cancel">Cancelar</string>
     <string name="sound_action_download">Descargar</string>
+    <string name="action_dismiss">Cerrar</string>
+
 </resources>

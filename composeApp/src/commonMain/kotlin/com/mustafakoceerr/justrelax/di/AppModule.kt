@@ -63,13 +63,12 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             homeModule,
             settingsModule,
             playerModule,
-            onboardingModule, // EKLENDİ
-            splashModule,     // EKLENDİ
+            onboardingModule,
+            splashModule,
             timerModule,
             mixerModule,
             savedModule,
             aiModule
-            // mixerModule, aiModule... (İleride eklenecek)
         )
     }
 }

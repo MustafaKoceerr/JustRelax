@@ -1,9 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.saved.usecase
 
+import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMix
 import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMixRepository
-import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedMixUiModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 /**
  * Sorumluluk (SRP):
@@ -13,19 +12,8 @@ import kotlinx.coroutines.flow.map
 class ObserveSavedMixesUseCase(
     private val savedMixRepository: SavedMixRepository
 ) {
-    operator fun invoke(): Flow<List<SavedMixUiModel>> {
+    // UI Model yerine Domain Model döndür
+    operator fun invoke(): Flow<List<SavedMix>> {
         return savedMixRepository.getSavedMixes()
-            .map { domainMixes ->
-                // Domain modelini (SavedMix) -> UI modeline (SavedMixUiModel) çevir
-                domainMixes.map { domainMix ->
-                    SavedMixUiModel(
-                        id = domainMix.id,
-                        title = domainMix.name,
-                        date = domainMix.createdAt, // Tarih formatlama burada yapılabilir
-                        icons = domainMix.sounds.keys.map { it.iconUrl },
-                        domainModel = domainMix // Orijinal modeli de saklıyoruz (Play/Delete için)
-                    )
-                }
-            }
     }
 }
