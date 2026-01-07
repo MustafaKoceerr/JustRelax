@@ -6,14 +6,13 @@ import platform.Foundation.NSLocale
 import platform.Foundation.currentLocale
 import platform.Foundation.languageCode
 
-class IosLanguageSwitcher : LanguageSwitcher {
+internal class IosLanguageSwitcher : LanguageSwitcher {
 
-    // iOS uygulama içi değişimi desteklemez, ayarlara yönlendiririz.
     override val supportsInAppSwitching: Boolean = false
 
     override suspend fun updateLanguage(language: AppLanguage) {
-        // iOS'ta programatik olarak dil değiştirilemez.
-        // Kullanıcı zaten SystemLauncher ile ayarlara yönlendirildiği için burası boş kalır.
+        // iOS does not support programmatic language switching within the app.
+        // Users are redirected to System Settings via SystemLauncher.
     }
 
     override fun getSystemLanguage(): AppLanguage {
