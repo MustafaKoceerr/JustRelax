@@ -5,22 +5,18 @@ import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMixRepository
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetGlobalMixerStateUseCase
 
-/**
- * O an global olarak çalmakta olan sesleri kalıcı hafızaya bir "Mix" olarak kaydeder.
- */
 class SaveCurrentMixUseCase(
     private val savedMixRepository: SavedMixRepository,
     private val getGlobalMixerStateUseCase: GetGlobalMixerStateUseCase
 ) {
     suspend operator fun invoke(name: String): Resource<Unit> {
         if (name.isBlank()) {
-            return Resource.Error(AppError.SaveMix.EmptyName()) // Hata artık bir class, () ile oluşturulmalı
+            return Resource.Error(AppError.SaveMix.EmptyName())
         }
 
         val activeSounds = getGlobalMixerStateUseCase().value.activeSounds
-
         if (activeSounds.isEmpty()) {
-            return Resource.Error(AppError.SaveMix.NoSoundsPlaying()) // Hata artık bir class, () ile oluşturulmalı
+            return Resource.Error(AppError.SaveMix.NoSoundsPlaying())
         }
 
         val soundsToSave = activeSounds.associate { config ->

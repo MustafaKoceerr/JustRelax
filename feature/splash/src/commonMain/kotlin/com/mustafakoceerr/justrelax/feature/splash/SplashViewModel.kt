@@ -3,7 +3,7 @@ package com.mustafakoceerr.justrelax.feature.splash
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.GetAppSetupStatusUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.SyncSoundsIfNecessaryUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsIfNecessaryUseCase
 import com.mustafakoceerr.justrelax.feature.splash.mvi.SplashEffect
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay

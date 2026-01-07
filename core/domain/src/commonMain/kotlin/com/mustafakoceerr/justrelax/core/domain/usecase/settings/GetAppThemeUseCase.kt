@@ -7,7 +7,5 @@ import kotlinx.coroutines.flow.Flow
 class GetAppThemeUseCase(
     private val repository: UserPreferencesRepository
 ) {
-    operator fun invoke(): Flow<AppTheme> {
-        return repository.getTheme()
-    }
+    operator fun invoke(): Flow<AppTheme> = repository.getTheme()
 }

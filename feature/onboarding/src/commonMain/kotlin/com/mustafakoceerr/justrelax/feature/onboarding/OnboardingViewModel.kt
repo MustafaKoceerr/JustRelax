@@ -5,7 +5,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.SetAppSetupFinishedUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.GetSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.SyncSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadAllSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadInitialSoundsUseCase
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus

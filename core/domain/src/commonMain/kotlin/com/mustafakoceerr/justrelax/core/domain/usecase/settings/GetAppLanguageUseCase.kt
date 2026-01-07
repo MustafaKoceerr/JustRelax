@@ -7,7 +7,5 @@ import kotlinx.coroutines.flow.Flow
 class GetAppLanguageUseCase(
     private val repository: UserPreferencesRepository
 ) {
-    operator fun invoke(): Flow<AppLanguage> {
-        return repository.getLanguage()
-    }
+    operator fun invoke(): Flow<AppLanguage> = repository.getLanguage()
 }
