@@ -16,9 +16,6 @@ enum class SoundCategory(val id: String) {
     MUSIC("MUSIC");
 
     companion object {
-        // Veritabanından gelen String ID'yi Enum'a çevirir.
-        // Bilinmeyen bir kategori gelirse (örn: backend yeni kategori ekledi ama app eski),
-        // varsayılan olarak NATURE döneriz ki app çökmesin.
         fun fromId(id: String): SoundCategory = entries.find { it.id == id } ?: NATURE
     }
 }
