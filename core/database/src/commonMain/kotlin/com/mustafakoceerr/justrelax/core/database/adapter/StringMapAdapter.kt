@@ -1,11 +1,9 @@
 package com.mustafakoceerr.justrelax.core.database.adapter
 
 import app.cash.sqldelight.ColumnAdapter
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-/**
- * SQLDelight için Map<String, String> <-> JSON String dönüşümü yapan adaptör.
- */
 internal class StringMapAdapter : ColumnAdapter<Map<String, String>, String> {
     override fun decode(databaseValue: String): Map<String, String> {
         return if (databaseValue.isBlank()) {

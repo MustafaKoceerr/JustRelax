@@ -7,7 +7,6 @@ import org.koin.dsl.module
 import com.mustafakoceerr.justrelax.core.database.db.Sound as DbSound
 
 val databaseModule = module {
-    // Platforma özel (actual) modülü dahil et
     includes(platformDatabaseModule)
 
     single {
@@ -18,16 +17,12 @@ val databaseModule = module {
             namesAdapter = stringMapAdapter
         )
 
-        // ARTIK DOĞRUDAN BURADA OLUŞTURUYORUZ
         JustRelaxDatabase(
             driver = driver,
             soundAdapter = soundAdapter
         )
     }
 
-    // Sound Sorguları
     single { get<JustRelaxDatabase>().soundQueries }
-
-    // SavedMix Sorguları
     single { get<JustRelaxDatabase>().savedMixQueries }
 }
