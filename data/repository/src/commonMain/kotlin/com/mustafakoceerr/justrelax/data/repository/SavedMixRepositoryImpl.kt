@@ -14,38 +14,32 @@ import kotlinx.coroutines.withContext
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-class SavedMixRepositoryImpl(
+internal class SavedMixRepositoryImpl(
     private val savedMixQueries: SavedMixQueries,
     private val soundQueries: SoundQueries,
     private val soundMapper: DatabaseSoundMapper,
     private val dispatchers: DispatcherProvider
 ) : SavedMixRepository {
+
     override fun getSavedMixes(): Flow<List<SavedMix>> {
-        // 3 Tabloyu Reaktif Olarak Birleştiriyoruz
         return combine(
             savedMixQueries.selectAllMixes().asFlow().mapToList(dispatchers.io),
             savedMixQueries.selectAllRelations().asFlow().mapToList(dispatchers.io),
             soundQueries.selectAllSounds().asFlow().mapToList(dispatchers.io)
         ) { mixEntities, relationEntities, soundEntities ->
 
-            // 1. Tüm sesleri ID'lerine göre Map'e çevir (Hızlı erişim için)
             val allSoundsMap = soundMapper.toModelList(soundEntities).associateBy { it.id }
-
-            // 2. İlişkileri Mix ID'sine göre grupla
             val relationsByMixId = relationEntities.groupBy { it.mix_id }
 
-            // 3. Mix listesini oluştur
             mixEntities.map { mixEntity ->
                 val relations = relationsByMixId[mixEntity.id] ?: emptyList()
 
-                // Bu mix'e ait sesleri ve volümlerini bul
                 val soundsMap = relations.mapNotNull { relation ->
                     val sound = allSoundsMap[relation.sound_id]
                     if (sound != null) {
-                        // Sound nesnesini ve kaydedilen volümü eşleştir
                         sound to relation.volume.toFloat()
                     } else {
-                        null // Eğer ses veritabanından silinmişse, mix'e dahil etme
+                        null
                     }
                 }.toMap()
 
@@ -83,5 +77,4 @@ class SavedMixRepositoryImpl(
             savedMixQueries.deleteMixById(id)
         }
     }
-
 }
