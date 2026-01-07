@@ -5,10 +5,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 
 class GlobalSnackbarController {
-    // State'i burada tutuyoruz. MainScreen bunu dinleyecek.
     val hostState = SnackbarHostState()
 
-    // Her yerden çağırabileceğimiz fonksiyon
     suspend fun showSnackbar(
         message: String,
         actionLabel: String? = null,

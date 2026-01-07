@@ -14,13 +14,10 @@ fun getAsyncImageLoader(context: PlatformContext): ImageLoader {
             add(SvgDecoder.Factory())
         }
         .diskCache {
-            // YENİ: Platforma özel, kalıcı cache dizinini alıyoruz.
-            // Bu dizin OS tarafından yönetilir ve uygulama silinmedikçe (veya yer dolmadıkça) kalıcıdır.
             val cacheDir = getDiskCacheDir(context)
-
             DiskCache.Builder()
-                .directory(cacheDir.resolve("image_cache")) // Alt klasör oluştur
-                .maxSizeBytes(30L * 1024 * 1024) // 100 MB Limit (Ambiyans ikonları için bol bol yeter)
+                .directory(cacheDir.resolve("image_cache"))
+                .maxSizeBytes(30L * 1024 * 1024) // 30 MB
                 .build()
         }
         .crossfade(true)
