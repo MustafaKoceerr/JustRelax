@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.splash.components
 
-// --- IMPORT BURADA ---
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -21,7 +20,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.random.Random
 
-// Sabitler: Kodun içine gömülü sayıları (Magic Numbers) buraya aldık.
 private const val MIN_SIZE_DP = 20
 private const val MAX_SIZE_ADD_DP = 40
 private const val MIN_ALPHA = 0.1f
@@ -37,28 +35,17 @@ fun FloatingIcon(
 ) {
     val density = LocalDensity.current
 
-    // --- RANDOM ÖZELLİKLER ---
-    // Ekran boyutları değişirse (rotate) bu değerlerin yeniden hesaplanması gerekir.
-    // Bu yüzden remember(screenWidth, screenHeight) kullanıyoruz.
-
-    // 1. Boyut ve Opaklık
     val size = remember { (MIN_SIZE_DP + Random.nextInt(MAX_SIZE_ADD_DP)).dp }
     val targetAlpha = remember { MIN_ALPHA + Random.nextFloat() * MAX_ALPHA_ADD }
-
-    // 2. Animasyon Süresi
     val duration = remember { MIN_DURATION_MS + Random.nextInt(MAX_DURATION_ADD_MS) }
 
-    // 3. Koordinatlar (Pixel cinsinden)
     val startX = remember(screenWidth, density) { Random.nextFloat() * with(density) { screenWidth.toPx() } }
     val startY = remember(screenHeight, density) { Random.nextFloat() * with(density) { screenHeight.toPx() } }
-
     val endX = remember(screenWidth, density) { Random.nextFloat() * with(density) { screenWidth.toPx() } }
     val endY = remember(screenHeight, density) { Random.nextFloat() * with(density) { screenHeight.toPx() } }
 
-    // --- ANİMASYON ---
     val infiniteTransition = rememberInfiniteTransition(label = "floating")
 
-    // X Hareketi
     val x by infiniteTransition.animateFloat(
         initialValue = startX,
         targetValue = endX,
@@ -69,7 +56,6 @@ fun FloatingIcon(
         label = "x"
     )
 
-    // Y Hareketi (Süreyi biraz değiştiriyoruz ki X ile senkronize olup düz çizgi çizmesin, kaotik olsun)
     val y by infiniteTransition.animateFloat(
         initialValue = startY,
         targetValue = endY,
@@ -80,7 +66,6 @@ fun FloatingIcon(
         label = "y"
     )
 
-    // Dönme Efekti
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
@@ -90,15 +75,11 @@ fun FloatingIcon(
         label = "rotation"
     )
 
-    // --- ÇİZİM ---
     Icon(
         imageVector = icon,
-        contentDescription = null, // Dekoratif ikon
+        contentDescription = null,
         modifier = Modifier
             .size(size)
-            // PERFORMANCE BOOST:
-            // offset, rotate ve alpha yerine tek bir graphicsLayer kullanıyoruz.
-            // Bu işlem GPU'da yapılır ve layout recalculation tetiklemez.
             .graphicsLayer {
                 translationX = x
                 translationY = y
