@@ -1,11 +1,11 @@
 package com.mustafakoceerr.justrelax.feature.timer.util
 
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.resources.stringResource
 import justrelax.feature.timer.generated.resources.Res
 import justrelax.feature.timer.generated.resources.duration_hour_short
 import justrelax.feature.timer.generated.resources.duration_minute_short
 import justrelax.feature.timer.generated.resources.duration_second_short
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun formatDurationVerbose(totalSeconds: Long): String {
@@ -13,17 +13,14 @@ fun formatDurationVerbose(totalSeconds: Long): String {
     val minutes = (totalSeconds % 3600) / 60
     val seconds = totalSeconds % 60
 
-    // KMP'de stringResource kullanımı
     val h = stringResource(Res.string.duration_hour_short)
     val m = stringResource(Res.string.duration_minute_short)
     val s = stringResource(Res.string.duration_second_short)
 
-    // Mantık: 0 olanları göstermeyelim, daha temiz dursun (Opsiyonel Senior Dokunuşu)
     val parts = mutableListOf<String>()
 
     if (hours > 0) parts.add("$hours $h")
     if (minutes > 0) parts.add("$minutes $m")
-    // Saniye 0 olsa bile, eğer saat ve dakika da 0 ise (toplam 0) veya sadece saniye varsa gösterelim.
     if (seconds > 0 || (hours == 0L && minutes == 0L)) parts.add("$seconds $s")
 
     return parts.joinToString(" ")

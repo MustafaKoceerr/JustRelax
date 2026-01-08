@@ -46,7 +46,6 @@ fun InfiniteWheelPicker(
     val largeCount = Int.MAX_VALUE
     val startIndex = largeCount / 2
 
-    // Başlangıç indeksini hesapla (Listenin ortasına denk gelen doğru item)
     val initialIndex = remember(items, initialItem) {
         val index = items.indexOf(initialItem)
         if (index != -1) startIndex + index - (startIndex % items.size) else startIndex
@@ -55,21 +54,17 @@ fun InfiniteWheelPicker(
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIndex)
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
 
-    // State okumalarını optimize et
     val centerIndex by remember { derivedStateOf { listState.firstVisibleItemIndex } }
 
-    // Scroll durduğunda seçili öğeyi bildir
     LaunchedEffect(listState.isScrollInProgress) {
         if (!listState.isScrollInProgress) {
             val actualIndex = centerIndex % items.size
-            // IndexOutOfBounds koruması
             if (actualIndex in items.indices) {
                 onItemSelected(items[actualIndex], actualIndex)
             }
         }
     }
 
-    // Gradient Maskesi (Üst ve alt kısımları silikleştirmek için)
     val brush = remember(activeColor, inactiveColor) {
         Brush.verticalGradient(
             0.0f to inactiveColor,
@@ -84,7 +79,7 @@ fun InfiniteWheelPicker(
     Box(
         modifier = modifier
             .width(width)
-            .height(itemHeight * 3), // Görünür alan: 3 satır yüksekliği
+            .height(itemHeight * 3),
         contentAlignment = Alignment.Center
     ) {
         LazyColumn(
@@ -92,8 +87,6 @@ fun InfiniteWheelPicker(
             flingBehavior = flingBehavior,
             modifier = Modifier
                 .fillMaxSize()
-                // Offscreen stratejisi BlendMode.SrcIn'in doğru çalışması için kritiktir.
-                // Bu sayede gradient sadece text üzerinde maskeleme yapar.
                 .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
                 .drawWithCache {
                     onDrawWithContent {
@@ -102,7 +95,7 @@ fun InfiniteWheelPicker(
                     }
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(vertical = itemHeight) // Ortalamak için padding
+            contentPadding = PaddingValues(vertical = itemHeight)
         ) {
             items(largeCount) { index ->
                 val item = items[index % items.size]
@@ -116,7 +109,7 @@ fun InfiniteWheelPicker(
                     Text(
                         text = item,
                         style = textStyle,
-                        color = Color.Black, // Renk Brush ile yönetiliyor, burası dummy
+                        color = Color.Black,
                         maxLines = 1,
                         textAlign = TextAlign.Center
                     )

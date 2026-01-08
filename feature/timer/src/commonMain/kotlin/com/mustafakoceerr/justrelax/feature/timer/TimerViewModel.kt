@@ -31,23 +31,20 @@ class TimerViewModel(
         when (event) {
             is TimerContract.Event.StartTimer -> timerManager.startTimer(event.durationSeconds)
             TimerContract.Event.CancelTimer -> timerManager.cancelTimer()
-            TimerContract.Event.ToggleTimer -> handleToggleTimer() // Değişiklik burada
+            TimerContract.Event.ToggleTimer -> handleToggleTimer()
         }
     }
 
-    // YENİ FONKSİYON
     private fun handleToggleTimer() {
         when (timerManager.state.value.status) {
             TimerStatus.RUNNING -> timerManager.pauseTimer()
             TimerStatus.PAUSED -> timerManager.resumeTimer()
-            TimerStatus.IDLE -> { /* IDLE durumunda toggle bir şey yapmaz */
-            }
+            TimerStatus.IDLE -> { /* No-op */ }
         }
     }
 
     private fun observeTimerState() {
         timerManager.state.onEach { domainState ->
-            // MAPPING: Domain (TimerStatus) -> UI (Booleans)
             _state.update {
                 it.copy(
                     isSetupMode = domainState.status == TimerStatus.IDLE,

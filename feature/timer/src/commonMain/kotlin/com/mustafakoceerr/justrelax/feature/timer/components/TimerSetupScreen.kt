@@ -27,7 +27,6 @@ fun TimerSetupScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // PICKER (Merkezde)
         Box(
             modifier = Modifier.align(Alignment.Center),
             contentAlignment = Alignment.Center
@@ -35,7 +34,6 @@ fun TimerSetupScreen(
             JustRelaxTimerPicker(state = pickerState)
         }
 
-        // BAŞLAT BUTONU (Altta)
         Button(
             onClick = {
                 val total = pickerState.totalSeconds
@@ -43,7 +41,6 @@ fun TimerSetupScreen(
                     onStartClick(total)
                 }
             },
-            // Buton pasif (disabled) durumu eklenebilir eğer süre 0 ise.
             enabled = pickerState.totalSeconds > 0,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
