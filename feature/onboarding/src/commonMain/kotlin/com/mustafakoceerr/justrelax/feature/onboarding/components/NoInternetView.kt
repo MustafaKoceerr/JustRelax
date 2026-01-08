@@ -1,11 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.onboarding.components
 
-/**
- * SRP NOTU: Bu bileşen, internetin var olup olmadığını KONTROL ETMEZ.
- * Sadece kendisine "internet yok" denildiğinde,
- * ilgili mesajı ve butonu göstermekle sorumludur.
- */
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +14,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,7 +35,6 @@ import justrelax.feature.onboarding.generated.resources.error_no_internet_desc
 import justrelax.feature.onboarding.generated.resources.error_no_internet_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -52,7 +44,6 @@ fun NoInternetView(
 ) {
     val haptic = LocalHapticFeedback.current
 
-    // --- LOTTIE KURULUMU (Doğru Kısım) ---
     val composition by rememberLottieComposition {
         LottieCompositionSpec.DotLottie(
             Res.readBytes("files/error_cat.lottie")
@@ -66,20 +57,17 @@ fun NoInternetView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // --- 1. LOTTIE ANİMASYONU (Image + Painter) ---
         Image(
             painter = rememberLottiePainter(
                 composition = composition,
-                iterations = Compottie.IterateForever // Sonsuz döngü
+                iterations = Compottie.IterateForever
             ),
-            contentDescription = null, // Dekoratif animasyon
-            modifier = Modifier
-                .size(250.dp)
+            contentDescription = null,
+            modifier = Modifier.size(250.dp)
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // --- 2. BAŞLIK VE AÇIKLAMA ---
         Text(
             text = stringResource(Res.string.error_no_internet_title),
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
@@ -99,7 +87,6 @@ fun NoInternetView(
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        // --- 3. AKSİYON BUTONU ---
         FilledTonalButton(
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -122,13 +109,5 @@ fun NoInternetView(
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun NoInternetViewPreview() {
-    Surface {
-        NoInternetView(onRetryClick = {})
     }
 }

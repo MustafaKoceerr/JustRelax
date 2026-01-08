@@ -5,20 +5,32 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.SetAppSetupFinishedUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.GetSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadAllSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadInitialSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsUseCase
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.extensions.calculateTotalSizeInMb
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.*
+import com.mustafakoceerr.justrelax.feature.onboarding.mvi.DownloadOption
+import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingEffect
+import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingIntent
+import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingScreenStatus
+import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class OnboardingViewModel(
-    private val syncSoundsUseCase: SyncSoundsUseCase, // Force Sync
+    private val syncSoundsUseCase: SyncSoundsUseCase,
     private val getSoundsUseCase: GetSoundsUseCase,
     private val downloadInitialSoundsUseCase: DownloadInitialSoundsUseCase,
     private val downloadAllSoundsUseCase: DownloadAllSoundsUseCase,
@@ -45,38 +57,29 @@ class OnboardingViewModel(
         }
     }
 
-    // 1. BAŞLANGIÇ KONTROLÜ (Init Logic)
     private fun checkDataAndLoadConfig() {
         screenModelScope.launch {
             _state.update { it.copy(status = OnboardingScreenStatus.LOADING_CONFIG) }
 
-            // Adım A: Önce Veritabanına Bak (Hız için)
             val currentSounds = getSoundsUseCase().first()
 
             if (currentSounds.isNotEmpty()) {
-                // Veri var! Direkt hesapla.
                 calculateOptions(currentSounds)
             } else {
-                // Adım B: Veri yok! Splash indirememiş veya internet yokmuş. Biz indiriyoruz.
                 val result = syncSoundsUseCase()
 
                 if (result is Resource.Success) {
-                    // Başarılı, DB doldu, veriyi çek
                     val newSounds = getSoundsUseCase().first()
                     calculateOptions(newSounds)
                 } else {
-                    // HATA! İnternet yok.
                     _state.update { it.copy(status = OnboardingScreenStatus.NO_INTERNET) }
                 }
             }
         }
     }
 
-    // 2. SEÇENEKLERİ HESAPLAMA (Calculation)
     private fun calculateOptions(sounds: List<Sound>) {
         val initialSounds = sounds.filter { it.isInitial }
-
-        // Extension fonksiyon ile hesapla
         val initialSize = initialSounds.calculateTotalSizeInMb()
         val totalSize = sounds.calculateTotalSizeInMb()
 
@@ -89,7 +92,6 @@ class OnboardingViewModel(
         }
     }
 
-    // 3. İNDİRME YÖNETİMİ (Downloading)
     private fun startDownload(downloadFlow: Flow<DownloadStatus>) {
         if (_state.value.status == OnboardingScreenStatus.DOWNLOADING) return
 
@@ -104,16 +106,14 @@ class OnboardingViewModel(
                     finishSetup()
                 }
                 is DownloadStatus.Error -> {
-                    // Hata Yönetimi: Mesaj göster ve seçime geri dön
                     _effect.send(OnboardingEffect.ShowError(status.message))
                     _state.update { it.copy(status = OnboardingScreenStatus.CHOOSING) }
                 }
-                else -> {} // Queued
+                else -> {}
             }
         }.launchIn(screenModelScope)
     }
 
-    // 4. KURULUMU TAMAMLAMA (Finalizing)
     private fun finishSetup() {
         screenModelScope.launch {
             setAppSetupFinishedUseCase()
