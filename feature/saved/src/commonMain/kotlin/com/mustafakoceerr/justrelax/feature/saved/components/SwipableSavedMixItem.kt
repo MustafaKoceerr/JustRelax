@@ -17,11 +17,8 @@ fun SwipableSavedMixItem(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Deprecated olmayan modern kullanım: State'i doğrudan oluştur.
     val dismissState = rememberSwipeToDismissBoxState()
 
-    // State'in hedefini (targetValue) izle. Kullanıcı parmağını kaldırdığında
-    // bu değer değişir ve bu effect tetiklenir.
     LaunchedEffect(dismissState.targetValue) {
         if (dismissState.targetValue == SwipeToDismissBoxValue.StartToEnd) {
             onDelete()
@@ -44,7 +41,7 @@ fun SwipableSavedMixItem(
                 onPlayClick = onPlayClick,
             )
         },
-        enableDismissFromStartToEnd = true, // Sadece soldan sağa silme
+        enableDismissFromStartToEnd = true,
         enableDismissFromEndToStart = false,
         modifier = modifier
     )

@@ -9,12 +9,9 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val savedModule = module {
-    // UseCases
     factoryOf(::ObserveSavedMixesUseCase)
     factoryOf(::PlaySavedMixUseCase)
-    factoryOf(::DeleteSavedMixUseCase)  // YENİ
-    factoryOf(::RestoreSavedMixUseCase) // YENİ
-
-    // ScreenModel
+    factoryOf(::DeleteSavedMixUseCase)
+    factoryOf(::RestoreSavedMixUseCase)
     factoryOf(::SavedViewModel)
 }

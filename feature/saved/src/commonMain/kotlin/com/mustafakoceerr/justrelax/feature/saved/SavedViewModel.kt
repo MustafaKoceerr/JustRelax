@@ -30,18 +30,13 @@ class SavedViewModel(
     private val restoreSavedMixUseCase: RestoreSavedMixUseCase
 ) : ScreenModel {
 
-    // 1. STATE & EFFECT
     private val _state = MutableStateFlow(SavedContract.State())
     val state = _state.asStateFlow()
 
     private val _effect = Channel<SavedContract.Effect>()
     val effect = _effect.receiveAsFlow()
 
-    // 2. LOGIC VARIABLES
     private var lastDeletedMix: SavedMix? = null
-
-    // CRITICAL: Oynatma işini takip eden Job.
-    // Kullanıcı hızlıca başka bir mix'e basarsa, önceki işi iptal etmek için kullanılır.
     private var playbackJob: Job? = null
 
     init {
@@ -62,38 +57,30 @@ class SavedViewModel(
         screenModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            // UseCase artık List<SavedMix> (Domain) döndürüyor.
             observeSavedMixesUseCase().collectLatest { domainMixes ->
-
-                // MAPPING: Domain Model -> UI Model dönüşümü burada yapılıyor.
                 val uiMixes = domainMixes.map { domainMix ->
                     SavedContract.SavedMixUiModel(
                         id = domainMix.id,
                         title = domainMix.name,
-                        date = domainMix.createdAt, // İleride formatlanabilir
-                        // Map'in anahtarlarından (Sound nesneleri) ikonları çekiyoruz
+                        date = domainMix.createdAt,
                         icons = domainMix.sounds.keys.map { it.iconUrl },
                         domainModel = domainMix
                     )
                 }
-
                 _state.update { it.copy(mixes = uiMixes, isLoading = false) }
             }
         }
     }
 
     private fun playMix(mixId: Long) {
-        // 1. Önceki oynatma işlemini İPTAL ET (Race Condition Koruması)
         playbackJob?.cancel()
 
         val mixToPlay = _state.value.mixes.find { it.id == mixId }?.domainModel ?: return
 
-        // 2. Yeni işi başlat ve referansını tut
         playbackJob = screenModelScope.launch {
             try {
                 playSavedMixUseCase(mixToPlay)
             } catch (e: Exception) {
-                // Hata Yönetimi: Uygulamanın çökmesini engelle
                 val errorMsg = if (e is AppError) e.message else "Failed to play mix"
                 sendEffect(
                     SavedContract.Effect.ShowDeleteSnackbar(
