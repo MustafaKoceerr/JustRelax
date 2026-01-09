@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.CloudDownload
 import androidx.compose.material3.Icon
@@ -39,7 +38,6 @@ import justrelax.feature.settings.generated.resources.download_all_title
 import justrelax.feature.settings.generated.resources.download_progress
 import org.jetbrains.compose.resources.stringResource
 
-// KOD TEMİZLİĞİ: Karmaşık if/else'leri yönetmek için basit bir durum enum'u.
 private enum class DownloadCardState { IDLE, DOWNLOADING, COMPLETED }
 
 @Composable
@@ -49,7 +47,6 @@ fun DownloadAllCard(
     progress: Float,
     onClick: () -> Unit
 ) {
-    // KOD OKUNABİLİRLİĞİ: İki boolean yerine tek bir state'i yönetiyoruz.
     val cardState = remember(isDownloaded, isDownloading) {
         when {
             isDownloaded -> DownloadCardState.COMPLETED
@@ -58,7 +55,6 @@ fun DownloadAllCard(
         }
     }
 
-    // ANİMASYON: Renk geçişlerini yumuşatıyoruz.
     val backgroundColor by animateColorAsState(
         targetValue = if (cardState == DownloadCardState.COMPLETED) MaterialTheme.colorScheme.secondaryContainer
         else MaterialTheme.colorScheme.tertiaryContainer,
@@ -77,7 +73,6 @@ fun DownloadAllCard(
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(backgroundColor)
-            // HATA DÜZELTME: Tıklama mantığı düzeltildi ve state'e bağlandı.
             .clickable(enabled = cardState == DownloadCardState.IDLE, onClick = onClick)
             .padding(16.dp)
     ) {
@@ -99,7 +94,6 @@ fun DownloadAllCard(
                     color = contentColor
                 )
 
-                // MANTIK DÜZELTME: Altyazı, indirilmediği sürece her zaman görünür.
                 if (cardState != DownloadCardState.COMPLETED) {
                     Text(
                         text = stringResource(Res.string.download_all_subtitle_recommended),
@@ -110,7 +104,6 @@ fun DownloadAllCard(
             }
         }
 
-        // ANİMASYON: Progress bar alanı zarifçe açılıp kapanır.
         AnimatedVisibility(
             visible = cardState == DownloadCardState.DOWNLOADING,
             enter = expandVertically(animationSpec = tween(400)),
