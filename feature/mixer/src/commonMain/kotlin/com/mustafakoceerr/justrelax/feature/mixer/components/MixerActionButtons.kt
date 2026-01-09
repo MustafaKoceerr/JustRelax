@@ -19,18 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.core.ui.components.LoadingDots
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import justrelax.feature.mixer.generated.resources.Res
-import justrelax.feature.mixer.generated.resources.*
+import justrelax.feature.mixer.generated.resources.action_create_mix
+import justrelax.feature.mixer.generated.resources.action_save_mix
 import org.jetbrains.compose.resources.stringResource
 
-// import justrelax.composeapp.generated.resources.*
-// import org.jetbrains.compose.resources.stringResource
-
-/**
- * Yeni bir miks oluşturmak için kullanılan ana aksiyon butonu.
- * Yüklenme durumunu ve spam tıklamaları önleme (debounce) özelliğini destekler.
- */
 @Composable
 fun CreateMixButton(
     onClick: () -> Unit,
@@ -49,7 +44,10 @@ fun CreateMixButton(
     ) {
         Crossfade(targetState = isLoading, label = "CreateButtonCrossfade") { loading ->
             if (loading) {
-                // LoadingDots(...) // Senin yüklenme animasyonun
+                LoadingDots(
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    dotSize = 8.dp
+                )
             } else {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -68,9 +66,6 @@ fun CreateMixButton(
     }
 }
 
-/**
- * Mevcut miksi kaydetmek için kullanılan ikincil aksiyon butonu.
- */
 @Composable
 fun SaveMixButton(
     onClick: () -> Unit,

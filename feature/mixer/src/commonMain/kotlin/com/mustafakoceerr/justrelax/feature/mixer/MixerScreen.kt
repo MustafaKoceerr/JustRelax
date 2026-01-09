@@ -43,21 +43,17 @@ import justrelax.feature.mixer.generated.resources.mixer_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-
 object MixerScreen : AppScreen {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        // --- BAĞIMLILIKLAR ---
         val snackbarController = koinInject<GlobalSnackbarController>()
         val viewModel = koinScreenModel<MixerViewModel>()
 
         val mixerState by viewModel.state.collectAsState()
-        // Global State (SoundController üzerinden)
         val soundControllerState by viewModel.soundController.state.collectAsState()
 
-        // --- EFFECT HANDLING ---
         LaunchedEffect(Unit) {
             viewModel.effect.collect { effect ->
                 when (effect) {
@@ -68,7 +64,6 @@ object MixerScreen : AppScreen {
             }
         }
 
-        // --- UI ---
         Scaffold(
             containerColor = Color.Transparent,
             contentWindowInsets = WindowInsets(0.dp),
@@ -96,29 +91,24 @@ private fun MixerScreenContent(
     onEvent: (MixerContract.Event) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // LazyVerticalGrid: Hem listeyi hem de grid'i tek bir kaydırılabilir yapıda birleştirir.
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 110.dp), // SoundCard ile uyumlu boyut
+        columns = GridCells.Adaptive(minSize = 110.dp),
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp), // SoundGridSection ile aynı spacing
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
 
-        // 1. BÖLÜM: KONTROLLER (Header)
-        // span = { GridItemSpan(maxLineSpan) } sayesinde tüm genişliği kaplar.
         item(span = { GridItemSpan(maxLineSpan) }) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Ses Sayısı Seçici
                 MixCountSelector(
                     selectedCount = mixerState.selectedSoundCount,
                     onCountSelected = { count -> onEvent(MixerContract.Event.SelectSoundCount(count)) }
                 )
 
-                // Karıştır Butonu
                 CreateMixButton(
                     onClick = { onEvent(MixerContract.Event.GenerateMix) },
                     isLoading = mixerState.isGenerating
@@ -128,13 +118,11 @@ private fun MixerScreenContent(
             }
         }
 
-        // 2. BÖLÜM: SES LİSTESİ (Grid)
         if (mixerState.mixedSounds.isNotEmpty()) {
             items(
                 items = mixerState.mixedSounds,
-                key = { it.id } // Performans için unique key
+                key = { it.id }
             ) { sound ->
-                // Global State'den bu sesin durumunu buluyoruz
                 val activeConfig = soundControllerState.activeSounds.find { it.id == sound.id }
                 val isPlaying = activeConfig != null && soundControllerState.isPlaying
                 val volume = activeConfig?.initialVolume ?: 0.5f
@@ -142,7 +130,7 @@ private fun MixerScreenContent(
                 SoundCard(
                     sound = sound,
                     isPlaying = isPlaying,
-                    isDownloading = false, // Mixer sadece indirilmiş sesleri gösterir
+                    isDownloading = false,
                     volume = volume,
                     onCardClick = { onEvent(MixerContract.Event.ToggleSound(sound.id)) },
                     onVolumeChange = { newVol ->
@@ -151,7 +139,6 @@ private fun MixerScreenContent(
                 )
             }
         } else {
-            // 3. BÖLÜM: BOŞ DURUM (Footer)
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Box(
                     modifier = Modifier
@@ -169,7 +156,6 @@ private fun MixerScreenContent(
             }
         }
 
-        // Listenin en altına biraz boşluk bırakalım ki PlayerBar'ın altında kalmasın
         item(span = { GridItemSpan(maxLineSpan) }) {
             Spacer(modifier = Modifier.height(32.dp))
         }

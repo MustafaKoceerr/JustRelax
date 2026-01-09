@@ -1,16 +1,13 @@
 package com.mustafakoceerr.justrelax.feature.mixer.components
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -26,12 +23,6 @@ import justrelax.feature.mixer.generated.resources.Res
 import justrelax.feature.mixer.generated.resources.mix_count_selector_title
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Kullanıcının mikse kaç ses ekleyeceğini seçmesini sağlayan bileşen.
- * @param selectedCount O an seçili olan sayı.
- * @param onCountSelected Bir sayı seçildiğinde tetiklenen fonksiyon.
- * @param availableCounts Seçenek olarak sunulacak sayıların listesi.
- */
 @Composable
 fun MixCountSelector(
     selectedCount: Int,
@@ -49,13 +40,11 @@ fun MixCountSelector(
                 .padding(top = 16.dp, bottom = 16.dp)
         )
 
-        // Değişiklik: Row yerine LazyRow kullanıldı.
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
-            // Değişiklik: forEach yerine LazyListScope'un 'items' fonksiyonu kullanıldı.
             items(items = availableCounts) { number ->
                 MixNumberChip(
                     number = number,
@@ -67,10 +56,6 @@ fun MixCountSelector(
     }
 }
 
-/**
- * MixCountSelector içinde kullanılan, seçili durumu olan dairesel sayı çipi.
- * Bu bileşen dışarıdan erişime kapalıdır (private).
- */
 @Composable
 private fun MixNumberChip(
     number: Int,
@@ -96,8 +81,8 @@ private fun MixNumberChip(
             labelColor = MaterialTheme.colorScheme.onSurface
         ),
         border = FilterChipDefaults.filterChipBorder(
-            enabled = true, // Çip her zaman aktif olduğu için 'true'
-            selected = isSelected, // Seçili durumunu buradan alıyor
+            enabled = true,
+            selected = isSelected,
             borderColor = Color.Transparent,
             selectedBorderColor = MaterialTheme.colorScheme.primary,
             borderWidth = 1.dp
