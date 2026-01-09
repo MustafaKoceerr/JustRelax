@@ -25,7 +25,6 @@ import com.mustafakoceerr.justrelax.feature.home.util.icon
 import com.mustafakoceerr.justrelax.feature.home.util.titleRes
 import org.jetbrains.compose.resources.stringResource
 
-// Gerekli importlar...
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTabRow(
@@ -48,14 +47,13 @@ fun HomeTabRow(
             val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent
             val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
 
-            // --- DEĞİŞİKLİK: Tab yerine, tıklanabilir bir Row kullanıyoruz ---
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .padding(vertical = 8.dp)
-                    .clip(CircleShape) // Tıklama alanını yuvarlak yapar
-                    .clickable { onCategorySelected(category) } // Basit tıklama
-                    .background(backgroundColor) // Seçiliyse arkaplanı boya
+                    .clip(CircleShape)
+                    .clickable { onCategorySelected(category) }
+                    .background(backgroundColor)
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Icon(
@@ -76,4 +74,3 @@ fun HomeTabRow(
         }
     }
 }
-

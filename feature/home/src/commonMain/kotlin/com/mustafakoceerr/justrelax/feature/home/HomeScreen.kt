@@ -29,20 +29,15 @@ import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-// Voyager Screen objesi
 object HomeScreen : AppScreen {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        val screenModel = koinScreenModel<HomeScreenModel>()
+        val screenModel = koinScreenModel<HomeViewModel>()
         val state by screenModel.state.collectAsState()
-
         val snackbarController = koinInject<GlobalSnackbarController>()
-
-        // Navigasyon için Voyager'ın navigator'ını ve bizim arayüzümüzü alıyoruz
         val currentNavigator = LocalNavigator.currentOrThrow
-        // 2. Onun parent'ını (Kök Navigator) al. Eğer parent'ı yoksa (olmamalı ama güvenli kod) kendisini kullan.
         val rootNavigator = currentNavigator.parent ?: currentNavigator
         val homeNavigator = koinInject<HomeNavigator>()
 
@@ -50,10 +45,8 @@ object HomeScreen : AppScreen {
             screenModel.effect.collectLatest { effect ->
                 when (effect) {
                     is HomeContract.Effect.ShowSnackbar -> {
-                        // UiText'i Composable context'inde String'e çevir
                         snackbarController.showSnackbar(effect.message.resolve())
                     }
-
                     is HomeContract.Effect.NavigateToSettings -> {
                         rootNavigator.push(homeNavigator.toSettings())
                     }
@@ -61,7 +54,6 @@ object HomeScreen : AppScreen {
             }
         }
 
-        // --- ANA UI İSKELETİ ---
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {
@@ -86,6 +78,3 @@ object HomeScreen : AppScreen {
         }
     }
 }
-
-
-

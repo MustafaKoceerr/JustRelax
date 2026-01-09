@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.home
 
-
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
@@ -24,7 +23,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeScreenModel(
+class HomeViewModel(
     getCategorizedSoundsUseCase: GetCategorizedSoundsUseCase,
     getGlobalMixerStateUseCase: GetGlobalMixerStateUseCase,
     private val playSoundUseCase: PlaySoundUseCase,
@@ -45,13 +44,8 @@ class HomeScreenModel(
             getGlobalMixerStateUseCase()
         ) { soundsResult, playerState ->
             _state.update { currentState ->
-                val categories =
-                    (soundsResult as? Resource.Success)?.data ?: currentState.categories
-
-                // Eğer henüz bir kategori seçilmemişse ve kategoriler yeni geldiyse,
-                // ilk kategoriyi varsayılan olarak seç.
-                val selectedCategory = currentState.selectedCategory
-                    ?: categories.keys.firstOrNull()
+                val categories = (soundsResult as? Resource.Success)?.data ?: currentState.categories
+                val selectedCategory = currentState.selectedCategory ?: categories.keys.firstOrNull()
 
                 currentState.copy(
                     isLoading = soundsResult is Resource.Loading,
@@ -65,11 +59,9 @@ class HomeScreenModel(
 
     fun onEvent(event: HomeContract.Event) {
         when (event) {
-            // YENİ: Kategori seçme event'ini işle
             is HomeContract.Event.OnCategorySelected -> {
                 _state.update { it.copy(selectedCategory = event.category) }
             }
-
             is HomeContract.Event.OnSoundClick -> handleSoundClick(event.sound)
             is HomeContract.Event.OnVolumeChange -> adjustVolumeUseCase(event.soundId, event.volume)
             is HomeContract.Event.OnSettingsClick -> sendEffect(HomeContract.Effect.NavigateToSettings)
@@ -83,9 +75,7 @@ class HomeScreenModel(
             if (isPlaying) {
                 stopSoundUseCase(sound.id)
             } else {
-                // KONTROL: Ses indirilmiş mi?
                 if (sound.isDownloaded) {
-                    // İndirilmişse direkt çal
                     when (val result = playSoundUseCase(sound.id)) {
                         is Resource.Error -> {
                             val errorMessage = UiText.DynamicString(
@@ -93,12 +83,9 @@ class HomeScreenModel(
                             )
                             sendEffect(HomeContract.Effect.ShowSnackbar(errorMessage))
                         }
-
-                        else -> { /* Başarılı */
-                        }
+                        else -> {}
                     }
                 } else {
-                    // İndirilmemişse önce indir (Zaten içinde playSound çağırıyor)
                     downloadSound(sound)
                 }
             }
@@ -112,21 +99,15 @@ class HomeScreenModel(
     }
 
     private fun downloadSound(sound: Sound) = screenModelScope.launch {
-        // 1. UI Güncellemesi: İndirme başladığı için spinner'ı aktif et
         _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds + sound.id) }
 
-        // 2. UseCase Çağrısı: İndirmeyi başlat (IO Thread içinde çalışır)
         val isSuccess = downloadSingleSoundUseCase(sound)
 
-        // 3. UI Güncellemesi: İndirme bitti, spinner'ı kaldır
         _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - sound.id) }
 
-        // 4. Sonuç Yönetimi
         if (isSuccess) {
-            // Başarılıysa bekletmeden çalmaya başla (Otomatik Play)
             playSoundUseCase(sound.id)
         } else {
-            // Hata varsa kullanıcıya bildir
             sendEffect(HomeContract.Effect.ShowSnackbar(UiText.Resource(Res.string.download_failed)))
         }
     }

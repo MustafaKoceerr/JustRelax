@@ -9,26 +9,25 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 import kotlinx.coroutines.delay
 
-
-/**
- * Ses kartlarını animasyonlu bir ızgara (grid) içinde gösterir.
- * Bu Composable "aptaldır"; sadece kendisine verilen veriyi çizer ve event'leri yukarı iletir.
- */
 @Composable
 fun SoundCardGrid(
     sounds: List<Sound>,
     playingSoundIds: Set<String>,
     soundVolumes: Map<String, Float>,
     downloadingSoundIds: Set<String>,
-    onSoundClick: (Sound) -> Unit, // Değişiklik: ID yerine tam Sound nesnesi istiyoruz.
+    onSoundClick: (Sound) -> Unit,
     onVolumeChange: (String, Float) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
@@ -44,10 +43,9 @@ fun SoundCardGrid(
             items = sounds,
             key = { sound -> sound.id }
         ) { sound ->
-            // Animasyon için her kartın kendi görünürlük state'i
             var isVisible by remember { mutableStateOf(false) }
             LaunchedEffect(Unit) {
-                delay(50L) // Küçük bir gecikme, animasyonun akıcı başlaması için
+                delay(50L)
                 isVisible = true
             }
 
@@ -69,7 +67,7 @@ fun SoundCardGrid(
                     isPlaying = isPlaying,
                     isDownloading = isDownloading,
                     volume = volume,
-                    onCardClick = { onSoundClick(sound) }, // Tıklandığında Sound nesnesini yukarı gönder
+                    onCardClick = { onSoundClick(sound) },
                     onVolumeChange = { newVolume -> onVolumeChange(sound.id, newVolume) }
                 )
             }

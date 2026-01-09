@@ -14,10 +14,18 @@ import androidx.compose.material.icons.rounded.WaterDrop
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import justrelax.feature.home.generated.resources.Res
-import justrelax.feature.home.generated.resources.*
+import justrelax.feature.home.generated.resources.category_air
+import justrelax.feature.home.generated.resources.category_asmr
+import justrelax.feature.home.generated.resources.category_city
+import justrelax.feature.home.generated.resources.category_music
+import justrelax.feature.home.generated.resources.category_nature
+import justrelax.feature.home.generated.resources.category_noise
+import justrelax.feature.home.generated.resources.category_rain
+import justrelax.feature.home.generated.resources.category_travel
+import justrelax.feature.home.generated.resources.category_water
+import justrelax.feature.home.generated.resources.category_zen
 import org.jetbrains.compose.resources.StringResource
 
-// 1. Title Extension
 val SoundCategory.titleRes: StringResource
     get() = when (this) {
         SoundCategory.RAIN -> Res.string.category_rain
@@ -32,17 +40,16 @@ val SoundCategory.titleRes: StringResource
         SoundCategory.MUSIC -> Res.string.category_music
     }
 
-// 2. Icon Extension
 val SoundCategory.icon: ImageVector
     get() = when (this) {
-        SoundCategory.RAIN -> Icons.Rounded.Thunderstorm   // Yağmur ve Fırtına için
-        SoundCategory.WATER -> Icons.Rounded.WaterDrop     // Su ve Okyanus için
-        SoundCategory.NATURE -> Icons.Rounded.Forest       // Doğa için
-        SoundCategory.AIR -> Icons.Rounded.Air             // Rüzgar için
-        SoundCategory.CITY -> Icons.Rounded.Apartment      // Şehir binaları için
-        SoundCategory.TRAVEL -> Icons.Rounded.DirectionsCar // Yolculuk (Genel araç) için
-        SoundCategory.NOISE -> Icons.Rounded.GraphicEq     // Gürültü frekansları için
-        SoundCategory.ASMR -> Icons.Rounded.Mic            // ASMR (Mikrofon/Kayıt) için
-        SoundCategory.ZEN -> Icons.Rounded.SelfImprovement // Meditasyon yapan kişi ikonu
-        SoundCategory.MUSIC -> Icons.Rounded.MusicNote     // Müzik notası
+        SoundCategory.RAIN -> Icons.Rounded.Thunderstorm
+        SoundCategory.WATER -> Icons.Rounded.WaterDrop
+        SoundCategory.NATURE -> Icons.Rounded.Forest
+        SoundCategory.AIR -> Icons.Rounded.Air
+        SoundCategory.CITY -> Icons.Rounded.Apartment
+        SoundCategory.TRAVEL -> Icons.Rounded.DirectionsCar
+        SoundCategory.NOISE -> Icons.Rounded.GraphicEq
+        SoundCategory.ASMR -> Icons.Rounded.Mic
+        SoundCategory.ZEN -> Icons.Rounded.SelfImprovement
+        SoundCategory.MUSIC -> Icons.Rounded.MusicNote
     }
