@@ -7,8 +7,6 @@ import com.mustafakoceerr.justrelax.feature.splash.navigation.SplashNavigator
 
 class SplashNavigatorImpl : SplashNavigator {
     override fun toHome(): AppScreen {
-        // DÜZELTME: HomeScreen değil, MainScreen dönmeliyiz.
-        // MainScreen içinde BottomBar ve TabNavigator var.
         return MainScreen
     }
 

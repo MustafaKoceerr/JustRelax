@@ -10,16 +10,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
 class MainViewModel(
-    private val getAppThemeUseCase: GetAppThemeUseCase,
-    private val getAppLanguageUseCase: GetAppLanguageUseCase
-    // Sync UseCase'e burada artık ihtiyacımız yok (Splash/Onboarding hallediyor)
+    getAppThemeUseCase: GetAppThemeUseCase,
+    getAppLanguageUseCase: GetAppLanguageUseCase
 ) : ScreenModel {
 
-    // MainActivity'nin dinleyeceği tema akışı
     val currentTheme = getAppThemeUseCase()
         .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), AppTheme.SYSTEM)
 
-    // Dil yönetimi
     val currentLanguage = getAppLanguageUseCase()
         .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), AppLanguage.SYSTEM)
 }

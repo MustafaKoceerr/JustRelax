@@ -12,11 +12,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.mustafakoceerr.justrelax.composeapp.generated.resources.Res
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_ai
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_home
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_mixer
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_saved
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_timer
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.*
 import com.mustafakoceerr.justrelax.feature.ai.AiScreen
 import com.mustafakoceerr.justrelax.feature.home.HomeScreen
 import com.mustafakoceerr.justrelax.feature.mixer.MixerScreen
@@ -24,9 +20,6 @@ import com.mustafakoceerr.justrelax.feature.saved.SavedScreen
 import com.mustafakoceerr.justrelax.feature.timer.TimerScreen
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * 1. HOME TAB
- */
 object HomeTab : Tab {
     override val options: TabOptions
         @Composable
@@ -49,9 +42,6 @@ object HomeTab : Tab {
     }
 }
 
-/**
- * 2. TIMER TAB
- */
 object TimerTab : Tab {
     override val options: TabOptions
         @Composable
@@ -74,9 +64,6 @@ object TimerTab : Tab {
     }
 }
 
-/**
- * 3. AI TAB
- */
 object AiTab : Tab {
     override val options: TabOptions
         @Composable
@@ -99,9 +86,6 @@ object AiTab : Tab {
     }
 }
 
-/**
- * 4. SAVED TAB
- */
 object SavedTab : Tab {
     override val options: TabOptions
         @Composable
@@ -124,9 +108,6 @@ object SavedTab : Tab {
     }
 }
 
-/**
- * 5. MIXER TAB
- */
 object MixerTab : Tab {
     override val options: TabOptions
         @Composable
