@@ -51,8 +51,6 @@ fun AiPromptInput(
 
     Column(modifier = modifier.fillMaxWidth()) {
 
-        // 1. Öneriler Listesi (Sadece düşünmüyorken görünür)
-        // AnimatedVisibility ile yumuşakça açılıp kapanır.
         AnimatedVisibility(
             visible = !isThinking && suggestions.isNotEmpty(),
             enter = fadeIn() + expandVertically(),
@@ -73,7 +71,6 @@ fun AiPromptInput(
             }
         }
 
-        // 2. Metin Giriş Alanı
         TextField(
             value = prompt,
             onValueChange = onPromptChange,
@@ -87,9 +84,9 @@ fun AiPromptInput(
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                 )
             },
-            enabled = !isThinking, // Düşünürken kilitli
+            enabled = !isThinking,
             singleLine = true,
-            shape = CircleShape, // Tam yuvarlak kapsül
+            shape = CircleShape,
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
@@ -126,13 +123,11 @@ private fun SendButton(
     isEnabled: Boolean,
     onClick: () -> Unit
 ) {
-    // Butonun kendisi
     FilledIconButton(
         onClick = onClick,
-        enabled = isEnabled || isLoading, // Loading iken de görünür kalsın ama tıklanmasın (içerik değişecek)
-        modifier = Modifier.size(40.dp).padding(4.dp) // Biraz padding ile içeriden küçültelim
+        enabled = isEnabled || isLoading,
+        modifier = Modifier.size(40.dp).padding(4.dp)
     ) {
-        // İçerik değişimi animasyonu (Icon <-> Loading)
         Crossfade(targetState = isLoading, label = "SendButtonState") { loading ->
             if (loading) {
                 CircularProgressIndicator(

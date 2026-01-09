@@ -16,8 +16,6 @@ import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 @Composable
 fun AiResultGrid(
     sounds: List<Sound>,
-    // State'i map olarak değil, fonksiyonel olarak alıyoruz.
-    // Bu sayede UI, verinin nasıl tutulduğunu bilmek zorunda kalmaz.
     isSoundPlaying: (String) -> Boolean,
     getSoundVolume: (String) -> Float,
     onToggleSound: (String) -> Unit,
@@ -27,13 +25,12 @@ fun AiResultGrid(
     headerContent: (@Composable () -> Unit)? = null
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 110.dp), // SoundCard ile uyumlu standart boyut
+        columns = GridCells.Adaptive(minSize = 110.dp),
         modifier = modifier.fillMaxSize(),
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // 1. HEADER SLOT (Varsa ekle)
         if (headerContent != null) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 headerContent()
@@ -42,7 +39,7 @@ fun AiResultGrid(
 
         items(
             items = sounds,
-            key = { it.id } // Performans için kritik: Unique Key
+            key = { it.id }
         ) { sound ->
 
             val isPlaying = isSoundPlaying(sound.id)
@@ -51,7 +48,7 @@ fun AiResultGrid(
             SoundCard(
                 sound = sound,
                 isPlaying = isPlaying,
-                isDownloading = false, // AI sonuçlarında varsayılan olarak indirilmişleri gösteriyoruz (veya yönetimi sende)
+                isDownloading = false,
                 volume = volume,
                 onCardClick = { onToggleSound(sound.id) },
                 onVolumeChange = { newVol -> onVolumeChange(sound.id, newVol) }

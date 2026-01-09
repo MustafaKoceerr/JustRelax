@@ -30,7 +30,6 @@ fun AiMixInfo(
             .animateContentSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. Miks İsmi
         Text(
             text = name,
             style = MaterialTheme.typography.headlineMedium.copy(
@@ -39,13 +38,12 @@ fun AiMixInfo(
             ),
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurface,
-            maxLines = 2, // EN FAZLA 2 SATIR
-            overflow = TextOverflow.Ellipsis // Sığmazsa "..." koy
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 2. Açıklama
         if (description.isNotBlank()) {
             Text(
                 text = description,
@@ -54,8 +52,8 @@ fun AiMixInfo(
                 ),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 3, // EN FAZLA 3 SATIR
-                overflow = TextOverflow.Ellipsis // Sığmazsa "..." koy
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
             )
         }
 

@@ -8,8 +8,6 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val aiModule = module {
-    // --- Data Katmanı ---
-    // Single: AiRepository'nin durumu (state) yoktur, tek bir instance yeterlidir.
     single<AiRepository> {
         OpenAiRepositoryImpl()
     }
