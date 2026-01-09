@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -22,7 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.Icon
+
 @Composable
 fun AiResultActions(
     isGenerating: Boolean,
@@ -32,22 +33,22 @@ fun AiResultActions(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp), // Grid ve Başlık arası nefes payı
+            .padding(vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
         OutlinedButton(
             onClick = onRegenerateClick,
             enabled = !isGenerating,
-            shape = CircleShape, // Tam yuvarlak (Hap)
+            shape = CircleShape,
             border = BorderStroke(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f) // Çok ince, zarif bir çerçeve
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
             ),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = MaterialTheme.colorScheme.primary,
-                containerColor = MaterialTheme.colorScheme.surface // Arka planı şeffaf değil, surface olsun ki grid üstüne binerse okunsun
+                containerColor = MaterialTheme.colorScheme.surface
             ),
-            modifier = Modifier.height(36.dp) // Kibar, çok yüksek olmayan yapı
+            modifier = Modifier.height(36.dp)
         ) {
             Crossfade(targetState = isGenerating, label = "RegenerateIcon") { loading ->
                 if (loading) {
@@ -65,7 +66,7 @@ fun AiResultActions(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Başka bir varyasyon dene", // Kullanıcıyla konuşan dil
+                            text = "Try another variation",
                             style = MaterialTheme.typography.labelMedium
                         )
                     }

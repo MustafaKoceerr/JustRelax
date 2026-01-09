@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.core.ui.components
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,10 +25,6 @@ import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_dismiss
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Uygulamanın genelinde kullanılacak Snackbar Host.
- * Scaffold'un snackbarHost parametresine bu verilmeli.
- */
 @Composable
 fun JustRelaxSnackbarHost(
     hostState: SnackbarHostState,
@@ -39,13 +34,10 @@ fun JustRelaxSnackbarHost(
         hostState = hostState,
         modifier = modifier
     ) { data ->
-        // SnackbarData'yı bizim esnek UI bileşenimize adapte ediyoruz.
         JustRelaxSnackbar(
             message = data.visuals.message,
             actionLabel = data.visuals.actionLabel,
-            // Sadece bir aksiyon varsa tıklandığında performAction'ı çağır.
             onActionClick = if (data.visuals.actionLabel != null) { { data.performAction() } } else { null },
-            // Kapatma butonu her zaman dismiss'i tetikler.
             onDismiss = { data.dismiss() }
         )
     }
@@ -74,19 +66,16 @@ private fun JustRelaxSnackbar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Mesaj
             Text(
                 text = message,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f, fill = false)
             )
 
-            // Butonları sağda gruplamak için bir Row
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Aksiyon Butonu (Sadece label ve click varsa gösterilir)
                 if (actionLabel != null && onActionClick != null) {
                     TextButton(
                         onClick = onActionClick,
@@ -94,14 +83,10 @@ private fun JustRelaxSnackbar(
                             contentColor = MaterialTheme.colorScheme.inversePrimary
                         )
                     ) {
-                        Text(
-                            text = actionLabel,
-                            style = MaterialTheme.typography.labelLarge
-                        )
+                        Text(text = actionLabel, style = MaterialTheme.typography.labelLarge)
                     }
                 }
 
-                // Kapatma Butonu (Sadece onDismiss varsa gösterilir)
                 if (onDismiss != null) {
                     IconButton(
                         onClick = onDismiss,

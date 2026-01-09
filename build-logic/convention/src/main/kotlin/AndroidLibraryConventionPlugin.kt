@@ -3,7 +3,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
-
 class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
@@ -13,14 +12,9 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             }
 
             extensions.configure<LibraryExtension> {
-                // YARDIMCI FONKSİYONU ÇAĞIRIYORUZ
-                // Bu fonksiyon TOML'dan versiyonları okuyup set edecek.
                 configureAndroid(this)
 
-                // Library'ye özel ek ayarlar (Varsa)
-                // Core modülündeki resource ayarı:
                 experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
-
                 defaultConfig.consumerProguardFiles("consumer-rules.pro")
             }
         }

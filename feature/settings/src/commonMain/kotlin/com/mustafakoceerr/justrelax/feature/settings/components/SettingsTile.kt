@@ -14,25 +14,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.rounded.Language
-import androidx.compose.material.icons.rounded.Notifications
-import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
+
 @Composable
 fun SettingsTile(
     icon: ImageVector,
@@ -57,19 +50,16 @@ fun SettingsTile(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // SRP: İkon mantığı kendi Composable'ına taşındı.
         SettingsTileIcon(icon = icon)
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        // SRP: Metin mantığı kendi Composable'ına taşındı.
         SettingsTileText(
             title = title,
             subtitle = subtitle,
             modifier = Modifier.weight(1f)
         )
 
-        // Sağ taraf opsiyonel içeriği
         if (trailingContent != null) {
             Spacer(modifier = Modifier.width(8.dp))
             trailingContent()
@@ -77,9 +67,6 @@ fun SettingsTile(
     }
 }
 
-/**
- * SettingsTile'ın sol tarafındaki, arka planı renkli ikonu çizer.
- */
 @Composable
 private fun SettingsTileIcon(icon: ImageVector) {
     Surface(
@@ -98,9 +85,6 @@ private fun SettingsTileIcon(icon: ImageVector) {
     }
 }
 
-/**
- * SettingsTile'ın ortasındaki başlık ve opsiyonel altyazıyı çizer.
- */
 @Composable
 private fun SettingsTileText(
     title: String,

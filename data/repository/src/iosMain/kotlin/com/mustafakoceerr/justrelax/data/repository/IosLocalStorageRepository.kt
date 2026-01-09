@@ -11,21 +11,17 @@ import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
-/**
- * iOS için 'LocalStorageRepository' implementasyonu.
- */
 @OptIn(ExperimentalForeignApi::class)
 internal class IosLocalStorageRepository(
     private val dispatchers: DispatcherProvider
 ) : LocalStorageRepository {
 
-    // iOS'te uygulamanın veri saklayabileceği 'Documents' klasörünü alıyoruz.
     private val appDataDirectory: Path by lazy {
         val documentDirectory = NSFileManager.defaultManager.URLForDirectory(
             directory = NSDocumentDirectory,
             inDomain = NSUserDomainMask,
             appropriateForURL = null,
-            create = true, // Klasör yoksa oluştur.
+            create = true,
             error = null,
         )
         requireNotNull(documentDirectory?.path).toPath()
@@ -47,9 +43,6 @@ internal class IosLocalStorageRepository(
         return soundsDir.toString()
     }
 
-    /**
-     * YENİ: Bir dosyayı atomik olarak taşır.
-     */
     override suspend fun moveFile(sourcePath: String, destinationPath: String) =
         withContext(dispatchers.io) {
             FileSystem.SYSTEM.atomicMove(sourcePath.toPath(), destinationPath.toPath())

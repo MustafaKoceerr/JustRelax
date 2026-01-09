@@ -22,16 +22,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
-/**
- * AudioMixer arayüzünün Android implementasyonu.
- * Uygulamanın ses motorunun beynidir.
- */
-/**
- * AudioMixer arayüzünün Android implementasyonu.
- * PERFORMANS GÜNCELLEMESİ:
- * - Player oluşturma işlemleri Mutex dışına taşındı.
- * - setMix işlemi paralel (async/await) hale getirildi.
- */
 internal class AndroidAudioMixer(
     private val context: Context,
     private val serviceController: AudioServiceController
@@ -40,13 +30,11 @@ internal class AndroidAudioMixer(
     private val _state = MutableStateFlow(GlobalMixerState())
     override val state = _state.asStateFlow()
 
-    // Main thread işlemleri için (ExoPlayer Main thread sever)
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private val players = mutableMapOf<String, ExoPlayerWrapper>()
     private val mutex = Mutex()
 
     override suspend fun playSound(config: SoundConfig): Resource<Unit> {
-        // 1. Hızlı Kontrol
         mutex.withLock {
             if (players.containsKey(config.id)) return Resource.Success(Unit)
             if (players.size >= AudioDefaults.MAX_CONCURRENT_SOUNDS) {
@@ -56,17 +44,14 @@ internal class AndroidAudioMixer(
             }
         }
 
-        // 2. Arka Planda Hazırlık (IO Thread)
-        // Wrapper oluşturulur ve Player inşa edilir. UI Thread serbesttir.
         val newWrapper = try {
             val wrapper = ExoPlayerWrapper(context)
-            wrapper.prepare(config) // Bu fonksiyon artık suspend ve IO-safe
+            wrapper.prepare(config)
             wrapper
         } catch (e: Exception) {
             return Resource.Error(AppError.Player.InitializationError(e.message ?: "Unknown"))
         }
 
-        // 3. Ekleme ve Başlatma (Main Thread + Mutex)
         return mutex.withLock {
             if (players.containsKey(config.id)) {
                 newWrapper.stop()
@@ -83,7 +68,6 @@ internal class AndroidAudioMixer(
                 it.copy(isPlaying = true, activeSounds = it.activeSounds + config)
             }
 
-            // Sadece "Play" komutu verilir (Hafif işlem)
             scope.launch { newWrapper.playFadeIn(config.fadeInDurationMs) }
 
             Resource.Success(Unit)
@@ -109,34 +93,29 @@ internal class AndroidAudioMixer(
     }
 
     override suspend fun setMix(configs: List<SoundConfig>) {
-        // 1. Analiz
         val (toRemove, toAdd) = mutex.withLock {
             val currentIds = players.keys.toSet()
             val newIds = configs.map { it.id }.toSet()
             Pair(currentIds - newIds, configs.filter { !currentIds.contains(it.id) })
         }
 
-        // 2. Temizlik
         if (toRemove.isNotEmpty()) {
             mutex.withLock {
                 toRemove.forEach { players.remove(it)?.stop() }
             }
         }
 
-        // 3. Paralel Hazırlık (IO Thread - ASYNC)
-        // 7 ses varsa 7'si de IO thread'inde, Main Looper'a bağlı olarak oluşturulur.
         if (toAdd.isNotEmpty()) {
             val newPlayersMap = withContext(Dispatchers.IO) {
                 toAdd.map { config ->
                     async {
                         val wrapper = ExoPlayerWrapper(context)
-                        wrapper.prepare(config) // Ağır iş burada
+                        wrapper.prepare(config)
                         config to wrapper
                     }
                 }.awaitAll().toMap()
             }
 
-            // 4. Toplu Başlatma (Main Thread)
             mutex.withLock {
                 if (players.isEmpty() && newPlayersMap.isNotEmpty()) {
                     serviceController.start()
@@ -149,7 +128,6 @@ internal class AndroidAudioMixer(
             }
         }
 
-        // 5. State Güncelleme
         mutex.withLock {
             _state.update {
                 it.copy(isPlaying = configs.isNotEmpty(), activeSounds = configs)
@@ -190,7 +168,3 @@ internal class AndroidAudioMixer(
         _state.update { it.copy(error = null) }
     }
 }
-
-
-
-

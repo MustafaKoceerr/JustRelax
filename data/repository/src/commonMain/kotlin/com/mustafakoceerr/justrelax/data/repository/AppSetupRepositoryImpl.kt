@@ -16,14 +16,12 @@ internal class AppSetupRepositoryImpl(
 
     override val isStarterPackInstalled: Flow<Boolean>
         get() = dataStore.data.map { preferences ->
-            // Anahtarı merkezi 'DataConstants' dosyasından alıyoruz.
             preferences[DataConstants.KEY_STARTER_PACK_INSTALLED] ?: false
         }
 
     override suspend fun setStarterPackInstalled(installed: Boolean) {
         withContext(dispatchers.io) {
             dataStore.edit { preferences ->
-                // Anahtarı merkezi 'DataConstants' dosyasından alıyoruz.
                 preferences[DataConstants.KEY_STARTER_PACK_INSTALLED] = installed
             }
         }

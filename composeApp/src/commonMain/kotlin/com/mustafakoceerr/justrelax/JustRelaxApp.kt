@@ -6,7 +6,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.transitions.FadeTransition
 import cafe.adriel.voyager.transitions.SlideTransition
 import coil3.compose.setSingletonImageLoaderFactory
 import com.mustafakoceerr.justrelax.core.model.AppTheme
@@ -18,27 +17,21 @@ import org.koin.compose.koinInject
 
 @Composable
 fun JustRelaxApp() {
-// 1. Coil Setup (Aynen kalıyor)
     setSingletonImageLoaderFactory { context ->
         getAsyncImageLoader(context)
     }
 
-// 2. ViewModel ve Tema Yönetimi (BURASI DEĞİŞTİ)
-    // Root seviyesinde olduğumuz için koinInject kullanıyoruz.
     val mainViewModel = koinInject<MainViewModel>()
     val currentTheme by mainViewModel.currentTheme.collectAsState()
-    val currentLanguage by mainViewModel.currentLanguage.collectAsState() // <-- DİLİ DE DİNLE
+    val currentLanguage by mainViewModel.currentLanguage.collectAsState()
 
     val isDarkTheme = when (currentTheme) {
-        AppTheme.SYSTEM -> isSystemInDarkTheme() // Compose Multiplatform fonksiyonu
+        AppTheme.SYSTEM -> isSystemInDarkTheme()
         AppTheme.LIGHT -> false
         AppTheme.DARK -> true
     }
 
-    // 3. UI Başlatma
-    // Temayı burada sarmalıyoruz. Artık Android/iOS fark etmeksizin çalışır.
     JustRelaxTheme(darkTheme = isDarkTheme) {
-
         CompositionLocalProvider(
             LocalLanguageCode provides currentLanguage.code
         ) {

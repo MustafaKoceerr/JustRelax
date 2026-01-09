@@ -38,15 +38,10 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
-/**
- * Bu ana kapsayıcıdır. Animasyonu ve görünürlüğü yönetir.
- * Scaffold'un bottomBar parametresine veya Box içinde en alta koyulabilir.
- */
 @Composable
 fun PlayerBottomBar(
-    isVisible: Boolean, // State'den gelecek (activeSounds.isNotEmpty())
+    isVisible: Boolean,
     activeIcons: List<String>,
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
@@ -57,14 +52,12 @@ fun PlayerBottomBar(
     AnimatedVisibility(
         visible = isVisible,
         modifier = modifier,
-        // Aşağıdan yukarıya kayarak gel + Fade In
         enter = slideInVertically(
-            initialOffsetY = { fullHeight -> fullHeight }, // Kendi boyu kadar aşağıdan başla
+            initialOffsetY = { fullHeight -> fullHeight },
             animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
         ) + fadeIn(),
-        // Aşağıya kayarak kaybol + Fade Out
         exit = slideOutVertically(
-            targetOffsetY = { fullHeight -> fullHeight }, // Kendi boyu kadar aşağı git
+            targetOffsetY = { fullHeight -> fullHeight },
             animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
         ) + fadeOut()
     ) {
@@ -73,7 +66,7 @@ fun PlayerBottomBar(
             isPlaying = isPlaying,
             onPlayPauseClick = onPlayPauseClick,
             onStopAllClick = onStopAllClick,
-            onSaveClick = onSaveClick // İçeriye pasla
+            onSaveClick = onSaveClick
         )
     }
 }
@@ -87,18 +80,14 @@ private fun ActiveSoundsBarContent(
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Play/Pause butonu için 1 saniyelik korumalı bir lambda oluşturuyoruz.
     val debouncedOnPlayPauseClick = rememberThrottledOnClick(
-        throttleMs = 500L, // 1 saniye
+        throttleMs = 500L,
         onClick = onPlayPauseClick
     )
     val debouncedOnSaveClick = rememberThrottledOnClick(
         throttleMs = 1000L,
         onClick = onSaveClick
     )
-
-    // Not: onStopAllClick de ağır bir işlem olduğu için ona da debounce eklenebilir.
-    // Şimdilik sadece Play/Pause için ekliyoruz.
     val debouncedOnStopAllClick = rememberThrottledOnClick(
         throttleMs = 1000L,
         onClick = onStopAllClick
@@ -107,15 +96,12 @@ private fun ActiveSoundsBarContent(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(80.dp) // Yükseklik biraz artırıldı, padding için pay
-            .padding(
-                horizontal = 16.dp,
-                vertical = 8.dp
-            ), // Kenarlardan boşluk (Floating hissi için)
-        shape = RoundedCornerShape(24.dp), // Daha yuvarlak hatlar
+            .height(80.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(24.dp),
         color = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        shadowElevation = 8.dp, // Gölge artırıldı
+        shadowElevation = 8.dp,
         tonalElevation = 8.dp
     ) {
         Row(
@@ -125,9 +111,8 @@ private fun ActiveSoundsBarContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // SOL: Aktif İkonlar (Weight azaltıldı ki butonlara yer kalsın)
             LazyRow(
-                modifier = Modifier.weight(0.8f), // Biraz yer açtık
+                modifier = Modifier.weight(0.8f),
                 horizontalArrangement = Arrangement.spacedBy((-8).dp),
                 contentPadding = PaddingValues(end = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -137,30 +122,23 @@ private fun ActiveSoundsBarContent(
                 }
             }
 
-            // SAĞ: Kontroller
-            // Row içinde butonları grupluyoruz
             Row(
-                horizontalArrangement = Arrangement.spacedBy(0.dp), // Araları sıkı tutalım
+                horizontalArrangement = Arrangement.spacedBy(0.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(0.6f, fill = false) // İhtiyacı kadar yer kaplasın
+                modifier = Modifier.weight(0.6f, fill = false)
             ) {
-
-                // 1. SAVE BUTONU (YENİ)
-                // Kullanıcıya "Bunu beğendim" hissi vermek için Kalp ikonu
                 IconButton(
                     onClick = debouncedOnSaveClick,
                     modifier = Modifier.size(40.dp)
                 ) {
                     Icon(
-                        // Dolu veya boş kalp durumu state'den de gelebilir ama şimdilik standart
                         imageVector = Icons.Rounded.FavoriteBorder,
                         contentDescription = "Save Mix",
                         modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.primary // Vurgulu renk
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
 
-                // 2. PLAY/PAUSE (En Büyük ve Ortada)
                 IconButton(
                     onClick = debouncedOnPlayPauseClick,
                     modifier = Modifier
@@ -168,7 +146,7 @@ private fun ActiveSoundsBarContent(
                         .background(
                             color = MaterialTheme.colorScheme.secondaryContainer,
                             shape = CircleShape
-                        ) // Play butonunu arkasına renk atarak vurguladım
+                        )
                 ) {
                     Icon(
                         imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
@@ -178,7 +156,6 @@ private fun ActiveSoundsBarContent(
                     )
                 }
 
-                // 3. STOP ALL (En Sağda, biraz daha sönük)
                 IconButton(
                     onClick = debouncedOnStopAllClick,
                     modifier = Modifier.size(40.dp)
@@ -187,7 +164,7 @@ private fun ActiveSoundsBarContent(
                         imageVector = Icons.Rounded.Close,
                         contentDescription = "Close all",
                         modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f) // Kapatma olduğu için hafif kırmızımsı olabilir veya gri
+                        tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
                     )
                 }
             }
@@ -200,13 +177,10 @@ private fun SoundIconItem(url: String) {
     Surface(
         modifier = Modifier
             .size(36.dp)
-            .padding(2.dp), // Border efekti için boşluk
+            .padding(2.dp),
         shape = CircleShape,
         color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        border = BorderStroke(
-            2.dp,
-            MaterialTheme.colorScheme.primaryContainer
-        ) // Arka planla karışmasın diye sınır
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer)
     ) {
         Box(contentAlignment = Alignment.Center) {
             AsyncImage(

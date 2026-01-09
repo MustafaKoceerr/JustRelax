@@ -22,14 +22,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Uygulama genelinde kullanılabilen, tekrar kullanılabilir Boş Durum ekranı.
- * @param visualContent Üstte gösterilecek görsel (Image, Lottie, vb.).
- * @param title Ana başlık metni.
- * @param description Açıklama metni.
- * @param actionButtonText Butonun üzerindeki metin.
- * @param onActionClick Butona tıklandığında tetiklenecek eylem.
- */
 @Composable
 fun GenericEmptyState(
     visualContent: @Composable () -> Unit,
@@ -46,12 +38,10 @@ fun GenericEmptyState(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // 1. GÖRSEL (Slot API ile esneklik)
         visualContent()
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // 2. MESAJLAR
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = title,
@@ -71,7 +61,6 @@ fun GenericEmptyState(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // 3. AKSİYON BUTONU
         Button(
             onClick = onActionClick,
             modifier = Modifier

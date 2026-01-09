@@ -25,7 +25,6 @@ internal class SoundSyncRepositoryImpl(
             val localSoundsMap = localDbSounds.associateBy { it.id }
 
             database.transaction {
-                // Silme mantığı aynı
                 val soundsToDelete = localSoundsMap.keys - remoteSoundsMap.keys
                 soundsToDelete.forEach { soundId ->
                     database.soundQueries.deleteSoundById(soundId)
@@ -34,22 +33,19 @@ internal class SoundSyncRepositoryImpl(
                 remoteSounds.forEach { remoteSound ->
                     val localDbSound = localSoundsMap[remoteSound.id]
 
-                    // DEĞİŞİKLİK: 'insertOrReplace' sorgusuna yeni alanları ekliyoruz
                     if (localDbSound == null) {
                         database.soundQueries.insertOrReplace(
                             id = remoteSound.id,
-                            names = remoteSound.names, // 'names' Map'ini veriyoruz
+                            names = remoteSound.names,
                             categoryId = remoteSound.categoryId,
                             iconUrl = remoteSound.iconUrl,
                             remoteUrl = remoteSound.remoteUrl,
                             localPath = null,
-                            isInitial = remoteSound.isInitial, // 'isInitial' flag'ini veriyoruz
+                            isInitial = remoteSound.isInitial,
                             sizeBytes = remoteSound.sizeBytes
-
                         )
                     } else {
                         val localModelSound = soundMapper.toModel(localDbSound)
-                        // Karşılaştırma için remoteSound'un da 'isInitial' alanını içermesi lazım
                         if (localModelSound != remoteSound) {
                             database.soundQueries.insertOrReplace(
                                 id = remoteSound.id,
@@ -57,7 +53,7 @@ internal class SoundSyncRepositoryImpl(
                                 categoryId = remoteSound.categoryId,
                                 iconUrl = remoteSound.iconUrl,
                                 remoteUrl = remoteSound.remoteUrl,
-                                localPath = localDbSound.localPath, // Path'i koru
+                                localPath = localDbSound.localPath,
                                 isInitial = remoteSound.isInitial,
                                 sizeBytes = remoteSound.sizeBytes
                             )

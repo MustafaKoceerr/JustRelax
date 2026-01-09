@@ -3,7 +3,6 @@ package com.mustafakoceerr.justrelax.feature.settings.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,6 +29,7 @@ import justrelax.feature.settings.generated.resources.Res
 import justrelax.feature.settings.generated.resources.language_selection_title
 import justrelax.feature.settings.generated.resources.language_system_default
 import org.jetbrains.compose.resources.stringResource
+
 @Composable
 fun LanguageSelectionItem(
     language: AppLanguage,
@@ -42,7 +42,6 @@ fun LanguageSelectionItem(
         language.nativeName
     }
 
-    // --- ANİMASYONLAR ---
     val containerColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
         animationSpec = tween(300),
@@ -53,7 +52,6 @@ fun LanguageSelectionItem(
         animationSpec = tween(300),
         label = "LangContentColor"
     )
-    // İYİLEŞTİRME: Kenarlık rengini anime ederek daha yumuşak bir geçiş sağlıyoruz.
     val borderColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
         animationSpec = tween(300),
@@ -67,7 +65,6 @@ fun LanguageSelectionItem(
         shape = RoundedCornerShape(16.dp),
         color = containerColor,
         contentColor = contentColor,
-        // Kenarlık her zaman var, sadece rengi değişiyor.
         border = BorderStroke(1.dp, borderColor),
         onClick = onClick
     ) {
@@ -78,7 +75,6 @@ fun LanguageSelectionItem(
             Text(
                 text = displayText,
                 style = MaterialTheme.typography.titleMedium,
-                // İYİLEŞTİRME: FontWeight'ı doğrudan atıyoruz.
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
             )
         }
@@ -90,7 +86,6 @@ fun LanguageSelectionItem(
 fun LanguageSelectionBottomSheet(
     availableLanguages: List<AppLanguage>,
     currentLanguageCode: String,
-    // DEĞİŞİKLİK GERİ ALINDI: Artık iki ayrı fonksiyon alıyor.
     onLanguageSelected: (AppLanguage) -> Unit,
     onDismissRequest: () -> Unit
 ) {

@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.core.ui.permission
 
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import platform.UserNotifications.UNAuthorizationOptionAlert
@@ -12,17 +11,10 @@ import platform.UserNotifications.UNUserNotificationCenter
 actual fun RequestNotificationPermission() {
     LaunchedEffect(Unit) {
         val center = UNUserNotificationCenter.currentNotificationCenter()
+        val options = UNAuthorizationOptionAlert or UNAuthorizationOptionSound or UNAuthorizationOptionBadge
 
-        // İstenen izin türleri: Ses, Uyarı ve Rozet
-        val options =
-            UNAuthorizationOptionAlert or UNAuthorizationOptionSound or UNAuthorizationOptionBadge
-
-        center.requestAuthorizationWithOptions(options) { isGranted, error ->
-            if (isGranted) {
-                println("iOS: Notification permission granted")
-            } else {
-                println("iOS: Notification permission denied: ${error?.localizedDescription}")
-            }
+        center.requestAuthorizationWithOptions(options) { _, _ ->
+            // Permission result handled by OS
         }
     }
 }

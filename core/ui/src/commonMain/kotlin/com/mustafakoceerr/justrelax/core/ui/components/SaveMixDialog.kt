@@ -33,9 +33,7 @@ import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_name_placeholder
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_title
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.job
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SaveMixDialog(
@@ -49,9 +47,8 @@ fun SaveMixDialog(
         var isError by remember { mutableStateOf(false) }
         val focusRequester = remember { FocusRequester() }
 
-        // Klavye açılışını garantiye almak için ufak bir gecikme
         LaunchedEffect(Unit) {
-            delay(100) // UI çizimi tamamlansın diye kısa bir bekleme
+            delay(100)
             focusRequester.requestFocus()
         }
 
@@ -97,11 +94,8 @@ fun SaveMixDialog(
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                if (mixName.isNotBlank()) {
-                                    onConfirm(mixName)
-                                } else {
-                                    isError = true
-                                }
+                                if (mixName.isNotBlank()) onConfirm(mixName)
+                                else isError = true
                             }
                         )
                     )
@@ -110,11 +104,8 @@ fun SaveMixDialog(
             confirmButton = {
                 Button(
                     onClick = {
-                        if (mixName.isNotBlank()) {
-                            onConfirm(mixName)
-                        } else {
-                            isError = true
-                        }
+                        if (mixName.isNotBlank()) onConfirm(mixName)
+                        else isError = true
                     }
                 ) {
                     Text(stringResource(Res.string.action_save))

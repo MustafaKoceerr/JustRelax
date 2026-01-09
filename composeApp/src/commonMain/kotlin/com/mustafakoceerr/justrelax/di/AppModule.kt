@@ -26,15 +26,11 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
-
-// 1. ComposeApp Modülüne Özel Tanımlar
-// (MainViewModel ve Navigation Implementasyonları burada)
 val appModule = module {
     factoryOf(::MainViewModel)
     single<TabProvider> { TabProviderImpl() }
 }
 
-// Android tarafında implement edilecek (AudioServiceController için)
 expect val platformAudioModule: Module
 
 fun initKoin(config: KoinAppDeclaration? = null) {
@@ -42,7 +38,6 @@ fun initKoin(config: KoinAppDeclaration? = null) {
         config?.invoke(this)
 
         modules(
-            // --- Core ---
             commonModule,
             domainModule,
             databaseModule,
@@ -51,15 +46,12 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             uiModule,
             systemModule,
 
-            // --- Audio ---
             audioCoreModule,
-            platformAudioModule, // Android specific
+            platformAudioModule,
 
-            // --- App Specific ---
             appModule,
             navigationTargetsModule,
 
-            // --- Features ---
             homeModule,
             settingsModule,
             playerModule,

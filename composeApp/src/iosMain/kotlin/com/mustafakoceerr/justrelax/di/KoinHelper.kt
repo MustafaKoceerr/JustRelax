@@ -1,17 +1,17 @@
 package com.mustafakoceerr.justrelax.di
-import org.koin.core.context.startKoin
-import com.mustafakoceerr.justrelax.di.initKoin as initCommonKoin // Common'daki fonksiyonu çağırıyoruz
+
+import com.mustafakoceerr.justrelax.di.initKoin as initCommonKoin
 
 /**
- * Swift tarafından çağrılacak olan başlatıcı.
- * Swift, Kotlin'in default parametrelerini ve lambda'larını bazen zor anlar,
- * o yüzden bu yardımcı fonksiyonu yazıyoruz.
+ * Entry point for Koin initialization on iOS.
+ *
+ * This function is intended to be called from the iOS App Delegate (Swift).
+ * It acts as a wrapper around the common [initCommonKoin] function to ensure
+ * compatibility with Swift/Objective-C, which may struggle with Kotlin's
+ * default arguments and lambda syntax.
  */
 fun initKoin() {
-    // CommonMain içindeki ana initKoin'i çağırıyoruz.
-    // O zaten tüm modülleri (Feature + Core) yüklüyor.
     initCommonKoin {
-        // iOS'e özel modüller varsa buraya eklersin (Örn: Analytics)
-        // modules(iosSpecificModule)
+        // iOS-specific modules can be injected here if necessary.
     }
 }

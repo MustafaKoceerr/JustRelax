@@ -34,7 +34,7 @@ fun SavedMixesEmptyScreen(
 ) {
     GenericEmptyState(
         modifier = modifier,
-        visualContent = { EmptyStateVisual() }, // Kendi özel animasyonlu görselimizi veriyoruz
+        visualContent = { EmptyStateVisual() },
         title = stringResource(Res.string.saved_empty_title),
         description = stringResource(Res.string.saved_empty_description),
         actionButtonText = stringResource(Res.string.action_create_new_mix),
@@ -42,7 +42,6 @@ fun SavedMixesEmptyScreen(
     )
 }
 
-// Bu bileşen artık SavedMixesEmptyScreen'in bir parçası olduğu için private olabilir.
 @Composable
 private fun EmptyStateVisual() {
     val infiniteTransition = rememberInfiniteTransition(label = "floating")

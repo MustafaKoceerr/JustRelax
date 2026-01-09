@@ -1,5 +1,5 @@
 plugins {
-    id("justrelax.kmp.library") // Senin yazdığın convention plugin
+    id("justrelax.kmp.library")
 }
 
 android {
@@ -9,9 +9,7 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // Flow ve Coroutine işlemleri için gerekli
             implementation(libs.findLibrary("kotlinx-coroutines-core").get())
-            // Koin (DI)
             implementation(libs.findLibrary("koin-core").get())
         }
     }

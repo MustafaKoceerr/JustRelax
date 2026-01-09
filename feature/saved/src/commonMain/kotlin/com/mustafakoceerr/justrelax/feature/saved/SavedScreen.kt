@@ -1,10 +1,10 @@
 package com.mustafakoceerr.justrelax.feature.saved
 
-
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarDuration
@@ -15,9 +15,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
+import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.navigation.TabProvider
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
@@ -29,26 +29,23 @@ import justrelax.feature.saved.generated.resources.saved_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-data object SavedScreen : Screen {
+data object SavedScreen : AppScreen {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        // 1. Bağımlılıklar
         val tabNavigator = LocalTabNavigator.current
         val tabProvider = koinInject<TabProvider>()
         val viewModel = koinScreenModel<SavedViewModel>()
         val state by viewModel.state.collectAsState()
         val snackbarController = koinInject<GlobalSnackbarController>()
 
-        // 2. Effect Handling (Navigasyon ve Snackbar)
         LaunchedEffect(Unit) {
             viewModel.effect.collect { effect ->
                 when (effect) {
                     is SavedContract.Effect.NavigateToMixer -> {
                         tabNavigator.current = tabProvider.mixerTab
                     }
-
                     is SavedContract.Effect.ShowDeleteSnackbar -> {
                         val messageStr = effect.message.resolve()
                         val actionStr = effect.actionLabel?.resolve()
@@ -59,7 +56,6 @@ data object SavedScreen : Screen {
                             duration = SnackbarDuration.Short
                         )
 
-                        // Kullanıcı "UNDO"ya basarsa
                         if (result == SnackbarResult.ActionPerformed) {
                             viewModel.onEvent(SavedContract.Event.UndoDelete)
                         }
@@ -68,7 +64,6 @@ data object SavedScreen : Screen {
             }
         }
 
-        // 3. UI İskeleti
         Column(modifier = Modifier.fillMaxSize()) {
             JustRelaxTopBar(
                 title = stringResource(Res.string.saved_screen_title)
@@ -83,7 +78,6 @@ data object SavedScreen : Screen {
     }
 }
 
-// --- İÇERİK YÖNETİMİ ---
 @Composable
 private fun SavedScreenContent(
     state: SavedContract.State,
@@ -96,7 +90,6 @@ private fun SavedScreenContent(
         label = "SavedScreenContentCrossfade"
     ) { currentState ->
         when {
-            // A. Yükleniyor
             currentState.isLoading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -105,7 +98,6 @@ private fun SavedScreenContent(
                     CircularProgressIndicator()
                 }
             }
-            // B. Liste Boş
             currentState.mixes.isEmpty() -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -116,7 +108,6 @@ private fun SavedScreenContent(
                     )
                 }
             }
-            // C. Liste Dolu
             else -> {
                 SavedMixesList(
                     mixes = currentState.mixes,

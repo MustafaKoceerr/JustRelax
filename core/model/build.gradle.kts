@@ -1,6 +1,6 @@
 plugins {
     id("justrelax.kmp.library")
-    alias(libs.plugins.kotlin.serialization) // Model'de @Serializable var
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {

@@ -21,6 +21,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsIntent
@@ -47,17 +48,13 @@ fun SettingsContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
-        // Ana bölümler arasındaki boşluk
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        // 1. TEMA SEÇİMİ
         ThemeSelector(
             currentTheme = state.currentTheme,
             onThemeSelected = { onIntent(SettingsIntent.ChangeTheme(it)) }
         )
 
-        // 2. İÇERİK (İndirme & Dil)
-        // İYİLEŞTİRME: İçindeki Spacer'lar kaldırıldı.
         SectionGroup(title = stringResource(Res.string.section_content)) {
             DownloadAllCard(
                 isDownloaded = state.isLibraryComplete,
@@ -73,9 +70,7 @@ fun SettingsContent(
             )
         }
 
-        // 3. DESTEK VE YASAL (GÜNCELLENDİ)
         SectionGroup(title = stringResource(Res.string.section_support_legal)) {
-            // Destek Kısmı
             SettingsTile(
                 icon = Icons.Rounded.StarRate,
                 title = stringResource(Res.string.rate_app_title),
@@ -89,25 +84,22 @@ fun SettingsContent(
                 onClick = { onIntent(SettingsIntent.SendFeedback) }
             )
 
-            // Görsel ayrım için ince bir çizgi (Opsiyonel ama şık durur)
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 4.dp),
                 color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
             )
 
-            // Yasal Kısmı
             SettingsTile(
-                icon = Icons.Rounded.PrivacyTip, // Gizlilik için uygun ikon
+                icon = Icons.Rounded.PrivacyTip,
                 title = stringResource(Res.string.privacy_policy_title),
                 onClick = { onIntent(SettingsIntent.OpenPrivacyPolicy) }
             )
             SettingsTile(
-                icon = Icons.Rounded.Description, // Terms için belge ikonu
+                icon = Icons.Rounded.Description,
                 title = stringResource(Res.string.terms_conditions_title),
                 onClick = { onIntent(SettingsIntent.OpenTermsAndConditions) }
             )
 
-            // Versiyon Bilgisi (Tıklanabilir değil, sadece bilgi)
             VersionInfoTile(versionName = "v1.0.0")
         }
 
@@ -115,10 +107,6 @@ fun SettingsContent(
     }
 }
 
-/**
- * Versiyon bilgisini pasif bir şekilde gösteren özel bir tile.
- * Tıklanabilir olmasına gerek yok, sadece bilgi verir.
- */
 @Composable
 private fun VersionInfoTile(versionName: String) {
     Row(
@@ -135,10 +123,6 @@ private fun VersionInfoTile(versionName: String) {
     }
 }
 
-/**
- * Başlığı olan ve içeriğindeki elemanların arasına otomatik boşluk ekleyen
- * akıllı bir bölüm grubu.
- */
 @Composable
 private fun SectionGroup(
     title: String,
@@ -152,7 +136,6 @@ private fun SectionGroup(
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
         )
-        // İYİLEŞTİRME: Bu iç Column, çocukları arasına 12.dp boşluk ekler.
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {

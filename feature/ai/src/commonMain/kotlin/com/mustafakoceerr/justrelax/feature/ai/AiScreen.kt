@@ -1,14 +1,12 @@
 package com.mustafakoceerr.justrelax.feature.ai
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -20,10 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.DeleteOutline
@@ -46,7 +40,6 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
-import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.ai.components.AiMixInfo
 import com.mustafakoceerr.justrelax.feature.ai.components.AiPromptInput
@@ -54,12 +47,11 @@ import com.mustafakoceerr.justrelax.feature.ai.components.AiResultActions
 import com.mustafakoceerr.justrelax.feature.ai.components.AiResultGrid
 import com.mustafakoceerr.justrelax.feature.ai.components.AiVisualizer
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiContract
-import justrelax.feature.ai.generated.resources.*
+import justrelax.feature.ai.generated.resources.Res
+import justrelax.feature.ai.generated.resources.action_back
+import justrelax.feature.ai.generated.resources.ai_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-
-
-// Voyager Screen implementasy
 
 object AiScreen : AppScreen {
 
@@ -69,10 +61,8 @@ object AiScreen : AppScreen {
         val viewModel = koinScreenModel<AiViewModel>()
 
         val state by viewModel.state.collectAsState()
-        // SoundController state'ini dinliyoruz (Play/Pause/Volume için)
         val soundControllerState by viewModel.soundController.state.collectAsState()
 
-        // Effect Handling
         LaunchedEffect(Unit) {
             viewModel.effect.collect { effect ->
                 when (effect) {
@@ -103,7 +93,6 @@ private fun AiScreenContent(
     val keyboardController = LocalSoftwareKeyboardController.current
     val hasResults = state.generatedSounds.isNotEmpty()
 
-    // Layout Morphing Animasyonu: Sonuçlar geldiğinde üstteki boşlukları küçültüyoruz.
     val spacerWeight by animateFloatAsState(
         targetValue = if (hasResults) 0.001f else 1f,
         animationSpec = tween(durationMillis = 600),
@@ -117,7 +106,6 @@ private fun AiScreenContent(
         topBar = {
             JustRelaxTopBar(
                 title = stringResource(Res.string.ai_screen_title),
-                // 1. BACK BUTTON (Edit Prompt)
                 navigationIcon = {
                     if (hasResults) {
                         IconButton(onClick = { onEvent(AiContract.Event.EditPrompt) }) {
@@ -128,7 +116,6 @@ private fun AiScreenContent(
                         }
                     }
                 },
-                // 2. CLEAR BUTTON (New Mix)
                 actions = {
                     if (hasResults) {
                         IconButton(onClick = { onEvent(AiContract.Event.ClearMix) }) {
@@ -152,12 +139,10 @@ private fun AiScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // 1. ÜST BOŞLUK (Animasyonlu)
             if (!hasResults) {
                 Spacer(modifier = Modifier.weight(spacerWeight))
             }
 
-            // 2. GÖRSELLEŞTİRİCİ (Sadece sonuç yokken görünür)
             AnimatedVisibility(
                 visible = !hasResults,
                 enter = fadeIn() + expandVertically(),
@@ -169,16 +154,13 @@ private fun AiScreenContent(
                 )
             }
 
-            // 3. ORTA BOŞLUK (Animasyonlu)
             if (!hasResults) {
                 Spacer(modifier = Modifier.weight(spacerWeight))
             }
 
-            // 4. PROMPT GİRİŞ ALANI
             AiPromptInput(
                 prompt = state.prompt,
                 isThinking = state.isLoading,
-                // Sonuçlar varsa önerileri gizle
                 suggestions = if (hasResults) emptyList() else state.suggestions,
                 onPromptChange = { onEvent(AiContract.Event.UpdatePrompt(it)) },
                 onSendClick = {
@@ -191,7 +173,6 @@ private fun AiScreenContent(
                 modifier = Modifier.padding(bottom = if (hasResults) 8.dp else 0.dp)
             )
 
-            // 5. SONUÇ ALANI (BAŞLIK + BUTON + GRID)
             AnimatedVisibility(
                 visible = hasResults,
                 enter = fadeIn(animationSpec = tween(delayMillis = 300)) + expandVertically(),
@@ -215,7 +196,6 @@ private fun AiScreenContent(
                         bottom = 100.dp,
                         top = 16.dp
                     ),
-                    // SLOT KULLANIMI:
                     headerContent = {
                         Column {
                             AiMixInfo(
@@ -232,7 +212,6 @@ private fun AiScreenContent(
                 )
             }
 
-            // Klavye kapalıyken alt boşluk
             if (!hasResults) {
                 Spacer(modifier = Modifier.height(16.dp))
             }

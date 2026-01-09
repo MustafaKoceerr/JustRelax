@@ -1,4 +1,4 @@
-package com.mustafakoceerr.justrelax.core.domain.usecase.sound
+package com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync
 
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.DataSourceStateRepository
@@ -6,10 +6,6 @@ import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundSyncReposi
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-/**
- * Sorumluluk: Sunucudaki ses listesini yerel veritabanıyla senkronize etmek.
- * Zaman kontrolü yapmaz, direkt tetiklenir.
- */
 class SyncSoundsUseCase(
     private val soundSyncRepository: SoundSyncRepository,
     private val dataSourceStateRepository: DataSourceStateRepository
@@ -17,7 +13,6 @@ class SyncSoundsUseCase(
     @OptIn(ExperimentalTime::class)
     suspend operator fun invoke(): Resource<Unit> {
         val result = soundSyncRepository.syncWithServer()
-        // Başarılı olursa zaman damgasını güncelle
         if (result is Resource.Success) {
             dataSourceStateRepository.setLastSoundSyncTimestamp(
                 Clock.System.now().toEpochMilliseconds()

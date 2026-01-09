@@ -2,11 +2,11 @@ package com.mustafakoceerr.justrelax.data.repository.di
 
 import com.mustafakoceerr.justrelax.core.domain.repository.appsetup.AppSetupRepository
 import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMixRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.settings.UserPreferencesRepository
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.DataSourceStateRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.system.FileDownloadRepository
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundSyncRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.settings.UserPreferencesRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.system.FileDownloadRepository
 import com.mustafakoceerr.justrelax.data.repository.AppSetupRepositoryImpl
 import com.mustafakoceerr.justrelax.data.repository.DataSourceStateRepositoryImpl
 import com.mustafakoceerr.justrelax.data.repository.FileDownloadRepositoryImpl
@@ -20,49 +20,15 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    // Platforma özel (actual) modülü bu modüle dahil et.
-    // (DataStore instance'ı buradan sağlanır)
     includes(platformRepositoryModule)
 
-    // Mapper (Diğer repository'ler bunu kullanacak)
     singleOf(::DatabaseSoundMapper)
 
-    // --- Repositories ---
-
-    // 1. User Preferences (Theme, Language)
-    singleOf(::UserPreferencesRepositoryImpl) {
-        bind<UserPreferencesRepository>()
-    }
-
-    // 2. App Setup (Onboarding, Starter Pack)
-    singleOf(::AppSetupRepositoryImpl) {
-        bind<AppSetupRepository>()
-    }
-
-    // 3. Data Source State (Sync Timestamp)
-    singleOf(::DataSourceStateRepositoryImpl) {
-        bind<DataSourceStateRepository>()
-    }
-
-    // 4. Sound Repository (Database Read/Write)
-    // SoundQueries ve DatabaseSoundMapper otomatik inject edilir.
-    singleOf(::SoundRepositoryImpl) {
-        bind<SoundRepository>()
-    }
-
-    // 5. Sound Sync Repository (Network -> Database Sync)
-    // SoundRemoteDataSource ve JustRelaxDatabase otomatik inject edilir.
-    singleOf(::SoundSyncRepositoryImpl) {
-        bind<SoundSyncRepository>()
-    }
-
-    // 6. File Download Repository (File System & Network)
-    // HttpClient otomatik inject edilir.
-    singleOf(::FileDownloadRepositoryImpl) {
-        bind<FileDownloadRepository>()
-    }
-
-    singleOf(::SavedMixRepositoryImpl) {
-        bind<SavedMixRepository>()
-    }
+    singleOf(::UserPreferencesRepositoryImpl) { bind<UserPreferencesRepository>() }
+    singleOf(::AppSetupRepositoryImpl) { bind<AppSetupRepository>() }
+    singleOf(::DataSourceStateRepositoryImpl) { bind<DataSourceStateRepository>() }
+    singleOf(::SoundRepositoryImpl) { bind<SoundRepository>() }
+    singleOf(::SoundSyncRepositoryImpl) { bind<SoundSyncRepository>() }
+    singleOf(::FileDownloadRepositoryImpl) { bind<FileDownloadRepository>() }
+    singleOf(::SavedMixRepositoryImpl) { bind<SavedMixRepository>() }
 }

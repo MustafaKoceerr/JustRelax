@@ -8,22 +8,16 @@ import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-/**
- * Android Sistemi ile Uygulama arasındaki Medya Köprüsü.
- * Kilit ekranı, kulaklık butonları gibi kontrolleri yönetir.
- */
 class MediaSessionManager(
     context: Context,
     private val audioMixer: AudioMixer,
-    private val scope: CoroutineScope // Komutları çalıştırmak için Service'in scope'unu kullanır
+    private val scope: CoroutineScope
 ) {
     private val mediaSession = MediaSessionCompat(context, "JustRelaxMediaSession")
 
     init {
-        // Oturumu aktif hale getiriyoruz ki sistem onu tanısın.
         mediaSession.isActive = true
 
-        // Medya butonlarından (kulaklık vb.) gelen komutları dinle
         mediaSession.setCallback(object : MediaSessionCompat.Callback() {
             override fun onPlay() {
                 scope.launch { audioMixer.resumeAll() }
@@ -39,10 +33,6 @@ class MediaSessionManager(
         })
     }
 
-    /**
-     * Service tarafından, AudioMixer'ın durumu her değiştiğinde çağrılır.
-     * Kilit ekranındaki Play/Pause butonunun doğru görünmesini sağlar.
-     */
     fun updateState(state: GlobalMixerState) {
         val playbackState = if (state.isPlaying) {
             PlaybackStateCompat.STATE_PLAYING

@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.splash.components
 
-
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,13 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.components.LoadingDots
 
-// Sabit: Ekranda kaç tane uçuşan ikon olsun?
 private const val FLOATING_ICON_COUNT = 15
 
 @Composable
 fun LoadingScreen() {
-    // Süzülecek İkon Havuzu
-    // remember içinde tutuyoruz, recomposition'da tekrar liste oluşmasın.
     val icons = remember {
         listOf(
             Icons.Outlined.WaterDrop,
@@ -48,8 +44,6 @@ fun LoadingScreen() {
         val maxHeight = maxHeight
         val maxWidth = maxWidth
 
-        // 1. ARKA PLAN EFEKTLERİ
-        // key(index) kullanımı: Compose'un bu elemanları takip etmesini kolaylaştırır.
         repeat(FLOATING_ICON_COUNT) { index ->
             key(index) {
                 FloatingIcon(
@@ -60,20 +54,16 @@ fun LoadingScreen() {
             }
         }
 
-        // 2. ÖN PLAN (Mesaj ve Yükleniyor Animasyonu)
         Column(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Enterprise Kararı: Standart spinner yerine kendi markamızın bileşeni.
-            // Splash ekranı olduğu için noktaları biraz büyüttük (12dp).
             LoadingDots(
                 color = MaterialTheme.colorScheme.primary,
                 dotSize = 12.dp,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 
-            // PDF Kuralı: 24dp boşluk (8dp gridin katı)
             Spacer(modifier = Modifier.height(24.dp))
 
             LoadingMessage()

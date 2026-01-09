@@ -14,4 +14,3 @@ class TabProviderImpl : TabProvider {
     override val aiTab = AiTab
     override val timerTab = TimerTab
 }
-

@@ -12,7 +12,11 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.savedmix.SaveCurrentMixU
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerContract
 import justrelax.feature.player.generated.resources.Res
-import justrelax.feature.player.generated.resources.*
+import justrelax.feature.player.generated.resources.err_mix_save_empty_name
+import justrelax.feature.player.generated.resources.err_mix_save_name_exists
+import justrelax.feature.player.generated.resources.err_mix_save_no_sound
+import justrelax.feature.player.generated.resources.err_unknown
+import justrelax.feature.player.generated.resources.msg_mix_saved_success
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,11 +35,9 @@ class PlayerViewModel(
     private val saveCurrentMixUseCase: SaveCurrentMixUseCase
 ) : ScreenModel {
 
-    // 1. STATE
     private val _state = MutableStateFlow(PlayerContract.State())
     val state: StateFlow<PlayerContract.State> = _state.asStateFlow()
 
-    // 2. EFFECT
     private val _effect = Channel<PlayerContract.Effect>()
     val effect: Flow<PlayerContract.Effect> = _effect.receiveAsFlow()
 
@@ -90,34 +92,27 @@ class PlayerViewModel(
 
     private fun saveMix(name: String) {
         screenModelScope.launch {
-            // 1. Loading Başlat
             _state.update { it.copy(isSaving = true) }
 
-            // 2. UseCase Çağır
             val result = saveCurrentMixUseCase(name)
 
-            // 3. Loading Bitir ve Duruma Göre Diyaloğu Yönet
             _state.update {
                 it.copy(
                     isSaving = false,
-                    // Başarılıysa kapat, hataysa açık kalsın ki kullanıcı düzeltebilsin
                     isSaveDialogVisible = result !is Resource.Success
                 )
             }
 
-            // 4. Sonucu Kullanıcıya Bildir (Localization Uyumlu)
             when (result) {
                 is Resource.Success -> {
                     _effect.send(
                         PlayerContract.Effect.ShowSnackbar(
-                            // %1$s formatı ile mix ismini mesajın içine gömüyoruz
                             UiText.Resource(Res.string.msg_mix_saved_success, listOf(name))
                         )
                     )
                 }
 
                 is Resource.Error -> {
-                    // Hata türüne göre doğru mesajı seç
                     val errorText = when (result.error) {
                         is AppError.SaveMix.EmptyName -> UiText.Resource(Res.string.err_mix_save_empty_name)
                         is AppError.SaveMix.NameAlreadyExists -> UiText.Resource(Res.string.err_mix_save_name_exists)

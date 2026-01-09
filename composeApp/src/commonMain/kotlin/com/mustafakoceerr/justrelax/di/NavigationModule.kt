@@ -11,17 +11,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val navigationTargetsModule = module {
-    // HomeNavigator istendiğinde HomeNavigatorImpl ver.
-    // 'single' yapıyoruz çünkü navigator stateless bir yardımcı sınıftır, her seferinde üretmeye gerek yok.
-    singleOf(::HomeNavigatorImpl) {
-        bind<HomeNavigator>()
-    }
-
-    singleOf(::OnboardingNavigatorImpl) {
-        bind<OnboardingNavigator>()
-    }
-
-    singleOf(::SplashNavigatorImpl) {
-        bind<SplashNavigator>()
-    }
+    singleOf(::HomeNavigatorImpl) { bind<HomeNavigator>() }
+    singleOf(::OnboardingNavigatorImpl) { bind<OnboardingNavigator>() }
+    singleOf(::SplashNavigatorImpl) { bind<SplashNavigator>() }
 }

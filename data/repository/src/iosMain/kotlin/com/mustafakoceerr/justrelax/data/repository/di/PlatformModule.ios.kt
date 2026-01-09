@@ -16,9 +16,6 @@ import platform.Foundation.NSFileManager
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
 
-/**
- * iOS platformu için 'platformRepositoryModule'un gerçek (actual) implementasyonu.
- */
 @OptIn(ExperimentalForeignApi::class)
 internal actual val platformRepositoryModule: Module = module {
     single<DataStore<Preferences>> {
@@ -36,8 +33,6 @@ internal actual val platformRepositoryModule: Module = module {
         )
     }
 
-    // YENİ: LocalStorageRepository arayüzü istendiğinde,
-    // iOS'e özel implementasyonu olan IosLocalStorageRepository'yi oluştur.
     singleOf(::IosLocalStorageRepository) {
         bind<LocalStorageRepository>()
     }

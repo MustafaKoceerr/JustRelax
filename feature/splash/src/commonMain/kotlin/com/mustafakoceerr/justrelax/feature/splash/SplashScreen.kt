@@ -14,24 +14,20 @@ import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
-// 1. ROUTE (Stateful): Navigasyon ve Logic Sorumlusu
 data object SplashScreen : AppScreen {
 
     @Composable
     override fun Content() {
-        // Dependency Injection
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = koinScreenModel<SplashViewModel>() // Voyager standardı
+        val viewModel = koinScreenModel<SplashViewModel>()
         val splashNavigator = koinInject<SplashNavigator>()
 
-        // Side Effects (Navigasyon Kararları)
         LaunchedEffect(Unit) {
             viewModel.effect.collectLatest { effect ->
                 when (effect) {
                     SplashEffect.NavigateToMain -> {
                         navigator.replaceAll(splashNavigator.toHome())
                     }
-
                     SplashEffect.NavigateToOnboarding -> {
                         navigator.replaceAll(splashNavigator.toOnBoarding())
                     }

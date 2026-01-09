@@ -5,6 +5,5 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val settingsModule = module {
-    // ViewModel her ekran açılışında yeniden oluşturulur (Factory)
     factoryOf(::SettingsViewModel)
 }

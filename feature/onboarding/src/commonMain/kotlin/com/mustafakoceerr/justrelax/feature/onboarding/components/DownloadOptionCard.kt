@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -34,11 +35,6 @@ import justrelax.feature.onboarding.generated.resources.Res
 import justrelax.feature.onboarding.generated.resources.download_option_details
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * SRP NOTU: Bu kart, ne indirildiğini bilmez.
- * Sadece bir başlık, ikon, ses sayısı ve boyut gibi verileri alıp
- * şık bir şekilde göstermekle sorumludur. Tıklanma olayını dışarıya bildirir.
- */
 @Composable
 fun DownloadOptionCard(
     icon: ImageVector,
@@ -49,8 +45,7 @@ fun DownloadOptionCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // --- 1. ANİMASYONLAR (Kenarlık dahil) ---
-    val animationSpec = tween<androidx.compose.ui.graphics.Color>(300)
+    val animationSpec = tween<Color>(300)
 
     val containerColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -68,11 +63,10 @@ fun DownloadOptionCard(
         label = "CardBorderColor"
     )
 
-    // --- 2. KART YAPISI ---
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(180.dp) // Yüksekliği sabit tutuyoruz
+            .height(180.dp)
             .semantics {
                 role = Role.RadioButton
                 selected = isSelected
@@ -85,9 +79,6 @@ fun DownloadOptionCard(
         border = BorderStroke(1.dp, borderColor),
         onClick = onClick
     ) {
-        // --- 3. İÇERİK (Güvenli Yerleşim) ---
-        // Column(fillMaxSize) yerine Box kullanmak, içeriğin ortalanmasını
-        // daha güvenilir bir şekilde garanti eder ve layout döngülerini önler.
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -115,8 +106,6 @@ fun DownloadOptionCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // 4. LOKALİZASYON
-                // Hardcoded string yerine formatlı kaynak kullanıyoruz.
                 Text(
                     text = stringResource(Res.string.download_option_details, soundCount, sizeInMb),
                     style = MaterialTheme.typography.bodyMedium,

@@ -3,7 +3,9 @@ package com.mustafakoceerr.justrelax.core.navigation
 import cafe.adriel.voyager.core.screen.Screen
 
 /**
- * Tüm Feature ekranlarının implemente edeceği ortak arayüz.
- * İleride Analytics veya ortak loglama eklemek istersek burası harika bir yer.
+ * Base interface for all screens within the application.
+ *
+ * Acts as a marker interface to enforce a common type hierarchy,
+ * allowing for future extensions (e.g., logging, analytics) without modifying individual screens.
  */
-interface AppScreen: Screen
+interface AppScreen : Screen

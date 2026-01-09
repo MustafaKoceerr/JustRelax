@@ -34,8 +34,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -47,14 +47,14 @@ import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
 import org.jetbrains.compose.resources.stringResource
 
-// --- SABİTLER ---
 private const val ANIM_COLOR_DURATION = 300
 private const val ANIM_CONTENT_ENTER_DURATION = 220
 private const val ANIM_CONTENT_EXIT_DURATION = 90
 private const val ANIM_CONTENT_DELAY = 90
+
 @Composable
 fun SoundCard(
-    sound: Sound, // Sound modelinin proje içinde tanımlı olduğunu varsayıyorum
+    sound: Sound,
     isPlaying: Boolean,
     isDownloading: Boolean,
     volume: Float,
@@ -62,11 +62,8 @@ fun SoundCard(
     onVolumeChange: (Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Debounce işlemi (yardımcı fonksiyonun var olduğunu varsayıyoruz)
-    // Eğer yoksa basit bir clickable kullanılabilir ama bu daha güvenli.
     val debouncedClick = rememberThrottledOnClick(throttleMs = 500, onClick = onCardClick)
 
-    // Renk Animasyonları
     val cardContainerColor by animateColorAsState(
         targetValue = if (isPlaying) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
         animationSpec = tween(ANIM_COLOR_DURATION),
@@ -88,29 +85,23 @@ fun SoundCard(
 
     Column(
         modifier = modifier
-            // Erişilebilirlik: Bu bir karttır ve durumu vardır.
             .semantics {
                 role = Role.Button
                 stateDescription = if (isPlaying) "Playing" else "Stopped"
             },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp) // PDF Kuralı: 8dp ritim
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // 1. KART GÖVDESİ (Resim + Overlay)
         CardSurface(
             onClick = debouncedClick,
             containerColor = cardContainerColor,
         ) {
             Box(contentAlignment = Alignment.Center) {
-                // Ses İkonu
                 SoundIcon(
                     iconUrl = sound.iconUrl,
-                    displayName = sound.displayName(),
                     isDownloaded = sound.isDownloaded,
                     colors = iconColors
                 )
-
-                // İndirme Durumu (Varsa üzerine biner)
                 DownloadOverlay(
                     isDownloaded = sound.isDownloaded,
                     isDownloading = isDownloading
@@ -118,7 +109,6 @@ fun SoundCard(
             }
         }
 
-        // 2. ALT KONTROLLER (Slider <-> İsim)
         BottomControls(
             isPlaying = isPlaying,
             soundName = sound.displayName(),
@@ -129,9 +119,6 @@ fun SoundCard(
     }
 }
 
-// --- ALT BİLEŞENLER (Private & Stateless) ---
-
-// Veri Sınıfı: Çoklu renk parametresi geçmek yerine wrapper kullandık.
 private data class IconColors(val circleColor: Color, val tintColor: Color)
 
 @Composable
@@ -143,7 +130,7 @@ private fun CardSurface(
     Surface(
         onClick = onClick,
         modifier = Modifier.aspectRatio(1f),
-        shape = MaterialTheme.shapes.medium, // PDF: 12dp-16dp arası shape
+        shape = MaterialTheme.shapes.medium,
         color = containerColor,
         content = content
     )
@@ -152,13 +139,12 @@ private fun CardSurface(
 @Composable
 private fun SoundIcon(
     iconUrl: String,
-    displayName: String,
     isDownloaded: Boolean,
     colors: IconColors
 ) {
     Surface(
         modifier = Modifier
-            .size(48.dp) // PDF: Dokunma/Görsel hedef en az 48dp
+            .size(48.dp)
             .alpha(if (isDownloaded) 1f else 0.3f),
         shape = CircleShape,
         color = colors.circleColor,
@@ -167,7 +153,7 @@ private fun SoundIcon(
         Box(contentAlignment = Alignment.Center) {
             AsyncImage(
                 model = iconUrl,
-                contentDescription = null, // Üst container zaten açıklıyor
+                contentDescription = null,
                 modifier = Modifier.size(24.dp),
                 contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(colors.tintColor)
@@ -233,8 +219,6 @@ private fun BottomControls(
         label = "BottomContent"
     ) { playing ->
         if (playing) {
-            // Slider'ın ayrı bir component olduğunu varsayıyorum.
-            // Eğer yoksa Material3 Slider kullanılmalı.
             VolumeSlider(
                 value = volume,
                 onValueChange = onVolumeChange,

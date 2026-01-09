@@ -8,11 +8,8 @@ import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
 
-/**
- * Android için 'LocalStorageRepository' implementasyonu.
- */
 internal class AndroidLocalStorageRepository(
-    private val context: Context,
+    context: Context,
     private val dispatchers: DispatcherProvider
 ) : LocalStorageRepository {
 
@@ -34,10 +31,6 @@ internal class AndroidLocalStorageRepository(
         return soundsDir.toString()
     }
 
-    /**
-     * YENİ: Bir dosyayı atomik olarak taşır.
-     * Bu işlem ya tamamen başarılı olur ya da hiç olmaz.
-     */
     override suspend fun moveFile(sourcePath: String, destinationPath: String) = withContext(dispatchers.io) {
         FileSystem.SYSTEM.atomicMove(sourcePath.toPath(), destinationPath.toPath())
     }

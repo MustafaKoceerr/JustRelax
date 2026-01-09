@@ -21,6 +21,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,12 +54,10 @@ import org.koin.compose.koinInject
 object MainScreen : AppScreen {
     @Composable
     override fun Content() {
-        // 1. State & Dependencies
         val playerViewModel = koinScreenModel<PlayerViewModel>()
         val playerState by playerViewModel.state.collectAsState()
         val snackbarController = koinInject<GlobalSnackbarController>()
 
-        // 2. Side Effects
         LaunchedEffect(Unit) {
             playerViewModel.effect.collect { effect ->
                 when (effect) {
@@ -68,7 +67,7 @@ object MainScreen : AppScreen {
                 }
             }
         }
-        // 3. Dialogs
+
         if (playerState.isSaveDialogVisible) {
             SaveMixDialog(
                 isOpen = true,
@@ -77,7 +76,6 @@ object MainScreen : AppScreen {
             )
         }
 
-        // 4. UI Layout
         MainScreenLayout(
             playerState = playerState,
             onPlayerEvent = playerViewModel::onEvent,
@@ -90,7 +88,7 @@ object MainScreen : AppScreen {
 private fun MainScreenLayout(
     playerState: PlayerContract.State,
     onPlayerEvent: (PlayerContract.Event) -> Unit,
-    snackbarHostState: androidx.compose.material3.SnackbarHostState
+    snackbarHostState: SnackbarHostState
 ) {
     val density = LocalDensity.current
     val isKeyboardOpen = WindowInsets.ime.getBottom(density) > 0
@@ -109,7 +107,6 @@ private fun MainScreenLayout(
                     }
                 }
             ) { innerPadding ->
-                // Klavye açılıp kapanırken padding'i yumuşat
                 val animatedBottomPadding by animateDpAsState(
                     targetValue = innerPadding.calculateBottomPadding(),
                     animationSpec = spring(
@@ -125,8 +122,6 @@ private fun MainScreenLayout(
                         bottom = animatedBottomPadding.coerceAtLeast(0.dp)
                     )
                 ) {
-                    // --- TAB ANİMASYONU BURADA ---
-                    // CurrentTab() yerine AnimatedContent kullanıyoruz.
                     AnimatedContent(
                         targetState = tabNavigator.current,
                         transitionSpec = {

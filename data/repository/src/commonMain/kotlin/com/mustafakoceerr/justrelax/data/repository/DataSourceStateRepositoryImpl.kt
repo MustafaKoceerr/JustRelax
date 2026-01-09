@@ -16,7 +16,6 @@ internal class DataSourceStateRepositoryImpl(
 
     override fun getLastSoundSyncTimestamp(): Flow<Long> {
         return dataStore.data.map { preferences ->
-            // Anahtarı merkezi 'DataConstants' dosyasından alıyoruz.
             preferences[DataConstants.KEY_LAST_SOUND_SYNC] ?: 0L
         }
     }
@@ -24,7 +23,6 @@ internal class DataSourceStateRepositoryImpl(
     override suspend fun setLastSoundSyncTimestamp(timestamp: Long) {
         withContext(dispatchers.io) {
             dataStore.edit { preferences ->
-                // Anahtarı merkezi 'DataConstants' dosyasından alıyoruz.
                 preferences[DataConstants.KEY_LAST_SOUND_SYNC] = timestamp
             }
         }

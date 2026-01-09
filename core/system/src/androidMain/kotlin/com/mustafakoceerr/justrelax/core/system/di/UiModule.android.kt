@@ -10,11 +10,9 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 actual val platformSystemModule = module {
-    // SystemLauncher -> AndroidSystemLauncher
     single { AndroidSystemLauncher(androidContext()) }
         .bind<SystemLauncher>()
 
-    // LanguageSwitcher -> AndroidLanguageSwitcher
     singleOf(::AndroidLanguageSwitcher)
         .bind<LanguageSwitcher>()
 }

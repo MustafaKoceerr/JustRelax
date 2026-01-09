@@ -24,7 +24,6 @@ import com.mustafakoceerr.justrelax.feature.timer.components.TimerPortraitLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerSetupScreen
 import com.mustafakoceerr.justrelax.feature.timer.mvi.TimerContract
 
-// 1. ROUTE (Stateful): Sadece veri ve olay yönetimi yapar.
 object TimerScreen : AppScreen {
     @Composable
     override fun Content() {
@@ -64,7 +63,7 @@ fun TimerScreenContent(
                 TimerPortraitLayout(
                     totalTimeSeconds = state.totalSeconds,
                     timeLeftSeconds = state.remainingSeconds,
-                    isPaused = state.isPaused, // isPaused boolean'ını paslıyoruz
+                    isPaused = state.isPaused,
                     onToggleClick = { onEvent(TimerContract.Event.ToggleTimer) },
                     onCancelClick = { onEvent(TimerContract.Event.CancelTimer) }
                 )
@@ -78,7 +77,7 @@ private fun AnimatedContentTransitionScope<Boolean>.timerTransitionSpec(): Conte
     val fadeOutDuration = 200
     val fadeInDuration = 600
 
-    return if (targetState) { // Geri Dönüş (Running -> Setup)
+    return if (targetState) {
         (fadeIn(animationSpec = tween(fadeInDuration, delayMillis = 100)) +
                 scaleIn(initialScale = 1.5f, animationSpec = tween(motionDuration)))
             .togetherWith(
@@ -87,7 +86,7 @@ private fun AnimatedContentTransitionScope<Boolean>.timerTransitionSpec(): Conte
             )
             .using(SizeTransform(clip = false))
             .apply { targetContentZIndex = 1f }
-    } else { // İleri Gitme (Setup -> Running)
+    } else {
         (fadeIn(animationSpec = tween(fadeInDuration, delayMillis = 100)) +
                 scaleIn(initialScale = 0.5f, animationSpec = tween(motionDuration)))
             .togetherWith(

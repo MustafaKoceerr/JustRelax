@@ -41,7 +41,6 @@ fun SavedMixSwipeBackground(
         Color.Transparent
     }
 
-    // Animasyon eklendi: Renk keskin değişmek yerine yumuşak geçecek
     val animatedColor by animateColorAsState(
         targetValue = targetColor,
         animationSpec = tween(durationMillis = 300),

@@ -6,8 +6,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-
 
 internal val LightColorScheme = lightColorScheme(
     primary = primaryLight,
@@ -85,12 +83,6 @@ internal val DarkColorScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
-
-// 1. EXPECT: Her platformun bu fonksiyonu sağlamasını bekliyoruz.
-// YENİ İMZA: Artık 'isHighContrast' parametresini alıyor.
-
-// 1. EXPECT FONKSİYONUN İMZASINI GÜNCELLİYORUZ
-// EXPECT: Her platform, dinamik renk desteğine göre doğru ColorScheme'i hesaplayacak.
 @Composable
 internal expect fun rememberPlatformColorScheme(
     darkTheme: Boolean,
@@ -100,11 +92,11 @@ internal expect fun rememberPlatformColorScheme(
 @Composable
 fun JustRelaxTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true, // Kullanıcıya bu seçeneği sunuyoruz
+    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = rememberPlatformColorScheme(darkTheme, dynamicColor)
-    val typography = getAppTypography() // Mevcut hali kalsın, Type.kt'yi optimize edeceğiz.
+    val typography = getAppTypography()
 
     MaterialTheme(
         colorScheme = colorScheme,

@@ -44,23 +44,14 @@ fun OnboardingScreenContent(
     onConfirmClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // LazyColumn: İçerik sığmazsa otomatik kaydırır.
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(24.dp), // Kenar boşlukları
-        horizontalAlignment = Alignment.CenterHorizontally, // Her şeyi ortala
-        verticalArrangement = Arrangement.spacedBy(16.dp) // Elemanlar arası varsayılan boşluk
+        contentPadding = PaddingValues(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // 1. Başlık Bölümü
-        item {
-            OnboardingHeader()
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(32.dp))
-        }
-
-        // 2. Seçim Kartları
+        item { OnboardingHeader() }
+        item { Spacer(modifier = Modifier.height(32.dp)) }
         item {
             OnboardingSelectionArea(
                 state = state,
@@ -68,18 +59,8 @@ fun OnboardingScreenContent(
                 onOptionSelected = onOptionSelected
             )
         }
-
-        // 3. Alt Boşluk (Görsel ayrım için)
-        item {
-            Spacer(modifier = Modifier.height(32.dp))
-        }
-
-        // 4. Bilgilendirme Metni
-        item {
-            DataUsageInfo()
-        }
-
-        // 5. Onay Butonu
+        item { Spacer(modifier = Modifier.height(32.dp)) }
+        item { DataUsageInfo() }
         item {
             OnboardingConfirmButton(
                 onClick = onConfirmClick,
@@ -88,7 +69,6 @@ fun OnboardingScreenContent(
         }
     }
 }
-// --- Private Alt Bileşenler ---
 
 @Composable
 private fun DataUsageInfo() {
@@ -97,7 +77,6 @@ private fun DataUsageInfo() {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Icon(
-            // Wi-Fi yerine genel bir "veri" ikonu daha uygun
             imageVector = Icons.Rounded.SignalCellularAlt,
             contentDescription = null,
             modifier = Modifier.size(20.dp),
@@ -111,8 +90,6 @@ private fun DataUsageInfo() {
         )
     }
 }
-
-// --- Private Alt Bileşenler ---
 
 @Composable
 private fun OnboardingHeader() {
@@ -140,7 +117,6 @@ private fun OnboardingSelectionArea(
     onOptionSelected: (DownloadOptionType) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        // Başlangıç Paketi
         state.initialOption?.let { option ->
             DownloadOptionCard(
                 icon = Icons.Rounded.DownloadForOffline,
@@ -151,7 +127,6 @@ private fun OnboardingSelectionArea(
                 onClick = { onOptionSelected(DownloadOptionType.STARTER) }
             )
         }
-        // Tüm Kütüphane
         state.allOption?.let { option ->
             DownloadOptionCard(
                 icon = Icons.Rounded.LibraryMusic,

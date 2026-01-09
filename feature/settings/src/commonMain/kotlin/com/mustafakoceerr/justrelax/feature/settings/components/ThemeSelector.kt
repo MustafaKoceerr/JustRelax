@@ -53,10 +53,8 @@ fun ThemeSelector(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Döngü aynı kalıyor, çünkü bu hala en temiz yöntem.
             AppTheme.entries.forEach { theme ->
                 ThemeOptionCard(
-                    // DEĞİŞİKLİK: Artık yardımcı fonksiyonları çağırıyoruz.
                     title = stringResource(theme.toStringResource()),
                     icon = theme.toIcon(),
                     isSelected = currentTheme == theme,
@@ -67,6 +65,7 @@ fun ThemeSelector(
         }
     }
 }
+
 @Composable
 private fun ThemeOptionCard(
     title: String,
@@ -75,7 +74,6 @@ private fun ThemeOptionCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // ANİMASYON: Tüm renk geçişleri artık yumuşak.
     val containerColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
         label = "ThemeCardContainer"
@@ -89,7 +87,6 @@ private fun ThemeOptionCard(
         label = "ThemeCardBorder"
     )
 
-    // İYİLEŞTİRME (Okunabilirlik): Karmaşık modifier zinciri yerine Surface kullanıldı.
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
@@ -101,7 +98,7 @@ private fun ThemeOptionCard(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize() // Surface tüm alanı kapladığı için fillMaxSize
+            modifier = Modifier.fillMaxSize()
         ) {
             Icon(
                 imageVector = icon,
@@ -116,9 +113,6 @@ private fun ThemeOptionCard(
         }
     }
 }
-
-// Bu fonksiyonlar, Domain modelini UI detaylarına eşler.
-// Sadece bu dosyada kullanılacakları için 'private' olmaları en doğrusu.
 
 @Composable
 private fun AppTheme.toStringResource(): StringResource {

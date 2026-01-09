@@ -1,9 +1,19 @@
 package com.mustafakoceerr.justrelax.feature.splash.components
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import justrelax.feature.splash.generated.resources.Res
@@ -19,14 +29,12 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
-// Sabit: Mesaj değişim hızı (Milisaniye)
 private const val MESSAGE_CHANGE_DELAY = 2000L
 
 @Composable
 fun LoadingMessage(
     modifier: Modifier = Modifier
 ) {
-    // Mesaj listesi
     val messages = remember {
         listOf(
             Res.string.loading_message_peace,
@@ -40,24 +48,18 @@ fun LoadingMessage(
         )
     }
 
-    // Başlangıç mesajını rastgele seçiyoruz
     var currentMessage by remember {
         mutableStateOf(messages.random())
     }
 
-    // Timer Döngüsü
-    LaunchedEffect(messages) { // messages key olarak verildi
-        // Güvenlik Önlemi: Eğer listede 1 veya daha az eleman varsa döngüye girme (Sonsuz döngüden kaçış)
+    LaunchedEffect(messages) {
         if (messages.size > 1) {
             while (true) {
                 delay(MESSAGE_CHANGE_DELAY)
-
-                // Aynı mesajın art arda gelmesini engelleme mantığı
                 var newMessage: StringResource
                 do {
                     newMessage = messages.random()
                 } while (newMessage == currentMessage)
-
                 currentMessage = newMessage
             }
         }
@@ -66,8 +68,6 @@ fun LoadingMessage(
     AnimatedContent(
         targetState = currentMessage,
         transitionSpec = {
-            // Aşağıdan yukarıya kayarak değişim (Slide Up Effect)
-            // Metin yukarı doğru çıkıp kaybolur, yenisi alttan gelir.
             (fadeIn() + slideInVertically { height -> height })
                 .togetherWith(fadeOut() + slideOutVertically { height -> -height })
         },
@@ -76,7 +76,7 @@ fun LoadingMessage(
         Text(
             text = stringResource(messageRes),
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface, // Kontrast için onSurface daha güvenli
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
             modifier = modifier
         )

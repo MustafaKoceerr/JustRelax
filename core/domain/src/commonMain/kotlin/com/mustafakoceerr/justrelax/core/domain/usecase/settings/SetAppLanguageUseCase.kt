@@ -6,7 +6,5 @@ import com.mustafakoceerr.justrelax.core.model.AppLanguage
 class SetAppLanguageUseCase(
     private val repository: UserPreferencesRepository
 ) {
-    suspend operator fun invoke(language: AppLanguage) {
-        repository.setLanguage(language)
-    }
+    suspend operator fun invoke(language: AppLanguage) = repository.setLanguage(language)
 }

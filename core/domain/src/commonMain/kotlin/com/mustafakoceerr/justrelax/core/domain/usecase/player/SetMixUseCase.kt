@@ -5,28 +5,17 @@ import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
 import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
 import com.mustafakoceerr.justrelax.core.model.Sound
 
-/**
- * Belirtilen bir ses karışımını (mix) çalar.
- * Önceki tüm sesleri durdurur ve listedeki sesleri çalmaya başlar.
- */
 class SetMixUseCase(
     private val audioMixer: AudioMixer
 ) {
-    /**
-     * @param mix Çalınacak sesleri ve onların ses seviyelerini içeren bir harita.
-     * @param useFadeIn Sesler çalmaya başlarken yumuşak bir giriş (fade-in) kullanılsın mı?
-     */
     suspend operator fun invoke(
         mix: Map<Sound, Float>,
-        useFadeIn: Boolean = true // Varsayılan olarak yumuşak geçiş yap
+        useFadeIn: Boolean = true
     ) {
-        // 1. GÜVENLİK & DÖNÜŞÜM:
-        // Verilen mix'i, AudioMixer'ın anlayacağı List<SoundConfig>'e çeviriyoruz.
-        // Bu sırada, dosyası indirilmemiş (localPath'i boş olan) sesleri atlıyoruz.
         val configs = mix.mapNotNull { (sound, volume) ->
             val path = sound.localPath
             if (path.isNullOrBlank()) {
-                null // Geçersiz sesi filtrele ve atla
+                null
             } else {
                 SoundConfig(
                     id = sound.id,
@@ -36,8 +25,6 @@ class SetMixUseCase(
                 )
             }
         }
-
-        // 2. AKSİYON: Hazırlanan ve temizlenen listeyi Mixer'a gönder.
         audioMixer.setMix(configs)
     }
 }

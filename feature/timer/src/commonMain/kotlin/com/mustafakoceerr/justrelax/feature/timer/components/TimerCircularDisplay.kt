@@ -40,8 +40,6 @@ fun TimerCircularDisplay(
     timeLeftSeconds: Long,
     modifier: Modifier = Modifier
 ) {
-    // --- ANİMASYONLAR ---
-    // 1. Progress Animasyonu: Saniye atlamaları "tak" diye değil, kayarak olsun.
     val progressTarget = if (totalTimeSeconds > 0) timeLeftSeconds.toFloat() / totalTimeSeconds.toFloat() else 0f
 
     val animatedProgress by animateFloatAsState(
@@ -50,7 +48,6 @@ fun TimerCircularDisplay(
         label = "ProgressAnim"
     )
 
-    // 2. Renk Animasyonu: Son 5 saniyede kırmızıya yumuşak geçiş.
     val targetColor = if (timeLeftSeconds <= 5 && timeLeftSeconds > 0)
         MaterialTheme.colorScheme.error
     else
@@ -66,10 +63,9 @@ fun TimerCircularDisplay(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxWidth(0.8f)
-            .aspectRatio(1f) // Tam kare (daire) olması için
-            .widthIn(max = 350.dp) // Tablette devasa olmasın
+            .aspectRatio(1f)
+            .widthIn(max = 350.dp)
     ) {
-        // A) Gri Halka (Arka Plan Pisti)
         CircularProgressIndicator(
             progress = { 1f },
             modifier = Modifier.fillMaxSize(),
@@ -78,7 +74,6 @@ fun TimerCircularDisplay(
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
         )
 
-        // B) Renkli Halka (İlerleme)
         CircularProgressIndicator(
             progress = { animatedProgress },
             modifier = Modifier.fillMaxSize(),
@@ -88,12 +83,10 @@ fun TimerCircularDisplay(
             strokeCap = StrokeCap.Round
         )
 
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Detaylı Toplam Süre
             Text(
                 text = formatDurationVerbose(totalTimeSeconds),
                 style = MaterialTheme.typography.titleMedium,
@@ -102,7 +95,6 @@ fun TimerCircularDisplay(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Ana Sayaç
             Text(
                 text = timeLeftSeconds.toFormattedTime(),
                 style = MaterialTheme.typography.displayLarge.copy(fontSize = 48.sp),
@@ -111,7 +103,6 @@ fun TimerCircularDisplay(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Bitiş Saati
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Rounded.Notifications,

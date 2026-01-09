@@ -14,10 +14,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlin.math.min
 
-/**
- * Tek bir ExoPlayer instance'ını yöneten sarmalayıcı sınıf.
- * Sorumluluğu (SRP): Sadece bir ses dosyasını çalmak, durdurmak ve sesini ayarlamak.
- */
 internal class ExoPlayerWrapper(
     private val context: Context
 ) {
@@ -25,83 +21,55 @@ internal class ExoPlayerWrapper(
     private var exoPlayer: ExoPlayer? = null
     private var targetVolume: Float = AudioDefaults.BASE_VOLUME
 
-
-    // O anki hedef ses seviyesi (AudioDefaults'tan alınıyor)
-
-    /**
-     * Sesi hazırlar ve çalmaya başlar (Fade-In ile).
-     */
     suspend fun play(config: SoundConfig) = withContext(Dispatchers.Main) {
-        // Önce temizlik
         releasePlayer()
-
         targetVolume = config.initialVolume
 
-        // Player'ı oluştur
         exoPlayer = ExoPlayer.Builder(context).build().apply {
-            repeatMode = Player.REPEAT_MODE_ONE // Daima döngüde
+            repeatMode = Player.REPEAT_MODE_ONE
             setMediaItem(MediaItem.fromUri(config.url))
-            volume = 0f // Fade-in için sessiz başla
+            volume = 0f
             prepare()
             play()
         }
 
-        // Fade-In Animasyonu
         fadeIn(config.fadeInDurationMs)
     }
 
-    /**
-     * Sesi anında durdurur ve kaynakları serbest bırakır.
-     */
     suspend fun stop() = withContext(Dispatchers.Main) {
         releasePlayer()
     }
 
-    /**
-     * Sadece duraklatır (Kaynakları silmez).
-     */
     suspend fun pause() = withContext(Dispatchers.Main) {
         exoPlayer?.pause()
     }
 
-    /**
-     * Kaldığı yerden devam eder.
-     */
     suspend fun resume() = withContext(Dispatchers.Main) {
         exoPlayer?.play()
     }
 
-    /**
-     * Ses seviyesini anlık günceller.
-     */
     fun setVolume(volume: Float) {
         targetVolume = volume
         try {
             exoPlayer?.volume = volume
         } catch (e: Exception) {
-            // Player ölmüş olabilir, kritik değil.
+            // Ignored
         }
     }
 
-    /**
-     * Player'ı tamamen yok eder.
-     */
     private fun releasePlayer() {
         exoPlayer?.stop()
         exoPlayer?.release()
         exoPlayer = null
     }
 
-    /**
-     * Basit Fade-In mantığı.
-     */
     private suspend fun fadeIn(durationMs: Long) {
         if (durationMs <= 0) {
             exoPlayer?.volume = targetVolume
             return
         }
 
-        val steps = 20 // Animasyon adım sayısı
+        val steps = 20
         val delayTime = durationMs / steps
         val volumeStep = targetVolume / steps
         var currentVol = 0f
@@ -123,34 +91,24 @@ internal class ExoPlayerWrapper(
 
     @OptIn(UnstableApi::class)
     suspend fun prepare(config: SoundConfig) {
-        // A. İNŞAAT (IO Thread): Ağır nesne oluşturma işi burada.
         val player = withContext(Dispatchers.IO) {
             ExoPlayer.Builder(context)
-                .setLooper(Looper.getMainLooper()) // KRİTİK NOKTA: Main Thread beyni takıyoruz.
+                .setLooper(Looper.getMainLooper())
                 .build()
         }
 
-        // B. KURULUM (Main Thread): Player ayarları ve dosya yükleme.
-        // Looper Main olduğu için bu metodları Main thread'de çağırmalıyız.
         withContext(Dispatchers.Main) {
-            // Önceki varsa temizle (Safety)
             releasePlayer()
-
             exoPlayer = player.apply {
                 repeatMode = Player.REPEAT_MODE_ONE
                 setMediaItem(MediaItem.fromUri(config.url))
-                volume = 0f // Fade-in için sessiz başla
-                prepare() // Asenkron hazırlığı başlat
+                volume = 0f
+                prepare()
             }
-
             targetVolume = config.initialVolume
         }
     }
 
-    /**
-     * 2. AŞAMA: OYNATMA (Hafif İşlem)
-     * Hazır olan player'ı oynatır ve fade-in yapar.
-     */
     suspend fun playFadeIn(fadeInDurationMs: Long) = withContext(Dispatchers.Main) {
         exoPlayer?.play()
         fadeIn(fadeInDurationMs)

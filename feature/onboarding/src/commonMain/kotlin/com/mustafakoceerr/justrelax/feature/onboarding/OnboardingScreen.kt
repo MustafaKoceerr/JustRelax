@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.onboarding
 
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -32,7 +31,6 @@ import com.mustafakoceerr.justrelax.feature.onboarding.navigation.OnboardingNavi
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.koinInject
 
-// 1. ROUTE (Stateful): Veri ve Navigasyon Mantığı
 data object OnboardingScreen : AppScreen {
 
     @Composable
@@ -43,14 +41,12 @@ data object OnboardingScreen : AppScreen {
         val onboardingNavigator = koinInject<OnboardingNavigator>()
         val snackbarHostState = remember { SnackbarHostState() }
 
-        // Yan Etkiler (Navigasyon, Snackbar)
         LaunchedEffect(Unit) {
             viewModel.effect.collectLatest { effect ->
                 when (effect) {
                     is OnboardingEffect.NavigateToMainScreen -> {
                         navigator.replaceAll(onboardingNavigator.toMain())
                     }
-
                     is OnboardingEffect.ShowError -> {
                         snackbarHostState.showSnackbar(effect.message)
                     }
@@ -58,7 +54,6 @@ data object OnboardingScreen : AppScreen {
             }
         }
 
-        // Saf UI bileşenini çağırıyoruz.
         OnboardingUi(
             state = state,
             snackbarHostState = snackbarHostState,
@@ -67,7 +62,6 @@ data object OnboardingScreen : AppScreen {
     }
 }
 
-// 2. UI (Stateless): Sadece Çizim Yapar, Test Edilebilir
 @Composable
 internal fun OnboardingUi(
     state: OnboardingState,
@@ -123,7 +117,6 @@ internal fun OnboardingUi(
                 }
 
                 OnboardingScreenStatus.ERROR -> {
-                    // Hata durumunda kullanıcıya tekrar deneme şansı vermek en iyi UX'tir.
                     NoInternetView(
                         onRetryClick = { onIntent(OnboardingIntent.RetryLoadingConfig) },
                         modifier = contentModifier

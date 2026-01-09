@@ -1,8 +1,11 @@
 package com.mustafakoceerr.justrelax.feature.saved.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,14 +18,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.scaleIn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -69,18 +68,13 @@ fun SavedMixCard(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(16.dp)
 ) {
-    // Shimmer efekti için tetikleyici
     var clickTrigger by remember { mutableIntStateOf(0) }
 
-    // Tema renkleri
     val baseColor = MaterialTheme.colorScheme.surfaceContainer
     val shimmerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f)
     val borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
 
-    // 1. Adım: String kaynağından format desenini al.
     val dateFormatPattern = stringResource(Res.string.date_format_short)
-// 2. Adım: Yeni formatlama fonksiyonunu çağır.
-    // remember kullanarak gereksiz hesaplamaları önlüyoruz.
     val formattedDate = remember(date, dateFormatPattern) {
         formatIsoDate(date, dateFormatPattern)
     }
@@ -101,7 +95,7 @@ fun SavedMixCard(
             ),
         shape = shape,
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent, // Rengi drawBehind yönetiyor
+            containerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.cardElevation(0.dp),
@@ -114,7 +108,6 @@ fun SavedMixCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Sol Taraf
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
@@ -132,13 +125,11 @@ fun SavedMixCard(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Animasyonlu İkon Listesi
                 MixIconsRow(icons)
             }
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Sağ Taraf: Play Butonu
             PlayButton(
                 onClick = {
                     onPlayClick()
@@ -156,12 +147,10 @@ private fun MixIconsRow(icons: List<String>) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         icons.forEachIndexed { index, iconUrl ->
-            // Her ikon için görünürlük durumu
             var isVisible by remember { mutableStateOf(false) }
 
-            // Kademeli gecikme (Cascade effect)
             LaunchedEffect(Unit) {
-                delay(index * 100L) // Her öğe 100ms gecikmeli gelir
+                delay(index * 100L)
                 isVisible = true
             }
 
@@ -176,7 +165,7 @@ private fun MixIconsRow(icons: List<String>) {
                     shape = CircleShape,
                     border = BorderStroke(
                         width = 2.dp,
-                        color = MaterialTheme.colorScheme.surfaceContainer // Kart zeminine uyumlu
+                        color = MaterialTheme.colorScheme.surfaceContainer
                     ),
                     modifier = Modifier.size(36.dp),
                     color = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -207,7 +196,7 @@ private fun PlayButton(
         onClick = onClick,
         shape = CircleShape,
         color = MaterialTheme.colorScheme.secondaryContainer,
-        modifier = modifier.size(48.dp) // MD3 Touch Target (48dp)
+        modifier = modifier.size(48.dp)
     ) {
         Box(contentAlignment = Alignment.Center) {
             Icon(

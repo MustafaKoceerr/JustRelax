@@ -21,13 +21,11 @@ import justrelax.feature.timer.generated.resources.timer_unit_minute
 import justrelax.feature.timer.generated.resources.timer_unit_second
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
 fun JustRelaxTimerPicker(
     modifier: Modifier = Modifier,
     state: JustRelaxTimerState = rememberJustRelaxTimerState()
 ) {
-    // DÜZELTME: Saat 0-23 arasıdır. (0..24) yaparsan 25 saat olur.
     val hours = remember { (0..23).map { it.toString().padStart(2, '0') } }
     val minutes = remember { (0..59).map { it.toString().padStart(2, '0') } }
     val seconds = remember { (0..59).map { it.toString().padStart(2, '0') } }
@@ -54,7 +52,6 @@ fun JustRelaxTimerPicker(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // --- SAAT ---
         TimerUnitColumn(
             label = stringResource(Res.string.timer_unit_hour),
             labelStyle = labelStyle
@@ -68,10 +65,8 @@ fun JustRelaxTimerPicker(
             )
         }
 
-        // Ayraç
         TimerSeparator(separatorStyle)
 
-        // --- DAKİKA ---
         TimerUnitColumn(
             label = stringResource(Res.string.timer_unit_minute),
             labelStyle = labelStyle
@@ -85,10 +80,8 @@ fun JustRelaxTimerPicker(
             )
         }
 
-        // Ayraç
         TimerSeparator(separatorStyle)
 
-        // --- SANİYE ---
         TimerUnitColumn(
             label = stringResource(Res.string.timer_unit_second),
             labelStyle = labelStyle
@@ -103,9 +96,6 @@ fun JustRelaxTimerPicker(
         }
     }
 }
-
-// --- Private Helpers ---
-// Bunlar sadece bu dosya içinde kullanıldığı için private kalabilir.
 
 @Composable
 private fun TimerUnitColumn(
@@ -132,8 +122,7 @@ private fun TimerSeparator(style: TextStyle) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Label hizasına denk gelmesi için boş Text veya Spacer
-        Text(" ", style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp)) // Label placeholder
+        Text(" ", style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp))
         Text(
             text = ":",
             style = style,

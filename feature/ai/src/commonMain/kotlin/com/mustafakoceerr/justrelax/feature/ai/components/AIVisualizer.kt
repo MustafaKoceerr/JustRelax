@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.ai.components
 
-
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -29,12 +28,8 @@ fun AiVisualizer(
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "RippleLoop")
 
-// Hız Ayarı (Ultra Slow / Zen Modu):
-    // Düşünürken: 4000ms (4 sn)
-    // Beklerken: 12000ms (12 sn) - Neredeyse duruyormuş gibi
     val duration = if (isThinking) 4000 else 12000
 
-    // 0'dan 1'e sürekli akan bir zaman sayacı
     val progress by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
@@ -49,27 +44,14 @@ fun AiVisualizer(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        // --- RIPPLE EFEKTİ (Canvas) ---
-        // Canvas kullanımı GPU dostudur ve çoklu nesne çiziminde performanslıdır.
         Canvas(modifier = Modifier.fillMaxSize()) {
             val maxRadius = size.minDimension / 2
-
-            // 3 adet dalga oluşturuyoruz
             val waveCount = 3
 
             for (i in 0 until waveCount) {
-                // Her dalga arasında zaman farkı (offset) oluşturuyoruz
-                // Örn: 0.0, 0.33, 0.66
                 val offset = i / waveCount.toFloat()
-
-                // Mevcut dalganın o anki ilerlemesi (0..1 arası)
                 val waveProgress = (progress + offset) % 1f
-
-                // Yarıçap: Merkezden dışarı büyüyor
                 val currentRadius = maxRadius * waveProgress
-
-                // Opaklık: Merkezde belirgin, dışarı çıktıkça sönüyor (Fade Out)
-                // isThinking ise biraz daha opak (0.4), değilse çok silik (0.2)
                 val baseAlpha = if (isThinking) 0.4f else 0.2f
                 val currentAlpha = (1f - waveProgress) * baseAlpha
 
@@ -81,11 +63,9 @@ fun AiVisualizer(
             }
         }
 
-        // --- MERKEZ İKON (Sabit Çekirdek) ---
-        // Dalgaların üstünde net durması için
         Box(
             modifier = Modifier
-                .fillMaxSize(0.4f) // Toplam alanın %40'ı kadar
+                .fillMaxSize(0.4f)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
             contentAlignment = Alignment.Center

@@ -14,13 +14,11 @@ import org.jetbrains.compose.resources.Font
 
 @Composable
 fun getNunitoFontFamily(): FontFamily {
-    // Fontları yükle
     val regular = Font(resource = Res.font.nunito_regular, weight = FontWeight.Normal)
     val medium = Font(resource = Res.font.nunito_medium, weight = FontWeight.Medium)
     val semiBold = Font(resource = Res.font.nunito_semibold, weight = FontWeight.SemiBold)
     val bold = Font(resource = Res.font.nunito_bold, weight = FontWeight.Bold)
 
-    // FontFamily nesnesini hatırla
     return remember(regular, medium, semiBold, bold) {
         FontFamily(regular, medium, semiBold, bold)
     }
@@ -28,10 +26,8 @@ fun getNunitoFontFamily(): FontFamily {
 
 @Composable
 fun getAppTypography(): Typography {
-    // Font ailesini al
     val nunito = getNunitoFontFamily()
 
-    // Typography nesnesini hatırla. Eğer font ailesi değişmezse bu blok tekrar çalışmaz.
     return remember(nunito) {
         Typography(
             displayLarge = Typography().displayLarge.copy(fontFamily = nunito),

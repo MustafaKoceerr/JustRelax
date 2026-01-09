@@ -12,12 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/**
- * TimerManager implementasyonu.
- * Bu sınıf Singleton olarak (Koin ile) oluşturulmalı ve Application Scope verilmelidir.
- */
 class TimerManagerImpl(
-    private val externalScope: CoroutineScope, // Uygulama/Servis ölçeğinde scope
+    private val externalScope: CoroutineScope,
     private val stopAllSoundsUseCase: StopAllSoundsUseCase
 ) : TimerManager {
     private val _state = MutableStateFlow(TimerState())
@@ -26,10 +22,8 @@ class TimerManagerImpl(
     private var timerJob: Job? = null
 
     override fun startTimer(seconds: Long) {
-        // Güvenlik: Önceki sayacı temizle
         timerJob?.cancel()
 
-        // State'i güncelle
         _state.update {
             it.copy(
                 status = TimerStatus.RUNNING,
@@ -38,7 +32,6 @@ class TimerManagerImpl(
             )
         }
 
-        // Geri sayımı başlat
         startTicker()
     }
 
@@ -48,7 +41,6 @@ class TimerManagerImpl(
     }
 
     override fun resumeTimer() {
-        // Sadece kalan süre varsa devam et
         if (_state.value.remainingSeconds > 0) {
             _state.update { it.copy(status = TimerStatus.RUNNING) }
             startTicker()
@@ -62,32 +54,23 @@ class TimerManagerImpl(
         _state.update { TimerState(status = TimerStatus.IDLE) }
     }
 
-    /**
-     * Saniye saniye sayan döngü.
-     */
     private fun startTicker() {
         timerJob = externalScope.launch {
             while (_state.value.remainingSeconds > 0) {
-                delay(1000L) // 1 saniye bekle
-
+                delay(1000L)
                 _state.update { current ->
                     val newRemaining = current.remainingSeconds - 1
                     current.copy(remainingSeconds = newRemaining)
                 }
             }
-
-            // Döngü bitti (Süre 0 oldu) -> Timer Tamamlandı
             onTimerFinished()
         }
     }
 
     private fun onTimerFinished() {
-        // 1. Sesleri durdur (Servis de duracaktır)
         externalScope.launch {
             stopAllSoundsUseCase()
         }
-
-        // 2. Timer state'ini sıfırla
         _state.update { TimerState(status = TimerStatus.IDLE) }
     }
 }

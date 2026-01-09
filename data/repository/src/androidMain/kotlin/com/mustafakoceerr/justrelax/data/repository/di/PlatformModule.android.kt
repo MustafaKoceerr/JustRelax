@@ -12,20 +12,13 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-/**
- * Android platformu için 'platformRepositoryModule'un gerçek (actual) implementasyonu.
- */
 internal actual val platformRepositoryModule: Module = module {
-    // Bu modül, Koin'e 'DataStore<Preferences>'in nasıl oluşturulacağını öğretir.
-    // Bunu yaparken, Koin grafiğinden Android 'Context'ini talep eder ('get()').
     single<DataStore<Preferences>> {
         createDataStore(
             producePath = { get<Context>().filesDir.resolve(DataConstants.SETTINGS_DATASTORE_NAME).absolutePath }
         )
     }
 
-    // YENİ: LocalStorageRepository arayüzü istendiğinde,
-    // Android'e özel implementasyonu olan AndroidLocalStorageRepository'yi oluştur.
     singleOf(::AndroidLocalStorageRepository) {
         bind<LocalStorageRepository>()
     }

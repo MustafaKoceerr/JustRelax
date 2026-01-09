@@ -26,7 +26,6 @@ class AiViewModel(
     soundControllerFactory: SoundController.Factory
 ) : ScreenModel {
 
-    // SoundController'ı bu ViewModel'in yaşam döngüsüne (scope) bağlıyoruz.
     val soundController: SoundController = soundControllerFactory.create(screenModelScope)
 
     private val _state = MutableStateFlow(AiContract.State())
@@ -47,10 +46,9 @@ class AiViewModel(
 
             is AiContract.Event.GenerateMix -> generateMix()
 
-            is AiContract.Event.RegenerateMix -> generateMix() // Aynı prompt ile tekrar dene
+            is AiContract.Event.RegenerateMix -> generateMix()
 
             is AiContract.Event.EditPrompt -> {
-                // Back tuşu: Sonuçları temizle ama PROMPT KALSIN.
                 _state.update {
                     it.copy(
                         generatedMixName = "",
@@ -61,11 +59,9 @@ class AiViewModel(
             }
 
             is AiContract.Event.ClearMix -> {
-                // Yeni Mix / Temizle: Her şeyi sıfırla (Prompt dahil).
                 _state.update { AiContract.State() }
             }
 
-            // --- SoundController Delegasyonu ---
             is AiContract.Event.ToggleSound -> {
                 screenModelScope.launch {
                     soundController.toggleSound(event.soundId)
@@ -92,17 +88,13 @@ class AiViewModel(
                     is Resource.Success -> {
                         val mix = result.data
 
-                        // 1. Controller'a ses seviyelerini öğret (Cache)
                         val volumeMap = mix.sounds.map { (sound, volume) ->
                             sound.id to volume
                         }.toMap()
                         soundController.setVolumes(volumeMap)
 
-                        // 2. Ses Motoruna "Çal" emrini ver
-                        // (Arka planda paralel hazırlık yapılır)
                         setMixUseCase(mix.sounds)
 
-                        // 3. UI State güncelle
                         _state.update {
                             it.copy(
                                 isLoading = false,

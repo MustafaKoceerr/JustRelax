@@ -1,12 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.timer.mvi
 
-import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
-/**
- * Timer ekranı için MVI sözleşmesi.
- * UI'ın ihtiyacı olan tüm formatlanmış verileri içerir.
- */
 interface TimerContract {
     data class State(
         val isSetupMode: Boolean = true,
@@ -20,6 +15,7 @@ interface TimerContract {
         data object ToggleTimer : Event
         data object CancelTimer : Event
     }
+
     sealed interface Effect {
         data class ShowSnackbar(val message: UiText) : Effect
         data object TimerFinished : Effect

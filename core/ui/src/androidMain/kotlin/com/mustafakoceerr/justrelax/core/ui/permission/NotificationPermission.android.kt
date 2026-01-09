@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.core.ui.permission
 
-
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
@@ -18,7 +17,7 @@ actual fun RequestNotificationPermission() {
     val context = LocalContext.current
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { _ -> }
+    ) { }
 
     LaunchedEffect(Unit) {
         val isGranted = ContextCompat.checkSelfPermission(
