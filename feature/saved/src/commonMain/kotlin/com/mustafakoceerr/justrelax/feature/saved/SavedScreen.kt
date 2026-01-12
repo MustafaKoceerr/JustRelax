@@ -3,10 +3,12 @@ package com.mustafakoceerr.justrelax.feature.saved
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
@@ -15,10 +17,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.navigation.TabProvider
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesEmptyScreen
@@ -46,6 +51,7 @@ data object SavedScreen : AppScreen {
                     is SavedContract.Effect.NavigateToMixer -> {
                         tabNavigator.current = tabProvider.mixerTab
                     }
+
                     is SavedContract.Effect.ShowDeleteSnackbar -> {
                         val messageStr = effect.message.resolve()
                         val actionStr = effect.actionLabel?.resolve()
@@ -64,15 +70,20 @@ data object SavedScreen : AppScreen {
             }
         }
 
-        Column(modifier = Modifier.fillMaxSize()) {
-            JustRelaxTopBar(
-                title = stringResource(Res.string.saved_screen_title)
-            )
+        Scaffold(
+            containerColor = Color.Transparent,
+            contentWindowInsets = WindowInsets(0.dp),
+            topBar = {
+                JustRelaxTopBar(
+                    title = stringResource(Res.string.saved_screen_title)
+                )
+            }
+        ) { innerPadding ->
 
             SavedScreenContent(
                 state = state,
                 onEvent = viewModel::onEvent,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.padding(innerPadding)
             )
         }
     }
@@ -98,6 +109,7 @@ private fun SavedScreenContent(
                     CircularProgressIndicator()
                 }
             }
+
             currentState.mixes.isEmpty() -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -108,6 +120,7 @@ private fun SavedScreenContent(
                     )
                 }
             }
+
             else -> {
                 SavedMixesList(
                     mixes = currentState.mixes,

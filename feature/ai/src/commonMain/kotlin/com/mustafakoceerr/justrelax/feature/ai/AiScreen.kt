@@ -100,8 +100,8 @@ private fun AiScreenContent(
     )
 
     Scaffold(
-        containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0.dp),
+        containerColor = Color.Transparent,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             JustRelaxTopBar(
@@ -134,7 +134,6 @@ private fun AiScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .windowInsetsPadding(WindowInsets.systemBars)
                 .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
