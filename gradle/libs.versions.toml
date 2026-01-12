@@ -41,7 +41,6 @@ buildConfig = "6.0.6"
 datastore = "1.2.0"
 openai-kotlin = "4.0.1"
 
-# Mevcut sürümünü kontrol et, şu an stabil/yaygın olan RC sürümleridir
 compottie = "2.0.2"
 
 [libraries]

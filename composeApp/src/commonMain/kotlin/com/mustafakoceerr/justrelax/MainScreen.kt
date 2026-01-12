@@ -12,9 +12,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -27,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -96,31 +100,20 @@ private fun MainScreenLayout(
     TabNavigator(HomeTab) { tabNavigator ->
         JustRelaxBackground {
             Scaffold(
+                contentWindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom),
                 containerColor = Color.Transparent,
                 snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) },
                 bottomBar = {
                     if (!isKeyboardOpen) {
-                        MainBottomBarContent(
-                            playerState = playerState,
-                            onPlayerEvent = onPlayerEvent
-                        )
+                        MainBottomBarContent()
                     }
                 }
             ) { innerPadding ->
-                val animatedBottomPadding by animateDpAsState(
-                    targetValue = innerPadding.calculateBottomPadding(),
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessLow
-                    ),
-                    label = "BottomPaddingAnimation"
-                )
 
                 Box(
-                    modifier = Modifier.padding(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = animatedBottomPadding.coerceAtLeast(0.dp)
-                    )
+                    modifier = Modifier
+                        .padding(innerPadding)
+
                 ) {
                     AnimatedContent(
                         targetState = tabNavigator.current,
@@ -132,6 +125,18 @@ private fun MainScreenLayout(
                     ) { tab ->
                         tab.Content()
                     }
+
+                    PlayerBottomBar(
+                        isVisible = playerState.isVisible,
+                        activeIcons = playerState.activeSounds.map { it.iconUrl },
+                        isPlaying = playerState.isPlaying,
+                        onPlayPauseClick = { onPlayerEvent(PlayerContract.Event.ToggleMasterPlayPause) },
+                        onStopAllClick = { onPlayerEvent(PlayerContract.Event.StopAll) },
+                        onSaveClick = { onPlayerEvent(PlayerContract.Event.OpenSaveDialog) },
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 8.dp)
+                    )
                 }
             }
         }
@@ -140,18 +145,8 @@ private fun MainScreenLayout(
 
 @Composable
 private fun MainBottomBarContent(
-    playerState: PlayerContract.State,
-    onPlayerEvent: (PlayerContract.Event) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        PlayerBottomBar(
-            isVisible = playerState.isVisible,
-            activeIcons = playerState.activeSounds.map { it.iconUrl },
-            isPlaying = playerState.isPlaying,
-            onPlayPauseClick = { onPlayerEvent(PlayerContract.Event.ToggleMasterPlayPause) },
-            onStopAllClick = { onPlayerEvent(PlayerContract.Event.StopAll) },
-            onSaveClick = { onPlayerEvent(PlayerContract.Event.OpenSaveDialog) }
-        )
 
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.surface,

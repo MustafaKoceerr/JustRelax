@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
@@ -68,12 +71,16 @@ object MixerScreen : AppScreen {
             containerColor = Color.Transparent,
             contentWindowInsets = WindowInsets(0.dp),
             topBar = {
-                JustRelaxTopBar(title = stringResource(Res.string.mixer_screen_title))
+                JustRelaxTopBar(title = stringResource(Res.string.mixer_screen_title),)
             },
             snackbarHost = {
                 JustRelaxSnackbarHost(hostState = snackbarController.hostState)
             }
         ) { innerPadding ->
+            println("Inner padding top: ${innerPadding.calculateTopPadding()}")
+            println("Inner padding bottom: ${innerPadding.calculateBottomPadding()}")
+            println("Inner padding start: ${innerPadding.calculateStartPadding(LayoutDirection.Ltr)}")
+            println("Inner padding end: ${innerPadding.calculateEndPadding(LayoutDirection.Ltr)}")
             MixerScreenContent(
                 mixerState = mixerState,
                 soundControllerState = soundControllerState,
