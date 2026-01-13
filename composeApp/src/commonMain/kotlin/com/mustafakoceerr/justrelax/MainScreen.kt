@@ -99,7 +99,7 @@ private fun MainScreenLayout(
     TabNavigator(HomeTab) { tabNavigator ->
         JustRelaxBackground {
             Scaffold(
-                contentWindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom),
+                contentWindowInsets = WindowInsets(0.dp),
                 containerColor = Color.Transparent,
                 snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) },
                 bottomBar = {

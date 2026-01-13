@@ -29,7 +29,6 @@
             </intent-filter>
         </activity>
 
-        <!-- DÜZELTME BURADA: Intent Filter Eklendi -->
         <service
             android:name=".service.SoundscapeService"
             android:enabled="true"

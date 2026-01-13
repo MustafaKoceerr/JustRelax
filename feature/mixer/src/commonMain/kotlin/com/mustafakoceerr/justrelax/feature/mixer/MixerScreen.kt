@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -15,9 +14,7 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
@@ -39,7 +35,6 @@ import com.mustafakoceerr.justrelax.feature.mixer.components.EmptyMixerState
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixCountSelector
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerContract
 import justrelax.feature.mixer.generated.resources.Res
-import justrelax.feature.mixer.generated.resources.mixer_empty_state_message
 import justrelax.feature.mixer.generated.resources.mixer_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
