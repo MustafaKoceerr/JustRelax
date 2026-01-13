@@ -8,9 +8,11 @@
 
 > A modern **Kotlin Multiplatform** relaxation app where users can mix ambient sounds, create custom soundscapes, and relax with a minimal, soft-UI driven experience.
 
+**▶️ Google Play:** https://play.google.com/store/apps/details?id=com.mustafakoceerr.justrelax
+
 ---
 
-## ✨ Key Highlights
+## ✨ Highlights
 
 - 🎧 Custom ambient sound mixer  
 - 🧠 AI-assisted sound mix suggestions  
@@ -21,9 +23,9 @@
 
 ---
 
-## 🖼️ App Gallery (Screenshots)
+## 🖼️ App Gallery
 
-### 📱 Light Theme (8 Screens)
+### 📱 Light Theme (8)
 
 <table>
   <tr>
@@ -59,7 +61,7 @@
 
 ---
 
-### 🌙 Dark Theme (8 Screens)
+### 🌙 Dark Theme (8)
 
 <table>
   <tr>
@@ -134,58 +136,23 @@
 
 ---
 
-## 🧩 Modular Architecture (Project Structure)
+## 🧩 Architecture (Short)
 
-This project uses a **feature-based modular** architecture to keep the codebase scalable, testable, and easy to maintain.
+- Feature-based modular structure (`feature/*`)
+- Shared core building blocks (`core/*`)
+- MVI-inspired state management
+- Clear separation of UI / Domain / Data
 
 ```text
 .
-├── build-logic/          # Custom Gradle convention plugins & build tooling
-├── composeApp/           # App entrypoint (Android), app-level DI & UI host
-├── iosApp/               # iOS entrypoint (iOS host)
-├── core/                 # Shared core layer (reusable building blocks)
-│   ├── audio/            # Audio abstractions & playback-related core utilities
-│   ├── common/           # Shared utilities, helpers, extensions
-│   ├── data/             # Data sources, repository implementations, DTOs
-│   ├── domain/           # Use-cases, business rules, repository contracts
-│   ├── model/            # Shared models
-│   ├── navigation/       # Navigation contracts / routes (KMP-friendly)
-│   └── ui/               # Shared UI components, theming, design system
-└── feature/              # Feature modules (UI + state + feature-specific logic)
-    ├── ai/               # AI mix suggestions
-    ├── home/             # Home screen
-    ├── mixer/            # Mixer screen
-    ├── player/           # Global player UI & logic
-    ├── saved/            # Saved mixes
-    ├── settings/         # Settings
-    └── timer/            # Sleep / focus timer
+├── build-logic/
+├── composeApp/
+├── iosApp/
+├── core/
+└── feature/
 ```
 
-### 🧱 Core vs Feature (Quick Map)
-
-**Core modules** — shared, reusable building blocks:
-
-| Core Module | Responsibility |
-|---|---|
-| `core:audio` | Audio abstractions and core playback utilities |
-| `core:common` | Shared helpers, extensions, utilities |
-| `core:data` | Data sources + repository implementations |
-| `core:domain` | Use-cases, contracts, business rules |
-| `core:model` | Shared models (domain models) |
-| `core:navigation` | Navigation contracts/routes (KMP-friendly) |
-| `core:ui` | Shared UI components + theming/design system |
-
-**Feature modules** — screen-oriented, feature-specific logic (UI + state + integration):
-
-| Feature Module | Responsibility |
-|---|---|
-| `feature:home` | Home experience |
-| `feature:mixer` | Sound mixing workflow |
-| `feature:player` | Global player UI + playback coordination |
-| `feature:saved` | Saved mixes management |
-| `feature:ai` | AI-assisted mix suggestions |
-| `feature:timer` | Sleep/focus timer |
-| `feature:settings` | Preferences & app settings |
+---
 
 ### 🛠 build-logic (Convention Plugins)
 
@@ -200,24 +167,9 @@ What it standardizes (high-level):
 
 ---
 
-## 🧱 Architecture Overview
+## 🚧 Roadmap
 
-- MVI-inspired state management  
-- Clear separation of **UI / Domain / Data**  
-- Feature-based modular structure  
-- Shared business logic across platforms  
-
-Designed with **scalability**, **testability**, and **long-term maintainability** in mind.
-
----
-
-## 🚧 Known Limitations & Future Improvements
-
-- Advanced AI-driven personalization  
-
----
-
-⭐ *This repository is crafted to demonstrate modern Android & Kotlin Multiplatform development practices with a strong emphasis on architecture, UI consistency, and thoughtful technology choices.*
+- More advanced AI-driven personalization
 
 ---
 
