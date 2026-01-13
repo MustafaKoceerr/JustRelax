@@ -28,4 +28,7 @@
     <string name="err_unknown">Se produjo un error inesperado. Inténtalo de nuevo más tarde.</string>
 
     <string name="action_back">Atrás</string>
+
+    <string name="action_clear">Borrar</string>
+    <string name="ai_action_try_another_variation">Probar otra variación</string>
 </resources>

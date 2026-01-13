@@ -28,4 +28,6 @@
     <string name="err_unknown">Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.</string>
     <string name="action_back">Geri</string>
 
+    <string name="action_clear">Temizle</string>
+    <string name="ai_action_try_another_variation">Başka bir varyasyon dene</string>
 </resources>
