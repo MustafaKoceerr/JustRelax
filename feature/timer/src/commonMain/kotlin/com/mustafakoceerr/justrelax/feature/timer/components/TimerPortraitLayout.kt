@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.timer.components
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,22 +24,31 @@ fun TimerPortraitLayout(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
+        Box(modifier = Modifier.weight(0.2f))
 
-        TimerCircularDisplay(
-            totalTimeSeconds = totalTimeSeconds,
-            timeLeftSeconds = timeLeftSeconds
-        )
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.Center
+        ){
+            TimerCircularDisplay(
+                totalTimeSeconds = totalTimeSeconds,
+                timeLeftSeconds = timeLeftSeconds
+            )
+        }
 
-        Spacer(modifier = Modifier.weight(1f))
-
-        TimerControlButtons(
-            isPaused = isPaused,
-            onToggleClick = onToggleClick,
-            onCancelClick = onCancelClick,
-            modifier = Modifier.padding(bottom = 32.dp)
-        )
+        Box(
+            modifier = Modifier.weight(0.3f),
+            contentAlignment = Alignment.Center
+        ){
+            TimerControlButtons(
+                isPaused = isPaused,
+                onToggleClick = onToggleClick,
+                onCancelClick = onCancelClick,
+                modifier = Modifier.padding(bottom = 32.dp)
+            )
+        }
     }
 }

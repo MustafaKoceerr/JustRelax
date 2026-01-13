@@ -9,7 +9,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
-//    private val activityViewModel: MainActivityViewModel by viewModel()
+    private val activityViewModel: MainActivityViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,13 +20,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        activityViewModel.checkSystemLanguage()
-//    }
-//
-//    override fun onConfigurationChanged(newConfig: Configuration) {
-//        super.onConfigurationChanged(newConfig)
-//        activityViewModel.checkSystemLanguage()
-//    }
+    override fun onResume() {
+        super.onResume()
+        activityViewModel.checkSystemLanguage()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        activityViewModel.checkSystemLanguage()
+    }
 }

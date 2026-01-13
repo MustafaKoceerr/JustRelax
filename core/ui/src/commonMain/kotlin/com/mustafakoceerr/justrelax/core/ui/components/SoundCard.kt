@@ -3,17 +3,22 @@ package com.mustafakoceerr.justrelax.core.ui.components
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -25,10 +30,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -39,6 +47,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.extensions.displayName
@@ -83,6 +92,12 @@ fun SoundCard(
         ).value
     )
 
+    val iconYOffset by animateDpAsState(
+        targetValue = if (isPlaying) (-12).dp else 0.dp,
+        animationSpec = tween(ANIM_COLOR_DURATION),
+        label = "IconOffset"
+    )
+
     Column(
         modifier = modifier
             .semantics {
@@ -90,13 +105,20 @@ fun SoundCard(
                 stateDescription = if (isPlaying) "Playing" else "Stopped"
             },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         CardSurface(
             onClick = debouncedClick,
             containerColor = cardContainerColor,
+            isPlaying = isPlaying,
+            soundName = sound.displayName()
         ) {
-            Box(contentAlignment = Alignment.Center) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .offset(y = iconYOffset)
+            ) {
                 SoundIcon(
                     iconUrl = sound.iconUrl,
                     isDownloaded = sound.isDownloaded,
@@ -125,15 +147,51 @@ private data class IconColors(val circleColor: Color, val tintColor: Color)
 private fun CardSurface(
     onClick: () -> Unit,
     containerColor: Color,
+    isPlaying: Boolean,
+    soundName: String,
     content: @Composable () -> Unit
 ) {
     Surface(
         onClick = onClick,
         modifier = Modifier.aspectRatio(1f),
         shape = MaterialTheme.shapes.medium,
-        color = containerColor,
-        content = content
-    )
+        color = containerColor
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            content()
+
+            AnimatedVisibility(
+                visible = isPlaying,
+                enter = fadeIn() + slideInVertically { it / 2 },
+                exit = fadeOut(),
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    containerColor
+                                )
+                            )
+                        )
+                        .padding(bottom = 8.dp, top = 16.dp, start = 4.dp, end = 4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = soundName,
+                        style = MaterialTheme.typography.labelSmall.copy(lineHeight = 12.sp),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -212,8 +270,19 @@ private fun BottomControls(
     AnimatedContent(
         targetState = isPlaying,
         transitionSpec = {
-            (fadeIn(animationSpec = tween(ANIM_CONTENT_ENTER_DURATION, delayMillis = ANIM_CONTENT_DELAY)) +
-                    scaleIn(initialScale = 0.92f, animationSpec = tween(ANIM_CONTENT_ENTER_DURATION, delayMillis = ANIM_CONTENT_DELAY)))
+            (fadeIn(
+                animationSpec = tween(
+                    ANIM_CONTENT_ENTER_DURATION,
+                    delayMillis = ANIM_CONTENT_DELAY
+                )
+            ) +
+                    scaleIn(
+                        initialScale = 0.92f,
+                        animationSpec = tween(
+                            ANIM_CONTENT_ENTER_DURATION,
+                            delayMillis = ANIM_CONTENT_DELAY
+                        )
+                    ))
                 .togetherWith(fadeOut(animationSpec = tween(ANIM_CONTENT_EXIT_DURATION)))
         },
         label = "BottomContent"

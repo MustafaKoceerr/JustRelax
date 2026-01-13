@@ -1,9 +1,13 @@
 package com.mustafakoceerr.justrelax.feature.timer.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -11,18 +15,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mustafakoceerr.justrelax.core.ui.util.WindowWidthSize
 import justrelax.feature.timer.generated.resources.Res
 import justrelax.feature.timer.generated.resources.timer_unit_hour
 import justrelax.feature.timer.generated.resources.timer_unit_minute
 import justrelax.feature.timer.generated.resources.timer_unit_second
 import org.jetbrains.compose.resources.stringResource
 
+private data class PickerUiMetrics(
+    val itemHeight: Dp,
+    val numberFontSize: TextUnit,
+    val labelFontSize: TextUnit,
+    val labelBottomPadding: Dp
+)
+
 @Composable
 fun JustRelaxTimerPicker(
+    windowSize: WindowWidthSize,
     modifier: Modifier = Modifier,
     state: JustRelaxTimerState = rememberJustRelaxTimerState()
 ) {
@@ -30,13 +46,36 @@ fun JustRelaxTimerPicker(
     val minutes = remember { (0..59).map { it.toString().padStart(2, '0') } }
     val seconds = remember { (0..59).map { it.toString().padStart(2, '0') } }
 
+    val metrics = when (windowSize) {
+        WindowWidthSize.COMPACT -> PickerUiMetrics(
+            itemHeight = 80.dp,
+            numberFontSize = 40.sp,
+            labelFontSize = 15.sp,
+            labelBottomPadding = 10.dp
+        )
+
+        WindowWidthSize.MEDIUM -> PickerUiMetrics(
+            itemHeight = 96.dp,
+            numberFontSize = 48.sp,
+            labelFontSize = 17.sp,
+            labelBottomPadding = 12.dp
+        )
+
+        WindowWidthSize.EXPANDED -> PickerUiMetrics(
+            itemHeight = 110.dp,
+            numberFontSize = 55.sp,
+            labelFontSize = 18.sp,
+            labelBottomPadding = 14.dp
+        )
+    }
+
     val textStyle = MaterialTheme.typography.displayLarge.copy(
-        fontSize = 50.sp,
+        fontSize = metrics.numberFontSize,
         fontWeight = FontWeight.Bold
     )
 
     val labelStyle = MaterialTheme.typography.titleMedium.copy(
-        fontSize = 18.sp,
+        fontSize = metrics.labelFontSize,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         fontWeight = FontWeight.Medium
     )
@@ -45,19 +84,19 @@ fun JustRelaxTimerPicker(
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
     )
 
-    val itemHeight = 100.dp
-
+    val spacerHeight = metrics.labelFontSize.value.dp + metrics.labelBottomPadding
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         TimerUnitColumn(
             label = stringResource(Res.string.timer_unit_hour),
-            labelStyle = labelStyle
+            labelStyle = labelStyle,
+            paddingBottom = metrics.labelBottomPadding
         ) {
             InfiniteWheelPicker(
-                itemHeight = itemHeight,
+                itemHeight = metrics.itemHeight,
                 items = hours,
                 initialItem = state.hour.toString().padStart(2, '0'),
                 textStyle = textStyle,
@@ -65,14 +104,18 @@ fun JustRelaxTimerPicker(
             )
         }
 
-        TimerSeparator(separatorStyle)
+        TimerSeparator(
+            separatorStyle = separatorStyle,
+            spacerHeight = spacerHeight
+        )
 
         TimerUnitColumn(
             label = stringResource(Res.string.timer_unit_minute),
-            labelStyle = labelStyle
+            labelStyle = labelStyle,
+            paddingBottom = metrics.labelBottomPadding
         ) {
             InfiniteWheelPicker(
-                itemHeight = itemHeight,
+                itemHeight = metrics.itemHeight,
                 items = minutes,
                 initialItem = state.minute.toString().padStart(2, '0'),
                 textStyle = textStyle,
@@ -80,14 +123,18 @@ fun JustRelaxTimerPicker(
             )
         }
 
-        TimerSeparator(separatorStyle)
+        TimerSeparator(
+            separatorStyle = separatorStyle,
+            spacerHeight = spacerHeight
+        )
 
         TimerUnitColumn(
             label = stringResource(Res.string.timer_unit_second),
-            labelStyle = labelStyle
+            labelStyle = labelStyle,
+            paddingBottom = metrics.labelBottomPadding
         ) {
             InfiniteWheelPicker(
-                itemHeight = itemHeight,
+                itemHeight = metrics.itemHeight,
                 items = seconds,
                 initialItem = state.second.toString().padStart(2, '0'),
                 textStyle = textStyle,
@@ -101,6 +148,7 @@ fun JustRelaxTimerPicker(
 private fun TimerUnitColumn(
     label: String,
     labelStyle: TextStyle,
+    paddingBottom: Dp,
     content: @Composable () -> Unit
 ) {
     Column(
@@ -110,22 +158,25 @@ private fun TimerUnitColumn(
         Text(
             text = label,
             style = labelStyle,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = paddingBottom)
         )
         content()
     }
 }
 
 @Composable
-private fun TimerSeparator(style: TextStyle) {
+private fun TimerSeparator(
+    separatorStyle: TextStyle,
+    spacerHeight: Dp
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(" ", style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp))
+        Spacer(modifier = Modifier.height(spacerHeight))
         Text(
             text = ":",
-            style = style,
+            style = separatorStyle,
             modifier = Modifier.padding(bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurface
         )

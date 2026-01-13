@@ -48,6 +48,8 @@ kotlin {
             // Context ve Activity işlemleri için
             implementation(libs.findLibrary("androidx-activity-compose").get())
             implementation(libs.findLibrary("koin-android").get())
+
+            implementation(libs.findLibrary("material3-window-size").get())
         }
     }
 }

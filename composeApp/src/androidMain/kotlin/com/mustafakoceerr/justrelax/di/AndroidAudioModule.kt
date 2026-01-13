@@ -15,5 +15,5 @@ actual val platformAudioModule = module {
         )
     }
 
-//    viewModelOf(::MainActivityViewModel)
+    viewModelOf(::MainActivityViewModel)
 }
