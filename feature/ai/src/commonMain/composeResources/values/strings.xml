@@ -28,4 +28,7 @@
     <string name="err_unknown">An unexpected error occurred. Please try again later.</string>
     <string name="action_back">Back</string>
 
+    <string name="action_clear">Clear</string>
+    <string name="ai_action_try_another_variation">Try another variation</string>
+
 </resources>

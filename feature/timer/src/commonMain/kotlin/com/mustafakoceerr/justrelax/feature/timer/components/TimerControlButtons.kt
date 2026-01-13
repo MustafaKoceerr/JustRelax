@@ -50,7 +50,11 @@ fun TimerControlButtons(
             modifier = Modifier
                 .height(50.dp)
                 .widthIn(min = 100.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp)
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            colors = ButtonDefaults.filledTonalButtonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         ) {
             Icon(
                 imageVector = Icons.Rounded.Close,
@@ -66,10 +70,9 @@ fun TimerControlButtons(
             )
         }
 
-        Spacer(modifier = Modifier.width(32.dp))
+        Spacer(modifier = Modifier.width(24.dp))
 
         val isRunning = !isPaused
-        val toggleContainerColor = if (isRunning) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
         val toggleIcon = if (isRunning) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
         val toggleText = if (isRunning) Res.string.timer_action_pause else Res.string.timer_action_resume
 
@@ -80,7 +83,8 @@ fun TimerControlButtons(
                 .widthIn(min = 130.dp),
             contentPadding = PaddingValues(horizontal = 24.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = toggleContainerColor
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.primary
             )
         ) {
             Icon(

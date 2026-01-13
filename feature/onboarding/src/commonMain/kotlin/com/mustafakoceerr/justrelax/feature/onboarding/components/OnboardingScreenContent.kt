@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.onboarding.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -8,9 +9,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.DownloadForOffline
@@ -44,28 +49,58 @@ fun OnboardingScreenContent(
     onConfirmClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    BoxWithConstraints(
+        modifier = modifier.fillMaxSize()
     ) {
-        item { OnboardingHeader() }
-        item { Spacer(modifier = Modifier.height(32.dp)) }
-        item {
-            OnboardingSelectionArea(
-                state = state,
-                selectedOption = selectedOption,
-                onOptionSelected = onOptionSelected
-            )
-        }
-        item { Spacer(modifier = Modifier.height(32.dp)) }
-        item { DataUsageInfo() }
-        item {
-            OnboardingConfirmButton(
-                onClick = onConfirmClick,
-                enabled = state.initialOption != null && state.allOption != null
-            )
+        val minHeight = maxHeight
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = minHeight)
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                // CRITICAL POINT: We push the content to the edges
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                // Header + content
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(32.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OnboardingHeader()
+
+                    OnboardingSelectionArea(
+                        state = state,
+                        selectedOption = selectedOption,
+                        onOptionSelected = onOptionSelected
+                    )
+                }
+
+                // Footer
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    DataUsageInfo()
+
+                    OnboardingConfirmButton(
+                        onClick = onConfirmClick,
+                        enabled = state.initialOption != null && state.allOption != null
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
         }
     }
 }

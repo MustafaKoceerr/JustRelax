@@ -1,11 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.ai.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -51,11 +45,7 @@ fun AiPromptInput(
 
     Column(modifier = modifier.fillMaxWidth()) {
 
-        AnimatedVisibility(
-            visible = !isThinking && suggestions.isNotEmpty(),
-            enter = fadeIn() + expandVertically(),
-            exit = fadeOut() + shrinkVertically()
-        ) {
+        if (!isThinking && suggestions.isNotEmpty()) {
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -126,22 +116,22 @@ private fun SendButton(
     FilledIconButton(
         onClick = onClick,
         enabled = isEnabled || isLoading,
-        modifier = Modifier.size(40.dp).padding(4.dp)
+        modifier = Modifier
+            .size(40.dp)
+            .padding(4.dp)
     ) {
-        Crossfade(targetState = isLoading, label = "SendButtonState") { loading ->
-            if (loading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                    strokeWidth = 2.dp,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.Send,
-                    contentDescription = "Send",
-                    modifier = Modifier.size(20.dp)
-                )
-            }
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        } else {
+            Icon(
+                imageVector = Icons.AutoMirrored.Rounded.Send,
+                contentDescription = "Send",
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }

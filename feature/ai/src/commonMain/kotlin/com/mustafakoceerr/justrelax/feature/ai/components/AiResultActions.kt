@@ -23,6 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import justrelax.feature.ai.generated.resources.Res
+import justrelax.feature.ai.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AiResultActions(
@@ -66,7 +69,7 @@ fun AiResultActions(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Try another variation",
+                            text = stringResource(Res.string.ai_action_try_another_variation),
                             style = MaterialTheme.typography.labelMedium
                         )
                     }

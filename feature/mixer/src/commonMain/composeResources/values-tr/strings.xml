@@ -15,4 +15,6 @@
     <string name="err_mix_save_no_sound">Çalan ses yok</string>
 
     <string name="err_unknown">Bir şeyler ters gitti</string>
+    <string name="err_mixer_generate_failed">Mix oluşturulamadı. Sesleri indirdiğinizden emin olun.</string>
+
 </resources>

@@ -10,12 +10,12 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.model.SoundUi
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 
 @Composable
 fun AiResultGrid(
-    sounds: List<Sound>,
+    sounds: List<SoundUi>,
     isSoundPlaying: (String) -> Boolean,
     getSoundVolume: (String) -> Float,
     onToggleSound: (String) -> Unit,

@@ -31,4 +31,6 @@
     <string name="section_support_legal">Destek &amp; Yasal</string>
     <string name="privacy_policy_title">Gizlilik Politikası</string>
     <string name="terms_conditions_title">Şartlar ve Koşullar</string>
+    <string name="msg_all_sounds_downloaded">Tüm sesler indirildi!</string>
+
 </resources>

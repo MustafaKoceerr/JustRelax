@@ -31,4 +31,5 @@
     <string name="section_support_legal">Soporte y legal</string>
     <string name="privacy_policy_title">Política de privacidad</string>
     <string name="terms_conditions_title">Términos y condiciones</string>
+    <string name="msg_all_sounds_downloaded">¡Todos los sonidos se descargaron!</string>
 </resources>

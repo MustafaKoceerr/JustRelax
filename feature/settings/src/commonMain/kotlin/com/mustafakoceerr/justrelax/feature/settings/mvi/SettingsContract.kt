@@ -2,6 +2,7 @@ package com.mustafakoceerr.justrelax.feature.settings.mvi
 
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 data class SettingsState(
     val currentTheme: AppTheme = AppTheme.SYSTEM,
@@ -25,5 +26,5 @@ sealed interface SettingsIntent {
 }
 
 sealed interface SettingsEffect {
-    data class ShowMessage(val message: String) : SettingsEffect
+    data class ShowMessage(val message: UiText) : SettingsEffect
 }

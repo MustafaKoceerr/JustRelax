@@ -3,17 +3,21 @@ package com.mustafakoceerr.justrelax.core.ui.components
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -29,19 +33,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.mustafakoceerr.justrelax.core.model.Sound
-import com.mustafakoceerr.justrelax.core.ui.extensions.displayName
+import com.mustafakoceerr.justrelax.core.model.SoundUi
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
@@ -54,7 +59,7 @@ private const val ANIM_CONTENT_DELAY = 90
 
 @Composable
 fun SoundCard(
-    sound: Sound,
+    sound: SoundUi,
     isPlaying: Boolean,
     isDownloading: Boolean,
     volume: Float,
@@ -72,15 +77,21 @@ fun SoundCard(
 
     val iconColors = IconColors(
         circleColor = animateColorAsState(
-            targetValue = if (isPlaying) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainer,
+            targetValue = if (isPlaying) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHighest,
             animationSpec = tween(ANIM_COLOR_DURATION),
             label = "IconCircleColor"
         ).value,
         tintColor = animateColorAsState(
-            targetValue = if (isPlaying) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+            targetValue = if (isPlaying) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
             animationSpec = tween(ANIM_COLOR_DURATION),
             label = "IconTintColor"
         ).value
+    )
+
+    val iconYOffset by animateDpAsState(
+        targetValue = if (isPlaying) (-12).dp else 0.dp,
+        animationSpec = tween(ANIM_COLOR_DURATION),
+        label = "IconOffset"
     )
 
     Column(
@@ -90,13 +101,20 @@ fun SoundCard(
                 stateDescription = if (isPlaying) "Playing" else "Stopped"
             },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         CardSurface(
             onClick = debouncedClick,
             containerColor = cardContainerColor,
+            isPlaying = isPlaying,
+            soundName = sound.name
         ) {
-            Box(contentAlignment = Alignment.Center) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .offset(y = iconYOffset)
+            ) {
                 SoundIcon(
                     iconUrl = sound.iconUrl,
                     isDownloaded = sound.isDownloaded,
@@ -111,7 +129,7 @@ fun SoundCard(
 
         BottomControls(
             isPlaying = isPlaying,
-            soundName = sound.displayName(),
+            soundName = sound.name,
             isDownloaded = sound.isDownloaded,
             volume = volume,
             onVolumeChange = onVolumeChange
@@ -125,15 +143,51 @@ private data class IconColors(val circleColor: Color, val tintColor: Color)
 private fun CardSurface(
     onClick: () -> Unit,
     containerColor: Color,
+    isPlaying: Boolean,
+    soundName: String,
     content: @Composable () -> Unit
 ) {
     Surface(
         onClick = onClick,
         modifier = Modifier.aspectRatio(1f),
         shape = MaterialTheme.shapes.medium,
-        color = containerColor,
-        content = content
-    )
+        color = containerColor
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            content()
+
+            AnimatedVisibility(
+                visible = isPlaying,
+                enter = fadeIn() + slideInVertically { it / 2 },
+                exit = fadeOut(),
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    containerColor
+                                )
+                            )
+                        )
+                        .padding(bottom = 8.dp, top = 16.dp, start = 4.dp, end = 4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = soundName,
+                        style = MaterialTheme.typography.labelSmall.copy(lineHeight = 12.sp),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -212,8 +266,19 @@ private fun BottomControls(
     AnimatedContent(
         targetState = isPlaying,
         transitionSpec = {
-            (fadeIn(animationSpec = tween(ANIM_CONTENT_ENTER_DURATION, delayMillis = ANIM_CONTENT_DELAY)) +
-                    scaleIn(initialScale = 0.92f, animationSpec = tween(ANIM_CONTENT_ENTER_DURATION, delayMillis = ANIM_CONTENT_DELAY)))
+            (fadeIn(
+                animationSpec = tween(
+                    ANIM_CONTENT_ENTER_DURATION,
+                    delayMillis = ANIM_CONTENT_DELAY
+                )
+            ) +
+                    scaleIn(
+                        initialScale = 0.92f,
+                        animationSpec = tween(
+                            ANIM_CONTENT_ENTER_DURATION,
+                            delayMillis = ANIM_CONTENT_DELAY
+                        )
+                    ))
                 .togetherWith(fadeOut(animationSpec = tween(ANIM_CONTENT_EXIT_DURATION)))
         },
         label = "BottomContent"

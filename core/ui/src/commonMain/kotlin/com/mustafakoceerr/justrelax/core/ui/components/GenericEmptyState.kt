@@ -1,13 +1,18 @@
 package com.mustafakoceerr.justrelax.core.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Button
@@ -31,55 +36,74 @@ fun GenericEmptyState(
     onActionClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    // 1. Ekran boyutunu ölçmek için BoxWithConstraints kullanıyoruz
+    BoxWithConstraints(
+        modifier = modifier.fillMaxSize()
     ) {
-        visualContent()
+        // Ekranın o anki yüksekliğini alıyoruz
+        val minHeight = maxHeight
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-                lineHeight = 24.sp
-            )
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Button(
-            onClick = onActionClick,
+        // 2. Scroll edilebilir ana kapsayıcı
+        Column(
             modifier = Modifier
-                .widthIn(min = 200.dp)
-                .height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                imageVector = Icons.Rounded.Add,
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = actionButtonText,
-                style = MaterialTheme.typography.titleMedium
-            )
+            // 3. İçerik kapsayıcısı
+            // Buradaki kritik nokta: heightIn(min = minHeight)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = minHeight) // En az ekran boyu kadar ol
+                    .padding(32.dp), // Padding'i buraya taşıdık ki scroll içinde kalsın
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center // Artık çalışır çünkü minHeight var
+            ) {
+                visualContent()
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 24.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Button(
+                    onClick = onActionClick,
+                    modifier = Modifier
+                        .widthIn(min = 200.dp)
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Add,
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = actionButtonText,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
         }
     }
 }

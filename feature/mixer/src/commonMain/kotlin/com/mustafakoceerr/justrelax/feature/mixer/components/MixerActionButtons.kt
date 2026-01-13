@@ -9,9 +9,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
-import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.Button
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,7 +22,6 @@ import com.mustafakoceerr.justrelax.core.ui.components.LoadingDots
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import justrelax.feature.mixer.generated.resources.Res
 import justrelax.feature.mixer.generated.resources.action_create_mix
-import justrelax.feature.mixer.generated.resources.action_save_mix
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -40,7 +38,13 @@ fun CreateMixButton(
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
-        shape = MaterialTheme.shapes.extraLarge
+        shape = MaterialTheme.shapes.extraLarge,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.primary,
+            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f),
+            disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+        )
     ) {
         Crossfade(targetState = isLoading, label = "CreateButtonCrossfade") { loading ->
             if (loading) {
@@ -66,27 +70,3 @@ fun CreateMixButton(
     }
 }
 
-@Composable
-fun SaveMixButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    FilledTonalButton(
-        onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(50.dp),
-        shape = MaterialTheme.shapes.extraLarge
-    ) {
-        Icon(
-            imageVector = Icons.Rounded.Save,
-            contentDescription = null,
-            modifier = Modifier.size(20.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = stringResource(Res.string.action_save_mix),
-            style = MaterialTheme.typography.titleMedium
-        )
-    }
-}

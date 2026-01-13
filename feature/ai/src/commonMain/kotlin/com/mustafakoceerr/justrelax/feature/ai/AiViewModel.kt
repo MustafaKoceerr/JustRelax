@@ -88,9 +88,10 @@ class AiViewModel(
                     is Resource.Success -> {
                         val mix = result.data
 
-                        val volumeMap = mix.sounds.map { (sound, volume) ->
-                            sound.id to volume
+                        val volumeMap = mix.sounds.map { (soundUi, volume) ->
+                            soundUi.id to volume
                         }.toMap()
+
                         soundController.setVolumes(volumeMap)
 
                         setMixUseCase(mix.sounds)
@@ -113,7 +114,6 @@ class AiViewModel(
             }
         }
     }
-
     private fun handleError(error: AppError) {
         val message = when (error) {
             is AppError.Ai.NoDownloadedSounds -> UiText.Resource(Res.string.err_ai_no_sounds)

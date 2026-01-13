@@ -2,7 +2,8 @@ package com.mustafakoceerr.justrelax.feature.settings
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.mustafakoceerr.justrelax.core.domain.system.LanguageSwitcher
+import com.mustafakoceerr.justrelax.core.domain.system.LanguageController
+import com.mustafakoceerr.justrelax.core.domain.system.LanguageStrategy
 import com.mustafakoceerr.justrelax.core.domain.system.SystemLauncher
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppLanguageUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppThemeUseCase
@@ -13,9 +14,12 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadA
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsEffect
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsIntent
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsState
+import justrelax.feature.settings.generated.resources.Res
+import justrelax.feature.settings.generated.resources.msg_all_sounds_downloaded
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +39,7 @@ class SettingsViewModel(
     private val setAppLanguageUseCase: SetAppLanguageUseCase,
     private val downloadAllSoundsUseCase: DownloadAllSoundsUseCase,
     private val systemLauncher: SystemLauncher,
-    private val languageSwitcher: LanguageSwitcher,
+    private val languageController: LanguageController,
     private val getLegalUrlUseCase: GetLegalUrlUseCase
 ) : ScreenModel {
 
@@ -54,7 +58,7 @@ class SettingsViewModel(
     fun processIntent(intent: SettingsIntent) {
         when (intent) {
             is SettingsIntent.ChangeTheme -> changeTheme(intent.theme)
-            is SettingsIntent.OpenLanguageSelection -> openLanguageSheet()
+            is SettingsIntent.OpenLanguageSelection -> handleOpenLanguageSelection()
             is SettingsIntent.CloseLanguageSelection -> closeLanguageSheet()
             is SettingsIntent.ChangeLanguage -> changeLanguage(intent.language)
             is SettingsIntent.RateApp -> systemLauncher.openStorePage()
@@ -95,17 +99,23 @@ class SettingsViewModel(
         }
     }
 
-    private fun changeTheme(theme: AppTheme) {
-        screenModelScope.launch {
-            setAppThemeUseCase(theme)
+    private fun handleOpenLanguageSelection() {
+        when (languageController.strategy) {
+            LanguageStrategy.IN_APP -> {
+                // Android: open the in-app language selection sheet
+                _state.update { it.copy(isLanguageSheetOpen = true) }
+            }
+
+            LanguageStrategy.SYSTEM_SETTINGS -> {
+                // iOS: redirect to system language settings for this app
+                systemLauncher.openAppLanguageSettings()
+            }
         }
     }
 
-    private fun openLanguageSheet() {
-        if (languageSwitcher.supportsInAppSwitching) {
-            _state.update { it.copy(isLanguageSheetOpen = true) }
-        } else {
-            systemLauncher.openAppLanguageSettings()
+    private fun changeTheme(theme: AppTheme) {
+        screenModelScope.launch {
+            setAppThemeUseCase(theme)
         }
     }
 
@@ -116,7 +126,6 @@ class SettingsViewModel(
     private fun changeLanguage(language: AppLanguage) {
         screenModelScope.launch {
             setAppLanguageUseCase(language)
-            languageSwitcher.updateLanguage(language)
             closeLanguageSheet()
         }
     }
@@ -136,22 +145,29 @@ class SettingsViewModel(
         downloadJob = downloadAllSoundsUseCase().onEach { status ->
             when (status) {
                 is DownloadStatus.Progress -> {
-                    _state.update { it.copy(
-                        isDownloadingLibrary = true,
-                        downloadProgress = status.percentage
-                    ) }
+                    _state.update {
+                        it.copy(
+                            isDownloadingLibrary = true,
+                            downloadProgress = status.percentage
+                        )
+                    }
                 }
+
                 is DownloadStatus.Completed -> {
-                    _state.update { it.copy(
-                        isDownloadingLibrary = false,
-                        isLibraryComplete = true
-                    ) }
-                    _effect.send(SettingsEffect.ShowMessage("All sounds downloaded!"))
+                    _state.update {
+                        it.copy(
+                            isDownloadingLibrary = false,
+                            isLibraryComplete = true
+                        )
+                    }
+                    _effect.send(SettingsEffect.ShowMessage(UiText.Resource(Res.string.msg_all_sounds_downloaded)))
                 }
+
                 is DownloadStatus.Error -> {
                     _state.update { it.copy(isDownloadingLibrary = false) }
-                    _effect.send(SettingsEffect.ShowMessage(status.message))
+                    _effect.send(SettingsEffect.ShowMessage(UiText.DynamicString(status.message)))
                 }
+
                 else -> {}
             }
         }.launchIn(screenModelScope)

@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.timer.mvi
 
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-
 interface TimerContract {
     data class State(
         val isSetupMode: Boolean = true,
@@ -17,7 +15,5 @@ interface TimerContract {
     }
 
     sealed interface Effect {
-        data class ShowSnackbar(val message: UiText) : Effect
-        data object TimerFinished : Effect
     }
 }

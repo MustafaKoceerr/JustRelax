@@ -23,7 +23,6 @@ fun JustRelaxApp() {
 
     val mainViewModel = koinInject<MainViewModel>()
     val currentTheme by mainViewModel.currentTheme.collectAsState()
-    val currentLanguage by mainViewModel.currentLanguage.collectAsState()
 
     val isDarkTheme = when (currentTheme) {
         AppTheme.SYSTEM -> isSystemInDarkTheme()
@@ -32,15 +31,11 @@ fun JustRelaxApp() {
     }
 
     JustRelaxTheme(darkTheme = isDarkTheme) {
-        CompositionLocalProvider(
-            LocalLanguageCode provides currentLanguage.code
-        ) {
+
             Navigator(
                 screen = SplashScreen,
-                key = currentLanguage.code
             ) { navigator ->
                 SlideTransition(navigator)
             }
-        }
     }
 }

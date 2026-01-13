@@ -1,5 +1,11 @@
 package com.mustafakoceerr.justrelax.feature.home.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,7 +25,6 @@ fun HomeScreenContent(
 ) {
     val categories = state.categories.keys.toList()
     val selectedCategory = state.selectedCategory
-    val soundsToShow = state.categories[selectedCategory] ?: emptyList()
 
     val playingSoundIds = state.playerState.activeSounds.map { it.id }.toSet()
     val soundVolumes = state.playerState.activeSounds.associate { it.id to it.initialVolume }
@@ -40,16 +45,34 @@ fun HomeScreenContent(
                 CircularProgressIndicator()
             }
         } else {
-            SoundCardGrid(
-                sounds = soundsToShow,
-                playingSoundIds = playingSoundIds,
-                soundVolumes = soundVolumes,
-                downloadingSoundIds = state.downloadingSoundIds,
-                onSoundClick = { sound -> onEvent(HomeContract.Event.OnSoundClick(sound)) },
-                onVolumeChange = { soundId, volume -> onEvent(HomeContract.Event.OnVolumeChange(soundId, volume)) },
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(16.dp)
-            )
+            AnimatedContent(
+                targetState = selectedCategory,
+                transitionSpec = {
+                    (slideInVertically { height -> height / 10 } + fadeIn(tween(300)))
+                        .togetherWith(fadeOut(tween(150)))
+                },
+                label = "CategoryTransition",
+                modifier = Modifier.weight(1f)
+            ) { currentCategory ->
+                val soundsToShow = state.categories[currentCategory] ?: emptyList()
+
+                SoundCardGrid(
+                    sounds = soundsToShow,
+                    playingSoundIds = playingSoundIds,
+                    soundVolumes = soundVolumes,
+                    downloadingSoundIds = state.downloadingSoundIds,
+                    onSoundClick = { sound -> onEvent(HomeContract.Event.OnSoundClick(sound)) },
+                    onVolumeChange = { soundId, volume ->
+                        onEvent(
+                            HomeContract.Event.OnVolumeChange(
+                                soundId,
+                                volume
+                            )
+                        )
+                    },
+                    contentPadding = PaddingValues(16.dp)
+                )
+            }
         }
     }
 }

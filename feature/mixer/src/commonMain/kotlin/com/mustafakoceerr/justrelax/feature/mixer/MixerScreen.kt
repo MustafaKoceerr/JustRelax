@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -15,9 +14,7 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
@@ -35,10 +31,10 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
+import com.mustafakoceerr.justrelax.feature.mixer.components.EmptyMixerState
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixCountSelector
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerContract
 import justrelax.feature.mixer.generated.resources.Res
-import justrelax.feature.mixer.generated.resources.mixer_empty_state_message
 import justrelax.feature.mixer.generated.resources.mixer_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -91,12 +87,13 @@ private fun MixerScreenContent(
     onEvent: (MixerContract.Event) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 110.dp),
+        columns = GridCells.Adaptive(minSize = 96.dp),
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
         item(span = { GridItemSpan(maxLineSpan) }) {
@@ -106,7 +103,9 @@ private fun MixerScreenContent(
             ) {
                 MixCountSelector(
                     selectedCount = mixerState.selectedSoundCount,
-                    onCountSelected = { count -> onEvent(MixerContract.Event.SelectSoundCount(count)) }
+                    onCountSelected = { count ->
+                        onEvent(MixerContract.Event.SelectSoundCount(count))
+                    }
                 )
 
                 CreateMixButton(
@@ -140,24 +139,12 @@ private fun MixerScreenContent(
             }
         } else {
             item(span = { GridItemSpan(maxLineSpan) }) {
-                Box(
+                EmptyMixerState(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(Res.string.mixer_empty_state_message),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center
-                    )
-                }
+                        .padding(top = 48.dp, bottom = 24.dp)
+                )
             }
-        }
-
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -18,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerPortraitLayout
@@ -43,6 +45,7 @@ fun TimerScreenContent(
     onEvent: (TimerContract.Event) -> Unit
 ) {
     Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
         containerColor = Color.Transparent,
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->

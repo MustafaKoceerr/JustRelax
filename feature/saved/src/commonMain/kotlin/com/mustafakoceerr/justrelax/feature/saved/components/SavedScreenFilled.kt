@@ -70,9 +70,9 @@ fun SavedMixCard(
 ) {
     var clickTrigger by remember { mutableIntStateOf(0) }
 
-    val baseColor = MaterialTheme.colorScheme.surfaceContainer
-    val shimmerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f)
-    val borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+    val baseColor = MaterialTheme.colorScheme.surfaceContainerLow
+    val shimmerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+    val borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
 
     val dateFormatPattern = stringResource(Res.string.date_format_short)
     val formattedDate = remember(date, dateFormatPattern) {
@@ -114,7 +114,8 @@ fun SavedMixCard(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Text(
@@ -125,7 +126,7 @@ fun SavedMixCard(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                MixIconsRow(icons)
+                MixIconsRow(icons, backgroundColor = baseColor)
             }
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -141,7 +142,10 @@ fun SavedMixCard(
 }
 
 @Composable
-private fun MixIconsRow(icons: List<String>) {
+private fun MixIconsRow(
+    icons: List<String>,
+    backgroundColor: Color
+) {
     Row(
         horizontalArrangement = Arrangement.spacedBy((-12).dp),
         verticalAlignment = Alignment.CenterVertically
@@ -165,7 +169,7 @@ private fun MixIconsRow(icons: List<String>) {
                     shape = CircleShape,
                     border = BorderStroke(
                         width = 2.dp,
-                        color = MaterialTheme.colorScheme.surfaceContainer
+                        color = backgroundColor
                     ),
                     modifier = Modifier.size(36.dp),
                     color = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -175,8 +179,8 @@ private fun MixIconsRow(icons: List<String>) {
                             model = iconUrl,
                             contentDescription = null,
                             modifier = Modifier
-                                .size(24.dp)
-                                .padding(2.dp),
+                                .size(20.dp)
+                                .padding(1.dp),
                             contentScale = ContentScale.Fit,
                             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
                         )
@@ -195,15 +199,15 @@ private fun PlayButton(
     Surface(
         onClick = onClick,
         shape = CircleShape,
-        color = MaterialTheme.colorScheme.secondaryContainer,
+        color = MaterialTheme.colorScheme.primary,
         modifier = modifier.size(48.dp)
     ) {
         Box(contentAlignment = Alignment.Center) {
             Icon(
                 imageVector = Icons.Rounded.PlayArrow,
                 contentDescription = stringResource(Res.string.action_play),
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.size(24.dp)
+                tint = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.size(28.dp)
             )
         }
     }

@@ -18,5 +18,6 @@
 
     <string name="date_format_short">dd.MM.yyyy</string>
 
-    <string name="err_unknown">Beklenmedik bir hata oluştu.</string>
+    <string name="err_play_mix_failed">Mix çalınamadı</string>
+    <string name="err_unknown">Bilinmeyen bir hata oluştu</string>
 </resources>

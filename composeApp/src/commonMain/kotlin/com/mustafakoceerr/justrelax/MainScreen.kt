@@ -1,20 +1,23 @@
 package com.mustafakoceerr.justrelax
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -96,31 +99,23 @@ private fun MainScreenLayout(
     TabNavigator(HomeTab) { tabNavigator ->
         JustRelaxBackground {
             Scaffold(
+                contentWindowInsets = WindowInsets(0.dp),
                 containerColor = Color.Transparent,
                 snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) },
                 bottomBar = {
                     if (!isKeyboardOpen) {
                         MainBottomBarContent(
-                            playerState = playerState,
-                            onPlayerEvent = onPlayerEvent
+                            onPlayerEvent = onPlayerEvent,
+                            playerState = playerState
                         )
                     }
                 }
             ) { innerPadding ->
-                val animatedBottomPadding by animateDpAsState(
-                    targetValue = innerPadding.calculateBottomPadding(),
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessLow
-                    ),
-                    label = "BottomPaddingAnimation"
-                )
 
                 Box(
-                    modifier = Modifier.padding(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = animatedBottomPadding.coerceAtLeast(0.dp)
-                    )
+                    modifier = Modifier
+                        .padding(innerPadding)
+
                 ) {
                     AnimatedContent(
                         targetState = tabNavigator.current,
@@ -144,14 +139,27 @@ private fun MainBottomBarContent(
     onPlayerEvent: (PlayerContract.Event) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        PlayerBottomBar(
-            isVisible = playerState.isVisible,
-            activeIcons = playerState.activeSounds.map { it.iconUrl },
-            isPlaying = playerState.isPlaying,
-            onPlayPauseClick = { onPlayerEvent(PlayerContract.Event.ToggleMasterPlayPause) },
-            onStopAllClick = { onPlayerEvent(PlayerContract.Event.StopAll) },
-            onSaveClick = { onPlayerEvent(PlayerContract.Event.OpenSaveDialog) }
-        )
+        AnimatedVisibility(
+            visible = playerState.isVisible,
+            enter = slideInVertically(
+                animationSpec = tween(220),
+                initialOffsetY = { fullHeight -> fullHeight }
+            ) + fadeIn(animationSpec = tween(150)),
+            exit = slideOutVertically(
+                animationSpec = tween(220),
+                targetOffsetY = { fullHeight -> fullHeight }
+            ) + fadeOut(animationSpec = tween(150))
+        ) {
+            PlayerBottomBar(
+                isVisible = true,
+                activeIcons = playerState.activeSounds.map { it.iconUrl },
+                isPlaying = playerState.isPlaying,
+                onPlayPauseClick = { onPlayerEvent(PlayerContract.Event.ToggleMasterPlayPause) },
+                onStopAllClick = { onPlayerEvent(PlayerContract.Event.StopAll) },
+                onSaveClick = { onPlayerEvent(PlayerContract.Event.OpenSaveDialog) },
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
 
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.surface,

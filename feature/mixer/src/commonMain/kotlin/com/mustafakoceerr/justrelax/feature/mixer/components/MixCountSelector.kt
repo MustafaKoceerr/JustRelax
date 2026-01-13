@@ -1,6 +1,9 @@
 package com.mustafakoceerr.justrelax.feature.mixer.components
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,10 +15,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -35,6 +41,7 @@ fun MixCountSelector(
             text = stringResource(Res.string.mix_count_selector_title),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp, bottom = 16.dp)
@@ -63,30 +70,32 @@ private fun MixNumberChip(
     onSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    FilterChip(
-        selected = isSelected,
+    Surface(
         onClick = onSelected,
-        label = {
+        modifier = modifier
+            .size(48.dp),
+        shape = CircleShape,
+        color = if (isSelected) {
+            MaterialTheme.colorScheme.primaryContainer
+        } else {
+            MaterialTheme.colorScheme.surfaceContainerHigh
+        },
+        border = BorderStroke(
+            width = 1.dp,
+            color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+        )
+    ) {
+        Box(contentAlignment = Alignment.Center) {
             Text(
                 text = number.toString(),
-                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium,
+                color = if (isSelected) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
+                textAlign = TextAlign.Center
             )
-        },
-        shape = CircleShape,
-        colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            labelColor = MaterialTheme.colorScheme.onSurface
-        ),
-        border = FilterChipDefaults.filterChipBorder(
-            enabled = true,
-            selected = isSelected,
-            borderColor = Color.Transparent,
-            selectedBorderColor = MaterialTheme.colorScheme.primary,
-            borderWidth = 1.dp
-        ),
-        modifier = modifier.size(48.dp)
-    )
+        }
+    }
 }

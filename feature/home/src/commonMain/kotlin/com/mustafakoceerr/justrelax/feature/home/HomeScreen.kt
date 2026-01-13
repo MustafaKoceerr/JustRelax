@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.home
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
@@ -13,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -42,7 +44,7 @@ object HomeScreen : AppScreen {
         val homeNavigator = koinInject<HomeNavigator>()
 
         LaunchedEffect(key1 = true) {
-            screenModel.effect.collectLatest { effect ->
+            screenModel.effect.collect { effect ->
                 when (effect) {
                     is HomeContract.Effect.ShowSnackbar -> {
                         snackbarController.showSnackbar(effect.message.resolve())
@@ -55,6 +57,7 @@ object HomeScreen : AppScreen {
         }
 
         Scaffold(
+            contentWindowInsets = WindowInsets(0.dp),
             containerColor = Color.Transparent,
             topBar = {
                 JustRelaxTopBar(
