@@ -19,7 +19,8 @@
     <string name="onboarding_full_library_title">Tüm Kütüphane</string>
 
     <!-- Veri Kullanım Uyarısı (Yeni & Gelişmiş Metin) -->
-    <string name="onboarding_data_usage_info">Büyük paketler için mobil veri kullanımından kaçınmak adına Wi-Fi önerilir.</string>
+    <string name="onboarding_data_usage_info">Büyük paketler için mobil veri kullanımından
+        kaçınmak adına Wi-Fi önerilir.</string>
 
     <!-- Buton -->
     <string name="onboarding_action_download_and_start">İndir ve Başla</string>

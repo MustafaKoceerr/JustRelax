@@ -48,7 +48,8 @@ data object SettingsScreen : AppScreen {
         LaunchedEffect(Unit) {
             screenModel.effect.collectLatest { effect ->
                 when (effect) {
-                    is SettingsEffect.ShowMessage -> snackbarHostState.showSnackbar(effect.message)
+                    is SettingsEffect.ShowMessage -> snackbarHostState.showSnackbar(effect.message.resolve())
+
                 }
             }
         }

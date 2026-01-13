@@ -47,8 +47,9 @@ data object OnboardingScreen : AppScreen {
                     is OnboardingEffect.NavigateToMainScreen -> {
                         navigator.replaceAll(onboardingNavigator.toMain())
                     }
+
                     is OnboardingEffect.ShowError -> {
-                        snackbarHostState.showSnackbar(effect.message)
+                        snackbarHostState.showSnackbar(effect.message.resolve())
                     }
                 }
             }

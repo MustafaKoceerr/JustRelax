@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.onboarding.mvi
 
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
+
 enum class OnboardingScreenStatus {
     LOADING_CONFIG,
     NO_INTERNET,
@@ -29,5 +31,5 @@ sealed interface OnboardingIntent {
 
 sealed interface OnboardingEffect {
     data object NavigateToMainScreen : OnboardingEffect
-    data class ShowError(val message: String) : OnboardingEffect
+    data class ShowError(val message: UiText) : OnboardingEffect
 }

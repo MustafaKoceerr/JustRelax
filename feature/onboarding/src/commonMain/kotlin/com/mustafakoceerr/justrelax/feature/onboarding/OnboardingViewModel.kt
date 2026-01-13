@@ -11,6 +11,7 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsUse
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.extensions.calculateTotalSizeInMb
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.DownloadOption
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingEffect
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingIntent
@@ -106,7 +107,8 @@ class OnboardingViewModel(
                     finishSetup()
                 }
                 is DownloadStatus.Error -> {
-                    _effect.send(OnboardingEffect.ShowError(status.message))
+                    val errorMessage = UiText.DynamicString(status.message)
+                    _effect.send(OnboardingEffect.ShowError(errorMessage))
                     _state.update { it.copy(status = OnboardingScreenStatus.CHOOSING) }
                 }
                 else -> {}

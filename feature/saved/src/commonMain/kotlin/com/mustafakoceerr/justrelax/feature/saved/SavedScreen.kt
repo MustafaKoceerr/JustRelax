@@ -3,8 +3,6 @@ package com.mustafakoceerr.justrelax.feature.saved
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
@@ -19,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
@@ -53,14 +50,14 @@ data object SavedScreen : AppScreen {
                         tabNavigator.current = tabProvider.mixerTab
                     }
 
-                    is SavedContract.Effect.ShowDeleteSnackbar -> {
+                    is SavedContract.Effect.ShowUndoSnackbar -> {
                         val messageStr = effect.message.resolve()
                         val actionStr = effect.actionLabel?.resolve()
 
                         val result = snackbarController.showSnackbar(
                             message = messageStr,
                             actionLabel = actionStr,
-                            duration = SnackbarDuration.Short
+                            duration = SnackbarDuration.Long
                         )
 
                         if (result == SnackbarResult.ActionPerformed) {

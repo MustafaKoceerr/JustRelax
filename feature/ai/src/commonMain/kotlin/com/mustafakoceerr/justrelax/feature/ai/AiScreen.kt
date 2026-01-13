@@ -74,7 +74,6 @@ object AiScreen : AppScreen {
             state = state,
             soundControllerState = soundControllerState,
             onEvent = viewModel::onEvent,
-            snackbarHostState = snackbarController.hostState
         )
     }
 }
@@ -85,7 +84,6 @@ private fun AiScreenContent(
     state: AiContract.State,
     soundControllerState: GlobalMixerState,
     onEvent: (AiContract.Event) -> Unit,
-    snackbarHostState: SnackbarHostState
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val hasResults = state.generatedSounds.isNotEmpty()
@@ -101,7 +99,6 @@ private fun AiScreenContent(
         // Combine status bars and IME insets to handle keyboard padding correctly
         contentWindowInsets = WindowInsets.statusBars.union(WindowInsets.ime),
         containerColor = Color.Transparent,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             JustRelaxTopBar(
                 title = stringResource(Res.string.ai_screen_title),

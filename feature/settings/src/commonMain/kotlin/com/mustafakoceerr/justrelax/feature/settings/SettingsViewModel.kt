@@ -14,9 +14,12 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadA
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsEffect
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsIntent
 import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsState
+import justrelax.feature.settings.generated.resources.Res
+import justrelax.feature.settings.generated.resources.msg_all_sounds_downloaded
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -157,12 +160,12 @@ class SettingsViewModel(
                             isLibraryComplete = true
                         )
                     }
-                    _effect.send(SettingsEffect.ShowMessage("All sounds downloaded!"))
+                    _effect.send(SettingsEffect.ShowMessage(UiText.Resource(Res.string.msg_all_sounds_downloaded)))
                 }
 
                 is DownloadStatus.Error -> {
                     _state.update { it.copy(isDownloadingLibrary = false) }
-                    _effect.send(SettingsEffect.ShowMessage(status.message))
+                    _effect.send(SettingsEffect.ShowMessage(UiText.DynamicString(status.message)))
                 }
 
                 else -> {}

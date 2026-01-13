@@ -12,6 +12,7 @@ import com.mustafakoceerr.justrelax.feature.saved.usecase.PlaySavedMixUseCase
 import com.mustafakoceerr.justrelax.feature.saved.usecase.RestoreSavedMixUseCase
 import justrelax.feature.saved.generated.resources.Res
 import justrelax.feature.saved.generated.resources.action_undo
+import justrelax.feature.saved.generated.resources.err_play_mix_failed
 import justrelax.feature.saved.generated.resources.err_unknown
 import justrelax.feature.saved.generated.resources.msg_mix_deleted
 import kotlinx.coroutines.Job
@@ -81,10 +82,9 @@ class SavedViewModel(
             try {
                 playSavedMixUseCase(mixToPlay)
             } catch (e: Exception) {
-                val errorMsg = if (e is AppError) e.message else "Failed to play mix"
                 sendEffect(
-                    SavedContract.Effect.ShowDeleteSnackbar(
-                        message = UiText.DynamicString(errorMsg ?: "Unknown error")
+                    SavedContract.Effect.ShowUndoSnackbar(
+                        message = UiText.Resource(Res.string.err_play_mix_failed)
                     )
                 )
             }
@@ -98,7 +98,7 @@ class SavedViewModel(
                 deleteSavedMixUseCase(uiMix.id)
 
                 sendEffect(
-                    SavedContract.Effect.ShowDeleteSnackbar(
+                    SavedContract.Effect.ShowUndoSnackbar(
                         message = UiText.Resource(
                             resId = Res.string.msg_mix_deleted,
                             formatArgs = listOf(uiMix.title)
@@ -107,7 +107,7 @@ class SavedViewModel(
                     )
                 )
             } catch (e: Exception) {
-                sendEffect(SavedContract.Effect.ShowDeleteSnackbar(UiText.Resource(Res.string.err_unknown)))
+                sendEffect(SavedContract.Effect.ShowUndoSnackbar(UiText.Resource(Res.string.err_unknown)))
             }
         }
     }
@@ -119,7 +119,7 @@ class SavedViewModel(
                 restoreSavedMixUseCase(mixToRestore)
                 lastDeletedMix = null
             } catch (e: Exception) {
-                sendEffect(SavedContract.Effect.ShowDeleteSnackbar(UiText.Resource(Res.string.err_unknown)))
+                sendEffect(SavedContract.Effect.ShowUndoSnackbar(UiText.Resource(Res.string.err_unknown)))
             }
         }
     }

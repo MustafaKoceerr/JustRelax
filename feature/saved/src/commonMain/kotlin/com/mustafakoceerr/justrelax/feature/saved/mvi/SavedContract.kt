@@ -28,7 +28,7 @@ interface SavedContract {
 
     sealed interface Effect {
         data object NavigateToMixer : Effect
-        data class ShowDeleteSnackbar(
+        data class ShowUndoSnackbar(
             val message: UiText,
             val actionLabel: UiText? = null
         ) : Effect

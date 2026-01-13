@@ -19,5 +19,5 @@
 
     <string name="date_format_short">dd/MM/yyyy</string>
     <string name="err_unknown">Ocurrió un error inesperado.</string>
-
+    <string name="err_play_mix_failed">Error al reproducir la mezcla</string>
 </resources>

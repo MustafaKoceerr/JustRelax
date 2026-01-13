@@ -44,7 +44,7 @@ object HomeScreen : AppScreen {
         val homeNavigator = koinInject<HomeNavigator>()
 
         LaunchedEffect(key1 = true) {
-            screenModel.effect.collectLatest { effect ->
+            screenModel.effect.collect { effect ->
                 when (effect) {
                     is HomeContract.Effect.ShowSnackbar -> {
                         snackbarController.showSnackbar(effect.message.resolve())

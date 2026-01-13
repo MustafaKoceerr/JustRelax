@@ -41,6 +41,7 @@ fun MixCountSelector(
             text = stringResource(Res.string.mix_count_selector_title),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp, bottom = 16.dp)

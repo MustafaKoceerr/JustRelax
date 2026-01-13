@@ -15,4 +15,5 @@
     <string name="err_mix_save_no_sound">No hay sonidos reproduciéndose</string>
 
     <string name="err_unknown">Algo salió mal</string>
+    <string name="err_mixer_generate_failed">No se pudo generar la mezcla. Asegúrate de haber descargado los sonidos.</string>
 </resources>
