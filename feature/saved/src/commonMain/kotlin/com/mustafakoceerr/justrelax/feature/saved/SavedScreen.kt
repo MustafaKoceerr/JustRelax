@@ -4,6 +4,8 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
@@ -79,6 +82,10 @@ data object SavedScreen : AppScreen {
                 )
             }
         ) { innerPadding ->
+            println("Saved screen: start: ${innerPadding.calculateStartPadding(LayoutDirection.Ltr)}")
+            println("Saved screen: end: ${innerPadding.calculateEndPadding(LayoutDirection.Ltr)}")
+            println("Saved screen: top: ${innerPadding.calculateTopPadding()}")
+            println("Saved screen: bottom: ${innerPadding.calculateBottomPadding()}")
 
             SavedScreenContent(
                 state = state,
