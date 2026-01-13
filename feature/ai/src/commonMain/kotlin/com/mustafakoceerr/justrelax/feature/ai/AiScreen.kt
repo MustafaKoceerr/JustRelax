@@ -46,9 +46,7 @@ import com.mustafakoceerr.justrelax.feature.ai.components.AiResultGrid
 import com.mustafakoceerr.justrelax.feature.ai.components.AiVisualizer
 import com.mustafakoceerr.justrelax.feature.ai.mvi.AiContract
 import justrelax.feature.ai.generated.resources.Res
-import justrelax.feature.ai.generated.resources.action_back
-import justrelax.feature.ai.generated.resources.action_clear
-import justrelax.feature.ai.generated.resources.ai_screen_title
+import justrelax.feature.ai.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -91,6 +89,13 @@ private fun AiScreenContent(
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val hasResults = state.generatedSounds.isNotEmpty()
+
+    val suggestions = listOf(
+        stringResource(Res.string.ai_suggestion_rainforest),
+        stringResource(Res.string.ai_suggestion_deep_sleep),
+        stringResource(Res.string.ai_suggestion_cafe),
+        stringResource(Res.string.ai_suggestion_meditation)
+    )
 
     Scaffold(
         // Combine status bars and IME insets to handle keyboard padding correctly
@@ -156,7 +161,14 @@ private fun AiScreenContent(
                                     ?: 0.5f
                             },
                             onToggleSound = { id -> onEvent(AiContract.Event.ToggleSound(id)) },
-                            onVolumeChange = { id, vol -> onEvent(AiContract.Event.ChangeVolume(id, vol)) },
+                            onVolumeChange = { id, vol ->
+                                onEvent(
+                                    AiContract.Event.ChangeVolume(
+                                        id,
+                                        vol
+                                    )
+                                )
+                            },
                             contentPadding = PaddingValues(16.dp),
                             headerContent = {
                                 Column {
@@ -188,7 +200,7 @@ private fun AiScreenContent(
             AiPromptInput(
                 prompt = state.prompt,
                 isThinking = state.isLoading,
-                suggestions = if (hasResults) emptyList() else state.suggestions,
+                suggestions = if (hasResults) emptyList() else suggestions,
                 onPromptChange = { onEvent(AiContract.Event.UpdatePrompt(it)) },
                 onSendClick = {
                     keyboardController?.hide()

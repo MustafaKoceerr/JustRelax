@@ -11,10 +11,6 @@ interface AiContract {
         val generatedMixName: String = "",
         val generatedMixDescription: String = "",
         val generatedSounds: List<Sound> = emptyList(),
-        // todo: fetch from string resources
-        val suggestions: List<String> = listOf(
-            "Rainy Forest", "Deep Sleep", "Cafe Ambience", "Meditation"
-        )
     )
 
     sealed interface Event {
