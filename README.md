@@ -23,94 +23,75 @@
 
 ## 🖼️ App Gallery (Screenshots)
 
-### 📱 Light Theme Screens
+### 📱 Light Theme (8 Screens)
 
 <table>
-    <tr>
-      <th>Home</th>
-      <th>Home (Alt)</th>
-      <th>Mixer</th>
-      <th>Mixer (Alt)</th>
-    </tr>
-    <tr>
-      <td><img src="assets/light_home_1.jpg" height="380"/></td>
-      <td><img src="assets/light_home_2.jpg" height="380"/></td>
-      <td><img src="assets/light_mixer_1.jpg" height="380"/></td>
-      <td><img src="assets/light_mixer_2.jpg" height="380"/></td>
-    </tr>
-  </table>
+  <tr>
+    <th>Splash</th>
+    <th>Home</th>
+    <th>AI</th>
+    <th>AI (Alt)</th>
+  </tr>
+  <tr>
+    <td><img src="assets/JR_light_splash_1.png" height="380"/></td>
+    <td><img src="assets/JR_light_home_1.png" height="380"/></td>
+    <td><img src="assets/JR_light_ai_1.png" height="380"/></td>
+    <td><img src="assets/JR_light_ai_2.png" height="380"/></td>
+  </tr>
+</table>
 
-  <br/>
+<br/>
 
-  <table>
-    <tr>
-      <th>AI Suggestions</th>
-      <th>AI Suggestions (Alt)</th>
-      <th>Saved Mixes</th>
-      <th>Saved Mixes (Alt)</th>
-    </tr>
-    <tr>
-      <td><img src="assets/light_ai_1.jpg" height="380"/></td>
-      <td><img src="assets/light_ai_2.jpg" height="380"/></td>
-      <td><img src="assets/light_saved_1.jpg" height="380"/></td>
-      <td><img src="assets/light_saved_2.jpg" height="380"/></td>
-    </tr>
-  </table>
+<table>
+  <tr>
+    <th>Mixer</th>
+    <th>Timer</th>
+    <th>Saved</th>
+    <th>Settings</th>
+  </tr>
+  <tr>
+    <td><img src="assets/JR_light_mixer_2.png" height="380"/></td>
+    <td><img src="assets/JR_light_timer_2.png" height="380"/></td>
+    <td><img src="assets/JR_light_saved_2.png" height="380"/></td>
+    <td><img src="assets/JR_light_settings_1.png" height="380"/></td>
+  </tr>
+</table>
 
-  <br/>
+---
 
-  <table>
-    <tr>
-      <th>Timer</th>
-      <th>Timer (Alt)</th>
-      <th>Settings</th>
-      <th>Settings (Alt)</th>
-    </tr>
-    <tr>
-      <td><img src="assets/light_timer_1.jpg" height="380"/></td>
-      <td><img src="assets/light_timer_2.jpg" height="380"/></td>
-      <td><img src="assets/light_settings_1.jpg" height="380"/></td>
-      <td><img src="assets/light_settings_2.jpg" height="380"/></td>
-    </tr>
-  </table>
+### 🌙 Dark Theme (8 Screens)
 
-  <br/>
+<table>
+  <tr>
+    <th>Onboarding</th>
+    <th>Home</th>
+    <th>AI</th>
+    <th>AI (Alt)</th>
+  </tr>
+  <tr>
+    <td><img src="assets/JR_dark_onboarding_1.png" height="380"/></td>
+    <td><img src="assets/JR_dark_home_1.png" height="380"/></td>
+    <td><img src="assets/JR_dark_ai_1.png" height="380"/></td>
+    <td><img src="assets/JR_dark_ai_2.png" height="380"/></td>
+  </tr>
+</table>
 
-  <table>
-    <tr>
-      <th>Loading</th>
-      <th>Coming Soon</th>
-      <th>Coming Soon</th>
-      <th>Coming Soon</th>
-    </tr>
-    <tr>
-      <td><img src="assets/light_loading_1.jpg" height="380"/></td>
-      <td align="center"><i>New states planned</i></td>
-      <td align="center"><i>New states planned</i></td>
-      <td align="center"><i>New states planned</i></td>
-    </tr>
-  </table>
+<br/>
 
-  ---
-
-  ### 📱 Dark Theme (Preview)
-
-  <table>
-    <tr>
-      <th>Settings (Dark)</th>
-      <th>Palette Update</th>
-      <th>Palette Update</th>
-      <th>Palette Update</th>
-    </tr>
-    <tr>
-      <td><img src="assets/dark_settings_1.jpg" height="380"/></td>
-      <td align="center"><i>Color palette refinement in progress</i></td>
-      <td align="center"><i>Contrast tuning planned</i></td>
-      <td align="center"><i>Additional screens coming soon</i></td>
-    </tr>
-  </table>
-
-</details>
+<table>
+  <tr>
+    <th>Mixer</th>
+    <th>Timer</th>
+    <th>Saved</th>
+    <th>Settings</th>
+  </tr>
+  <tr>
+    <td><img src="assets/JR_dark_mixer_2.png" height="380"/></td>
+    <td><img src="assets/JR_dark_timer_2.png" height="380"/></td>
+    <td><img src="assets/JR_dark_saved_2.png" height="380"/></td>
+    <td><img src="assets/JR_dark_settings_1.png" height="380"/></td>
+  </tr>
+</table>
 
 ---
 
@@ -232,8 +213,6 @@ Designed with **scalability**, **testability**, and **long-term maintainability*
 
 ## 🚧 Known Limitations & Future Improvements
 
-- Extended offline caching strategies  
-- Further refinement of dark theme palette  
 - Advanced AI-driven personalization  
 
 ---
