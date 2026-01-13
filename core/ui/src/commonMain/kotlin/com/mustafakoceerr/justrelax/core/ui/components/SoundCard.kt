@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -30,9 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -42,15 +39,14 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.mustafakoceerr.justrelax.core.model.Sound
-import com.mustafakoceerr.justrelax.core.ui.extensions.displayName
+import com.mustafakoceerr.justrelax.core.model.SoundUi
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
@@ -63,7 +59,7 @@ private const val ANIM_CONTENT_DELAY = 90
 
 @Composable
 fun SoundCard(
-    sound: Sound,
+    sound: SoundUi,
     isPlaying: Boolean,
     isDownloading: Boolean,
     volume: Float,
@@ -111,7 +107,7 @@ fun SoundCard(
             onClick = debouncedClick,
             containerColor = cardContainerColor,
             isPlaying = isPlaying,
-            soundName = sound.displayName()
+            soundName = sound.name
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -133,7 +129,7 @@ fun SoundCard(
 
         BottomControls(
             isPlaying = isPlaying,
-            soundName = sound.displayName(),
+            soundName = sound.name,
             isDownloaded = sound.isDownloaded,
             volume = volume,
             onVolumeChange = onVolumeChange

@@ -9,8 +9,9 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.StopSoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSingleSoundUseCase
 import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.model.SoundUi
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.home.domain.usecase.GetCategorizedSoundsUseCase
+import com.mustafakoceerr.justrelax.feature.home.domain.usecase.GetLocalizedCategorizedSoundsUseCase
 import com.mustafakoceerr.justrelax.feature.home.mvi.HomeContract
 import justrelax.feature.home.generated.resources.Res
 import justrelax.feature.home.generated.resources.download_failed
@@ -24,14 +25,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    getCategorizedSoundsUseCase: GetCategorizedSoundsUseCase,
+    getLocalizedCategorizedSoundsUseCase: GetLocalizedCategorizedSoundsUseCase,
     getGlobalMixerStateUseCase: GetGlobalMixerStateUseCase,
     private val playSoundUseCase: PlaySoundUseCase,
     private val stopSoundUseCase: StopSoundUseCase,
     private val downloadSingleSoundUseCase: DownloadSingleSoundUseCase,
     private val adjustVolumeUseCase: AdjustVolumeUseCase
 ) : ScreenModel, HomeContract {
-
     private val _state = MutableStateFlow(HomeContract.State())
     val state = _state.asStateFlow()
 
@@ -40,12 +40,14 @@ class HomeViewModel(
 
     init {
         combine(
-            getCategorizedSoundsUseCase(),
+            getLocalizedCategorizedSoundsUseCase(),
             getGlobalMixerStateUseCase()
         ) { soundsResult, playerState ->
             _state.update { currentState ->
-                val categories = (soundsResult as? Resource.Success)?.data ?: currentState.categories
-                val selectedCategory = currentState.selectedCategory ?: categories.keys.firstOrNull()
+                val categories =
+                    (soundsResult as? Resource.Success)?.data ?: currentState.categories
+                val selectedCategory =
+                    currentState.selectedCategory ?: categories.keys.firstOrNull()
 
                 currentState.copy(
                     isLoading = soundsResult is Resource.Loading,
@@ -62,13 +64,14 @@ class HomeViewModel(
             is HomeContract.Event.OnCategorySelected -> {
                 _state.update { it.copy(selectedCategory = event.category) }
             }
+
             is HomeContract.Event.OnSoundClick -> handleSoundClick(event.sound)
             is HomeContract.Event.OnVolumeChange -> adjustVolumeUseCase(event.soundId, event.volume)
             is HomeContract.Event.OnSettingsClick -> sendEffect(HomeContract.Effect.NavigateToSettings)
         }
     }
 
-    private fun handleSoundClick(sound: Sound) {
+    private fun handleSoundClick(sound: SoundUi) {
         screenModelScope.launch {
             val isPlaying = state.value.playerState.activeSounds.any { it.id == sound.id }
 
@@ -83,6 +86,7 @@ class HomeViewModel(
                             )
                             sendEffect(HomeContract.Effect.ShowSnackbar(errorMessage))
                         }
+
                         else -> {}
                     }
                 } else {
@@ -98,10 +102,13 @@ class HomeViewModel(
         }
     }
 
-    private fun downloadSound(sound: Sound) = screenModelScope.launch {
+    private fun downloadSound(sound: SoundUi) = screenModelScope.launch {
         _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds + sound.id) }
 
-        val isSuccess = downloadSingleSoundUseCase(sound)
+        val isSuccess = downloadSingleSoundUseCase(
+            soundId = sound.id,
+            remoteUrl = sound.remoteUrl
+        )
 
         _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - sound.id) }
 

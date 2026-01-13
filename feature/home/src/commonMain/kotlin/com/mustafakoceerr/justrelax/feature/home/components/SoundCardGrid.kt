@@ -9,15 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.model.SoundUi
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 
 @Composable
 fun SoundCardGrid(
-    sounds: List<Sound>,
+    sounds: List<SoundUi>,
     playingSoundIds: Set<String>,
     soundVolumes: Map<String, Float>,
     downloadingSoundIds: Set<String>,
-    onSoundClick: (Sound) -> Unit,
+    onSoundClick: (SoundUi) -> Unit,
     onVolumeChange: (String, Float) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)

@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.ai.mvi
 
-import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.model.SoundUi
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 interface AiContract {
@@ -10,7 +10,7 @@ interface AiContract {
         val isLoading: Boolean = false,
         val generatedMixName: String = "",
         val generatedMixDescription: String = "",
-        val generatedSounds: List<Sound> = emptyList(),
+        val generatedSounds: List<SoundUi> = emptyList(),
     )
 
     sealed interface Event {

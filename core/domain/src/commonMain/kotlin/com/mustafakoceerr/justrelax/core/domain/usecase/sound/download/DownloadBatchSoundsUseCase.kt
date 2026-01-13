@@ -27,7 +27,10 @@ class DownloadBatchSoundsUseCase(
                 launch {
                     semaphore.withPermit {
                         try {
-                            downloadSingleSoundUseCase(sound)
+                            downloadSingleSoundUseCase(
+                                soundId = sound.id,
+                                remoteUrl = sound.remoteUrl
+                            )
                         } catch (e: Exception) {
                             // Log error if needed
                         } finally {

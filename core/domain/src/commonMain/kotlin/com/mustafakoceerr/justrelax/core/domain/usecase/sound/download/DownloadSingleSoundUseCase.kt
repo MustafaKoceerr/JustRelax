@@ -10,13 +10,16 @@ class DownloadSingleSoundUseCase(
     private val fileDownloadRepository: FileDownloadRepository,
     private val soundRepository: SoundRepository
 ) {
-    suspend operator fun invoke(sound: Sound): Boolean {
-        if (sound.isDownloaded) return true
-
+    suspend operator fun invoke(soundId: String, remoteUrl: String): Boolean {
         val soundsDir = localStorageRepository.getSoundsDirectoryPath()
-        val extension = sound.remoteUrl.substringAfterLast('.', "m4a").takeIf { it.isNotEmpty() } ?: "m4a"
-        val finalPath = "$soundsDir/${sound.id}.$extension"
+        val extension = remoteUrl.substringAfterLast('.', "m4a").takeIf { it.isNotEmpty() } ?: "m4a"
+        val finalPath = "$soundsDir/$soundId.$extension"
         val tempPath = "$finalPath.tmp"
+
+        if (localStorageRepository.fileExists(finalPath)) {
+            soundRepository.updateLocalPath(soundId, finalPath)
+            return true
+        }
 
         try {
             if (localStorageRepository.fileExists(tempPath)) {
@@ -24,12 +27,12 @@ class DownloadSingleSoundUseCase(
             }
         } catch (e: Exception) { /* Ignored */ }
 
-        val isSuccess = fileDownloadRepository.downloadFile(sound.remoteUrl, tempPath)
+        val isSuccess = fileDownloadRepository.downloadFile(remoteUrl, tempPath)
 
         if (isSuccess) {
             try {
                 localStorageRepository.moveFile(tempPath, finalPath)
-                soundRepository.updateLocalPath(sound.id, finalPath)
+                soundRepository.updateLocalPath(soundId, finalPath)
                 return true
             } catch (e: Exception) {
                 return false

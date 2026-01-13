@@ -58,9 +58,10 @@ class MixerViewModel(
 
             val mixMap = generateRandomMixUseCase(_state.value.selectedSoundCount)
 
-            val volumeMapForController = mixMap.map { (sound, volume) ->
-                sound.id to volume
+            val volumeMapForController = mixMap.map { (soundUi, volume) ->
+                soundUi.id to volume
             }.toMap()
+
             soundController.setVolumes(volumeMapForController)
 
             setMixUseCase(mixMap)
@@ -68,7 +69,7 @@ class MixerViewModel(
             _state.update {
                 it.copy(
                     isGenerating = false,
-                    mixedSounds = mixMap.keys.toList()
+                    mixedSounds = mixMap.keys.toList() // List<SoundUi>
                 )
             }
         }
