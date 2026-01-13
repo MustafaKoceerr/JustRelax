@@ -11,12 +11,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class MainViewModel(
      getAppThemeUseCase: GetAppThemeUseCase,
-     getAppLanguageUseCase: GetAppLanguageUseCase
 ) : ScreenModel {
-
     val currentTheme = getAppThemeUseCase()
         .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), AppTheme.SYSTEM)
-
-    val currentLanguage = getAppLanguageUseCase()
-        .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), AppLanguage.SYSTEM)
 }

@@ -17,7 +17,6 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppThemeUseC
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetLegalUrlUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SetAppLanguageUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SetAppThemeUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SyncLanguageWithSystemUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.GetSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsIfNecessaryUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsUseCase
@@ -54,7 +53,6 @@ val domainModule = module {
     factoryOf(::SetAppThemeUseCase)
     factoryOf(::GetAppLanguageUseCase)
     factoryOf(::SetAppLanguageUseCase)
-    factoryOf(::SyncLanguageWithSystemUseCase)
 
     // App Setup
     factoryOf(::GetAppSetupStatusUseCase)

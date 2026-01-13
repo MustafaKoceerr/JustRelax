@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.di
 
-import com.mustafakoceerr.justrelax.MainActivityViewModel
 import com.mustafakoceerr.justrelax.core.audio.AudioServiceController
 import com.mustafakoceerr.justrelax.service.AndroidAudioServiceController
 import org.koin.android.ext.koin.androidContext
@@ -14,6 +13,4 @@ actual val platformAudioModule = module {
             context = androidContext()
         )
     }
-
-    viewModelOf(::MainActivityViewModel)
 }
