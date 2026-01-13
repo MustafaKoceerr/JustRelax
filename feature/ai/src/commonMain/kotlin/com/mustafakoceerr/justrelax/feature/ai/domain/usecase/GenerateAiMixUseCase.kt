@@ -29,13 +29,22 @@ class GenerateAiMixUseCase(
 
         val inventoryIds = downloadedSounds.map { it.id }
 
-        val response = when (val aiResult = aiRepository.generateMix(prompt, inventoryIds)) {
-            is Resource.Success -> aiResult.data
-            is Resource.Error -> throw aiResult.error
-            is Resource.Loading -> return@flow
-        }
-
         val currentLanguage = languageController.getCurrentLanguage()
+
+        val targetLanguageName = currentLanguage.aiPromptName
+
+        val modifiedPrompt = """
+            $prompt
+            
+            IMPORTANT: Provide the 'mix_name' and 'description' in $targetLanguageName language.
+        """.trimIndent()
+
+        val response =
+            when (val aiResult = aiRepository.generateMix(modifiedPrompt, inventoryIds)) {
+                is Resource.Success -> aiResult.data
+                is Resource.Error -> throw aiResult.error
+                is Resource.Loading -> return@flow
+            }
 
         val mixMap = mutableMapOf<SoundUi, Float>()
 
