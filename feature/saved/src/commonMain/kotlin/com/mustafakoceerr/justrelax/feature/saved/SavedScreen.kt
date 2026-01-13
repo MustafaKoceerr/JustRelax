@@ -80,10 +80,6 @@ data object SavedScreen : AppScreen {
                 )
             }
         ) { innerPadding ->
-            println("Saved screen: start: ${innerPadding.calculateStartPadding(LayoutDirection.Ltr)}")
-            println("Saved screen: end: ${innerPadding.calculateEndPadding(LayoutDirection.Ltr)}")
-            println("Saved screen: top: ${innerPadding.calculateTopPadding()}")
-            println("Saved screen: bottom: ${innerPadding.calculateBottomPadding()}")
 
             SavedScreenContent(
                 state = state,

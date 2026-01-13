@@ -42,7 +42,6 @@ fun NoInternetView(
     onRetryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val haptic = LocalHapticFeedback.current
 
     val composition by rememberLottieComposition {
         LottieCompositionSpec.DotLottie(
@@ -89,7 +88,6 @@ fun NoInternetView(
 
         FilledTonalButton(
             onClick = {
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 onRetryClick()
             },
             modifier = Modifier.height(56.dp),

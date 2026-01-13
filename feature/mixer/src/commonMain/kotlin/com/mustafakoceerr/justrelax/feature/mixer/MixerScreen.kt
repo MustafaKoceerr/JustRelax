@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
@@ -38,6 +35,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
+import com.mustafakoceerr.justrelax.feature.mixer.components.EmptyMixerState
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixCountSelector
 import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerContract
 import justrelax.feature.mixer.generated.resources.Res
@@ -71,16 +69,12 @@ object MixerScreen : AppScreen {
             containerColor = Color.Transparent,
             contentWindowInsets = WindowInsets(0.dp),
             topBar = {
-                JustRelaxTopBar(title = stringResource(Res.string.mixer_screen_title),)
+                JustRelaxTopBar(title = stringResource(Res.string.mixer_screen_title))
             },
             snackbarHost = {
                 JustRelaxSnackbarHost(hostState = snackbarController.hostState)
             }
         ) { innerPadding ->
-            println("Inner padding top: ${innerPadding.calculateTopPadding()}")
-            println("Inner padding bottom: ${innerPadding.calculateBottomPadding()}")
-            println("Inner padding start: ${innerPadding.calculateStartPadding(LayoutDirection.Ltr)}")
-            println("Inner padding end: ${innerPadding.calculateEndPadding(LayoutDirection.Ltr)}")
             MixerScreenContent(
                 mixerState = mixerState,
                 soundControllerState = soundControllerState,
@@ -98,12 +92,13 @@ private fun MixerScreenContent(
     onEvent: (MixerContract.Event) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 110.dp),
+        columns = GridCells.Adaptive(minSize = 96.dp),
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
         item(span = { GridItemSpan(maxLineSpan) }) {
@@ -113,7 +108,9 @@ private fun MixerScreenContent(
             ) {
                 MixCountSelector(
                     selectedCount = mixerState.selectedSoundCount,
-                    onCountSelected = { count -> onEvent(MixerContract.Event.SelectSoundCount(count)) }
+                    onCountSelected = { count ->
+                        onEvent(MixerContract.Event.SelectSoundCount(count))
+                    }
                 )
 
                 CreateMixButton(
@@ -147,24 +144,12 @@ private fun MixerScreenContent(
             }
         } else {
             item(span = { GridItemSpan(maxLineSpan) }) {
-                Box(
+                EmptyMixerState(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(Res.string.mixer_empty_state_message),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center
-                    )
-                }
+                        .padding(top = 48.dp, bottom = 24.dp)
+                )
             }
-        }
-
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
