@@ -1,7 +1,5 @@
 package com.mustafakoceerr.justrelax.feature.saved.components
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,15 +13,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import justrelax.feature.saved.generated.resources.Res
-import justrelax.feature.saved.generated.resources.action_delete
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,29 +29,23 @@ fun SavedMixSwipeBackground(
     val direction = dismissState.dismissDirection
     val isSwipingToDelete = direction == SwipeToDismissBoxValue.StartToEnd
 
-    val targetColor = if (isSwipingToDelete) {
+    val backgroundColor = if (isSwipingToDelete) {
         MaterialTheme.colorScheme.errorContainer
     } else {
         Color.Transparent
     }
 
-    val animatedColor by animateColorAsState(
-        targetValue = targetColor,
-        animationSpec = tween(durationMillis = 300),
-        label = "SwipeBackgroundColor"
-    )
-
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(animatedColor, shape)
+            .background(backgroundColor, shape)
             .padding(horizontal = 24.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         if (isSwipingToDelete) {
             Icon(
                 imageVector = Icons.Rounded.Delete,
-                contentDescription = stringResource(Res.string.action_delete),
+                contentDescription = null,
                 tint = MaterialTheme.colorScheme.onErrorContainer
             )
         }
