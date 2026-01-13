@@ -2,7 +2,7 @@ package com.mustafakoceerr.justrelax.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-
+// Light Theme
 val primaryLight = Color(0xFF88511D)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFFFDCC2)
@@ -39,40 +39,48 @@ val surfaceContainerLight = Color(0xFFFAEBE0)
 val surfaceContainerHighLight = Color(0xFFF4E6DA)
 val surfaceContainerHighestLight = Color(0xFFEEE0D5)
 
-val primaryDark = Color(0xFF80D4D5)
-val onPrimaryDark = Color(0xFF003738)
-val primaryContainerDark = Color(0xFF004F51)
-val onPrimaryContainerDark = Color(0xFF9CF1F2)
-val secondaryDark = Color(0xFFFFB877)
-val onSecondaryDark = Color(0xFF4B2700)
-val secondaryContainerDark = Color(0xFF6B3B03)
-val onSecondaryContainerDark = Color(0xFFFFDCC0)
-val tertiaryDark = Color(0xFFABD28F)
-val onTertiaryDark = Color(0xFF193706)
-val tertiaryContainerDark = Color(0xFF2F4F1B)
-val onTertiaryContainerDark = Color(0xFFC7EEA9)
+
+// Dark Theme
+val primaryDark = Color(0xFFFFCC99)
+val onPrimaryDark = Color(0xFF48290C)
+val primaryContainerDark = Color(0xFF5B3E23)
+val onPrimaryContainerDark = Color(0xFFFFCC99)
+
+val secondaryDark = Color(0xFFEBCAB1)
+val onSecondaryDark = Color(0xFF452B16)
+val secondaryContainerDark = Color(0xFF5E402A)
+val onSecondaryContainerDark = Color(0xFFEBCAB1)
+
+val tertiaryDark = Color(0xFFC2CC80)
+val onTertiaryDark = Color(0xFF2D3400)
+val tertiaryContainerDark = Color(0xFF424B06)
+val onTertiaryContainerDark = Color(0xFFDEEA96)
+
 val errorDark = Color(0xFFFFB4AB)
 val onErrorDark = Color(0xFF561E19)
 val errorContainerDark = Color(0xFF73342D)
 val onErrorContainerDark = Color(0xFFFFDAD5)
-val backgroundDark = Color(0xFF0E1415)
-val onBackgroundDark = Color(0xFFDDE4E3)
-val surfaceDark = Color(0xFF15130C)
-val onSurfaceDark = Color(0xFFE8E2D4)
-val surfaceVariantDark = Color(0xFF4E4539)
-val onSurfaceVariantDark = Color(0xFFD2C4B4)
-val outlineDark = Color(0xFF9B8F80)
-val outlineVariantDark = Color(0xFF4E4539)
-val scrimDark = Color(0xFF000000)
-val inverseSurfaceDark = Color(0xFFE8E2D4)
-val inverseOnSurfaceDark = Color(0xFF333027)
-val inversePrimaryDark = Color(0xFF00696B)
-val surfaceDimDark = Color(0xFF15130C)
-val surfaceBrightDark = Color(0xFF3C3930)
-val surfaceContainerLowestDark = Color(0xFF100E07)
-val surfaceContainerLowDark = Color(0xFF1D1C13)
-val surfaceContainerDark = Color(0xFF222017)
-val surfaceContainerHighDark = Color(0xFF2C2A21)
-val surfaceContainerHighestDark = Color(0xFF37352B)
+
+val backgroundDark = Color(0xFF1E1B18)
+val onBackgroundDark = Color(0xFFEEE0D5)
+val surfaceDark = Color(0xFF1E1B18)
+val onSurfaceDark = Color(0xFFEEE0D5)
+
+val surfaceVariantDark = Color(0xFF4F4539)
+val onSurfaceVariantDark = Color(0xFFD3C5B5)
+val outlineDark = Color(0xFF9E8E81)
+val outlineVariantDark = Color(0xFF51443A)
+
+val inverseSurfaceDark = Color(0xFFEEE0D5)
+val inverseOnSurfaceDark = Color(0xFF372F27)
+val inversePrimaryDark = Color(0xFF88511D)
+
+val surfaceDimDark = Color(0xFF17130E)
+val surfaceBrightDark = Color(0xFF3D3832)
+val surfaceContainerLowestDark = Color(0xFF110E09)
+val surfaceContainerLowDark = Color(0xFF1F1B16)
+val surfaceContainerDark = Color(0xFF231F1A)
+val surfaceContainerHighDark = Color(0xFF2E2924)
+val surfaceContainerHighestDark = Color(0xFF39342E)
 
 

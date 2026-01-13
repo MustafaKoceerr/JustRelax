@@ -81,12 +81,12 @@ fun SoundCard(
 
     val iconColors = IconColors(
         circleColor = animateColorAsState(
-            targetValue = if (isPlaying) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainer,
+            targetValue = if (isPlaying) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHighest,
             animationSpec = tween(ANIM_COLOR_DURATION),
             label = "IconCircleColor"
         ).value,
         tintColor = animateColorAsState(
-            targetValue = if (isPlaying) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+            targetValue = if (isPlaying) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
             animationSpec = tween(ANIM_COLOR_DURATION),
             label = "IconTintColor"
         ).value
