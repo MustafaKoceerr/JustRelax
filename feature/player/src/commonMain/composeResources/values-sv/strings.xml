@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_mix_dialog_description">Ge din nuvarande ljudkombination ett namn så att du enkelt kan spela upp den senare.</string>
+    <string name="save_mix_dialog_name_error">Namnet får inte vara tomt</string>
+    <string name="save_mix_dialog_name_label">Mixnamn</string>
+    <string name="save_mix_dialog_name_placeholder">t.ex. Djup fokus</string>
+    <string name="save_mix_dialog_title">Spara aktuell mix</string>
+    <string name="action_cancel">Avbryt</string>
+    <string name="action_save">Spara</string>
+    <string name="msg_mix_saved_success">Mix "%1$s" sparades!</string>
+    <string name="err_mix_save_empty_name">Mixnamnet får inte vara tomt.</string>
+    <string name="err_mix_save_name_exists">En mix med det här namnet finns redan.</string>
+    <string name="err_mix_save_no_sound">Inga ljud spelas upp att spara.</string>
+    <string name="err_unknown">Ett oväntat fel inträffade.</string>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="download_complete">모든 사운드가 다운로드되었습니다! 🎉</string>
+    <string name="download_failed">다운로드 실패</string>
+    <string name="home_screen_title">Just Relax</string>
+    <string name="suggestion_hidden">제안을 숨겼습니다.</string>
+    <string name="category_air">바람 &amp; 분위기</string>
+    <string name="category_asmr">ASMR &amp; 트리거</string>
+    <string name="category_city">도시 &amp; 실내</string>
+    <string name="category_music">음악 &amp; 멜로디</string>
+    <string name="category_nature">자연 &amp; 숲</string>
+    <string name="category_noise">화이트 노이즈 &amp; 기계음</string>
+    <string name="category_rain">비 &amp; 폭풍</string>
+    <string name="category_travel">여행 &amp; 교통</string>
+    <string name="category_water">물 &amp; 바다</string>
+    <string name="category_zen">젠 &amp; 명상</string>
+    <string name="download_banner_downloading_progress">사운드 다운로드 중... %1$d%%</string>
+    <string name="download_banner_question_description">끊김 없는 경험을 위해 전체 라이브러리를 기기에 저장할 수 있어요.</string>
+    <string name="download_banner_question_title">모든 사운드를 지금 다운로드할까요?</string>
+    <string name="action_download">다운로드</string>
+    <string name="action_later">나중에</string>
+    <string name="action_settings">설정</string>
+</resources>

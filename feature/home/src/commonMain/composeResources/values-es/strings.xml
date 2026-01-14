@@ -1,26 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="download_complete">¡Todos los sonidos se han descargado! 🎉</string>
-    <string name="suggestion_hidden">Sugerencia oculta.</string>
-    <string name="action_settings">AJUSTES</string>
-
-    <string name="category_rain">Lluvia &amp; Tormenta</string>
-    <string name="category_travel">Viaje &amp; Transporte</string>
-    <string name="category_asmr">ASMR &amp; Estímulos</string>
-    <string name="category_zen">Zen &amp; Meditación</string>
-    <string name="category_music">Música &amp; Melodías</string>
-    <string name="category_water">Agua &amp; Océano</string>
-    <string name="category_nature">Naturaleza &amp; Bosque</string>
-    <string name="category_air">Viento &amp; Atmósfera</string>
-    <string name="category_city">Ciudad &amp; Interior</string>
-    <string name="category_noise">Ruido Blanco &amp; Mecánico</string>
-
-    <string name="download_banner_downloading_progress">Descargando sonidos... %1$d%%</string>
-    <string name="download_banner_question_title">¿Descargar todos los sonidos ahora?</string>
-    <string name="download_banner_question_description">Para una experiencia sin interrupciones, puedes guardar toda la biblioteca en tu dispositivo.</string>
-    <string name="action_later">Más tarde</string>
-    <string name="action_download">Descargar</string>
+    <string name="download_complete">¡Se han descargado todos los sonidos! 🎉</string>
+    <string name="download_failed">Descarga fallida</string>
     <string name="home_screen_title">Just Relax</string>
-    <string name="download_failed">La descarga falló</string>
-
+    <string name="suggestion_hidden">Sugerencia oculta.</string>
+    <string name="category_air">Viento &amp; atmósfera</string>
+    <string name="category_asmr">ASMR &amp; desencadenantes</string>
+    <string name="category_city">Ciudad &amp; interior</string>
+    <string name="category_music">Música &amp; melodías</string>
+    <string name="category_nature">Naturaleza &amp; bosque</string>
+    <string name="category_noise">Ruido blanco &amp; mecánico</string>
+    <string name="category_rain">Lluvia &amp; tormenta</string>
+    <string name="category_travel">Viaje &amp; transporte</string>
+    <string name="category_water">Agua &amp; océano</string>
+    <string name="category_zen">Zen &amp; meditación</string>
+    <string name="download_banner_downloading_progress">Descargando sonidos... %1$d%%</string>
+    <string name="download_banner_question_description">Para una experiencia sin interrupciones, puedes guardar toda la biblioteca en tu dispositivo.</string>
+    <string name="download_banner_question_title">¿Descargar todos los sonidos ahora?</string>
+    <string name="action_download">Descargar</string>
+    <string name="action_later">Más tarde</string>
+    <string name="action_settings">AJUSTES</string>
 </resources>

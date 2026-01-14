@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_mix_dialog_description">現在のサウンドの組み合わせに名前を付けて、後で簡単に再生できるようにします。</string>
+    <string name="save_mix_dialog_name_error">名前は空にできません</string>
+    <string name="save_mix_dialog_name_label">ミックス名</string>
+    <string name="save_mix_dialog_name_placeholder">例：ディープフォーカス</string>
+    <string name="save_mix_dialog_title">現在のミックスを保存</string>
+    <string name="action_cancel">キャンセル</string>
+    <string name="action_save">保存</string>
+    <string name="msg_mix_saved_success">ミックス "%1$s" を保存しました！</string>
+    <string name="err_mix_save_empty_name">ミックス名は空にできません。</string>
+    <string name="err_mix_save_name_exists">この名前のミックスはすでに存在します。</string>
+    <string name="err_mix_save_no_sound">保存する再生中のサウンドがありません。</string>
+    <string name="err_unknown">予期しないエラーが発生しました。</string>
+</resources>

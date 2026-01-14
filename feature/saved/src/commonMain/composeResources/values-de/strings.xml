@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saved_empty_description">Mische deine Lieblingssounds und speichere sie hier. Erstelle deine eigene Ruhe-Sammlung.</string>
+    <string name="saved_empty_image_cd">Noch keine gespeicherten Mixe</string>
+    <string name="saved_empty_title">Noch keine Einträge</string>
+    <string name="saved_mix_metadata">%1$d Sounds • %2$s</string>
+    <string name="saved_screen_title">Gespeicherte Mixe</string>
+    <string name="action_create_new_mix">Neuen Mix erstellen</string>
+    <string name="action_delete">Löschen</string>
+    <string name="action_more_options">Optionen</string>
+    <string name="action_pause">Pausieren</string>
+    <string name="action_play">Abspielen</string>
+    <string name="action_rename">Umbenennen</string>
+    <string name="action_share">Teilen</string>
+    <string name="action_undo">Rückgängig</string>
+    <string name="msg_mix_deleted">Mix gelöscht</string>
+    <string name="date_format_short">dd.MM.yyyy</string>
+    <string name="err_play_mix_failed">Mix konnte nicht abgespielt werden</string>
+    <string name="err_unknown">Ein unerwarteter Fehler ist aufgetreten.</string>
+</resources>

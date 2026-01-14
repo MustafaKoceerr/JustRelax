@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">現在の言語: %1$s</string>
+    <string name="current_theme">現在のテーマ: %1$s</string>
+    <string name="go_to_settings">設定へ</string>
+    <string name="language_english">英語</string>
+    <string name="language_turkish">トルコ語</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_light">ライト</string>
+    <string name="theme_system">システム</string>
+    <string name="category_air">風 &amp; 雰囲気</string>
+    <string name="category_city">街 &amp; 屋内</string>
+    <string name="category_nature">自然 &amp; 森</string>
+    <string name="category_noise">ホワイトノイズ &amp; 機械音</string>
+    <string name="category_water">水 &amp; 雨</string>
+    <string name="sound_cafe">カフェの環境音</string>
+    <string name="sound_campfire">焚き火</string>
+    <string name="sound_fan">ファンの音</string>
+    <string name="sound_forest_birds">森の鳥</string>
+    <string name="sound_ocean">海の波</string>
+    <string name="sound_rain_light">小雨</string>
+    <string name="sound_rain_thunder">雨 &amp; 雷</string>
+    <string name="sound_wind">風の環境音</string>
+    <string name="duration_hour_short">時間</string>
+    <string name="duration_minute_short">分</string>
+    <string name="duration_second_short">秒</string>
+    <string name="msg_mix_saved_success">%1$s を保存しました！</string>
+    <string name="error_generic">問題が発生しました。もう一度お試しください。</string>
+    <string name="error_mix_name_empty">名前は空にできません。</string>
+    <string name="error_mix_name_exists">この名前のミックスはすでに存在します。</string>
+    <string name="error_no_sounds">保存するサウンドがありません。</string>
+    <string name="error_no_sounds_found">おすすめのサウンドがライブラリに見つかりませんでした。</string>
+    <string name="download_complete">すべてのサウンドをダウンロードしました！ 🎉</string>
+    <string name="suggestion_hidden">提案を非表示にしました。</string>
+    <string name="action_settings">設定</string>
+    <string name="tab_ai">AI</string>
+    <string name="tab_home">ホーム</string>
+    <string name="tab_mixer">ミキサー</string>
+    <string name="tab_saved">保存</string>
+    <string name="tab_timer">タイマー</string>
+</resources>

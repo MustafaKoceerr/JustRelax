@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mix_count_selector_title">いくつのサウンドをミックスしますか？</string>
+    <string name="mixer_empty_state_message">数を選んでミックスを始めましょう！</string>
+    <string name="mixer_screen_title">ミキサー</string>
+    <string name="action_create_mix">ミックスを作成</string>
+    <string name="action_save_mix">ミックスを保存</string>
+    <string name="msg_mix_saved_success">%1$s を保存しました！</string>
+    <string name="err_mix_save_empty_name">名前を入力してください</string>
+    <string name="err_mix_save_no_sound">再生中のサウンドがありません</string>
+    <string name="err_mixer_generate_failed">ミックスの生成に失敗しました。サウンドをダウンロードしているか確認してください。</string>
+    <string name="err_unknown">問題が発生しました</string>
+    <string name="error_mix_name_empty">名前は空にできません。</string>
+    <string name="error_mix_name_exists">この名前のミックスはすでに存在します。</string>
+    <string name="error_no_sounds">保存するサウンドがありません。</string>
+</resources>

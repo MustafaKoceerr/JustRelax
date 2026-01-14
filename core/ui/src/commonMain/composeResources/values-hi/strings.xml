@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="go_to_settings">सेटिंग्स पर जाएँ</string>
+    <string name="current_theme">वर्तमान थीम: %1$s</string>
+    <string name="theme_light">हल्का</string>
+    <string name="theme_dark">डार्क</string>
+    <string name="theme_system">सिस्टम</string>
+    <string name="current_language">वर्तमान भाषा: %1$s</string>
+    <string name="language_english">अंग्रेज़ी</string>
+    <string name="language_turkish">तुर्की</string>
+    <string name="sound_rain_light">हल्की बारिश</string>
+    <string name="sound_rain_thunder">बारिश &amp; गरज</string>
+    <string name="sound_ocean">समुद्री लहरें</string>
+    <string name="sound_forest_birds">जंगल के पक्षी</string>
+    <string name="sound_campfire">अलाव</string>
+    <string name="sound_wind">हवा का माहौल</string>
+    <string name="sound_cafe">कैफ़े का माहौल</string>
+    <string name="sound_fan">पंखे की आवाज़</string>
+    <string name="download_suggestion_title">और ध्वनियाँ?</string>
+    <string name="download_suggestion_description">अपनी लाइब्रेरी पूरी करें और मिक्सर का आनंद लें।</string>
+    <string name="download_suggestion_action_cd">देखें</string>
+    <string name="save_mix_dialog_title">मिक्स सहेजें</string>
+    <string name="save_mix_dialog_description">इस मिक्स को एक नाम दें:</string>
+    <string name="save_mix_dialog_name_label">मिक्स का नाम</string>
+    <string name="save_mix_dialog_name_placeholder">जैसे, स्लीप मोड, फोकस...</string>
+    <string name="save_mix_dialog_name_error">कृपया एक नाम दर्ज करें</string>
+    <string name="action_save">सहेजें</string>
+    <string name="action_cancel">रद्द करें</string>
+    <string name="sound_action_download">डाउनलोड</string>
+    <string name="action_dismiss">हटाएँ</string>
+</resources>

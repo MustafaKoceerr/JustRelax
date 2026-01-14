@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="go_to_settings">Ayarlar’a Git</string>
-    <string name="current_theme">Geçerli Tema: %1$s</string>
+    <string name="go_to_settings">Ayarlara Git</string>
+    <string name="current_theme">Mevcut Tema: %1$s</string>
     <string name="theme_light">Açık</string>
     <string name="theme_dark">Koyu</string>
     <string name="theme_system">Sistem</string>
-    <string name="current_language">Geçerli Dil: %1$s</string>
+    <string name="current_language">Mevcut Dil: %1$s</string>
     <string name="language_english">İngilizce</string>
     <string name="language_turkish">Türkçe</string>
     <string name="sound_rain_light">Hafif Yağmur</string>
@@ -17,17 +17,15 @@
     <string name="sound_cafe">Kafe Ambiyansı</string>
     <string name="sound_fan">Vantilatör Sesi</string>
     <string name="download_suggestion_title">Daha fazla ses?</string>
-    <string name="download_suggestion_description">Kütüphaneni tamamla, mixer’ın tadını çıkar.</string>
+    <string name="download_suggestion_description">Kütüphaneni tamamla ve mikserin keyfini çıkar.</string>
     <string name="download_suggestion_action_cd">Görüntüle</string>
-    <string name="save_mix_dialog_title">Mix’i Kaydet</string>
-    <string name="save_mix_dialog_description">Bu karışıma bir isim ver:</string>
-    <string name="save_mix_dialog_name_label">Mix İsmi</string>
-    <string name="save_mix_dialog_name_placeholder">Örn: Uyku Modu, Odaklanma...</string>
-    <string name="save_mix_dialog_name_error">Lütfen bir isim girin</string>
+    <string name="save_mix_dialog_title">Miksi Kaydet</string>
+    <string name="save_mix_dialog_description">Bu mikse bir ad ver:</string>
+    <string name="save_mix_dialog_name_label">Miks Adı</string>
+    <string name="save_mix_dialog_name_placeholder">ör. Uyku Modu, Odak...</string>
+    <string name="save_mix_dialog_name_error">Lütfen bir ad gir</string>
     <string name="action_save">Kaydet</string>
     <string name="action_cancel">İptal</string>
     <string name="sound_action_download">İndir</string>
-
     <string name="action_dismiss">Kapat</string>
-
 </resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="download_complete">Alle geluiden zijn gedownload! 🎉</string>
+    <string name="download_failed">Download mislukt</string>
+    <string name="home_screen_title">Just Relax</string>
+    <string name="suggestion_hidden">Suggestie verborgen.</string>
+    <string name="category_air">Wind &amp; atmosfeer</string>
+    <string name="category_asmr">ASMR &amp; triggers</string>
+    <string name="category_city">Stad &amp; binnen</string>
+    <string name="category_music">Muziek &amp; melodieën</string>
+    <string name="category_nature">Natuur &amp; bos</string>
+    <string name="category_noise">Witte ruis &amp; mechanisch</string>
+    <string name="category_rain">Regen &amp; storm</string>
+    <string name="category_travel">Reizen &amp; vervoer</string>
+    <string name="category_water">Water &amp; oceaan</string>
+    <string name="category_zen">Zen &amp; meditatie</string>
+    <string name="download_banner_downloading_progress">Geluiden downloaden... %1$d%%</string>
+    <string name="download_banner_question_description">Voor een ononderbroken ervaring kun je de volledige bibliotheek op je apparaat opslaan.</string>
+    <string name="download_banner_question_title">Alle geluiden nu downloaden?</string>
+    <string name="action_download">Downloaden</string>
+    <string name="action_later">Later</string>
+    <string name="action_settings">INSTELLINGEN</string>
+</resources>

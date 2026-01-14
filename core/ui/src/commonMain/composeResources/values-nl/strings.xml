@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="go_to_settings">Ga naar Instellingen</string>
+    <string name="current_theme">Huidig thema: %1$s</string>
+    <string name="theme_light">Licht</string>
+    <string name="theme_dark">Donker</string>
+    <string name="theme_system">Systeem</string>
+    <string name="current_language">Huidige taal: %1$s</string>
+    <string name="language_english">Engels</string>
+    <string name="language_turkish">Turks</string>
+    <string name="sound_rain_light">Lichte regen</string>
+    <string name="sound_rain_thunder">Regen &amp; onweer</string>
+    <string name="sound_ocean">Oceaan golven</string>
+    <string name="sound_forest_birds">Bosvogels</string>
+    <string name="sound_campfire">Kampvuur</string>
+    <string name="sound_wind">Wind ambiance</string>
+    <string name="sound_cafe">Café ambiance</string>
+    <string name="sound_fan">Ventilatorgeluid</string>
+    <string name="download_suggestion_title">Meer geluiden?</string>
+    <string name="download_suggestion_description">Maak je bibliotheek compleet en geniet van de mixer.</string>
+    <string name="download_suggestion_action_cd">Bekijken</string>
+    <string name="save_mix_dialog_title">Mix opslaan</string>
+    <string name="save_mix_dialog_description">Geef deze mix een naam:</string>
+    <string name="save_mix_dialog_name_label">Mixnaam</string>
+    <string name="save_mix_dialog_name_placeholder">bijv. Slaapmodus, Focus...</string>
+    <string name="save_mix_dialog_name_error">Voer een naam in</string>
+    <string name="action_save">Opslaan</string>
+    <string name="action_cancel">Annuleren</string>
+    <string name="sound_action_download">Downloaden</string>
+    <string name="action_dismiss">Sluiten</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">Langue actuelle : %1$s</string>
+    <string name="current_theme">Thème actuel : %1$s</string>
+    <string name="language_selection_title">Sélection de la langue</string>
+    <string name="language_settings_title">Paramètres de langue</string>
+    <string name="language_system_default">Par défaut du système</string>
+    <string name="section_content">Contenu</string>
+    <string name="section_support">Support</string>
+    <string name="section_support_legal">Support &amp; Mentions légales</string>
+    <string name="settings_language_title">Langue</string>
+    <string name="settings_title">Paramètres</string>
+    <string name="theme_dark">Sombre</string>
+    <string name="theme_light">Clair</string>
+    <string name="theme_section_title">Apparence</string>
+    <string name="theme_system">Système</string>
+    <string name="download_all_completed_title">Bibliothèque complétée</string>
+    <string name="download_all_subtitle_recommended">Recommandé pour une expérience sans interruption.</string>
+    <string name="download_all_title">Télécharger tous les sons</string>
+    <string name="download_progress">Téléchargement… %1$d%%</string>
+    <string name="rate_app_subtitle">Nous soutenir</string>
+    <string name="rate_app_title">Noter l’application</string>
+    <string name="feedback_body_template">\n\n\n---\nVeuillez écrire votre message ci-dessus.</string>
+    <string name="feedback_subject">Just Relax – Support &amp; Retour</string>
+    <string name="feedback_subtitle">Un souci ?</string>
+    <string name="feedback_title">Contact &amp; Signaler un problème</string>
+    <string name="support_email">kocerlabs@gmail.com</string>
+    <string name="about_title">À propos</string>
+    <string name="privacy_policy_title">Politique de confidentialité</string>
+    <string name="privacy_policy_url">https://www.google.com</string>
+    <string name="terms_conditions_title">Conditions générales</string>
+    <string name="msg_all_sounds_downloaded">Tous les sons ont été téléchargés !</string>
+</resources>

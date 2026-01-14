@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="loading_message_peace">Huzur hazırlanıyor...</string>
+    <string name="loading_message_brand">Just Relax...</string>
+    <string name="loading_message_fire">Çatırtılı ateş hazırlanıyor...</string>
     <string name="loading_message_frequency">Frekanslar ayarlanıyor...</string>
+    <string name="loading_message_mind">Zihnini arındır...</string>
+    <string name="loading_message_nature">Doğayla bağlantı kuruluyor...</string>
+    <string name="loading_message_peace">Huzurun hazırlanıyor...</string>
     <string name="loading_message_rain">Yağmur sesleri toplanıyor...</string>
     <string name="loading_message_wind">Rüzgar ayarlanıyor...</string>
-    <string name="loading_message_fire">Ateşin çıtırtısı getiriliyor...</string>
-    <string name="loading_message_mind">Zihnini boşalt...</string>
-    <string name="loading_message_nature">Doğa ile bağlantı kuruluyor...</string>
-    <string name="loading_message_brand">Just Relax...</string>
 </resources>

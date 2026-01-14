@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">Huidige taal: %1$s</string>
+    <string name="current_theme">Huidig thema: %1$s</string>
+    <string name="go_to_settings">Naar instellingen</string>
+    <string name="language_english">Engels</string>
+    <string name="language_turkish">Turks</string>
+    <string name="theme_dark">Donker</string>
+    <string name="theme_light">Licht</string>
+    <string name="theme_system">Systeem</string>
+    <string name="category_air">Wind &amp; atmosfeer</string>
+    <string name="category_city">Stad &amp; binnen</string>
+    <string name="category_nature">Natuur &amp; bos</string>
+    <string name="category_noise">Witte ruis &amp; mechanisch</string>
+    <string name="category_water">Water &amp; regen</string>
+    <string name="sound_cafe">Café-ambience</string>
+    <string name="sound_campfire">Kampvuur</string>
+    <string name="sound_fan">Ventilatorgeluid</string>
+    <string name="sound_forest_birds">Bosvogels</string>
+    <string name="sound_ocean">Oceaangolven</string>
+    <string name="sound_rain_light">Lichte regen</string>
+    <string name="sound_rain_thunder">Regen &amp; donder</string>
+    <string name="sound_wind">Windambience</string>
+    <string name="duration_hour_short">u</string>
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">s</string>
+    <string name="msg_mix_saved_success">%1$s is succesvol opgeslagen!</string>
+    <string name="error_generic">Er ging iets mis. Probeer het opnieuw.</string>
+    <string name="error_mix_name_empty">Naam mag niet leeg zijn.</string>
+    <string name="error_mix_name_exists">Er bestaat al een mix met deze naam.</string>
+    <string name="error_no_sounds">Er zijn geen geluiden om op te slaan.</string>
+    <string name="error_no_sounds_found">Aanbevolen geluiden zijn niet gevonden in de bibliotheek.</string>
+    <string name="download_complete">Alle geluiden zijn gedownload! 🎉</string>
+    <string name="suggestion_hidden">Suggestie verborgen.</string>
+    <string name="action_settings">INSTELLINGEN</string>
+    <string name="tab_ai">AI</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_mixer">Mixer</string>
+    <string name="tab_saved">Opgeslagen</string>
+    <string name="tab_timer">Timer</string>
+</resources>

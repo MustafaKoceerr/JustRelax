@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loading_message_brand">Just Relax...</string>
+    <string name="loading_message_fire">장작 타는 소리를 준비하는 중...</string>
+    <string name="loading_message_frequency">주파수를 조율하는 중...</string>
+    <string name="loading_message_mind">마음을 비워보세요...</string>
+    <string name="loading_message_nature">자연과 연결하는 중...</string>
+    <string name="loading_message_peace">평온을 준비하는 중...</string>
+    <string name="loading_message_rain">빗소리를 모으는 중...</string>
+    <string name="loading_message_wind">바람을 조정하는 중...</string>
+</resources>

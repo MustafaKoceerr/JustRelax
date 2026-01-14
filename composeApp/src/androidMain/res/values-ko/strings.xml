@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JustRelax</string>
+    <string name="notification_subtitle">Just Relax와 함께 지금을 즐겨보세요</string>
+    <string name="notification_title">편안한 사운드</string>
+    <string name="action_pause">일시정지</string>
+    <string name="action_play">재생</string>
+    <string name="action_stop">정지</string>
+</resources>

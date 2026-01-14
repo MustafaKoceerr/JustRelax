@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_generic">Qualcosa è andato storto. Riprova.</string>
+    <string name="error_no_sounds_found">I suoni consigliati non sono stati trovati nella libreria.</string>
+    <string name="error_no_sounds_to_save">Nessun suono da salvare.</string>
+    <string name="error_mix_name_exists">Esiste già un mix con questo nome.</string>
+    <string name="success_mix_saved">%1$s è stato salvato correttamente!</string>
+    <string name="ai_screen_title">Just Relax AI</string>
+    <string name="ai_suggestion_rainforest">Foresta pluviale</string>
+    <string name="ai_suggestion_deep_sleep">Sonno profondo</string>
+    <string name="ai_suggestion_cafe">Ambiente caffè</string>
+    <string name="ai_suggestion_meditation">Meditazione</string>
+    <string name="ai_suggestion_storm">Tempesta</string>
+    <string name="ai_prompt_placeholder">Descrivi il tuo ambiente ideale...</string>
+    <string name="ai_prompt_placeholder_with_context">Cosa dovremmo aggiungere qui?</string>
+    <string name="ai_context_toggle_cd">Contesto</string>
+    <string name="ai_action_generate">Genera</string>
+    <string name="ai_action_edit">Modifica</string>
+    <string name="ai_action_regenerate">Rigenera</string>
+    <string name="action_save">Salva</string>
+    <string name="msg_mix_saved_success">Il mix '%1$s' è stato salvato correttamente!</string>
+    <string name="err_ai_no_sounds">Nessun suono scaricato trovato. L'IA ha bisogno di suoni per creare un mix.</string>
+    <string name="err_ai_empty_response">L'IA ha restituito una risposta vuota o non valida. Riprova.</string>
+    <string name="err_unknown">Si è verificato un errore imprevisto. Riprova più tardi.</string>
+    <string name="action_back">Indietro</string>
+    <string name="action_clear">Cancella</string>
+    <string name="ai_action_try_another_variation">Prova un'altra variante</string>
+</resources>

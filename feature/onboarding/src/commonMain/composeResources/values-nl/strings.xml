@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_action_download_and_start">Downloaden &amp; starten</string>
+    <string name="onboarding_data_usage_info">Om mobiele data te besparen, wordt Wi‑Fi aanbevolen voor grotere downloads.</string>
+    <string name="onboarding_downloading_message">Geluiden downloaden...</string>
+    <string name="onboarding_downloading_secondary_message">De download gaat op de achtergrond door.</string>
+    <string name="onboarding_full_library_title">Volledige bibliotheek</string>
+    <string name="onboarding_starter_pack_title">Startpakket</string>
+    <string name="onboarding_subtitle">Je kunt de essentiële geluiden downloaden om te starten, of de volledige bibliotheek voor een ononderbroken ervaring.</string>
+    <string name="onboarding_title">Bouw je bibliotheek</string>
+    <string name="download_option_details">%1$d geluiden • %2$d MB</string>
+    <string name="loading_config_message">Bibliotheek voorbereiden...</string>
+    <string name="error_no_internet_desc">Er is een eerste download van essentiële geluiden nodig om je JustRelax-ervaring te starten. Deze eenmalige installatie vereist een internetverbinding.</string>
+    <string name="error_no_internet_title">Installatie vereist</string>
+    <string name="action_retry">Opnieuw proberen</string>
+</resources>

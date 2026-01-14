@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mix_count_selector_title">몇 개의 사운드를 믹스하고 싶으신가요?</string>
+    <string name="mixer_empty_state_message">개수를 선택하고 믹스를 시작하세요!</string>
+    <string name="mixer_screen_title">믹서</string>
+    <string name="action_create_mix">믹스 만들기</string>
+    <string name="action_save_mix">믹스 저장</string>
+    <string name="msg_mix_saved_success">%1$s이(가) 성공적으로 저장되었습니다!</string>
+    <string name="err_mix_save_empty_name">이름을 입력해주세요</string>
+    <string name="err_mix_save_no_sound">재생 중인 사운드가 없습니다</string>
+    <string name="err_mixer_generate_failed">믹스 생성에 실패했습니다. 사운드를 다운로드했는지 확인하세요.</string>
+    <string name="err_unknown">문제가 발생했습니다</string>
+    <string name="error_mix_name_empty">이름은 비워둘 수 없습니다.</string>
+    <string name="error_mix_name_exists">이 이름의 믹스가 이미 존재합니다.</string>
+    <string name="error_no_sounds">저장할 사운드가 없습니다.</string>
+</resources>

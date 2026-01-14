@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">현재 언어: %1$s</string>
+    <string name="current_theme">현재 테마: %1$s</string>
+    <string name="language_selection_title">언어 선택</string>
+    <string name="language_settings_title">언어 설정</string>
+    <string name="language_system_default">시스템 기본값</string>
+    <string name="section_content">콘텐츠</string>
+    <string name="section_support">지원</string>
+    <string name="section_support_legal">지원 &amp; 법적 고지</string>
+    <string name="settings_language_title">언어</string>
+    <string name="settings_title">설정</string>
+    <string name="theme_dark">다크</string>
+    <string name="theme_light">라이트</string>
+    <string name="theme_section_title">모양</string>
+    <string name="theme_system">시스템</string>
+    <string name="download_all_completed_title">라이브러리 완료</string>
+    <string name="download_all_subtitle_recommended">끊김 없는 경험을 위해 추천합니다.</string>
+    <string name="download_all_title">모든 사운드 다운로드</string>
+    <string name="download_progress">다운로드 중… %1$d%%</string>
+    <string name="rate_app_subtitle">응원해주세요</string>
+    <string name="rate_app_title">앱 평가하기</string>
+    <string name="feedback_body_template">\n\n\n---\n위에 메시지를 작성해주세요.</string>
+    <string name="feedback_subject">Just Relax – 지원 &amp; 피드백</string>
+    <string name="feedback_subtitle">문제가 있나요?</string>
+    <string name="feedback_title">문의 &amp; 문제 신고</string>
+    <string name="support_email">kocerlabs@gmail.com</string>
+    <string name="about_title">정보</string>
+    <string name="privacy_policy_title">개인정보 처리방침</string>
+    <string name="privacy_policy_url">https://www.google.com</string>
+    <string name="terms_conditions_title">이용약관</string>
+    <string name="msg_all_sounds_downloaded">모든 사운드가 다운로드되었습니다!</string>
+</resources>

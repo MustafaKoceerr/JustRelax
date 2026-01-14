@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">現在の言語: %1$s</string>
+    <string name="current_theme">現在のテーマ: %1$s</string>
+    <string name="language_selection_title">言語の選択</string>
+    <string name="language_settings_title">言語設定</string>
+    <string name="language_system_default">システム既定</string>
+    <string name="section_content">コンテンツ</string>
+    <string name="section_support">サポート</string>
+    <string name="section_support_legal">サポート &amp; 法的情報</string>
+    <string name="settings_language_title">言語</string>
+    <string name="settings_title">設定</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_light">ライト</string>
+    <string name="theme_section_title">外観</string>
+    <string name="theme_system">システム</string>
+    <string name="download_all_completed_title">ライブラリ完了</string>
+    <string name="download_all_subtitle_recommended">中断のない体験におすすめです。</string>
+    <string name="download_all_title">すべてのサウンドをダウンロード</string>
+    <string name="download_progress">ダウンロード中… %1$d%%</string>
+    <string name="rate_app_subtitle">応援してください</string>
+    <string name="rate_app_title">アプリを評価</string>
+    <string name="feedback_body_template">\n\n\n---\n上にメッセージを入力してください。</string>
+    <string name="feedback_subject">Just Relax – サポート &amp; フィードバック</string>
+    <string name="feedback_subtitle">問題がありますか？</string>
+    <string name="feedback_title">連絡先 &amp; 問題を報告</string>
+    <string name="support_email">kocerlabs@gmail.com</string>
+    <string name="about_title">情報</string>
+    <string name="privacy_policy_title">プライバシーポリシー</string>
+    <string name="privacy_policy_url">https://www.google.com</string>
+    <string name="terms_conditions_title">利用規約</string>
+    <string name="msg_all_sounds_downloaded">すべてのサウンドをダウンロードしました！</string>
+</resources>

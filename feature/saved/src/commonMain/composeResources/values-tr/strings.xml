@@ -1,23 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="saved_empty_image_cd">Henüz kaydedilmiş mix yok</string>
+    <string name="saved_empty_description">Favori seslerini miksle ve buraya kaydet. Kendi huzur koleksiyonunu oluşturmaya başla.</string>
+    <string name="saved_empty_image_cd">Henüz kaydedilmiş miks yok</string>
     <string name="saved_empty_title">Henüz Kayıt Yok</string>
-    <string name="saved_empty_description">Favori seslerini karıştırıp buraya kaydedebilirsin. Kendi huzur koleksiyonunu oluşturmaya başla.</string>
-    <string name="action_create_new_mix">Yeni Mix Oluştur</string>
-    <string name="action_delete">Sil</string>
     <string name="saved_mix_metadata">%1$d Ses • %2$s</string>
-    <string name="action_play">Oynat</string>
-    <string name="action_pause">Duraklat</string>
+    <string name="saved_screen_title">Kayıtlı Miksler</string>
+    <string name="action_create_new_mix">Yeni Miks Oluştur</string>
+    <string name="action_delete">Sil</string>
     <string name="action_more_options">Seçenekler</string>
-    <string name="action_rename">Yeniden Adlandır</string>
+    <string name="action_pause">Duraklat</string>
+    <string name="action_play">Oynat</string>
+    <string name="action_rename">Yeniden adlandır</string>
     <string name="action_share">Paylaş</string>
-    <string name="saved_screen_title">Kayıtlı Mixler</string>
-
-    <string name="msg_mix_deleted">Mix silindi</string>
     <string name="action_undo">Geri al</string>
-
+    <string name="msg_mix_deleted">Miks silindi</string>
     <string name="date_format_short">dd.MM.yyyy</string>
-
-    <string name="err_play_mix_failed">Mix çalınamadı</string>
-    <string name="err_unknown">Bilinmeyen bir hata oluştu</string>
+    <string name="err_play_mix_failed">Miks oynatılamadı</string>
+    <string name="err_unknown">Beklenmeyen bir hata oluştu.</string>
 </resources>

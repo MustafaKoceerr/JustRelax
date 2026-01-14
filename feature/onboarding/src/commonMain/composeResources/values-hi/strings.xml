@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_action_download_and_start">डाउनलोड &amp; शुरू करें</string>
+    <string name="onboarding_data_usage_info">मोबाइल डेटा बचाने के लिए, बड़े डाउनलोड के लिए Wi‑Fi का उपयोग करने की सलाह दी जाती है।</string>
+    <string name="onboarding_downloading_message">ध्वनियाँ डाउनलोड हो रही हैं...</string>
+    <string name="onboarding_downloading_secondary_message">डाउनलोड बैकग्राउंड में जारी रहेगा।</string>
+    <string name="onboarding_full_library_title">पूरी लाइब्रेरी</string>
+    <string name="onboarding_starter_pack_title">स्टार्टर पैक</string>
+    <string name="onboarding_subtitle">शुरू करने के लिए आवश्यक ध्वनियाँ डाउनलोड करें, या बिना रुकावट अनुभव के लिए पूरी लाइब्रेरी।</string>
+    <string name="onboarding_title">अपनी लाइब्रेरी बनाएं</string>
+    <string name="download_option_details">%1$d ध्वनियाँ • %2$d MB</string>
+    <string name="loading_config_message">लाइब्रेरी तैयार की जा रही है...</string>
+    <string name="error_no_internet_desc">आपका JustRelax अनुभव शुरू करने के लिए आवश्यक ध्वनियों का प्रारंभिक डाउनलोड जरूरी है। यह एक‑बार का सेटअप इंटरनेट कनेक्शन मांगता है।</string>
+    <string name="error_no_internet_title">सेटअप आवश्यक</string>
+    <string name="action_retry">फिर से कोशिश करें</string>
+</resources>

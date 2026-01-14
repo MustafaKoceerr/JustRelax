@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_generic">कुछ गलत हो गया। कृपया फिर से प्रयास करें।</string>
+    <string name="error_no_sounds_found">अनुशंसित ध्वनियाँ लाइब्रेरी में नहीं मिलीं।</string>
+    <string name="error_no_sounds_to_save">सहेजने के लिए कोई ध्वनि नहीं है।</string>
+    <string name="error_mix_name_exists">इस नाम का एक मिक्स पहले से मौजूद है।</string>
+    <string name="success_mix_saved">%1$s सफलतापूर्वक सहेजा गया!</string>
+    <string name="ai_screen_title">Just Relax AI</string>
+    <string name="ai_suggestion_rainforest">वर्षावन</string>
+    <string name="ai_suggestion_deep_sleep">गहरी नींद</string>
+    <string name="ai_suggestion_cafe">कैफ़े का माहौल</string>
+    <string name="ai_suggestion_meditation">ध्यान</string>
+    <string name="ai_suggestion_storm">तूफ़ान</string>
+    <string name="ai_prompt_placeholder">अपने आदर्श वातावरण का वर्णन करें...</string>
+    <string name="ai_prompt_placeholder_with_context">हम यहाँ क्या जोड़ें?</string>
+    <string name="ai_context_toggle_cd">संदर्भ</string>
+    <string name="ai_action_generate">बनाएँ</string>
+    <string name="ai_action_edit">संपादित करें</string>
+    <string name="ai_action_regenerate">फिर से बनाएं</string>
+    <string name="action_save">सहेजें</string>
+    <string name="msg_mix_saved_success">मिक्स '%1$s' सफलतापूर्वक सहेजा गया!</string>
+    <string name="err_ai_no_sounds">कोई डाउनलोड की गई ध्वनि नहीं मिली। मिक्स बनाने के लिए AI को ध्वनियों की आवश्यकता है।</string>
+    <string name="err_ai_empty_response">AI ने खाली या अमान्य उत्तर लौटाया। कृपया फिर से प्रयास करें।</string>
+    <string name="err_unknown">एक अप्रत्याशित त्रुटि हुई। कृपया बाद में फिर से प्रयास करें।</string>
+    <string name="action_back">वापस</string>
+    <string name="action_clear">साफ़ करें</string>
+    <string name="ai_action_try_another_variation">एक और वैरिएशन आज़माएँ</string>
+</resources>

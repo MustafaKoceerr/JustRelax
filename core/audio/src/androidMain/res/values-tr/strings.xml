@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Just Relax</string>
-    <string name="channel_name">Oynatılıyor</string>
-    <string name="notification_active_sound_count">
-        %1$d ses çalıyor
-    </string>
+    <string name="channel_name">Çalıyor</string>
+    <string name="notification_active_sound_count">%1$d ses çalıyor</string>
 </resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saved_empty_description">Mixez vos sons préférés et enregistrez-les ici. Commencez à créer votre collection de sérénité.</string>
+    <string name="saved_empty_image_cd">Aucun mix enregistré pour le moment</string>
+    <string name="saved_empty_title">Aucun enregistrement</string>
+    <string name="saved_mix_metadata">%1$d sons • %2$s</string>
+    <string name="saved_screen_title">Mix enregistrés</string>
+    <string name="action_create_new_mix">Créer un nouveau mix</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="action_more_options">Options</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_play">Lire</string>
+    <string name="action_rename">Renommer</string>
+    <string name="action_share">Partager</string>
+    <string name="action_undo">Annuler</string>
+    <string name="msg_mix_deleted">Mix supprimé</string>
+    <string name="date_format_short">dd/MM/yyyy</string>
+    <string name="err_play_mix_failed">Impossible de lire le mix</string>
+    <string name="err_unknown">Une erreur inattendue s’est produite.</string>
+</resources>

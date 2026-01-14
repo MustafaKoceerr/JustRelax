@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_title">Settings</string>
-    <string name="section_content">Content</string>
-    <string name="section_support">Support</string>
-    <string name="theme_section_title">Appearance</string>
-    <string name="theme_system">System</string>
-    <string name="theme_light">Light</string>
-    <string name="theme_dark">Dark</string>
+    <string name="current_language">Current language: %1$s</string>
     <string name="current_theme">Current theme: %1$s</string>
-    <string name="settings_language_title">Language</string>
     <string name="language_selection_title">Language Selection</string>
     <string name="language_settings_title">Language Settings</string>
     <string name="language_system_default">System Default</string>
-    <string name="current_language">Current language: %1$s</string>
-    <string name="download_all_title">Download all sounds</string>
+    <string name="section_content">Content</string>
+    <string name="section_support">Support</string>
+    <string name="section_support_legal">Support &amp; Legal</string>
+    <string name="settings_language_title">Language</string>
+    <string name="settings_title">Settings</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_section_title">Appearance</string>
+    <string name="theme_system">System</string>
     <string name="download_all_completed_title">Library completed</string>
     <string name="download_all_subtitle_recommended">Recommended for uninterrupted experience.</string>
+    <string name="download_all_title">Download all sounds</string>
     <string name="download_progress">Downloading… %1$d%%</string>
-    <string name="rate_app_title">Rate the app</string>
     <string name="rate_app_subtitle">Support us</string>
-    <string name="feedback_title">Contact &amp; Report a Problem</string>
-    <string name="feedback_subtitle">Having an issue?</string>
-    <string name="feedback_subject">Just Relax – Support &amp; Feedback</string>
+    <string name="rate_app_title">Rate the app</string>
     <string name="feedback_body_template">\n\n\n---\nPlease write your message above.</string>
+    <string name="feedback_subject">Just Relax – Support &amp; Feedback</string>
+    <string name="feedback_subtitle">Having an issue?</string>
+    <string name="feedback_title">Contact &amp; Report a Problem</string>
     <string name="support_email">kocerlabs@gmail.com</string>
     <string name="about_title">About</string>
-    <string name="privacy_policy_url">https://www.google.com</string>
-
-    <!-- values/strings.xml (en) -->
-    <string name="section_support_legal">Support &amp; Legal</string>
     <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="privacy_policy_url">https://www.google.com</string>
     <string name="terms_conditions_title">Terms &amp; Conditions</string>
     <string name="msg_all_sounds_downloaded">All sounds downloaded!</string>
-
 </resources>

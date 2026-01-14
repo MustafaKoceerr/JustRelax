@@ -2,7 +2,5 @@
 <resources>
     <string name="app_name">Just Relax</string>
     <string name="channel_name">Reproduciendo</string>
-    <string name="notification_active_sound_count">
-        %1$d sonidos reproduciéndose
-    </string>
+    <string name="notification_active_sound_count">Reproduciendo %1$d sonidos</string>
 </resources>

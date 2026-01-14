@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mix_count_selector_title">आप कितनी ध्वनियाँ मिक्स करना चाहेंगे?</string>
+    <string name="mixer_empty_state_message">एक संख्या चुनें और मिक्स करना शुरू करें!</string>
+    <string name="mixer_screen_title">मिक्सर</string>
+    <string name="action_create_mix">मिक्स बनाएँ</string>
+    <string name="action_save_mix">मिक्स सहेजें</string>
+    <string name="msg_mix_saved_success">%1$s सफलतापूर्वक सहेजा गया!</string>
+    <string name="err_mix_save_empty_name">कृपया एक नाम दर्ज करें</string>
+    <string name="err_mix_save_no_sound">कोई ध्वनि चल नहीं रही है</string>
+    <string name="err_mixer_generate_failed">मिक्स बनाना असफल रहा। सुनिश्चित करें कि आपने ध्वनियाँ डाउनलोड की हैं।</string>
+    <string name="err_unknown">कुछ गलत हो गया</string>
+    <string name="error_mix_name_empty">नाम खाली नहीं हो सकता।</string>
+    <string name="error_mix_name_exists">इस नाम का एक मिक्स पहले से मौजूद है।</string>
+    <string name="error_no_sounds">सहेजने के लिए कोई ध्वनि नहीं है।</string>
+</resources>

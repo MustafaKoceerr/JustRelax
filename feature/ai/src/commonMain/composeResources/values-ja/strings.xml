@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_generic">問題が発生しました。もう一度お試しください。</string>
+    <string name="error_no_sounds_found">おすすめのサウンドがライブラリに見つかりませんでした。</string>
+    <string name="error_no_sounds_to_save">保存するサウンドがありません。</string>
+    <string name="error_mix_name_exists">この名前のミックスはすでに存在します。</string>
+    <string name="success_mix_saved">%1$s を保存しました！</string>
+    <string name="ai_screen_title">Just Relax AI</string>
+    <string name="ai_suggestion_rainforest">熱帯雨林</string>
+    <string name="ai_suggestion_deep_sleep">深い睡眠</string>
+    <string name="ai_suggestion_cafe">カフェの環境音</string>
+    <string name="ai_suggestion_meditation">瞑想</string>
+    <string name="ai_suggestion_storm">嵐</string>
+    <string name="ai_prompt_placeholder">理想の環境を説明してください...</string>
+    <string name="ai_prompt_placeholder_with_context">ここに何を追加しますか？</string>
+    <string name="ai_context_toggle_cd">コンテキスト</string>
+    <string name="ai_action_generate">生成</string>
+    <string name="ai_action_edit">編集</string>
+    <string name="ai_action_regenerate">再生成</string>
+    <string name="action_save">保存</string>
+    <string name="msg_mix_saved_success">ミックス '%1$s' を保存しました！</string>
+    <string name="err_ai_no_sounds">ダウンロード済みのサウンドが見つかりません。ミックス作成にはサウンドが必要です。</string>
+    <string name="err_ai_empty_response">AI の応答が空または無効でした。もう一度お試しください。</string>
+    <string name="err_unknown">予期しないエラーが発生しました。後でもう一度お試しください。</string>
+    <string name="action_back">戻る</string>
+    <string name="action_clear">クリア</string>
+    <string name="ai_action_try_another_variation">別のバリエーションを試す</string>
+</resources>

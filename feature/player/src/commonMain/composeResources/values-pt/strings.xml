@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_mix_dialog_description">Dê um nome à sua combinação de sons atual para reproduzi-la facilmente depois.</string>
+    <string name="save_mix_dialog_name_error">O nome não pode ficar vazio</string>
+    <string name="save_mix_dialog_name_label">Nome do mix</string>
+    <string name="save_mix_dialog_name_placeholder">ex.: Foco profundo</string>
+    <string name="save_mix_dialog_title">Salvar mix atual</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_save">Salvar</string>
+    <string name="msg_mix_saved_success">Mix "%1$s" salvo com sucesso!</string>
+    <string name="err_mix_save_empty_name">O nome do mix não pode ficar vazio.</string>
+    <string name="err_mix_save_name_exists">Já existe um mix com esse nome.</string>
+    <string name="err_mix_save_no_sound">Não há sons tocando para salvar.</string>
+    <string name="err_unknown">Ocorreu um erro inesperado.</string>
+</resources>

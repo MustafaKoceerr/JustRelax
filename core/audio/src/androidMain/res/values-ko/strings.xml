@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Just Relax</string>
+    <string name="channel_name">재생 중</string>
+    <string name="notification_active_sound_count">사운드 %1$d개 재생 중</string>
+</resources>

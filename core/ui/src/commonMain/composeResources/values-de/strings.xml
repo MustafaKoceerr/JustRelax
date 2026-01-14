@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="go_to_settings">Zu den Einstellungen</string>
+    <string name="current_theme">Aktuelles Design: %1$s</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="theme_system">System</string>
+    <string name="current_language">Aktuelle Sprache: %1$s</string>
+    <string name="language_english">Englisch</string>
+    <string name="language_turkish">Türkisch</string>
+    <string name="sound_rain_light">Leichter Regen</string>
+    <string name="sound_rain_thunder">Regen &amp; Donner</string>
+    <string name="sound_ocean">Meereswellen</string>
+    <string name="sound_forest_birds">Waldvögel</string>
+    <string name="sound_campfire">Lagerfeuer</string>
+    <string name="sound_wind">Windatmosphäre</string>
+    <string name="sound_cafe">Café-Atmosphäre</string>
+    <string name="sound_fan">Ventilatorgeräusch</string>
+    <string name="download_suggestion_title">Mehr Sounds?</string>
+    <string name="download_suggestion_description">Vervollständige deine Bibliothek und genieße den Mixer.</string>
+    <string name="download_suggestion_action_cd">Ansehen</string>
+    <string name="save_mix_dialog_title">Mix speichern</string>
+    <string name="save_mix_dialog_description">Gib diesem Mix einen Namen:</string>
+    <string name="save_mix_dialog_name_label">Mix-Name</string>
+    <string name="save_mix_dialog_name_placeholder">z. B. Schlafmodus, Fokus...</string>
+    <string name="save_mix_dialog_name_error">Bitte einen Namen eingeben</string>
+    <string name="action_save">Speichern</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="sound_action_download">Herunterladen</string>
+    <string name="action_dismiss">Schließen</string>
+</resources>

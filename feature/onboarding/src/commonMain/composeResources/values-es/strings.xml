@@ -1,28 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="onboarding_action_download_and_start">Descargar &amp; empezar</string>
+    <string name="onboarding_data_usage_info">Para ahorrar datos móviles, se recomienda usar Wi‑Fi para descargas grandes.</string>
     <string name="onboarding_downloading_message">Descargando sonidos...</string>
-    <string name="onboarding_downloading_secondary_message">La descarga continuará mientras la aplicación se ejecute en segundo plano.</string>
-    <string name="download_option_details">%1$d Sonidos • %2$d MB</string>
-    <string name="loading_config_message">Preparando biblioteca...</string>
-
-    <string name="error_no_internet_title">Configuración Requerida</string>
-    <string name="error_no_internet_desc">Es necesario descargar la biblioteca de sonidos esenciales para iniciar tu experiencia con JustRelax. Esta configuración única requiere una conexión a internet.</string>
+    <string name="onboarding_downloading_secondary_message">La descarga continuará en segundo plano.</string>
+    <string name="onboarding_full_library_title">Biblioteca completa</string>
+    <string name="onboarding_starter_pack_title">Paquete inicial</string>
+    <string name="onboarding_subtitle">Puedes descargar los sonidos esenciales para empezar o la biblioteca completa para una experiencia sin interrupciones.</string>
+    <string name="onboarding_title">Crea tu biblioteca</string>
+    <string name="download_option_details">%1$d sonidos • %2$d MB</string>
+    <string name="loading_config_message">Preparando la biblioteca...</string>
+    <string name="error_no_internet_desc">Se requiere una descarga inicial de sonidos esenciales para comenzar tu experiencia JustRelax. Esta configuración única requiere una conexión a internet.</string>
+    <string name="error_no_internet_title">Se requiere configuración</string>
     <string name="action_retry">Reintentar</string>
-
-
-    <!-- Onboarding Main Titles -->
-    <string name="onboarding_title">Crea tu Biblioteca</string>
-    <string name="onboarding_subtitle">Puedes descargar los sonidos esenciales para comenzar, o la biblioteca completa para una experiencia ininterrumpida.</string>
-
-    <!-- Download Options -->
-    <string name="onboarding_starter_pack_title">Paquete de Inicio</string>
-    <string name="onboarding_full_library_title">Biblioteca Completa</string>
-
-    <!-- Data Usage Info (New & Improved Text) -->
-    <string name="onboarding_data_usage_info">Para ahorrar datos móviles, se recomienda usar una conexión Wi-Fi para las descargas de mayor tamaño.</string>
-
-    <!-- Button -->
-    <string name="onboarding_action_download_and_start">Descargar y Empezar</string>
-
-
 </resources>

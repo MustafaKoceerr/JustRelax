@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="go_to_settings">Ir a Ajustes</string>
     <string name="current_theme">Tema actual: %1$s</string>
@@ -8,25 +8,24 @@
     <string name="current_language">Idioma actual: %1$s</string>
     <string name="language_english">Inglés</string>
     <string name="language_turkish">Turco</string>
-    <string name="sound_rain_light">Lluvia Suave</string>
-    <string name="sound_rain_thunder">Lluvia y Trueno</string>
-    <string name="sound_ocean">Olas del Océano</string>
-    <string name="sound_forest_birds">Aves del Bosque</string>
-    <string name="sound_campfire">Fogata</string>
-    <string name="sound_wind">Ambiente de Viento</string>
-    <string name="sound_cafe">Ambiente de Café</string>
-    <string name="sound_fan">Ruido de Ventilador</string>
+    <string name="sound_rain_light">Lluvia ligera</string>
+    <string name="sound_rain_thunder">Lluvia &amp; truenos</string>
+    <string name="sound_ocean">Olas del mar</string>
+    <string name="sound_forest_birds">Pájaros del bosque</string>
+    <string name="sound_campfire">Hoguera</string>
+    <string name="sound_wind">Ambiente de viento</string>
+    <string name="sound_cafe">Ambiente de cafetería</string>
+    <string name="sound_fan">Ruido de ventilador</string>
     <string name="download_suggestion_title">¿Más sonidos?</string>
     <string name="download_suggestion_description">Completa tu biblioteca y disfruta del mezclador.</string>
     <string name="download_suggestion_action_cd">Ver</string>
-    <string name="save_mix_dialog_title">Guardar Mix</string>
-    <string name="save_mix_dialog_description">Asigna un nombre a este mix:</string>
-    <string name="save_mix_dialog_name_label">Nombre del Mix</string>
-    <string name="save_mix_dialog_name_placeholder">Ej.: Modo Sueño, Concentración...</string>
-    <string name="save_mix_dialog_name_error">Por favor, introduce un nombre</string>
+    <string name="save_mix_dialog_title">Guardar mezcla</string>
+    <string name="save_mix_dialog_description">Ponle un nombre a esta mezcla:</string>
+    <string name="save_mix_dialog_name_label">Nombre de la mezcla</string>
+    <string name="save_mix_dialog_name_placeholder">p. ej., Modo sueño, Enfoque...</string>
+    <string name="save_mix_dialog_name_error">Introduce un nombre</string>
     <string name="action_save">Guardar</string>
     <string name="action_cancel">Cancelar</string>
     <string name="sound_action_download">Descargar</string>
-    <string name="action_dismiss">Cerrar</string>
-
+    <string name="action_dismiss">Descartar</string>
 </resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">Aktuelle Sprache: %1$s</string>
+    <string name="current_theme">Aktuelles Design: %1$s</string>
+    <string name="go_to_settings">Zu den Einstellungen</string>
+    <string name="language_english">Englisch</string>
+    <string name="language_turkish">Türkisch</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_system">System</string>
+    <string name="category_air">Wind &amp; Atmosphäre</string>
+    <string name="category_city">Stadt &amp; Innenbereich</string>
+    <string name="category_nature">Natur &amp; Wald</string>
+    <string name="category_noise">Weißes Rauschen &amp; Mechanik</string>
+    <string name="category_water">Wasser &amp; Regen</string>
+    <string name="sound_cafe">Café-Ambiente</string>
+    <string name="sound_campfire">Lagerfeuer</string>
+    <string name="sound_fan">Ventilatorgeräusch</string>
+    <string name="sound_forest_birds">Waldvögel</string>
+    <string name="sound_ocean">Ozeanwellen</string>
+    <string name="sound_rain_light">Leichter Regen</string>
+    <string name="sound_rain_thunder">Regen &amp; Donner</string>
+    <string name="sound_wind">Wind-Ambiente</string>
+    <string name="duration_hour_short">Std</string>
+    <string name="duration_minute_short">Min</string>
+    <string name="duration_second_short">Sek</string>
+    <string name="msg_mix_saved_success">%1$s wurde erfolgreich gespeichert!</string>
+    <string name="error_generic">Etwas ist schiefgelaufen. Bitte versuche es erneut.</string>
+    <string name="error_mix_name_empty">Name darf nicht leer sein.</string>
+    <string name="error_mix_name_exists">Ein Mix mit diesem Namen existiert bereits.</string>
+    <string name="error_no_sounds">Es gibt keine Sounds zum Speichern.</string>
+    <string name="error_no_sounds_found">Empfohlene Sounds wurden in der Bibliothek nicht gefunden.</string>
+    <string name="download_complete">Alle Sounds wurden heruntergeladen! 🎉</string>
+    <string name="suggestion_hidden">Vorschlag ausgeblendet.</string>
+    <string name="action_settings">EINSTELLUNGEN</string>
+    <string name="tab_ai">KI</string>
+    <string name="tab_home">Start</string>
+    <string name="tab_mixer">Mixer</string>
+    <string name="tab_saved">Gespeichert</string>
+    <string name="tab_timer">Timer</string>
+</resources>

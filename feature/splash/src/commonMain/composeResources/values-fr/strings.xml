@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loading_message_brand">Just Relax...</string>
+    <string name="loading_message_fire">Ajout du crépitement du feu...</string>
+    <string name="loading_message_frequency">Réglage des fréquences...</string>
+    <string name="loading_message_mind">Videz votre esprit...</string>
+    <string name="loading_message_nature">Connexion avec la nature...</string>
+    <string name="loading_message_peace">Préparation de votre sérénité...</string>
+    <string name="loading_message_rain">Collecte des sons de pluie...</string>
+    <string name="loading_message_wind">Ajustement du vent...</string>
+</resources>

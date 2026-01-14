@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_generic">Något gick fel. Försök igen.</string>
+    <string name="error_no_sounds_found">Rekommenderade ljud hittades inte i biblioteket.</string>
+    <string name="error_no_sounds_to_save">Inga ljud att spara.</string>
+    <string name="error_mix_name_exists">En mix med det här namnet finns redan.</string>
+    <string name="success_mix_saved">%1$s har sparats!</string>
+    <string name="ai_screen_title">Just Relax AI</string>
+    <string name="ai_suggestion_rainforest">Regnskog</string>
+    <string name="ai_suggestion_deep_sleep">Djupsömn</string>
+    <string name="ai_suggestion_cafe">Café-stämning</string>
+    <string name="ai_suggestion_meditation">Meditation</string>
+    <string name="ai_suggestion_storm">Storm</string>
+    <string name="ai_prompt_placeholder">Beskriv din idealiska miljö...</string>
+    <string name="ai_prompt_placeholder_with_context">Vad ska vi lägga till här?</string>
+    <string name="ai_context_toggle_cd">Kontext</string>
+    <string name="ai_action_generate">Generera</string>
+    <string name="ai_action_edit">Redigera</string>
+    <string name="ai_action_regenerate">Generera igen</string>
+    <string name="action_save">Spara</string>
+    <string name="msg_mix_saved_success">Mix '%1$s' sparades!</string>
+    <string name="err_ai_no_sounds">Inga nedladdade ljud hittades. AI:n behöver ljud för att skapa en mix.</string>
+    <string name="err_ai_empty_response">AI:n gav ett tomt eller ogiltigt svar. Försök igen.</string>
+    <string name="err_unknown">Ett oväntat fel inträffade. Försök igen senare.</string>
+    <string name="action_back">Tillbaka</string>
+    <string name="action_clear">Rensa</string>
+    <string name="ai_action_try_another_variation">Prova en annan variation</string>
+</resources>

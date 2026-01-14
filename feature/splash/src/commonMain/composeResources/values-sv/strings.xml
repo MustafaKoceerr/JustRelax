@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loading_message_brand">Just Relax...</string>
+    <string name="loading_message_fire">Tar fram eldens sprakande...</string>
+    <string name="loading_message_frequency">Finjusterar frekvenser...</string>
+    <string name="loading_message_mind">Rensa ditt sinne...</string>
+    <string name="loading_message_nature">Kopplar upp mot naturen...</string>
+    <string name="loading_message_peace">Förbereder ditt lugn...</string>
+    <string name="loading_message_rain">Samlar regnljud...</string>
+    <string name="loading_message_wind">Justerar vinden...</string>
+</resources>

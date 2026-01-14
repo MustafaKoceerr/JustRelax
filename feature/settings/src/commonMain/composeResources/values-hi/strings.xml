@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">वर्तमान भाषा: %1$s</string>
+    <string name="current_theme">वर्तमान थीम: %1$s</string>
+    <string name="language_selection_title">भाषा चयन</string>
+    <string name="language_settings_title">भाषा सेटिंग्स</string>
+    <string name="language_system_default">सिस्टम डिफ़ॉल्ट</string>
+    <string name="section_content">सामग्री</string>
+    <string name="section_support">सपोर्ट</string>
+    <string name="section_support_legal">सपोर्ट &amp; कानूनी</string>
+    <string name="settings_language_title">भाषा</string>
+    <string name="settings_title">सेटिंग्स</string>
+    <string name="theme_dark">डार्क</string>
+    <string name="theme_light">हल्का</string>
+    <string name="theme_section_title">दिखावट</string>
+    <string name="theme_system">सिस्टम</string>
+    <string name="download_all_completed_title">लाइब्रेरी पूरी हो गई</string>
+    <string name="download_all_subtitle_recommended">बिना रुकावट अनुभव के लिए अनुशंसित।</string>
+    <string name="download_all_title">सभी ध्वनियाँ डाउनलोड करें</string>
+    <string name="download_progress">डाउनलोड हो रहा है… %1$d%%</string>
+    <string name="rate_app_subtitle">हमें सपोर्ट करें</string>
+    <string name="rate_app_title">ऐप को रेट करें</string>
+    <string name="feedback_body_template">\n\n\n---\nकृपया अपना संदेश ऊपर लिखें।</string>
+    <string name="feedback_subject">Just Relax – सपोर्ट &amp; फीडबैक</string>
+    <string name="feedback_subtitle">कोई समस्या है?</string>
+    <string name="feedback_title">संपर्क करें &amp; समस्या रिपोर्ट करें</string>
+    <string name="support_email">kocerlabs@gmail.com</string>
+    <string name="about_title">जानकारी</string>
+    <string name="privacy_policy_title">गोपनीयता नीति</string>
+    <string name="privacy_policy_url">https://www.google.com</string>
+    <string name="terms_conditions_title">नियम &amp; शर्तें</string>
+    <string name="msg_all_sounds_downloaded">सभी ध्वनियाँ डाउनलोड हो गईं!</string>
+</resources>

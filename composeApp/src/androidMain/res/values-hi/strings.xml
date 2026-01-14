@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JustRelax</string>
+    <string name="notification_subtitle">Just Relax के साथ इस पल का आनंद लें</string>
+    <string name="notification_title">सुकून देने वाली ध्वनियाँ</string>
+    <string name="action_pause">रोकें</string>
+    <string name="action_play">चलाएँ</string>
+    <string name="action_stop">बंद करें</string>
+</resources>

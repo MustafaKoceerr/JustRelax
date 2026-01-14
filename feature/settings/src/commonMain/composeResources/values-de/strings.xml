@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">Aktuelle Sprache: %1$s</string>
+    <string name="current_theme">Aktuelles Design: %1$s</string>
+    <string name="language_selection_title">Sprachauswahl</string>
+    <string name="language_settings_title">Spracheinstellungen</string>
+    <string name="language_system_default">Systemstandard</string>
+    <string name="section_content">Inhalt</string>
+    <string name="section_support">Support</string>
+    <string name="section_support_legal">Support &amp; Rechtliches</string>
+    <string name="settings_language_title">Sprache</string>
+    <string name="settings_title">Einstellungen</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_section_title">Darstellung</string>
+    <string name="theme_system">System</string>
+    <string name="download_all_completed_title">Bibliothek abgeschlossen</string>
+    <string name="download_all_subtitle_recommended">Empfohlen für ein unterbrechungsfreies Erlebnis.</string>
+    <string name="download_all_title">Alle Sounds herunterladen</string>
+    <string name="download_progress">Wird heruntergeladen… %1$d%%</string>
+    <string name="rate_app_subtitle">Unterstütze uns</string>
+    <string name="rate_app_title">App bewerten</string>
+    <string name="feedback_body_template">\n\n\n---\nBitte schreibe deine Nachricht oben.</string>
+    <string name="feedback_subject">Just Relax – Support &amp; Feedback</string>
+    <string name="feedback_subtitle">Gibt es ein Problem?</string>
+    <string name="feedback_title">Kontakt &amp; Problem melden</string>
+    <string name="support_email">kocerlabs@gmail.com</string>
+    <string name="about_title">Über</string>
+    <string name="privacy_policy_title">Datenschutzerklärung</string>
+    <string name="privacy_policy_url">https://www.google.com</string>
+    <string name="terms_conditions_title">Allgemeine Geschäftsbedingungen</string>
+    <string name="msg_all_sounds_downloaded">Alle Sounds heruntergeladen!</string>
+</resources>

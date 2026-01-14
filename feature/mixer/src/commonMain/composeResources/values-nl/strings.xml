@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mix_count_selector_title">Hoeveel geluiden wil je mixen?</string>
+    <string name="mixer_empty_state_message">Kies een aantal en begin met mixen!</string>
+    <string name="mixer_screen_title">Mixer</string>
+    <string name="action_create_mix">Mix maken</string>
+    <string name="action_save_mix">Mix opslaan</string>
+    <string name="msg_mix_saved_success">%1$s is succesvol opgeslagen!</string>
+    <string name="err_mix_save_empty_name">Voer een naam in</string>
+    <string name="err_mix_save_no_sound">Er worden geen geluiden afgespeeld</string>
+    <string name="err_mixer_generate_failed">Mix maken mislukt. Zorg dat je geluiden hebt gedownload.</string>
+    <string name="err_unknown">Er ging iets mis</string>
+    <string name="error_mix_name_empty">Naam mag niet leeg zijn.</string>
+    <string name="error_mix_name_exists">Er bestaat al een mix met deze naam.</string>
+    <string name="error_no_sounds">Er zijn geen geluiden om op te slaan.</string>
+</resources>

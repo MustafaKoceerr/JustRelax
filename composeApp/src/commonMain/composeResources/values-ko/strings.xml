@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">현재 언어: %1$s</string>
+    <string name="current_theme">현재 테마: %1$s</string>
+    <string name="go_to_settings">설정으로 이동</string>
+    <string name="language_english">영어</string>
+    <string name="language_turkish">터키어</string>
+    <string name="theme_dark">다크</string>
+    <string name="theme_light">라이트</string>
+    <string name="theme_system">시스템</string>
+    <string name="category_air">바람 &amp; 분위기</string>
+    <string name="category_city">도시 &amp; 실내</string>
+    <string name="category_nature">자연 &amp; 숲</string>
+    <string name="category_noise">화이트 노이즈 &amp; 기계음</string>
+    <string name="category_water">물 &amp; 비</string>
+    <string name="sound_cafe">카페 앰비언스</string>
+    <string name="sound_campfire">모닥불</string>
+    <string name="sound_fan">선풍기 소리</string>
+    <string name="sound_forest_birds">숲의 새소리</string>
+    <string name="sound_ocean">바다 파도</string>
+    <string name="sound_rain_light">가벼운 비</string>
+    <string name="sound_rain_thunder">비 &amp; 천둥</string>
+    <string name="sound_wind">바람 앰비언스</string>
+    <string name="duration_hour_short">시간</string>
+    <string name="duration_minute_short">분</string>
+    <string name="duration_second_short">초</string>
+    <string name="msg_mix_saved_success">%1$s이(가) 성공적으로 저장되었습니다!</string>
+    <string name="error_generic">문제가 발생했습니다. 다시 시도해주세요.</string>
+    <string name="error_mix_name_empty">이름은 비워둘 수 없습니다.</string>
+    <string name="error_mix_name_exists">이 이름의 믹스가 이미 존재합니다.</string>
+    <string name="error_no_sounds">저장할 사운드가 없습니다.</string>
+    <string name="error_no_sounds_found">추천 사운드를 라이브러리에서 찾을 수 없습니다.</string>
+    <string name="download_complete">모든 사운드가 다운로드되었습니다! 🎉</string>
+    <string name="suggestion_hidden">제안을 숨겼습니다.</string>
+    <string name="action_settings">설정</string>
+    <string name="tab_ai">AI</string>
+    <string name="tab_home">홈</string>
+    <string name="tab_mixer">믹서</string>
+    <string name="tab_saved">저장됨</string>
+    <string name="tab_timer">타이머</string>
+</resources>

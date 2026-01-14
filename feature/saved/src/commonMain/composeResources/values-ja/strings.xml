@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saved_empty_description">お気に入りのサウンドをミックスしてここに保存しましょう。自分だけの安らぎコレクションを作り始めてください。</string>
+    <string name="saved_empty_image_cd">保存されたミックスはまだありません</string>
+    <string name="saved_empty_title">まだ記録がありません</string>
+    <string name="saved_mix_metadata">%1$d サウンド • %2$s</string>
+    <string name="saved_screen_title">保存したミックス</string>
+    <string name="action_create_new_mix">新しいミックスを作成</string>
+    <string name="action_delete">削除</string>
+    <string name="action_more_options">オプション</string>
+    <string name="action_pause">一時停止</string>
+    <string name="action_play">再生</string>
+    <string name="action_rename">名前を変更</string>
+    <string name="action_share">共有</string>
+    <string name="action_undo">元に戻す</string>
+    <string name="msg_mix_deleted">ミックスを削除しました</string>
+    <string name="date_format_short">yyyy/MM/dd</string>
+    <string name="err_play_mix_failed">ミックスの再生に失敗しました</string>
+    <string name="err_unknown">予期しないエラーが発生しました。</string>
+</resources>

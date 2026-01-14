@@ -1,10 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">JustRelax</string>
-    <!-- ... diğerleri ... -->
-    <!-- Bildirim için Yeni Metinler -->
-    <string name="notification_title">Sakinleştirici Sesler</string>
     <string name="notification_subtitle">Just Relax ile anın tadını çıkar</string>
-    <string name="action_play">Oynat</string>
+    <string name="notification_title">Rahatlatıcı Sesler</string>
     <string name="action_pause">Duraklat</string>
+    <string name="action_play">Oynat</string>
     <string name="action_stop">Durdur</string>
 </resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="duration_hour_short">Std</string>
+    <string name="duration_minute_short">Min</string>
+    <string name="duration_second_short">Sek</string>
+    <string name="timer_unit_hour">Stunde</string>
+    <string name="timer_unit_minute">Minute</string>
+    <string name="timer_unit_second">Sekunde</string>
+    <string name="timer_action_delete">Löschen</string>
+    <string name="timer_action_pause">Pausieren</string>
+    <string name="timer_action_resume">Fortsetzen</string>
+    <string name="timer_action_start">Start</string>
+</resources>
