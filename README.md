@@ -23,6 +23,24 @@
 
 ---
 
+📽️ Feature Demos
+<details> <summary><b>🏠 Home & 🧠 AI Suggestions (Click to expand)</b></summary> <p align="center"> <img src="assets/home_demo.gif" width="190" /> <img src="assets/ai_demo.gif" width="190" />
+
+
+<em>Explore ambient sounds and generate AI-driven mixes.</em> </p> </details>
+
+<details> <summary><b>🎚️ Mixer & ⏱️ Timer (Click to expand)</b></summary> <p align="center"> <img src="assets/mixer_demo.gif" width="190" /> <img src="assets/timer_demo.gif" width="190" />
+
+
+<em>Fine-tune your layers and set a sleep timer for your session.</em> </p> </details>
+
+<details> <summary><b>💾 Saved Mixes & ⚙️ Settings (Click to expand)</b></summary> <p align="center"> <img src="assets/saved_demo.gif" width="190" /> <img src="assets/settings_demo.gif" width="190" />
+
+
+<em>Manage your favorite soundscapes and customize your app experience.</em> </p> </details>
+
+
+
 ## 🖼️ App Gallery
 
 ### 📱 Light Theme (8)
