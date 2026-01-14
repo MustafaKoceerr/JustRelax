@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_mix_dialog_description">현재 사운드 조합에 이름을 지정해 나중에 쉽게 재생할 수 있어요.</string>
+    <string name="save_mix_dialog_name_error">이름은 비워둘 수 없습니다</string>
+    <string name="save_mix_dialog_name_label">믹스 이름</string>
+    <string name="save_mix_dialog_name_placeholder">예: 딥 포커스</string>
+    <string name="save_mix_dialog_title">현재 믹스 저장</string>
+    <string name="action_cancel">취소</string>
+    <string name="action_save">저장</string>
+    <string name="msg_mix_saved_success">믹스 "%1$s"이(가) 성공적으로 저장되었습니다!</string>
+    <string name="err_mix_save_empty_name">믹스 이름은 비워둘 수 없습니다.</string>
+    <string name="err_mix_save_name_exists">이 이름의 믹스가 이미 존재합니다.</string>
+    <string name="err_mix_save_no_sound">저장할 재생 중인 사운드가 없습니다.</string>
+    <string name="err_unknown">예기치 않은 오류가 발생했습니다.</string>
+</resources>

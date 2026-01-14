@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saved_empty_description">Mix je favoriete geluiden en sla ze hier op. Begin met het opbouwen van je eigen rustcollectie.</string>
+    <string name="saved_empty_image_cd">Nog geen opgeslagen mixes</string>
+    <string name="saved_empty_title">Nog geen items</string>
+    <string name="saved_mix_metadata">%1$d geluiden • %2$s</string>
+    <string name="saved_screen_title">Opgeslagen mixes</string>
+    <string name="action_create_new_mix">Nieuwe mix maken</string>
+    <string name="action_delete">Verwijderen</string>
+    <string name="action_more_options">Opties</string>
+    <string name="action_pause">Pauzeren</string>
+    <string name="action_play">Afspelen</string>
+    <string name="action_rename">Hernoemen</string>
+    <string name="action_share">Delen</string>
+    <string name="action_undo">Ongedaan maken</string>
+    <string name="msg_mix_deleted">Mix verwijderd</string>
+    <string name="date_format_short">dd-MM-yyyy</string>
+    <string name="err_play_mix_failed">Mix afspelen mislukt</string>
+    <string name="err_unknown">Er is een onverwachte fout opgetreden.</string>
+</resources>

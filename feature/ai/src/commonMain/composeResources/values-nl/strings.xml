@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_generic">Er ging iets mis. Probeer het opnieuw.</string>
+    <string name="error_no_sounds_found">Aanbevolen geluiden zijn niet gevonden in de bibliotheek.</string>
+    <string name="error_no_sounds_to_save">Geen geluiden om op te slaan.</string>
+    <string name="error_mix_name_exists">Er bestaat al een mix met deze naam.</string>
+    <string name="success_mix_saved">%1$s is succesvol opgeslagen!</string>
+    <string name="ai_screen_title">Just Relax AI</string>
+    <string name="ai_suggestion_rainforest">Regenwoud</string>
+    <string name="ai_suggestion_deep_sleep">Diepe slaap</string>
+    <string name="ai_suggestion_cafe">Café-ambiance</string>
+    <string name="ai_suggestion_meditation">Meditatie</string>
+    <string name="ai_suggestion_storm">Storm</string>
+    <string name="ai_prompt_placeholder">Beschrijf je ideale omgeving...</string>
+    <string name="ai_prompt_placeholder_with_context">Wat moeten we hier toevoegen?</string>
+    <string name="ai_context_toggle_cd">Context</string>
+    <string name="ai_action_generate">Genereren</string>
+    <string name="ai_action_edit">Bewerken</string>
+    <string name="ai_action_regenerate">Opnieuw genereren</string>
+    <string name="action_save">Opslaan</string>
+    <string name="msg_mix_saved_success">Mix '%1$s' is succesvol opgeslagen!</string>
+    <string name="err_ai_no_sounds">Geen gedownloade geluiden gevonden. De AI heeft geluiden nodig om een mix te maken.</string>
+    <string name="err_ai_empty_response">De AI gaf een lege of ongeldige reactie terug. Probeer het opnieuw.</string>
+    <string name="err_unknown">Er is een onverwachte fout opgetreden. Probeer het later opnieuw.</string>
+    <string name="action_back">Terug</string>
+    <string name="action_clear">Wissen</string>
+    <string name="ai_action_try_another_variation">Probeer een andere variant</string>
+</resources>

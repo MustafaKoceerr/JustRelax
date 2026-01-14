@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_action_download_and_start">다운로드 &amp; 시작</string>
+    <string name="onboarding_data_usage_info">모바일 데이터를 절약하려면 큰 다운로드에는 Wi‑Fi 사용을 권장합니다.</string>
+    <string name="onboarding_downloading_message">사운드 다운로드 중...</string>
+    <string name="onboarding_downloading_secondary_message">다운로드는 백그라운드에서 계속됩니다.</string>
+    <string name="onboarding_full_library_title">전체 라이브러리</string>
+    <string name="onboarding_starter_pack_title">스타터 팩</string>
+    <string name="onboarding_subtitle">시작을 위해 필수 사운드를 다운로드하거나, 끊김 없는 경험을 위해 전체 라이브러리를 다운로드할 수 있어요.</string>
+    <string name="onboarding_title">라이브러리 만들기</string>
+    <string name="download_option_details">사운드 %1$d개 • %2$d MB</string>
+    <string name="loading_config_message">라이브러리 준비 중...</string>
+    <string name="error_no_internet_desc">JustRelax 경험을 시작하려면 필수 사운드를 처음 한 번 다운로드해야 합니다. 이 1회성 설정에는 인터넷 연결이 필요합니다.</string>
+    <string name="error_no_internet_title">설정 필요</string>
+    <string name="action_retry">다시 시도</string>
+</resources>

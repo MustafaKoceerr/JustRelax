@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loading_message_brand">Just Relax...</string>
+    <string name="loading_message_fire">Het knisperende vuur toevoegen...</string>
+    <string name="loading_message_frequency">Frequenties afstemmen...</string>
+    <string name="loading_message_mind">Maak je hoofd leeg...</string>
+    <string name="loading_message_nature">Verbinden met de natuur...</string>
+    <string name="loading_message_peace">Je rust wordt voorbereid...</string>
+    <string name="loading_message_rain">Regengeluiden verzamelen...</string>
+    <string name="loading_message_wind">De wind afstellen...</string>
+</resources>

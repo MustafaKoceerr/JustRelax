@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JustRelax</string>
+    <string name="notification_subtitle">Geniet van het moment met Just Relax</string>
+    <string name="notification_title">Rustgevende geluiden</string>
+    <string name="action_pause">Pauzeren</string>
+    <string name="action_play">Afspelen</string>
+    <string name="action_stop">Stoppen</string>
+</resources>

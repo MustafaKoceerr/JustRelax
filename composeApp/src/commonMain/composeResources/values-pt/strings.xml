@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">Idioma atual: %1$s</string>
+    <string name="current_theme">Tema atual: %1$s</string>
+    <string name="go_to_settings">Ir para Configurações</string>
+    <string name="language_english">Inglês</string>
+    <string name="language_turkish">Turco</string>
+    <string name="theme_dark">Escuro</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_system">Sistema</string>
+    <string name="category_air">Vento &amp; atmosfera</string>
+    <string name="category_city">Cidade &amp; interno</string>
+    <string name="category_nature">Natureza &amp; floresta</string>
+    <string name="category_noise">Ruído branco &amp; mecânico</string>
+    <string name="category_water">Água &amp; chuva</string>
+    <string name="sound_cafe">Ambiente de café</string>
+    <string name="sound_campfire">Fogueira</string>
+    <string name="sound_fan">Ruído do ventilador</string>
+    <string name="sound_forest_birds">Pássaros da floresta</string>
+    <string name="sound_ocean">Ondas do oceano</string>
+    <string name="sound_rain_light">Chuva leve</string>
+    <string name="sound_rain_thunder">Chuva &amp; trovão</string>
+    <string name="sound_wind">Ambiente de vento</string>
+    <string name="duration_hour_short">h</string>
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">s</string>
+    <string name="msg_mix_saved_success">%1$s foi salvo com sucesso!</string>
+    <string name="error_generic">Algo deu errado. Tente novamente.</string>
+    <string name="error_mix_name_empty">O nome não pode ficar vazio.</string>
+    <string name="error_mix_name_exists">Já existe um mix com esse nome.</string>
+    <string name="error_no_sounds">Não há sons para salvar.</string>
+    <string name="error_no_sounds_found">Os sons recomendados não foram encontrados na biblioteca.</string>
+    <string name="download_complete">Todos os sons foram baixados! 🎉</string>
+    <string name="suggestion_hidden">Sugestão ocultada.</string>
+    <string name="action_settings">CONFIGURAÇÕES</string>
+    <string name="tab_ai">IA</string>
+    <string name="tab_home">Início</string>
+    <string name="tab_mixer">Mixer</string>
+    <string name="tab_saved">Salvos</string>
+    <string name="tab_timer">Temporizador</string>
+</resources>

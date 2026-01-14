@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="go_to_settings">設定へ</string>
+    <string name="current_theme">現在のテーマ: %1$s</string>
+    <string name="theme_light">ライト</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_system">システム</string>
+    <string name="current_language">現在の言語: %1$s</string>
+    <string name="language_english">英語</string>
+    <string name="language_turkish">トルコ語</string>
+    <string name="sound_rain_light">小雨</string>
+    <string name="sound_rain_thunder">雨 &amp; 雷</string>
+    <string name="sound_ocean">海の波</string>
+    <string name="sound_forest_birds">森の鳥</string>
+    <string name="sound_campfire">焚き火</string>
+    <string name="sound_wind">風の環境音</string>
+    <string name="sound_cafe">カフェの環境音</string>
+    <string name="sound_fan">扇風機の音</string>
+    <string name="download_suggestion_title">もっとサウンドを追加しますか？</string>
+    <string name="download_suggestion_description">ライブラリを充実させて、ミキサーを楽しみましょう。</string>
+    <string name="download_suggestion_action_cd">表示</string>
+    <string name="save_mix_dialog_title">ミックスを保存</string>
+    <string name="save_mix_dialog_description">このミックスに名前を付けてください:</string>
+    <string name="save_mix_dialog_name_label">ミックス名</string>
+    <string name="save_mix_dialog_name_placeholder">例: スリープモード、集中...</string>
+    <string name="save_mix_dialog_name_error">名前を入力してください</string>
+    <string name="action_save">保存</string>
+    <string name="action_cancel">キャンセル</string>
+    <string name="sound_action_download">ダウンロード</string>
+    <string name="action_dismiss">閉じる</string>
+</resources>

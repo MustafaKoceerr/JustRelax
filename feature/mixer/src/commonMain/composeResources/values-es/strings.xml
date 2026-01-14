@@ -1,19 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="msg_mix_saved_success">%1$s se guardó correctamente.</string>
-    <string name="error_mix_name_exists">Ya existe un mix con este nombre.</string>
-    <string name="error_mix_name_empty">El nombre no puede estar vacío.</string>
-    <string name="error_no_sounds">No hay sonidos para guardar.</string>
-    <string name="mix_count_selector_title">¿Cuántos sonidos quieres mezclar?</string>
-    <string name="action_create_mix">Crear Mix</string>
-    <string name="action_save_mix">Guardar Mix</string>
-    <string name="mixer_screen_title">Mezclador</string>
+    <string name="mix_count_selector_title">¿Cuántos sonidos te gustaría mezclar?</string>
     <string name="mixer_empty_state_message">Elige un número y empieza a mezclar.</string>
-
-
-    <string name="err_mix_save_empty_name">Por favor, introduce un nombre</string>
-    <string name="err_mix_save_no_sound">No hay sonidos reproduciéndose</string>
-
+    <string name="mixer_screen_title">Mezclador</string>
+    <string name="action_create_mix">Crear mezcla</string>
+    <string name="action_save_mix">Guardar mezcla</string>
+    <string name="msg_mix_saved_success">¡%1$s se guardó correctamente!</string>
+    <string name="err_mix_save_empty_name">Introduce un nombre</string>
+    <string name="err_mix_save_no_sound">No se está reproduciendo ningún sonido</string>
+    <string name="err_mixer_generate_failed">No se pudo generar la mezcla. Asegúrate de haber descargado sonidos.</string>
     <string name="err_unknown">Algo salió mal</string>
-    <string name="err_mixer_generate_failed">No se pudo generar la mezcla. Asegúrate de haber descargado los sonidos.</string>
+    <string name="error_mix_name_empty">El nombre no puede estar vacío.</string>
+    <string name="error_mix_name_exists">Ya existe una mezcla con este nombre.</string>
+    <string name="error_no_sounds">No hay sonidos para guardar.</string>
 </resources>

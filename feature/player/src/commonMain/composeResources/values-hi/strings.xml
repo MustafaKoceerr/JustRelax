@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_mix_dialog_description">अपने वर्तमान साउंड कॉम्बिनेशन को एक नाम दें ताकि बाद में आसानी से चलाया जा सके।</string>
+    <string name="save_mix_dialog_name_error">नाम खाली नहीं हो सकता</string>
+    <string name="save_mix_dialog_name_label">मिक्स का नाम</string>
+    <string name="save_mix_dialog_name_placeholder">जैसे, गहरा फोकस</string>
+    <string name="save_mix_dialog_title">वर्तमान मिक्स सहेजें</string>
+    <string name="action_cancel">रद्द करें</string>
+    <string name="action_save">सहेजें</string>
+    <string name="msg_mix_saved_success">मिक्स "%1$s" सफलतापूर्वक सहेजा गया!</string>
+    <string name="err_mix_save_empty_name">मिक्स का नाम खाली नहीं हो सकता।</string>
+    <string name="err_mix_save_name_exists">इस नाम का एक मिक्स पहले से मौजूद है।</string>
+    <string name="err_mix_save_no_sound">सहेजने के लिए कोई साउंड चल नहीं रहा है।</string>
+    <string name="err_unknown">एक अप्रत्याशित त्रुटि हुई।</string>
+</resources>

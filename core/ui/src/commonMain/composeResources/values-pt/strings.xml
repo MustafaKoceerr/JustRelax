@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="go_to_settings">Ir para Configurações</string>
+    <string name="current_theme">Tema atual: %1$s</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Escuro</string>
+    <string name="theme_system">Sistema</string>
+    <string name="current_language">Idioma atual: %1$s</string>
+    <string name="language_english">Inglês</string>
+    <string name="language_turkish">Turco</string>
+    <string name="sound_rain_light">Chuva leve</string>
+    <string name="sound_rain_thunder">Chuva &amp; trovões</string>
+    <string name="sound_ocean">Ondas do oceano</string>
+    <string name="sound_forest_birds">Pássaros da floresta</string>
+    <string name="sound_campfire">Fogueira</string>
+    <string name="sound_wind">Ambiente de vento</string>
+    <string name="sound_cafe">Ambiente de café</string>
+    <string name="sound_fan">Ruído de ventilador</string>
+    <string name="download_suggestion_title">Mais sons?</string>
+    <string name="download_suggestion_description">Complete sua biblioteca e aproveite o mixer.</string>
+    <string name="download_suggestion_action_cd">Ver</string>
+    <string name="save_mix_dialog_title">Salvar mix</string>
+    <string name="save_mix_dialog_description">Dê um nome para este mix:</string>
+    <string name="save_mix_dialog_name_label">Nome do mix</string>
+    <string name="save_mix_dialog_name_placeholder">ex.: Modo Sono, Foco...</string>
+    <string name="save_mix_dialog_name_error">Por favor, insira um nome</string>
+    <string name="action_save">Salvar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="sound_action_download">Baixar</string>
+    <string name="action_dismiss">Dispensar</string>
+</resources>

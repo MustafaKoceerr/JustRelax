@@ -1,20 +1,15 @@
-<!-- values-tr/strings.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Save Mix Dialog -->
-    <string name="save_mix_dialog_title">Mevcut Karışımı Kaydet</string>
-    <string name="save_mix_dialog_description">Mevcut ses kombinasyonuna bir isim verin, daha sonra kolayca çalın.</string>
-    <string name="save_mix_dialog_name_label">Karışım Adı</string>
-    <string name="save_mix_dialog_name_placeholder">örn., Derin Odak</string>
-    <string name="save_mix_dialog_name_error">Ad boş olamaz</string>
-
-    <!-- Actions -->
-    <string name="action_save">Kaydet</string>
+    <string name="save_mix_dialog_description">Şu anki ses kombinasyonuna bir ad ver; daha sonra kolayca çal.</string>
+    <string name="save_mix_dialog_name_error">İsim boş olamaz</string>
+    <string name="save_mix_dialog_name_label">Miks Adı</string>
+    <string name="save_mix_dialog_name_placeholder">ör. Derin Odak</string>
+    <string name="save_mix_dialog_title">Mevcut Miksi Kaydet</string>
     <string name="action_cancel">İptal</string>
-
-    <!-- Messages & Errors -->
-    <string name="msg_mix_saved_success">\'%1$s\' karışımı başarıyla kaydedildi!</string>
-    <string name="err_mix_save_empty_name">Karışım adı boş olamaz.</string>
-    <string name="err_mix_save_name_exists">Bu adla bir karışım zaten mevcut.</string>
-    <string name="err_mix_save_no_sound">Kaydedilecek çalan ses yok.</string>
+    <string name="action_save">Kaydet</string>
+    <string name="msg_mix_saved_success">Miks "%1$s" başarıyla kaydedildi!</string>
+    <string name="err_mix_save_empty_name">Miks adı boş olamaz.</string>
+    <string name="err_mix_save_name_exists">Bu isimde bir miks zaten var.</string>
+    <string name="err_mix_save_no_sound">Kaydetmek için çalan bir ses yok.</string>
     <string name="err_unknown">Beklenmeyen bir hata oluştu.</string>
 </resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="download_complete">सभी ध्वनियाँ डाउनलोड हो गईं! 🎉</string>
+    <string name="download_failed">डाउनलोड विफल</string>
+    <string name="home_screen_title">Just Relax</string>
+    <string name="suggestion_hidden">सुझाव छिपा दिया गया।</string>
+    <string name="category_air">हवा &amp; वातावरण</string>
+    <string name="category_asmr">ASMR &amp; ट्रिगर्स</string>
+    <string name="category_city">शहर &amp; इनडोर</string>
+    <string name="category_music">संगीत &amp; धुनें</string>
+    <string name="category_nature">प्रकृति &amp; जंगल</string>
+    <string name="category_noise">व्हाइट नॉइज़ &amp; मैकेनिकल</string>
+    <string name="category_rain">बारिश &amp; तूफ़ान</string>
+    <string name="category_travel">यात्रा &amp; परिवहन</string>
+    <string name="category_water">पानी &amp; समुद्र</string>
+    <string name="category_zen">ज़ेन &amp; ध्यान</string>
+    <string name="download_banner_downloading_progress">ध्वनियाँ डाउनलोड हो रही हैं... %1$d%%</string>
+    <string name="download_banner_question_description">बिना रुकावट अनुभव के लिए, आप पूरी लाइब्रेरी अपने डिवाइस में सहेज सकते हैं।</string>
+    <string name="download_banner_question_title">सभी ध्वनियाँ अभी डाउनलोड करें?</string>
+    <string name="action_download">डाउनलोड</string>
+    <string name="action_later">बाद में</string>
+    <string name="action_settings">सेटिंग्स</string>
+</resources>

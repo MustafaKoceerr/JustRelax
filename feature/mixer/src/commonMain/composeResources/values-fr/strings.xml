@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mix_count_selector_title">Combien de sons souhaitez-vous mixer ?</string>
+    <string name="mixer_empty_state_message">Choisis un nombre et commence à mixer !</string>
+    <string name="mixer_screen_title">Mixeur</string>
+    <string name="action_create_mix">Créer un mix</string>
+    <string name="action_save_mix">Enregistrer le mix</string>
+    <string name="msg_mix_saved_success">%1$s a été enregistré avec succès !</string>
+    <string name="err_mix_save_empty_name">Veuillez saisir un nom</string>
+    <string name="err_mix_save_no_sound">Aucun son n’est en lecture</string>
+    <string name="err_mixer_generate_failed">Impossible de générer le mix. Assurez-vous d’avoir téléchargé des sons.</string>
+    <string name="err_unknown">Une erreur s’est produite</string>
+    <string name="error_mix_name_empty">Le nom ne peut pas être vide.</string>
+    <string name="error_mix_name_exists">Un mix portant ce nom existe déjà.</string>
+    <string name="error_no_sounds">Aucun son à enregistrer.</string>
+</resources>

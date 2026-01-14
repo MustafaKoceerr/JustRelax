@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="go_to_settings">설정으로 이동</string>
+    <string name="current_theme">현재 테마: %1$s</string>
+    <string name="theme_light">라이트</string>
+    <string name="theme_dark">다크</string>
+    <string name="theme_system">시스템</string>
+    <string name="current_language">현재 언어: %1$s</string>
+    <string name="language_english">영어</string>
+    <string name="language_turkish">터키어</string>
+    <string name="sound_rain_light">약한 비</string>
+    <string name="sound_rain_thunder">비 &amp; 천둥</string>
+    <string name="sound_ocean">바다 파도</string>
+    <string name="sound_forest_birds">숲 새소리</string>
+    <string name="sound_campfire">모닥불</string>
+    <string name="sound_wind">바람 분위기</string>
+    <string name="sound_cafe">카페 분위기</string>
+    <string name="sound_fan">선풍기 소음</string>
+    <string name="download_suggestion_title">더 많은 사운드?</string>
+    <string name="download_suggestion_description">라이브러리를 완성하고 믹서를 즐겨보세요.</string>
+    <string name="download_suggestion_action_cd">보기</string>
+    <string name="save_mix_dialog_title">믹스 저장</string>
+    <string name="save_mix_dialog_description">이 믹스의 이름을 정하세요:</string>
+    <string name="save_mix_dialog_name_label">믹스 이름</string>
+    <string name="save_mix_dialog_name_placeholder">예: 수면 모드, 집중...</string>
+    <string name="save_mix_dialog_name_error">이름을 입력해주세요</string>
+    <string name="action_save">저장</string>
+    <string name="action_cancel">취소</string>
+    <string name="sound_action_download">다운로드</string>
+    <string name="action_dismiss">닫기</string>
+</resources>

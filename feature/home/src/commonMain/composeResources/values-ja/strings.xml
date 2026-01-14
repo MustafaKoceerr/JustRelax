@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="download_complete">すべてのサウンドをダウンロードしました！ 🎉</string>
+    <string name="download_failed">ダウンロードに失敗しました</string>
+    <string name="home_screen_title">Just Relax</string>
+    <string name="suggestion_hidden">提案を非表示にしました。</string>
+    <string name="category_air">風 &amp; 雰囲気</string>
+    <string name="category_asmr">ASMR &amp; トリガー</string>
+    <string name="category_city">街 &amp; 屋内</string>
+    <string name="category_music">音楽 &amp; メロディ</string>
+    <string name="category_nature">自然 &amp; 森</string>
+    <string name="category_noise">ホワイトノイズ &amp; 機械音</string>
+    <string name="category_rain">雨 &amp; 嵐</string>
+    <string name="category_travel">旅行 &amp; 交通</string>
+    <string name="category_water">水 &amp; 海</string>
+    <string name="category_zen">禅 &amp; 瞑想</string>
+    <string name="download_banner_downloading_progress">サウンドをダウンロード中... %1$d%%</string>
+    <string name="download_banner_question_description">中断のない体験のために、ライブラリ全体を端末に保存できます。</string>
+    <string name="download_banner_question_title">すべてのサウンドを今すぐダウンロードしますか？</string>
+    <string name="action_download">ダウンロード</string>
+    <string name="action_later">後で</string>
+    <string name="action_settings">設定</string>
+</resources>

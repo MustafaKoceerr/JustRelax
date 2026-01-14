@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">Idioma atual: %1$s</string>
+    <string name="current_theme">Tema atual: %1$s</string>
+    <string name="language_selection_title">Seleção de idioma</string>
+    <string name="language_settings_title">Configurações de idioma</string>
+    <string name="language_system_default">Padrão do sistema</string>
+    <string name="section_content">Conteúdo</string>
+    <string name="section_support">Suporte</string>
+    <string name="section_support_legal">Suporte &amp; Legal</string>
+    <string name="settings_language_title">Idioma</string>
+    <string name="settings_title">Configurações</string>
+    <string name="theme_dark">Escuro</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_section_title">Aparência</string>
+    <string name="theme_system">Sistema</string>
+    <string name="download_all_completed_title">Biblioteca concluída</string>
+    <string name="download_all_subtitle_recommended">Recomendado para uma experiência sem interrupções.</string>
+    <string name="download_all_title">Baixar todos os sons</string>
+    <string name="download_progress">Baixando… %1$d%%</string>
+    <string name="rate_app_subtitle">Apoie-nos</string>
+    <string name="rate_app_title">Avaliar o app</string>
+    <string name="feedback_body_template">\n\n\n---\nEscreva sua mensagem acima.</string>
+    <string name="feedback_subject">Just Relax – Suporte &amp; Feedback</string>
+    <string name="feedback_subtitle">Está com algum problema?</string>
+    <string name="feedback_title">Contato &amp; Reportar um problema</string>
+    <string name="support_email">kocerlabs@gmail.com</string>
+    <string name="about_title">Sobre</string>
+    <string name="privacy_policy_title">Política de privacidade</string>
+    <string name="privacy_policy_url">https://www.google.com</string>
+    <string name="terms_conditions_title">Termos &amp; Condições</string>
+    <string name="msg_all_sounds_downloaded">Todos os sons foram baixados!</string>
+</resources>

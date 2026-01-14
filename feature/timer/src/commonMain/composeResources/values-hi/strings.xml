@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="duration_hour_short">घं</string>
+    <string name="duration_minute_short">मि</string>
+    <string name="duration_second_short">से</string>
+    <string name="timer_unit_hour">घंटा</string>
+    <string name="timer_unit_minute">मिनट</string>
+    <string name="timer_unit_second">सेकंड</string>
+    <string name="timer_action_delete">हटाएँ</string>
+    <string name="timer_action_pause">रोकें</string>
+    <string name="timer_action_resume">जारी रखें</string>
+    <string name="timer_action_start">शुरू</string>
+</resources>

@@ -1,30 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="onboarding_action_download_and_start">İndir &amp; Başla</string>
+    <string name="onboarding_data_usage_info">Mobil veriden tasarruf etmek için büyük indirmelerde Wi‑Fi kullanmanız önerilir.</string>
     <string name="onboarding_downloading_message">Sesler indiriliyor...</string>
-    <string name="onboarding_downloading_secondary_message">Uygulama arka planda çalışırken indirme devam edecek.</string>
+    <string name="onboarding_downloading_secondary_message">İndirme arka planda devam edecek.</string>
+    <string name="onboarding_full_library_title">Tam Kütüphane</string>
+    <string name="onboarding_starter_pack_title">Başlangıç Paketi</string>
+    <string name="onboarding_subtitle">Başlamak için temel sesleri ya da kesintisiz bir deneyim için tüm kütüphaneyi indirebilirsin.</string>
+    <string name="onboarding_title">Kütüphaneni Oluştur</string>
     <string name="download_option_details">%1$d Ses • %2$d MB</string>
     <string name="loading_config_message">Kütüphane hazırlanıyor...</string>
-
+    <string name="error_no_internet_desc">JustRelax deneyimine başlamak için gerekli temel seslerin ilk kez indirilmesi gerekir. Bu tek seferlik kurulum için internet bağlantısı gereklidir.</string>
     <string name="error_no_internet_title">Kurulum Gerekli</string>
-    <string name="error_no_internet_desc">JustRelax deneyimini başlatmak için temel ses kütüphanesini indirmeniz gerekiyor. Bu tek seferlik kurulum için internet bağlantısı gereklidir.</string>
     <string name="action_retry">Tekrar Dene</string>
-
-
-    <!-- Onboarding Ana Başlıkları -->
-    <string name="onboarding_title">Kütüphaneni Oluştur</string>
-    <string name="onboarding_subtitle">Başlangıç için temel sesleri veya kesintisiz bir deneyim için tüm kütüphaneyi indirebilirsin.</string>
-
-    <!-- İndirme Seçenekleri -->
-    <string name="onboarding_starter_pack_title">Başlangıç Paketi</string>
-    <string name="onboarding_full_library_title">Tüm Kütüphane</string>
-
-    <!-- Veri Kullanım Uyarısı (Yeni & Gelişmiş Metin) -->
-    <string name="onboarding_data_usage_info">Büyük paketler için mobil veri kullanımından
-        kaçınmak adına Wi-Fi önerilir.</string>
-
-    <!-- Buton -->
-    <string name="onboarding_action_download_and_start">İndir ve Başla</string>
-
-
-
 </resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loading_message_brand">Just Relax...</string>
+    <string name="loading_message_fire">Das Knistern des Feuers wird entfacht...</string>
+    <string name="loading_message_frequency">Frequenzen werden abgestimmt...</string>
+    <string name="loading_message_mind">Leere deinen Geist...</string>
+    <string name="loading_message_nature">Verbindung zur Natur wird hergestellt...</string>
+    <string name="loading_message_peace">Deine Ruhe wird vorbereitet...</string>
+    <string name="loading_message_rain">Regengeräusche werden gesammelt...</string>
+    <string name="loading_message_wind">Der Wind wird angepasst...</string>
+</resources>

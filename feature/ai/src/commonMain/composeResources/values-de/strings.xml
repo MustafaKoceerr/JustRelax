@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_generic">Etwas ist schiefgelaufen. Bitte versuche es erneut.</string>
+    <string name="error_no_sounds_found">Empfohlene Sounds wurden in der Bibliothek nicht gefunden.</string>
+    <string name="error_no_sounds_to_save">Keine Sounds zum Speichern.</string>
+    <string name="error_mix_name_exists">Ein Mix mit diesem Namen existiert bereits.</string>
+    <string name="success_mix_saved">%1$s wurde erfolgreich gespeichert!</string>
+    <string name="ai_screen_title">Just Relax AI</string>
+    <string name="ai_suggestion_rainforest">Regenwald</string>
+    <string name="ai_suggestion_deep_sleep">Tiefschlaf</string>
+    <string name="ai_suggestion_cafe">Café-Atmosphäre</string>
+    <string name="ai_suggestion_meditation">Meditation</string>
+    <string name="ai_suggestion_storm">Sturm</string>
+    <string name="ai_prompt_placeholder">Beschreibe deine ideale Umgebung...</string>
+    <string name="ai_prompt_placeholder_with_context">Was sollen wir hier hinzufügen?</string>
+    <string name="ai_context_toggle_cd">Kontext</string>
+    <string name="ai_action_generate">Generieren</string>
+    <string name="ai_action_edit">Bearbeiten</string>
+    <string name="ai_action_regenerate">Neu generieren</string>
+    <string name="action_save">Speichern</string>
+    <string name="msg_mix_saved_success">Mix '%1$s' wurde erfolgreich gespeichert!</string>
+    <string name="err_ai_no_sounds">Keine heruntergeladenen Sounds gefunden. Die KI benötigt Sounds, um einen Mix zu erstellen.</string>
+    <string name="err_ai_empty_response">Die KI hat eine leere oder ungültige Antwort zurückgegeben. Bitte versuche es erneut.</string>
+    <string name="err_unknown">Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später erneut.</string>
+    <string name="action_back">Zurück</string>
+    <string name="action_clear">Löschen</string>
+    <string name="ai_action_try_another_variation">Eine andere Variante ausprobieren</string>
+</resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="go_to_settings">Gå till Inställningar</string>
+    <string name="current_theme">Aktuellt tema: %1$s</string>
+    <string name="theme_light">Ljust</string>
+    <string name="theme_dark">Mörkt</string>
+    <string name="theme_system">System</string>
+    <string name="current_language">Aktuellt språk: %1$s</string>
+    <string name="language_english">Engelska</string>
+    <string name="language_turkish">Turkiska</string>
+    <string name="sound_rain_light">Lätt regn</string>
+    <string name="sound_rain_thunder">Regn &amp; åska</string>
+    <string name="sound_ocean">Havsvågor</string>
+    <string name="sound_forest_birds">Skogsfåglar</string>
+    <string name="sound_campfire">Lägereld</string>
+    <string name="sound_wind">Vindstämning</string>
+    <string name="sound_cafe">Café-stämning</string>
+    <string name="sound_fan">Fläktljud</string>
+    <string name="download_suggestion_title">Fler ljud?</string>
+    <string name="download_suggestion_description">Fyll på ditt bibliotek och njut av mixern.</string>
+    <string name="download_suggestion_action_cd">Visa</string>
+    <string name="save_mix_dialog_title">Spara mix</string>
+    <string name="save_mix_dialog_description">Ge den här mixen ett namn:</string>
+    <string name="save_mix_dialog_name_label">Mixnamn</string>
+    <string name="save_mix_dialog_name_placeholder">t.ex. Sovläge, Fokus...</string>
+    <string name="save_mix_dialog_name_error">Ange ett namn</string>
+    <string name="action_save">Spara</string>
+    <string name="action_cancel">Avbryt</string>
+    <string name="sound_action_download">Ladda ned</string>
+    <string name="action_dismiss">Stäng</string>
+</resources>

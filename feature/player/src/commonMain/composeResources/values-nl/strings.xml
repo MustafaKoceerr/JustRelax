@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_mix_dialog_description">Geef je huidige geluidscombinatie een naam om deze later makkelijk af te spelen.</string>
+    <string name="save_mix_dialog_name_error">Naam mag niet leeg zijn</string>
+    <string name="save_mix_dialog_name_label">Mixnaam</string>
+    <string name="save_mix_dialog_name_placeholder">bijv. Diepe focus</string>
+    <string name="save_mix_dialog_title">Huidige mix opslaan</string>
+    <string name="action_cancel">Annuleren</string>
+    <string name="action_save">Opslaan</string>
+    <string name="msg_mix_saved_success">Mix "%1$s" succesvol opgeslagen!</string>
+    <string name="err_mix_save_empty_name">Mixnaam mag niet leeg zijn.</string>
+    <string name="err_mix_save_name_exists">Er bestaat al een mix met deze naam.</string>
+    <string name="err_mix_save_no_sound">Er worden geen geluiden afgespeeld om op te slaan.</string>
+    <string name="err_unknown">Er is een onverwachte fout opgetreden.</string>
+</resources>

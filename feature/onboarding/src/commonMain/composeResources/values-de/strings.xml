@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_action_download_and_start">Herunterladen &amp; starten</string>
+    <string name="onboarding_data_usage_info">Um mobile Daten zu sparen, wird für größere Downloads WLAN empfohlen.</string>
+    <string name="onboarding_downloading_message">Sounds werden heruntergeladen...</string>
+    <string name="onboarding_downloading_secondary_message">Der Download wird im Hintergrund fortgesetzt.</string>
+    <string name="onboarding_full_library_title">Komplette Bibliothek</string>
+    <string name="onboarding_starter_pack_title">Starter-Paket</string>
+    <string name="onboarding_subtitle">Du kannst die wichtigsten Sounds zum Start herunterladen oder die komplette Bibliothek für ein unterbrechungsfreies Erlebnis.</string>
+    <string name="onboarding_title">Erstelle deine Bibliothek</string>
+    <string name="download_option_details">%1$d Sounds • %2$d MB</string>
+    <string name="loading_config_message">Bibliothek wird vorbereitet...</string>
+    <string name="error_no_internet_desc">Zum Starten deiner JustRelax-Erfahrung ist ein initialer Download der wichtigsten Sounds erforderlich. Diese einmalige Einrichtung benötigt eine Internetverbindung.</string>
+    <string name="error_no_internet_title">Einrichtung erforderlich</string>
+    <string name="action_retry">Erneut versuchen</string>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">Langue actuelle : %1$s</string>
+    <string name="current_theme">Thème actuel : %1$s</string>
+    <string name="go_to_settings">Aller aux paramètres</string>
+    <string name="language_english">Anglais</string>
+    <string name="language_turkish">Turc</string>
+    <string name="theme_dark">Sombre</string>
+    <string name="theme_light">Clair</string>
+    <string name="theme_system">Système</string>
+    <string name="category_air">Vent &amp; atmosphère</string>
+    <string name="category_city">Ville &amp; intérieur</string>
+    <string name="category_nature">Nature &amp; forêt</string>
+    <string name="category_noise">Bruit blanc &amp; mécanique</string>
+    <string name="category_water">Eau &amp; pluie</string>
+    <string name="sound_cafe">Ambiance de café</string>
+    <string name="sound_campfire">Feu de camp</string>
+    <string name="sound_fan">Bruit de ventilateur</string>
+    <string name="sound_forest_birds">Oiseaux de la forêt</string>
+    <string name="sound_ocean">Vagues de l’océan</string>
+    <string name="sound_rain_light">Pluie légère</string>
+    <string name="sound_rain_thunder">Pluie &amp; tonnerre</string>
+    <string name="sound_wind">Ambiance de vent</string>
+    <string name="duration_hour_short">h</string>
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">s</string>
+    <string name="msg_mix_saved_success">%1$s a été enregistré avec succès !</string>
+    <string name="error_generic">Une erreur s’est produite. Veuillez réessayer.</string>
+    <string name="error_mix_name_empty">Le nom ne peut pas être vide.</string>
+    <string name="error_mix_name_exists">Un mix portant ce nom existe déjà.</string>
+    <string name="error_no_sounds">Aucun son à enregistrer.</string>
+    <string name="error_no_sounds_found">Les sons recommandés n’ont pas été trouvés dans la bibliothèque.</string>
+    <string name="download_complete">Tous les sons ont été téléchargés ! 🎉</string>
+    <string name="suggestion_hidden">Suggestion masquée.</string>
+    <string name="action_settings">PARAMÈTRES</string>
+    <string name="tab_ai">IA</string>
+    <string name="tab_home">Accueil</string>
+    <string name="tab_mixer">Mixeur</string>
+    <string name="tab_saved">Enregistrés</string>
+    <string name="tab_timer">Minuteur</string>
+</resources>

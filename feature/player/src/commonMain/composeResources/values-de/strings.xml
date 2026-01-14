@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_mix_dialog_description">Gib deiner aktuellen Sound-Kombination einen Namen, um sie später leicht abzuspielen.</string>
+    <string name="save_mix_dialog_name_error">Name darf nicht leer sein</string>
+    <string name="save_mix_dialog_name_label">Mix-Name</string>
+    <string name="save_mix_dialog_name_placeholder">z. B. Tiefes Fokus</string>
+    <string name="save_mix_dialog_title">Aktuellen Mix speichern</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="action_save">Speichern</string>
+    <string name="msg_mix_saved_success">Mix "%1$s" wurde erfolgreich gespeichert!</string>
+    <string name="err_mix_save_empty_name">Der Mix-Name darf nicht leer sein.</string>
+    <string name="err_mix_save_name_exists">Ein Mix mit diesem Namen existiert bereits.</string>
+    <string name="err_mix_save_no_sound">Es werden keine Sounds abgespielt, die gespeichert werden können.</string>
+    <string name="err_unknown">Ein unerwarteter Fehler ist aufgetreten.</string>
+</resources>

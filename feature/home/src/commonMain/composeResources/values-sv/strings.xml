@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="download_complete">Alla ljud har laddats ned! 🎉</string>
+    <string name="download_failed">Nedladdning misslyckades</string>
+    <string name="home_screen_title">Just Relax</string>
+    <string name="suggestion_hidden">Förslag dolt.</string>
+    <string name="category_air">Vind &amp; atmosfär</string>
+    <string name="category_asmr">ASMR &amp; triggers</string>
+    <string name="category_city">Stad &amp; inomhus</string>
+    <string name="category_music">Musik &amp; melodier</string>
+    <string name="category_nature">Natur &amp; skog</string>
+    <string name="category_noise">Vitt brus &amp; mekaniskt</string>
+    <string name="category_rain">Regn &amp; storm</string>
+    <string name="category_travel">Resor &amp; transport</string>
+    <string name="category_water">Vatten &amp; hav</string>
+    <string name="category_zen">Zen &amp; meditation</string>
+    <string name="download_banner_downloading_progress">Laddar ned ljud... %1$d%%</string>
+    <string name="download_banner_question_description">För en oavbruten upplevelse kan du spara hela biblioteket på din enhet.</string>
+    <string name="download_banner_question_title">Ladda ned alla ljud nu?</string>
+    <string name="action_download">Ladda ned</string>
+    <string name="action_later">Senare</string>
+    <string name="action_settings">INSTÄLLNINGAR</string>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_action_download_and_start">Ladda ned &amp; starta</string>
+    <string name="onboarding_data_usage_info">För att spara mobildata rekommenderas Wi‑Fi för större nedladdningar.</string>
+    <string name="onboarding_downloading_message">Laddar ned ljud...</string>
+    <string name="onboarding_downloading_secondary_message">Nedladdningen fortsätter i bakgrunden.</string>
+    <string name="onboarding_full_library_title">Hela biblioteket</string>
+    <string name="onboarding_starter_pack_title">Startpaket</string>
+    <string name="onboarding_subtitle">Du kan ladda ned de viktigaste ljuden för att komma igång, eller hela biblioteket för en oavbruten upplevelse.</string>
+    <string name="onboarding_title">Bygg ditt bibliotek</string>
+    <string name="download_option_details">%1$d ljud • %2$d MB</string>
+    <string name="loading_config_message">Förbereder biblioteket...</string>
+    <string name="error_no_internet_desc">En första nedladdning av nödvändiga ljud krävs för att starta din JustRelax-upplevelse. Denna engångskonfiguration kräver en internetanslutning.</string>
+    <string name="error_no_internet_title">Konfiguration krävs</string>
+    <string name="action_retry">Försök igen</string>
+</resources>

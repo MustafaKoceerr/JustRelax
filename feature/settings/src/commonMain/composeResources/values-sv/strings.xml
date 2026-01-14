@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">Aktuellt språk: %1$s</string>
+    <string name="current_theme">Aktuellt tema: %1$s</string>
+    <string name="language_selection_title">Språkval</string>
+    <string name="language_settings_title">Språkinställningar</string>
+    <string name="language_system_default">Systemstandard</string>
+    <string name="section_content">Innehåll</string>
+    <string name="section_support">Support</string>
+    <string name="section_support_legal">Support &amp; Juridik</string>
+    <string name="settings_language_title">Språk</string>
+    <string name="settings_title">Inställningar</string>
+    <string name="theme_dark">Mörkt</string>
+    <string name="theme_light">Ljust</string>
+    <string name="theme_section_title">Utseende</string>
+    <string name="theme_system">System</string>
+    <string name="download_all_completed_title">Biblioteket är klart</string>
+    <string name="download_all_subtitle_recommended">Rekommenderas för en oavbruten upplevelse.</string>
+    <string name="download_all_title">Ladda ned alla ljud</string>
+    <string name="download_progress">Laddar ned… %1$d%%</string>
+    <string name="rate_app_subtitle">Stöd oss</string>
+    <string name="rate_app_title">Betygsätt appen</string>
+    <string name="feedback_body_template">\n\n\n---\nSkriv ditt meddelande ovan.</string>
+    <string name="feedback_subject">Just Relax – Support &amp; Feedback</string>
+    <string name="feedback_subtitle">Har du ett problem?</string>
+    <string name="feedback_title">Kontakt &amp; Rapportera ett problem</string>
+    <string name="support_email">kocerlabs@gmail.com</string>
+    <string name="about_title">Om</string>
+    <string name="privacy_policy_title">Integritetspolicy</string>
+    <string name="privacy_policy_url">https://www.google.com</string>
+    <string name="terms_conditions_title">Villkor</string>
+    <string name="msg_all_sounds_downloaded">Alla ljud har laddats ned!</string>
+</resources>

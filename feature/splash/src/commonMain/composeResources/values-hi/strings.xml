@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loading_message_brand">Just Relax...</string>
+    <string name="loading_message_fire">आग की चटखाहट लाई जा रही है...</string>
+    <string name="loading_message_frequency">फ्रीक्वेंसी ट्यून हो रही हैं...</string>
+    <string name="loading_message_mind">अपना मन शांत करें...</string>
+    <string name="loading_message_nature">प्रकृति से जुड़ रहे हैं...</string>
+    <string name="loading_message_peace">आपकी शांति तैयार हो रही है...</string>
+    <string name="loading_message_rain">बारिश की ध्वनियाँ इकट्ठा हो रही हैं...</string>
+    <string name="loading_message_wind">हवा समायोजित की जा रही है...</string>
+</resources>

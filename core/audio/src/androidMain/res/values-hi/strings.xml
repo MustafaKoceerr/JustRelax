@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Just Relax</string>
+    <string name="channel_name">चल रहा है</string>
+    <string name="notification_active_sound_count">%1$d ध्वनियाँ चल रही हैं</string>
+</resources>

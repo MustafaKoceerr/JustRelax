@@ -1,18 +1,13 @@
-<!-- values-es/strings.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Save Mix Dialog -->
-    <string name="save_mix_dialog_title">Guardar mezcla actual</string>
     <string name="save_mix_dialog_description">Ponle un nombre a tu combinación de sonidos actual para reproducirla fácilmente más tarde.</string>
+    <string name="save_mix_dialog_name_error">El nombre no puede estar vacío</string>
     <string name="save_mix_dialog_name_label">Nombre de la mezcla</string>
     <string name="save_mix_dialog_name_placeholder">p. ej., Enfoque profundo</string>
-    <string name="save_mix_dialog_name_error">El nombre no puede estar vacío</string>
-
-    <!-- Actions -->
-    <string name="action_save">Guardar</string>
+    <string name="save_mix_dialog_title">Guardar mezcla actual</string>
     <string name="action_cancel">Cancelar</string>
-
-    <!-- Messages & Errors -->
-    <string name="msg_mix_saved_success">¡Mezcla \'%1$s\' guardada correctamente!</string>
+    <string name="action_save">Guardar</string>
+    <string name="msg_mix_saved_success">¡Mezcla "%1$s" guardada correctamente!</string>
     <string name="err_mix_save_empty_name">El nombre de la mezcla no puede estar vacío.</string>
     <string name="err_mix_save_name_exists">Ya existe una mezcla con este nombre.</string>
     <string name="err_mix_save_no_sound">No hay sonidos reproduciéndose para guardar.</string>

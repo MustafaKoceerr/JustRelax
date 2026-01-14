@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="duration_hour_short">시간</string>
+    <string name="duration_minute_short">분</string>
+    <string name="duration_second_short">초</string>
+    <string name="timer_unit_hour">시간</string>
+    <string name="timer_unit_minute">분</string>
+    <string name="timer_unit_second">초</string>
+    <string name="timer_action_delete">삭제</string>
+    <string name="timer_action_pause">일시정지</string>
+    <string name="timer_action_resume">재개</string>
+    <string name="timer_action_start">시작</string>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="download_complete">Tous les sons ont été téléchargés ! 🎉</string>
+    <string name="download_failed">Échec du téléchargement</string>
+    <string name="home_screen_title">Just Relax</string>
+    <string name="suggestion_hidden">Suggestion masquée.</string>
+    <string name="category_air">Vent &amp; atmosphère</string>
+    <string name="category_asmr">ASMR &amp; déclencheurs</string>
+    <string name="category_city">Ville &amp; intérieur</string>
+    <string name="category_music">Musique &amp; mélodies</string>
+    <string name="category_nature">Nature &amp; forêt</string>
+    <string name="category_noise">Bruit blanc &amp; mécanique</string>
+    <string name="category_rain">Pluie &amp; tempête</string>
+    <string name="category_travel">Voyage &amp; transport</string>
+    <string name="category_water">Eau &amp; océan</string>
+    <string name="category_zen">Zen &amp; méditation</string>
+    <string name="download_banner_downloading_progress">Téléchargement des sons... %1$d%%</string>
+    <string name="download_banner_question_description">Pour une expérience sans interruption, vous pouvez enregistrer toute la bibliothèque sur votre appareil.</string>
+    <string name="download_banner_question_title">Télécharger tous les sons maintenant ?</string>
+    <string name="action_download">Télécharger</string>
+    <string name="action_later">Plus tard</string>
+    <string name="action_settings">PARAMÈTRES</string>
+</resources>

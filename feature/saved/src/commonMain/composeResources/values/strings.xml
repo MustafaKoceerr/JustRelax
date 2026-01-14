@@ -1,22 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="saved_empty_description">Mix your favorite sounds and save them here. Start building your own peace collection.</string>
     <string name="saved_empty_image_cd">No saved mixes yet</string>
     <string name="saved_empty_title">No Records Yet</string>
-    <string name="saved_empty_description">Mix your favorite sounds and save them here. Start building your own peace collection.</string>
+    <string name="saved_mix_metadata">%1$d Sounds • %2$s</string>
+    <string name="saved_screen_title">Saved Mixes</string>
     <string name="action_create_new_mix">Create New Mix</string>
     <string name="action_delete">Delete</string>
-    <string name="saved_mix_metadata">%1$d Sounds • %2$s</string>
-    <string name="action_play">Play</string>
-    <string name="action_pause">Pause</string>
     <string name="action_more_options">Options</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_play">Play</string>
     <string name="action_rename">Rename</string>
     <string name="action_share">Share</string>
-    <string name="saved_screen_title">Saved Mixes</string>
-
-    <string name="msg_mix_deleted">Mix deleted</string>
     <string name="action_undo">Undo</string>
-
+    <string name="msg_mix_deleted">Mix deleted</string>
     <string name="date_format_short">MM/dd/yyyy</string>
-    <string name="err_unknown">An unexpected error occurred.</string>
     <string name="err_play_mix_failed">Failed to play mix</string>
+    <string name="err_unknown">An unexpected error occurred.</string>
 </resources>

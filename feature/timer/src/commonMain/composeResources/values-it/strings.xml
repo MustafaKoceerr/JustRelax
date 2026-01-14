@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="duration_hour_short">h</string>
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">s</string>
+    <string name="timer_unit_hour">Ora</string>
+    <string name="timer_unit_minute">Minuto</string>
+    <string name="timer_unit_second">Secondo</string>
+    <string name="timer_action_delete">Elimina</string>
+    <string name="timer_action_pause">Pausa</string>
+    <string name="timer_action_resume">Riprendi</string>
+    <string name="timer_action_start">Avvia</string>
+</resources>

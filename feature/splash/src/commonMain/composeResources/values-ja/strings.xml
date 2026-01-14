@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loading_message_brand">Just Relax...</string>
+    <string name="loading_message_fire">火のパチパチ音を用意中...</string>
+    <string name="loading_message_frequency">周波数を調整中...</string>
+    <string name="loading_message_mind">心を落ち着けて...</string>
+    <string name="loading_message_nature">自然とつながっています...</string>
+    <string name="loading_message_peace">心の安らぎを準備中...</string>
+    <string name="loading_message_rain">雨音を集めています...</string>
+    <string name="loading_message_wind">風を調整中...</string>
+</resources>

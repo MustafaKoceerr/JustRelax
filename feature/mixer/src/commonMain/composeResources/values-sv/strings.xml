@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mix_count_selector_title">Hur många ljud vill du mixa?</string>
+    <string name="mixer_empty_state_message">Välj ett antal och börja mixa!</string>
+    <string name="mixer_screen_title">Mixer</string>
+    <string name="action_create_mix">Skapa mix</string>
+    <string name="action_save_mix">Spara mix</string>
+    <string name="msg_mix_saved_success">%1$s har sparats!</string>
+    <string name="err_mix_save_empty_name">Ange ett namn</string>
+    <string name="err_mix_save_no_sound">Inga ljud spelas upp</string>
+    <string name="err_mixer_generate_failed">Det gick inte att skapa mixen. Se till att du har laddat ned ljud.</string>
+    <string name="err_unknown">Något gick fel</string>
+    <string name="error_mix_name_empty">Namnet får inte vara tomt.</string>
+    <string name="error_mix_name_exists">En mix med det här namnet finns redan.</string>
+    <string name="error_no_sounds">Det finns inga ljud att spara.</string>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saved_empty_description">Misture seus sons favoritos e salve-os aqui. Comece a criar sua coleção de paz.</string>
+    <string name="saved_empty_image_cd">Ainda não há mixes salvos</string>
+    <string name="saved_empty_title">Nenhum registro ainda</string>
+    <string name="saved_mix_metadata">%1$d sons • %2$s</string>
+    <string name="saved_screen_title">Mixes salvos</string>
+    <string name="action_create_new_mix">Criar novo mix</string>
+    <string name="action_delete">Excluir</string>
+    <string name="action_more_options">Opções</string>
+    <string name="action_pause">Pausar</string>
+    <string name="action_play">Reproduzir</string>
+    <string name="action_rename">Renomear</string>
+    <string name="action_share">Compartilhar</string>
+    <string name="action_undo">Desfazer</string>
+    <string name="msg_mix_deleted">Mix excluído</string>
+    <string name="date_format_short">dd/MM/yyyy</string>
+    <string name="err_play_mix_failed">Falha ao reproduzir o mix</string>
+    <string name="err_unknown">Ocorreu um erro inesperado.</string>
+</resources>

@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_title">Ayarlar</string>
-    <string name="section_content">İçerik</string>
-    <string name="section_support">Destek</string>
-    <string name="theme_section_title">Görünüm</string>
-    <string name="theme_system">Sistem</string>
-    <string name="theme_light">Açık</string>
-    <string name="theme_dark">Koyu</string>
-    <string name="current_theme">Geçerli tema: %1$s</string>
-    <string name="settings_language_title">Dil</string>
+    <string name="current_language">Mevcut dil: %1$s</string>
+    <string name="current_theme">Mevcut tema: %1$s</string>
     <string name="language_selection_title">Dil Seçimi</string>
     <string name="language_settings_title">Dil Ayarları</string>
     <string name="language_system_default">Sistem Varsayılanı</string>
-    <string name="current_language">Geçerli dil: %1$s</string>
-    <string name="download_all_title">Tüm sesleri indir</string>
+    <string name="section_content">İçerik</string>
+    <string name="section_support">Destek</string>
+    <string name="section_support_legal">Destek &amp; Yasal</string>
+    <string name="settings_language_title">Dil</string>
+    <string name="settings_title">Ayarlar</string>
+    <string name="theme_dark">Koyu</string>
+    <string name="theme_light">Açık</string>
+    <string name="theme_section_title">Görünüm</string>
+    <string name="theme_system">Sistem</string>
     <string name="download_all_completed_title">Kütüphane tamamlandı</string>
     <string name="download_all_subtitle_recommended">Kesintisiz deneyim için önerilir.</string>
+    <string name="download_all_title">Tüm sesleri indir</string>
     <string name="download_progress">İndiriliyor… %1$d%%</string>
+    <string name="rate_app_subtitle">Bize destek ol</string>
     <string name="rate_app_title">Uygulamayı değerlendir</string>
-    <string name="rate_app_subtitle">Bize destek olun</string>
-    <string name="feedback_title">İletişim &amp; Sorun Bildir</string>
-    <string name="feedback_subtitle">Bir sorun mu yaşıyorsun?</string>
-    <string name="feedback_subject">Just Relax – Destek &amp; Geri Bildirim</string>
     <string name="feedback_body_template">\n\n\n---\nLütfen mesajınızı yukarıya yazın.</string>
+    <string name="feedback_subject">Just Relax – Destek &amp; Geri Bildirim</string>
+    <string name="feedback_subtitle">Bir sorun mu var?</string>
+    <string name="feedback_title">İletişim &amp; Sorun Bildir</string>
     <string name="support_email">kocerlabs@gmail.com</string>
     <string name="about_title">Hakkında</string>
-    <string name="privacy_policy_url">https://www.google.com</string>
-
-    <!-- values-tr/strings.xml -->
-    <string name="section_support_legal">Destek &amp; Yasal</string>
     <string name="privacy_policy_title">Gizlilik Politikası</string>
-    <string name="terms_conditions_title">Şartlar ve Koşullar</string>
+    <string name="privacy_policy_url">https://www.google.com</string>
+    <string name="terms_conditions_title">Şartlar &amp; Koşullar</string>
     <string name="msg_all_sounds_downloaded">Tüm sesler indirildi!</string>
-
 </resources>

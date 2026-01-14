@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_language">Aktuellt språk: %1$s</string>
+    <string name="current_theme">Aktuellt tema: %1$s</string>
+    <string name="go_to_settings">Gå till inställningar</string>
+    <string name="language_english">Engelska</string>
+    <string name="language_turkish">Turkiska</string>
+    <string name="theme_dark">Mörkt</string>
+    <string name="theme_light">Ljust</string>
+    <string name="theme_system">System</string>
+    <string name="category_air">Vind &amp; atmosfär</string>
+    <string name="category_city">Stad &amp; inomhus</string>
+    <string name="category_nature">Natur &amp; skog</string>
+    <string name="category_noise">Vitt brus &amp; mekaniskt</string>
+    <string name="category_water">Vatten &amp; regn</string>
+    <string name="sound_cafe">Caféambience</string>
+    <string name="sound_campfire">Lägereld</string>
+    <string name="sound_fan">Fläktljud</string>
+    <string name="sound_forest_birds">Skogsfåglar</string>
+    <string name="sound_ocean">Havsvågor</string>
+    <string name="sound_rain_light">Lätt regn</string>
+    <string name="sound_rain_thunder">Regn &amp; åska</string>
+    <string name="sound_wind">Vindambience</string>
+    <string name="duration_hour_short">h</string>
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">s</string>
+    <string name="msg_mix_saved_success">%1$s sparades!</string>
+    <string name="error_generic">Något gick fel. Försök igen.</string>
+    <string name="error_mix_name_empty">Namnet får inte vara tomt.</string>
+    <string name="error_mix_name_exists">En mix med det här namnet finns redan.</string>
+    <string name="error_no_sounds">Det finns inga ljud att spara.</string>
+    <string name="error_no_sounds_found">Rekommenderade ljud hittades inte i biblioteket.</string>
+    <string name="download_complete">Alla ljud har laddats ned! 🎉</string>
+    <string name="suggestion_hidden">Förslag dolt.</string>
+    <string name="action_settings">INSTÄLLNINGAR</string>
+    <string name="tab_ai">AI</string>
+    <string name="tab_home">Hem</string>
+    <string name="tab_mixer">Mixer</string>
+    <string name="tab_saved">Sparat</string>
+    <string name="tab_timer">Timer</string>
+</resources>

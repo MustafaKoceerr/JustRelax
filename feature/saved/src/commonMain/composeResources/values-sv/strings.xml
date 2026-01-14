@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saved_empty_description">Mixa dina favoritljud och spara dem här. Börja bygga din egen lugn-kollektion.</string>
+    <string name="saved_empty_image_cd">Inga sparade mixar ännu</string>
+    <string name="saved_empty_title">Inga poster ännu</string>
+    <string name="saved_mix_metadata">%1$d ljud • %2$s</string>
+    <string name="saved_screen_title">Sparade mixar</string>
+    <string name="action_create_new_mix">Skapa ny mix</string>
+    <string name="action_delete">Ta bort</string>
+    <string name="action_more_options">Alternativ</string>
+    <string name="action_pause">Pausa</string>
+    <string name="action_play">Spela</string>
+    <string name="action_rename">Byt namn</string>
+    <string name="action_share">Dela</string>
+    <string name="action_undo">Ångra</string>
+    <string name="msg_mix_deleted">Mix borttagen</string>
+    <string name="date_format_short">yyyy-MM-dd</string>
+    <string name="err_play_mix_failed">Det gick inte att spela upp mixen</string>
+    <string name="err_unknown">Ett oväntat fel inträffade.</string>
+</resources>

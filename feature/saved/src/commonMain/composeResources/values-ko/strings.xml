@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saved_empty_description">좋아하는 사운드를 믹스해 여기 저장해 보세요. 나만의 평온 컬렉션을 만들어 보세요.</string>
+    <string name="saved_empty_image_cd">저장된 믹스가 아직 없습니다</string>
+    <string name="saved_empty_title">아직 기록이 없습니다</string>
+    <string name="saved_mix_metadata">사운드 %1$d개 • %2$s</string>
+    <string name="saved_screen_title">저장된 믹스</string>
+    <string name="action_create_new_mix">새 믹스 만들기</string>
+    <string name="action_delete">삭제</string>
+    <string name="action_more_options">옵션</string>
+    <string name="action_pause">일시정지</string>
+    <string name="action_play">재생</string>
+    <string name="action_rename">이름 변경</string>
+    <string name="action_share">공유</string>
+    <string name="action_undo">실행 취소</string>
+    <string name="msg_mix_deleted">믹스가 삭제되었습니다</string>
+    <string name="date_format_short">yyyy.MM.dd</string>
+    <string name="err_play_mix_failed">믹스 재생에 실패했습니다</string>
+    <string name="err_unknown">예기치 않은 오류가 발생했습니다.</string>
+</resources>
