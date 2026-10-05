@@ -7,9 +7,6 @@ plugins {
     id("justrelax.kmp.library")
 }
 
-android {
-    namespace = "com.mustafakoceerr.justrelax.data.repository"
-}
 
 kotlin {
     sourceSets {
@@ -46,7 +43,7 @@ kotlin {
             implementation(libs.findLibrary("okio-fakefilesystem").get())
         }
 
-        androidUnitTest.dependencies {
+        androidHostTest.dependencies {
             implementation(libs.findLibrary("sqldelight-sqlite-driver").get())
         }
     }
