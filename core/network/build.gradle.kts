@@ -37,12 +37,16 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation(libs.findLibrary("ktor-client-android").get())
             // YENİ: Ktor için OkHttp motorunu ekliyoruz
             implementation(libs.findLibrary("ktor-client-okhttp").get())
         }
 
-        iosMain.dependencies {
+        commonTest.dependencies {
+            implementation(project(":core:testing"))
+            implementation(libs.findLibrary("ktor-client-mock").get())
+        }
+
+        iosMainDependencies {
             implementation(libs.findLibrary("ktor-client-darwin").get())
         }
     }

@@ -65,6 +65,8 @@ internal class SoundSyncRepositoryImpl(
             Resource.Success(Unit)
         } catch (e: CancellationException) {
             throw e
+        } catch (e: AppError) {
+            Resource.Error(e)
         } catch (e: Exception) {
             Resource.Error(AppError.Unknown(e))
         }
