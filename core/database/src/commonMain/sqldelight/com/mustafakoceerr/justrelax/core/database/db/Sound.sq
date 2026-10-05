@@ -21,9 +21,17 @@ SELECT * FROM sound;
 selectSoundById:
 SELECT * FROM sound WHERE id = ?;
 
-insertOrReplace:
-INSERT OR REPLACE INTO sound(id, names, categoryId, iconUrl, remoteUrl, localPath, isInitial, sizeBytes)
+insertSound:
+INSERT INTO sound(id, names, categoryId, iconUrl, remoteUrl, localPath, isInitial, sizeBytes)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+-- REPLACE kullanılmaz: satırı silip yeniden eklediği için saved_mix_sounds'a CASCADE eder.
+-- localPath bilerek güncellenmez; indirme durumu sync'ten bağımsızdır.
+updateSoundMetadata:
+UPDATE sound
+SET names = :names, categoryId = :categoryId, iconUrl = :iconUrl, remoteUrl = :remoteUrl,
+    isInitial = :isInitial, sizeBytes = :sizeBytes
+WHERE id = :id;
 
 updateLocalPath:
 UPDATE sound SET localPath = ? WHERE id = ?;
