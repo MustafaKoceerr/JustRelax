@@ -3,7 +3,6 @@
     <string name="app_name">JustRelax</string>
     <string name="notification_subtitle">Aproveite o momento com Just Relax</string>
     <string name="notification_title">Sons relaxantes</string>
-    <string name="action_pause">Pausar</string>
-    <string name="action_play">Reproduzir</string>
     <string name="action_stop">Parar</string>
+    <string name="notification_channel_name">Controles de reprodução</string>
 </resources>

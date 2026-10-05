@@ -2,26 +2,26 @@ package com.mustafakoceerr.justrelax.service
 
 import android.content.Context
 import android.content.Intent
-import androidx.core.content.ContextCompat
+import android.util.Log
 import com.mustafakoceerr.justrelax.core.audio.AudioServiceController
 
 class AndroidAudioServiceController(
     private val context: Context
 ) : AudioServiceController {
 
+    /**
+     * A plain start is enough: Media3 promotes the service to the foreground itself once
+     * playback is running. Sounds are started from the UI, so the app is in the foreground here.
+     */
     override fun start() {
-        val intent = Intent(context, SoundscapeService::class.java)
-        ContextCompat.startForegroundService(context, intent)
+        try {
+            context.startService(Intent(context, PlaybackService::class.java))
+        } catch (e: IllegalStateException) {
+            Log.w(TAG, "Could not start playback service", e)
+        }
     }
 
-    override fun stop() {
-        val intent = Intent(context, SoundscapeService::class.java).apply {
-            action = SoundscapeService.ACTION_STOP
-        }
-        try {
-            context.startService(intent)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+    private companion object {
+        const val TAG = "AudioServiceController"
     }
 }

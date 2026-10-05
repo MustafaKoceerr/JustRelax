@@ -3,7 +3,6 @@
     <string name="app_name">JustRelax</string>
     <string name="notification_subtitle">Just Relax ile anın tadını çıkar</string>
     <string name="notification_title">Rahatlatıcı Sesler</string>
-    <string name="action_pause">Duraklat</string>
-    <string name="action_play">Oynat</string>
     <string name="action_stop">Durdur</string>
+    <string name="notification_channel_name">Oynatma kontrolleri</string>
 </resources>
