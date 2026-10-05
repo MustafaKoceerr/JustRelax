@@ -60,8 +60,6 @@ class FakeAudioMixer : AudioMixer {
         _state.value = GlobalMixerState()
     }
 
-    override fun release() = Unit
-
     override fun clearError() {
         _state.update { it.copy(error = null) }
     }
