@@ -1,6 +1,5 @@
 plugins {
-    id("justrelax.kmp.library")
-    id("justrelax.android.library.compose")
+    id("justrelax.kmp.feature")
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -11,36 +10,10 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // --- Core ---
-            implementation(project(":core:common"))
-            implementation(project(":core:model"))
-            implementation(project(":core:ui"))
-            implementation(project(":core:navigation"))
-            implementation(project(":core:audio")) // SoundManager erişimi
-
-            // --- Compose ---
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.uiToolingPreview)
-            implementation(compose.components.resources)
-            implementation(compose.materialIconsExtended)
-
-            // --- Koin & Voyager ---
-            implementation(libs.findLibrary("koin-core").get())
-            implementation(libs.findLibrary("koin-compose").get())
-            implementation(libs.findLibrary("koin-compose-viewmodel").get())
-            implementation(libs.findLibrary("voyager-screenmodel").get())
-
-            // --- Coil3 ---
+            implementation(project(":core:audio"))
             implementation(libs.findLibrary("coil-compose").get())
             implementation(libs.findLibrary("coil-network").get())
-            implementation(libs.findLibrary("coil-compose").get())
-            implementation(libs.findLibrary("coil-network").get())
-
             implementation(libs.findLibrary("kotlinx-datetime").get())
-
         }
     }
 }

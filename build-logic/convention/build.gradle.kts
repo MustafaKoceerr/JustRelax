@@ -23,24 +23,22 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        // 1. Sadece Android Library Modülleri İçin (Eski usül Android-only modüller)
-        register("androidLibrary") {
-            id = "justrelax.android.library"
-            implementationClass = "AndroidLibraryConventionPlugin"
-        }
-
-        // 2. KMP Library Modülleri İçin (Core ve Feature modüllerinin %90'ı bunu kullanacak)
-        // Hem Android hem iOS hedeflerini otomatik ayarlar.
+        // KMP library modülleri: Android + (bayrak açıksa) iOS hedefleri, ortak test bağımlılıkları
         register("kmpLibrary") {
             id = "justrelax.kmp.library"
             implementationClass = "JustRelaxKmpConventionPlugin"
         }
 
-        // 3. Compose Kullanan Modüller İçin (UI içerenler)
-        // Compose'u aktif eder.
+        // UI içeren modüllerde Compose'u açar
         register("androidCompose") {
             id = "justrelax.android.library.compose"
             implementationClass = "JustRelaxComposeConventionPlugin"
+        }
+
+        // Feature modülleri: KMP + Compose + ortak core modülleri + Koin + test fake'leri
+        register("kmpFeature") {
+            id = "justrelax.kmp.feature"
+            implementationClass = "JustRelaxFeatureConventionPlugin"
         }
     }
 }

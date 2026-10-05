@@ -27,10 +27,7 @@ kotlin {
             // İkonlar (SoundCategory ve Tab'lar için kullanıyorsun)
             implementation(compose.materialIconsExtended)
 
-            // Coil (Eğer ortak UI bileşenlerinde resim yüklüyorsan)
-            implementation(libs.findLibrary("coil-compose").get())
-
-            // Coil Temel
+            // Coil
             implementation(libs.findLibrary("coil-compose").get())
 
             // 1. Ktor ile internetten resim çekmek için
