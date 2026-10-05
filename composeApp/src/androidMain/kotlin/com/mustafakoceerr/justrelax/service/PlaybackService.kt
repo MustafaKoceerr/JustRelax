@@ -53,6 +53,10 @@ class PlaybackService : MediaSessionService() {
             .setSessionActivity(openAppIntent())
             .setMediaButtonPreferences(listOf(stopButton()))
             .build()
+            // Media3 only manages the notification/foreground state of sessions added to the
+            // service. Normally that happens when a MediaController binds; we are started with
+            // startService, so the session is added explicitly.
+            .also(::addSession)
 
         stopWhenMixBecomesEmpty()
     }
@@ -96,8 +100,8 @@ class PlaybackService : MediaSessionService() {
             Uri.Builder()
                 .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
                 .authority(packageName)
-                .appendPath("drawable")
-                .appendPath("notification_artwork")
+                // Built from the resource id (not its name) so the resource shrinker sees the reference.
+                .appendPath(R.drawable.notification_artwork.toString())
                 .build()
         )
         .build()

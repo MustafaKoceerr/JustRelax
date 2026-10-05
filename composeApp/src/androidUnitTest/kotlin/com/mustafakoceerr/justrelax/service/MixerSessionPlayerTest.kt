@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.service
 
+import android.app.Application
 import android.os.Looper
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -22,7 +23,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [35])
+// Plain Application: the real one starts Koin, which this test does not need.
+@Config(sdk = [35], application = Application::class)
 class MixerSessionPlayerTest {
 
     private val mixer = FakeAudioMixer()
