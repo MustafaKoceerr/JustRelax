@@ -6,9 +6,6 @@ plugins {
     alias(libs.plugins.buildConfig)
 }
 
-android {
-    namespace = "com.mustafakoceerr.justrelax.feature.ai"
-}
 
 // OpenAI anahtarı local.properties'ten okunur (şimdilik APK'ya gömülü; ileride backend'e taşınacak).
 val localProperties = Properties().apply {

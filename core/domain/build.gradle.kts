@@ -2,9 +2,6 @@ plugins {
     id("justrelax.kmp.library") // Convention plugin
 }
 
-android {
-    namespace = "com.mustafakoceerr.justrelax.core.domain"
-}
 
 kotlin {
     sourceSets {

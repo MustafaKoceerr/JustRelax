@@ -2,9 +2,6 @@ plugins {
     id("justrelax.kmp.library")
 }
 
-android {
-    namespace = "com.mustafakoceerr.justrelax.core.audio"
-}
 
 kotlin {
     sourceSets {

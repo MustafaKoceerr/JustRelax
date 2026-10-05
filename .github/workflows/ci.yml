@@ -24,7 +24,8 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Unit tests
-        run: ./gradlew testDebugUnitTest --continue
+        # KMP modules (AGP 9 android-kmp-library) run host tests; the app module runs regular unit tests.
+        run: ./gradlew testAndroidHostTest :androidApp:testDebugUnitTest --continue
 
       - name: Upload test reports
         if: failure()

@@ -11,7 +11,5 @@ import com.mustafakoceerr.justrelax.di.initKoin as initCommonKoin
  * default arguments and lambda syntax.
  */
 fun initKoin() {
-    initCommonKoin {
-        // iOS-specific modules can be injected here if necessary.
-    }
+    initCommonKoin(platformModules = listOf(iosPlatformModule))
 }
