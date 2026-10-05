@@ -41,3 +41,10 @@ kotlin {
         }
     }
 }
+kotlin {
+    sourceSets {
+        androidUnitTest.dependencies {
+            implementation(libs.findLibrary("sqldelight-sqlite-driver").get())
+        }
+    }
+}

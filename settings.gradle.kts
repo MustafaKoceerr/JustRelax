@@ -45,6 +45,7 @@ include(":core:domain")
 include(":core:database")
 include(":core:network")
 include(":core:system")
+include(":core:testing")
 
 include(":data:repository")
 
