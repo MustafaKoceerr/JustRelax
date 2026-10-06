@@ -7,7 +7,7 @@ import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSingleSoundUseCase
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
-import com.mustafakoceerr.justrelax.core.model.SoundUi
+import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.home.domain.usecase.GetLocalizedCategorizedSoundsUseCase
 import justrelax.feature.home.generated.resources.Res
@@ -55,7 +55,7 @@ class HomeViewModel(
     fun selectCategory(category: SoundCategory) = screenState.update { it.copy(selectedCategory = category) }
 
     /** Stops a playing sound; otherwise plays it, downloading it first if needed. */
-    fun toggleSound(sound: SoundUi) {
+    fun toggleSound(sound: LocalizedSound) {
         viewModelScope.launch {
             when {
                 audioMixer.state.value.activeSounds.any { it.id == sound.id } -> audioMixer.stopSound(sound.id)
@@ -76,7 +76,7 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun downloadAndPlay(sound: SoundUi) {
+    private suspend fun downloadAndPlay(sound: LocalizedSound) {
         screenState.update { it.copy(downloadingSoundIds = it.downloadingSoundIds + sound.id) }
         val downloaded = downloadSingleSoundUseCase(soundId = sound.id, remoteUrl = sound.remoteUrl)
         screenState.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - sound.id) }

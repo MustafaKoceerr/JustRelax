@@ -16,14 +16,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
-import com.mustafakoceerr.justrelax.core.model.SoundUi
+import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.feature.home.HomeUiState
 
 @Composable
 fun HomeScreenContent(
     uiState: HomeUiState,
     onCategorySelected: (SoundCategory) -> Unit,
-    onSoundClick: (SoundUi) -> Unit,
+    onSoundClick: (LocalizedSound) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
     modifier: Modifier = Modifier
 ) {

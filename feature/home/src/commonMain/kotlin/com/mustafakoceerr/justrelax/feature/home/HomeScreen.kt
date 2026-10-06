@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
-import com.mustafakoceerr.justrelax.core.model.SoundUi
+import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
@@ -53,7 +53,7 @@ fun HomeScreen(
     uiState: HomeUiState,
     onOpenSettings: () -> Unit,
     onCategorySelected: (SoundCategory) -> Unit,
-    onSoundClick: (SoundUi) -> Unit,
+    onSoundClick: (LocalizedSound) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
 ) {
     Scaffold(

@@ -6,8 +6,8 @@ import com.mustafakoceerr.justrelax.core.common.asResource
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
 import com.mustafakoceerr.justrelax.core.domain.system.LanguageController
 import com.mustafakoceerr.justrelax.core.model.Sound
-import com.mustafakoceerr.justrelax.core.model.SoundUi
-import com.mustafakoceerr.justrelax.core.model.toSoundUi
+import com.mustafakoceerr.justrelax.core.model.LocalizedSound
+import com.mustafakoceerr.justrelax.core.model.localized
 import com.mustafakoceerr.justrelax.feature.ai.domain.model.AiGeneratedMix
 import com.mustafakoceerr.justrelax.feature.ai.domain.repository.AiRepository
 import kotlinx.coroutines.flow.Flow
@@ -46,14 +46,14 @@ class GenerateAiMixUseCase(
                 is Resource.Loading -> return@flow
             }
 
-        val mixMap = mutableMapOf<SoundUi, Float>()
+        val mixMap = mutableMapOf<LocalizedSound, Float>()
 
         response.sounds.forEach { aiSound ->
             val match = downloadedSounds.find { it.id == aiSound.id }
             if (match != null) {
                 val safeVolume = aiSound.volume.coerceIn(0.1f, 1.0f)
-                val soundUi = match.toSoundUi(currentLanguage.code)
-                mixMap[soundUi] = safeVolume
+                val sound = match.localized(currentLanguage.code)
+                mixMap[sound] = safeVolume
             }
         }
 

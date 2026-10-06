@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.core.model
 
-data class SoundUi(
+/** A [Sound] with its name resolved for the current app language. */
+data class LocalizedSound(
     val id: String,
     val name: String,
     val categoryId: String,

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.domain.controller.SoundController
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
-import com.mustafakoceerr.justrelax.core.model.SoundUi
+import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.mixer.usecase.GenerateRandomMixUseCase
 import justrelax.feature.mixer.generated.resources.Res
@@ -26,7 +26,7 @@ class MixerViewModel(
     private data class ScreenState(
         val selectedSoundCount: Int = DEFAULT_SOUND_COUNT,
         val isGenerating: Boolean = false,
-        val mixedSounds: List<SoundUi> = emptyList(),
+        val mixedSounds: List<LocalizedSound> = emptyList(),
         val userMessage: UiText? = null,
     )
 
