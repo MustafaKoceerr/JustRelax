@@ -3,8 +3,8 @@ package com.mustafakoceerr.justrelax.feature.onboarding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.SetAppSetupFinishedUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.GetSoundsUseCase
+import com.mustafakoceerr.justrelax.core.domain.repository.appsetup.AppSetupRepository
+import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadAllSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadInitialSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsUseCase
@@ -12,120 +12,82 @@ import com.mustafakoceerr.justrelax.core.model.DownloadStatus
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.extensions.calculateTotalSizeInMb
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.DownloadOption
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingEffect
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingIntent
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingScreenStatus
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingState
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class OnboardingViewModel(
+    private val soundRepository: SoundRepository,
+    private val appSetupRepository: AppSetupRepository,
     private val syncSoundsUseCase: SyncSoundsUseCase,
-    private val getSoundsUseCase: GetSoundsUseCase,
     private val downloadInitialSoundsUseCase: DownloadInitialSoundsUseCase,
     private val downloadAllSoundsUseCase: DownloadAllSoundsUseCase,
-    private val setAppSetupFinishedUseCase: SetAppSetupFinishedUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(OnboardingState())
-    val state: StateFlow<OnboardingState> = _state.asStateFlow()
-
-    private val _effect = Channel<OnboardingEffect>()
-    val effect = _effect.receiveAsFlow()
-
-    private var downloadJob: Job? = null
+    private val _uiState = MutableStateFlow(OnboardingUiState())
+    val uiState: StateFlow<OnboardingUiState> = _uiState.asStateFlow()
 
     init {
-        checkDataAndLoadConfig()
+        loadConfig()
     }
 
-    fun processIntent(intent: OnboardingIntent) {
-        when (intent) {
-            OnboardingIntent.RetryLoadingConfig -> checkDataAndLoadConfig()
-            OnboardingIntent.DownloadInitial -> startDownload(downloadInitialSoundsUseCase())
-            OnboardingIntent.DownloadAll -> startDownload(downloadAllSoundsUseCase())
-        }
-    }
+    fun retryLoadingConfig() = loadConfig()
 
-    private fun checkDataAndLoadConfig() {
+    fun downloadStarterPack() = download(downloadInitialSoundsUseCase())
+
+    fun downloadFullLibrary() = download(downloadAllSoundsUseCase())
+
+    fun onMessageShown() = _uiState.update { it.copy(userMessage = null) }
+
+    private fun loadConfig() {
         viewModelScope.launch {
-            _state.update { it.copy(status = OnboardingScreenStatus.LOADING_CONFIG) }
+            _uiState.update { it.copy(status = OnboardingStatus.LOADING_CONFIG) }
 
-            val currentSounds = getSoundsUseCase().first()
-
-            if (currentSounds.isNotEmpty()) {
-                calculateOptions(currentSounds)
-            } else {
-                val result = syncSoundsUseCase()
-
-                if (result is Resource.Success) {
-                    val newSounds = getSoundsUseCase().first()
-                    calculateOptions(newSounds)
-                } else {
-                    _state.update { it.copy(status = OnboardingScreenStatus.NO_INTERNET) }
+            val sounds = soundRepository.getSounds().first().ifEmpty {
+                if (syncSoundsUseCase() !is Resource.Success) {
+                    _uiState.update { it.copy(status = OnboardingStatus.NO_INTERNET) }
+                    return@launch
                 }
+                soundRepository.getSounds().first()
             }
+            showOptions(sounds)
         }
     }
 
-    private fun calculateOptions(sounds: List<Sound>) {
-        val initialSounds = sounds.filter { it.isInitial }
-        val initialSize = initialSounds.calculateTotalSizeInMb()
-        val totalSize = sounds.calculateTotalSizeInMb()
-
-        _state.update {
+    private fun showOptions(sounds: List<Sound>) {
+        val starterSounds = sounds.filter { it.isInitial }
+        _uiState.update {
             it.copy(
-                status = OnboardingScreenStatus.CHOOSING,
-                initialOption = DownloadOption(initialSize, initialSounds.size),
-                allOption = DownloadOption(totalSize, sounds.size)
+                status = OnboardingStatus.CHOOSING,
+                starterPack = DownloadOption(starterSounds.calculateTotalSizeInMb(), starterSounds.size),
+                fullLibrary = DownloadOption(sounds.calculateTotalSizeInMb(), sounds.size),
             )
         }
     }
 
-    private fun startDownload(downloadFlow: Flow<DownloadStatus>) {
-        if (_state.value.status == OnboardingScreenStatus.DOWNLOADING) return
+    private fun download(downloads: Flow<DownloadStatus>) {
+        if (_uiState.value.status == OnboardingStatus.DOWNLOADING) return
+        _uiState.update { it.copy(status = OnboardingStatus.DOWNLOADING, downloadProgress = 0f) }
 
-        _state.update { it.copy(status = OnboardingScreenStatus.DOWNLOADING, downloadProgress = 0f) }
-
-        downloadJob = downloadFlow.onEach { status ->
-            when (status) {
-                is DownloadStatus.Progress -> {
-                    _state.update { it.copy(downloadProgress = status.percentage) }
-                }
-                is DownloadStatus.Completed -> {
-                    finishSetup()
-                }
-                is DownloadStatus.Error -> {
-                    val errorMessage = UiText.DynamicString(status.message)
-                    _effect.send(OnboardingEffect.ShowError(errorMessage))
-                    _state.update { it.copy(status = OnboardingScreenStatus.CHOOSING) }
-                }
-                else -> {}
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    private fun finishSetup() {
+        // viewModelScope cancels the download if the user leaves onboarding.
         viewModelScope.launch {
-            setAppSetupFinishedUseCase()
-            _state.update { it.copy(status = OnboardingScreenStatus.COMPLETED) }
-            _effect.send(OnboardingEffect.NavigateToMainScreen)
+            downloads.collect { status ->
+                when (status) {
+                    is DownloadStatus.Progress -> _uiState.update { it.copy(downloadProgress = status.percentage) }
+                    is DownloadStatus.Completed -> {
+                        appSetupRepository.setStarterPackInstalled(true)
+                        _uiState.update { it.copy(status = OnboardingStatus.COMPLETED) }
+                    }
+                    is DownloadStatus.Error -> _uiState.update {
+                        it.copy(status = OnboardingStatus.CHOOSING, userMessage = UiText.DynamicString(status.message))
+                    }
+                    else -> Unit
+                }
+            }
         }
-    }
-
-    override fun onCleared() {
-        downloadJob?.cancel()
-        super.onCleared()
     }
 }

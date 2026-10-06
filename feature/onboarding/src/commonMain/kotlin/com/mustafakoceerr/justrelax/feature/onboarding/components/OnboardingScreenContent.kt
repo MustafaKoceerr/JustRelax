@@ -31,7 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingState
+import com.mustafakoceerr.justrelax.feature.onboarding.OnboardingUiState
 import justrelax.feature.onboarding.generated.resources.Res
 import justrelax.feature.onboarding.generated.resources.onboarding_action_download_and_start
 import justrelax.feature.onboarding.generated.resources.onboarding_data_usage_info
@@ -44,7 +44,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun OnboardingScreenContent(
     selectedOption: DownloadOptionType,
-    state: OnboardingState,
+    uiState: OnboardingUiState,
     onOptionSelected: (DownloadOptionType) -> Unit,
     onConfirmClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -78,7 +78,7 @@ fun OnboardingScreenContent(
                     OnboardingHeader()
 
                     OnboardingSelectionArea(
-                        state = state,
+                        uiState = uiState,
                         selectedOption = selectedOption,
                         onOptionSelected = onOptionSelected
                     )
@@ -95,7 +95,7 @@ fun OnboardingScreenContent(
 
                     OnboardingConfirmButton(
                         onClick = onConfirmClick,
-                        enabled = state.initialOption != null && state.allOption != null
+                        enabled = uiState.starterPack != null && uiState.fullLibrary != null
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -147,12 +147,12 @@ private fun OnboardingHeader() {
 
 @Composable
 private fun OnboardingSelectionArea(
-    state: OnboardingState,
+    uiState: OnboardingUiState,
     selectedOption: DownloadOptionType,
     onOptionSelected: (DownloadOptionType) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        state.initialOption?.let { option ->
+        uiState.starterPack?.let { option ->
             DownloadOptionCard(
                 icon = Icons.Rounded.DownloadForOffline,
                 title = stringResource(Res.string.onboarding_starter_pack_title),
@@ -162,7 +162,7 @@ private fun OnboardingSelectionArea(
                 onClick = { onOptionSelected(DownloadOptionType.STARTER) }
             )
         }
-        state.allOption?.let { option ->
+        uiState.fullLibrary?.let { option ->
             DownloadOptionCard(
                 icon = Icons.Rounded.LibraryMusic,
                 title = stringResource(Res.string.onboarding_full_library_title),

@@ -1,21 +1,17 @@
 package com.mustafakoceerr.justrelax.feature.onboarding
 
-import app.cash.turbine.test
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.SetAppSetupFinishedUseCase
 import com.mustafakoceerr.justrelax.core.testing.SoundLibraryEnvironment
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeAppSetupRepository
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingEffect
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingIntent
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingScreenStatus
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertIs
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class OnboardingViewModelTest {
@@ -26,11 +22,11 @@ class OnboardingViewModelTest {
     private val appSetup = FakeAppSetupRepository(installed = false)
 
     private fun viewModel() = OnboardingViewModel(
+        soundRepository = library.soundRepository,
+        appSetupRepository = appSetup,
         syncSoundsUseCase = library.syncSounds,
-        getSoundsUseCase = library.getSounds,
         downloadInitialSoundsUseCase = library.downloadInitial,
         downloadAllSoundsUseCase = library.downloadAll,
-        setAppSetupFinishedUseCase = SetAppSetupFinishedUseCase(appSetup),
     )
 
     @Test
@@ -38,49 +34,67 @@ class OnboardingViewModelTest {
         val viewModel = viewModel()
         advanceUntilIdle()
 
-        val state = viewModel.state.value
-        assertEquals(OnboardingScreenStatus.CHOOSING, state.status)
-        assertEquals(2, state.initialOption?.soundCount)
-        assertEquals(3, state.allOption?.soundCount)
+        val state = viewModel.uiState.value
+        assertEquals(OnboardingStatus.CHOOSING, state.status)
+        assertEquals(2, state.starterPack?.soundCount)
+        assertEquals(3, state.fullLibrary?.soundCount)
     }
 
     @Test
-    fun noSoundsAndNoInternet_showsNoInternet() = runMainTest {
+    fun noSoundsAndNoInternet_showsNoInternet_andRetryRecovers() = runMainTest {
         library.soundRepository.sounds.value = emptyList()
         library.syncRepository.result = Resource.Error(AppError.Network.NoInternet())
-
         val viewModel = viewModel()
         advanceUntilIdle()
+        assertEquals(OnboardingStatus.NO_INTERNET, viewModel.uiState.value.status)
 
-        assertEquals(OnboardingScreenStatus.NO_INTERNET, viewModel.state.value.status)
+        library.syncRepository.result = Resource.Success(Unit)
+        library.soundRepository.sounds.value = listOf(testSound("rain", isInitial = true))
+        viewModel.retryLoadingConfig()
+        advanceUntilIdle()
+
+        assertEquals(OnboardingStatus.CHOOSING, viewModel.uiState.value.status)
     }
 
     @Test
-    fun successfulDownload_finishesSetup_andNavigatesToMain() = runMainTest {
+    fun successfulDownload_finishesSetup() = runMainTest {
         val viewModel = viewModel()
         advanceUntilIdle()
 
-        viewModel.effect.test {
-            viewModel.processIntent(OnboardingIntent.DownloadInitial)
+        viewModel.downloadStarterPack()
+        advanceUntilIdle()
 
-            assertEquals(OnboardingEffect.NavigateToMainScreen, awaitItem())
-        }
-        assertEquals(OnboardingScreenStatus.COMPLETED, viewModel.state.value.status)
+        assertEquals(OnboardingStatus.COMPLETED, viewModel.uiState.value.status)
         assertTrue(appSetup.isStarterPackInstalled.value)
     }
 
     @Test
-    fun failedDownload_showsError_andLetsUserRetry() = runMainTest {
+    fun failedDownload_showsMessage_andLetsUserRetry() = runMainTest {
         library.downloader.onDownload = { url -> !url.contains("fire") }
         val viewModel = viewModel()
         advanceUntilIdle()
 
-        viewModel.effect.test {
-            viewModel.processIntent(OnboardingIntent.DownloadInitial)
+        viewModel.downloadStarterPack()
+        advanceUntilIdle()
 
-            assertIs<OnboardingEffect.ShowError>(awaitItem())
-        }
-        assertEquals(OnboardingScreenStatus.CHOOSING, viewModel.state.value.status)
+        val state = viewModel.uiState.value
+        assertEquals(OnboardingStatus.CHOOSING, state.status)
+        assertNotNull(state.userMessage)
         assertFalse(appSetup.isStarterPackInstalled.value)
+
+        viewModel.onMessageShown()
+        assertNull(viewModel.uiState.value.userMessage)
+    }
+
+    @Test
+    fun downloadingFullLibrary_downloadsEverySound() = runMainTest {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        viewModel.downloadFullLibrary()
+        advanceUntilIdle()
+
+        assertEquals(3, library.downloader.requestedUrls.size)
+        assertEquals(OnboardingStatus.COMPLETED, viewModel.uiState.value.status)
     }
 }
