@@ -85,7 +85,6 @@ class OnboardingViewModel(
                     is DownloadStatus.Error -> _uiState.update {
                         it.copy(status = OnboardingStatus.CHOOSING, userMessage = UiText.DynamicString(status.message))
                     }
-                    else -> Unit
                 }
             }
         }

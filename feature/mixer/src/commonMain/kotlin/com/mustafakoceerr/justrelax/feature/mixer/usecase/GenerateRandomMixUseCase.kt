@@ -2,7 +2,6 @@ package com.mustafakoceerr.justrelax.feature.mixer.usecase
 
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
 import com.mustafakoceerr.justrelax.core.domain.system.LanguageController
-import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.model.localized
 import kotlinx.coroutines.flow.first

@@ -3,7 +3,6 @@ package com.mustafakoceerr.justrelax.core.domain.usecase.player
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
 import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
-import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 
 class SetMixUseCase(

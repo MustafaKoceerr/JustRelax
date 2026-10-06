@@ -21,7 +21,6 @@ import com.mustafakoceerr.justrelax.feature.onboarding.components.DownloadingVie
 import com.mustafakoceerr.justrelax.feature.onboarding.components.LoadingConfigView
 import com.mustafakoceerr.justrelax.feature.onboarding.components.NoInternetView
 import com.mustafakoceerr.justrelax.feature.onboarding.components.OnboardingScreenContent
-import org.koin.compose.koinInject
 
 @Composable
 fun OnboardingRoute(

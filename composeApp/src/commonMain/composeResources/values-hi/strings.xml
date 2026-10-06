@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="current_language">वर्तमान भाषा: %1$s</string>
-    <string name="current_theme">वर्तमान थीम: %1$s</string>
-    <string name="go_to_settings">सेटिंग्स पर जाएँ</string>
-    <string name="language_english">अंग्रेज़ी</string>
-    <string name="language_turkish">तुर्की</string>
     <string name="theme_dark">डार्क</string>
     <string name="theme_light">हल्का</string>
     <string name="theme_system">सिस्टम</string>
@@ -13,25 +8,10 @@
     <string name="category_nature">प्रकृति &amp; जंगल</string>
     <string name="category_noise">व्हाइट नॉइज़ &amp; मैकेनिकल</string>
     <string name="category_water">पानी &amp; बारिश</string>
-    <string name="sound_cafe">कैफ़े का माहौल</string>
-    <string name="sound_campfire">अलाव</string>
-    <string name="sound_fan">पंखे की आवाज़</string>
-    <string name="sound_forest_birds">जंगल के पक्षी</string>
-    <string name="sound_ocean">समुद्र की लहरें</string>
-    <string name="sound_rain_light">हल्की बारिश</string>
-    <string name="sound_rain_thunder">बारिश &amp; गरज</string>
-    <string name="sound_wind">हवा का माहौल</string>
     <string name="duration_hour_short">घं</string>
     <string name="duration_minute_short">मि</string>
     <string name="duration_second_short">से</string>
     <string name="msg_mix_saved_success">%1$s सफलतापूर्वक सहेजा गया!</string>
-    <string name="error_generic">कुछ गलत हो गया। कृपया फिर से कोशिश करें।</string>
-    <string name="error_mix_name_empty">नाम खाली नहीं हो सकता।</string>
-    <string name="error_mix_name_exists">इस नाम का एक मिक्स पहले से मौजूद है।</string>
-    <string name="error_no_sounds">सहेजने के लिए कोई ध्वनि नहीं है।</string>
-    <string name="error_no_sounds_found">अनुशंसित ध्वनियाँ लाइब्रेरी में नहीं मिलीं।</string>
-    <string name="download_complete">सभी ध्वनियाँ डाउनलोड हो गईं! 🎉</string>
-    <string name="suggestion_hidden">सुझाव छिपा दिया गया।</string>
     <string name="action_settings">सेटिंग्स</string>
     <string name="tab_ai">AI</string>
     <string name="tab_home">होम</string>

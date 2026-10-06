@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="error_generic">Bir şeyler ters gitti. Lütfen tekrar deneyin.</string>
-    <string name="error_no_sounds_found">Önerilen sesler kütüphanede bulunamadı.</string>
-    <string name="error_no_sounds_to_save">Kaydedilecek ses yok.</string>
-    <string name="error_mix_name_exists">Bu isimde bir miks zaten var.</string>
-    <string name="success_mix_saved">%1$s başarıyla kaydedildi!</string>
     <string name="ai_screen_title">Just Relax AI</string>
     <string name="ai_suggestion_rainforest">Yağmur Ormanı</string>
     <string name="ai_suggestion_deep_sleep">Derin Uyku</string>
     <string name="ai_suggestion_cafe">Kafe Ambiyansı</string>
     <string name="ai_suggestion_meditation">Meditasyon</string>
-    <string name="ai_suggestion_storm">Fırtına</string>
     <string name="ai_prompt_placeholder">İdeal ortamını tarif et...</string>
-    <string name="ai_prompt_placeholder_with_context">Buraya ne ekleyelim?</string>
-    <string name="ai_context_toggle_cd">Bağlam</string>
-    <string name="ai_action_generate">Oluştur</string>
-    <string name="ai_action_edit">Düzenle</string>
-    <string name="ai_action_regenerate">Yeniden oluştur</string>
     <string name="action_save">Kaydet</string>
     <string name="msg_mix_saved_success">Miks '%1$s' başarıyla kaydedildi!</string>
     <string name="err_ai_no_sounds">İndirilen ses bulunamadı. AI'nin miks oluşturması için seslere ihtiyacı var.</string>

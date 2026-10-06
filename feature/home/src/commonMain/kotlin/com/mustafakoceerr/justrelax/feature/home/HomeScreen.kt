@@ -24,7 +24,6 @@ import com.mustafakoceerr.justrelax.feature.home.components.HomeScreenContent
 import justrelax.feature.home.generated.resources.Res
 import justrelax.feature.home.generated.resources.action_settings
 import justrelax.feature.home.generated.resources.home_screen_title
-import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 

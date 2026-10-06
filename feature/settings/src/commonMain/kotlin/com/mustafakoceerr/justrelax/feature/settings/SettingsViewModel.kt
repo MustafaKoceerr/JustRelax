@@ -116,7 +116,6 @@ class SettingsViewModel(
                     is DownloadStatus.Error -> screenState.update {
                         it.copy(isDownloadingLibrary = false, userMessage = UiText.DynamicString(status.message))
                     }
-                    else -> Unit
                 }
             }
         }

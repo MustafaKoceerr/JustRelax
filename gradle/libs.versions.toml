@@ -18,10 +18,10 @@ ktor = "3.6.0"
 kotlinx-serialization = "1.11.0"
 sqldelight = "2.4.0"
 
-# Kotlin ekleri
+# Kotlin extensions
 kotlinx-coroutines = "1.11.0"
 
-# Test / core (senin var olan değerlerin)
+# Misc
 okio = "3.18.2"
 coil3 = "3.6.3"
 buildConfig = "6.1.2"
@@ -67,7 +67,7 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 # Kotlinx Serialization
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
-# SQLDelight (Veritabanı)
+# SQLDelight (database)
 sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight" }
 sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
@@ -77,22 +77,22 @@ sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", versi
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 
-# Media3 & Media legacy
+# Media3
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
 androidx-media3-common = { module = "androidx.media3:media3-common", version.ref = "media3" }
 androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3" }
 kotlinx-coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "kotlinx-coroutines" }
 
-# Okio ( Path belirleme)
+# Okio (file system)
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 
-# Coil (resim indirme)
+# Coil (image loading)
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil3" }
 coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil3" }
 
-# --- Build Logic Dependencies (Plugin geliştirmek için gerekli artifactler) ---
-# Android Gradle Plugin (Kod erişimi için)
+# --- build-logic dependencies (Gradle plugin APIs) ---
+# Android Gradle Plugin
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 
 # Kotlin Gradle Plugin
@@ -108,12 +108,11 @@ composeCompiler-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
 
-# EKLENDİ - OpenAI Kotlin Kütüphanesi (BOM - Bill of Materials)
+# OpenAI client (versions from the BOM)
 openai-bom = { group = "com.aallam.openai", name = "openai-client-bom", version.ref = "openai-kotlin" }
-openai-client = { group = "com.aallam.openai", name = "openai-client" } # Versiyonu BOM'dan alacak
+openai-client = { group = "com.aallam.openai", name = "openai-client" }
 
-# Lottie animations
-# Ana Lottie Motoru
+# Lottie animations (Compottie)
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 compottie-resources = { module = "io.github.alexzhirkevich:compottie-resources", version.ref = "compottie" }
 compottie-dot = { module = "io.github.alexzhirkevich:compottie-dot", version.ref = "compottie" }

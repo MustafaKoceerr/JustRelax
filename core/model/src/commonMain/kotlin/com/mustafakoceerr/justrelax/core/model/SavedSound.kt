@@ -1,9 +1,0 @@
-package com.mustafakoceerr.justrelax.core.model
-
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class SavedSound(
-    val id: String,
-    val volume: Float
-)
