@@ -22,7 +22,7 @@ class JustRelaxKmpConventionPlugin : Plugin<Project> {
                     .configureAndroidLibrary(this@with)
 
                 if (isIosEnabled) {
-                    iosX64()
+                    // No iosX64 (Intel simulator): Compose Multiplatform 1.12+ and its libraries no longer publish it.
                     iosArm64()
                     iosSimulatorArm64()
                 }
