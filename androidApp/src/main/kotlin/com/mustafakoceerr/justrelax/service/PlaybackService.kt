@@ -1,17 +1,27 @@
 package com.mustafakoceerr.justrelax.service
 
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.IntentFilter
+import android.media.AudioManager
+import androidx.core.content.ContextCompat
+import com.mustafakoceerr.justrelax.core.audio.focus.PlaybackInterruptionPolicy
 import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaMetadata
-import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.CommandButton
 import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionResult
+import android.os.Bundle
+import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
 import com.mustafakoceerr.justrelax.MainActivity
 import com.mustafakoceerr.justrelax.R
 import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
@@ -37,6 +47,15 @@ class PlaybackService : MediaSessionService() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private var mediaSession: MediaSession? = null
+    private lateinit var interruptionPolicy: PlaybackInterruptionPolicy
+
+    private val becomingNoisyReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
+                interruptionPolicy.onBecomingNoisy()
+            }
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -52,12 +71,14 @@ class PlaybackService : MediaSessionService() {
         mediaSession = MediaSession.Builder(this, player)
             .setSessionActivity(openAppIntent())
             .setMediaButtonPreferences(listOf(stopButton()))
+            .setCallback(SessionCallback())
             .build()
             // Media3 only manages the notification/foreground state of sessions added to the
             // service. Normally that happens when a MediaController binds; we are started with
             // startService, so the session is added explicitly.
             .also(::addSession)
 
+        startInterruptionHandling()
         stopWhenMixBecomesEmpty()
     }
 
@@ -73,6 +94,8 @@ class PlaybackService : MediaSessionService() {
     }
 
     override fun onDestroy() {
+        unregisterReceiver(becomingNoisyReceiver)
+        interruptionPolicy.stop()
         mediaSession?.run {
             player.release()
             release()
@@ -80,6 +103,25 @@ class PlaybackService : MediaSessionService() {
         mediaSession = null
         serviceScope.cancel()
         super.onDestroy()
+    }
+
+    /** Phone calls, other apps taking audio focus, and headphones being unplugged. */
+    private fun startInterruptionHandling() {
+        val audioFocus = AndroidAudioFocus(getSystemService(AudioManager::class.java)) { change ->
+            when (change) {
+                AudioManager.AUDIOFOCUS_LOSS -> interruptionPolicy.onFocusLost(transient = false)
+                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> interruptionPolicy.onFocusLost(transient = true)
+                AudioManager.AUDIOFOCUS_GAIN -> interruptionPolicy.onFocusGained()
+            }
+        }
+        interruptionPolicy = PlaybackInterruptionPolicy(audioMixer, audioFocus, serviceScope).apply { start() }
+
+        ContextCompat.registerReceiver(
+            this,
+            becomingNoisyReceiver,
+            IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY),
+            ContextCompat.RECEIVER_NOT_EXPORTED,
+        )
     }
 
     private fun stopWhenMixBecomesEmpty() {
@@ -108,8 +150,33 @@ class PlaybackService : MediaSessionService() {
 
     private fun stopButton() = CommandButton.Builder(CommandButton.ICON_STOP)
         .setDisplayName(getString(R.string.action_stop))
-        .setPlayerCommand(Player.COMMAND_STOP)
+        .setSessionCommand(STOP_COMMAND)
         .build()
+
+    /** Allows the custom Stop command for every controller (system UI, Bluetooth, Auto). */
+    private inner class SessionCallback : MediaSession.Callback {
+        override fun onConnect(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+        ): MediaSession.ConnectionResult = MediaSession.ConnectionResult.AcceptedResultBuilder(session)
+            .setAvailableSessionCommands(
+                MediaSession.ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon().add(STOP_COMMAND).build()
+            )
+            .build()
+
+        override fun onCustomCommand(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            customCommand: SessionCommand,
+            args: Bundle,
+        ): ListenableFuture<SessionResult> {
+            if (customCommand.customAction != ACTION_STOP) {
+                return super.onCustomCommand(session, controller, customCommand, args)
+            }
+            serviceScope.launch { audioMixer.stopAll() }
+            return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+        }
+    }
 
     private fun openAppIntent(): PendingIntent = PendingIntent.getActivity(
         this,
@@ -117,4 +184,10 @@ class PlaybackService : MediaSessionService() {
         Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
+
+    companion object {
+        /** Custom session command: Android 13+ system media controls only show custom actions. */
+        const val ACTION_STOP = "com.mustafakoceerr.justrelax.STOP"
+        private val STOP_COMMAND = SessionCommand(ACTION_STOP, Bundle.EMPTY)
+    }
 }
