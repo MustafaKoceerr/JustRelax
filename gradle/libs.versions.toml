@@ -1,40 +1,38 @@
 [versions]
-kotlin = "2.2.21"
+kotlin = "2.4.20"
 agp = "9.4.1"
-android-compileSdk = "36"
+android-compileSdk = "37"
 android-minSdk = "29"
 android-targetSdk = "36"
 # Kotlin & Compose
-composeMultiplatform = "1.9.3"
+composeMultiplatform = "1.12.1"
 
 # AndroidX
-androidx-activity = "1.11.0"
-androidx-appcompat = "1.7.1"
-androidx-core = "1.17.0"
+androidx-activity = "1.13.0"
+androidx-appcompat = "1.8.0"
+androidx-core = "1.19.1"
 # Voyager
-kotlinxDatetime = "0.7.1"
-media3 = "1.8.0"
-voyager = "1.1.0-beta03"          # KMP için oturmuş beta
-
-# DI / Network vs.
-koin = "4.1.1"
-ktor = "3.3.2"
-kotlinx-serialization = "1.9.0"
-sqldelight = "2.2.1"
+kotlinxDatetime = "0.8.0"
+media3 = "1.11.1"
+voyager = "2.2.21-1.10.3"
+koin = "4.2.2"
+ktor = "3.6.0"
+kotlinx-serialization = "1.11.0"
+sqldelight = "2.4.0"
 
 # Kotlin ekleri
-kotlinx-coroutines = "1.10.2"
+kotlinx-coroutines = "1.11.0"
 
 # Test / core (senin var olan değerlerin)
-okio = "3.16.2"
-coil3 = "3.3.0" # Veya en güncel stabil sürüm
-buildConfig = "6.0.6"
-datastore = "1.2.0"
-openai-kotlin = "4.0.1"
+okio = "3.18.2"
+coil3 = "3.6.3"
+buildConfig = "6.1.2"
+datastore = "1.2.1"
+openai-kotlin = "4.1.0"
 
-compottie = "2.0.2"
+compottie = "2.3.3"
 turbine = "1.2.1"
-robolectric = "4.16"
+robolectric = "4.17"
 androidx-test-core = "1.7.0"
 
 [libraries]
