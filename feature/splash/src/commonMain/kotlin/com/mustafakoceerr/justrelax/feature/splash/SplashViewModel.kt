@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.splash
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.GetAppSetupStatusUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsIfNecessaryUseCase
 import com.mustafakoceerr.justrelax.feature.splash.mvi.SplashEffect
@@ -16,7 +16,7 @@ import kotlin.time.ExperimentalTime
 class SplashViewModel(
     private val getAppSetupStatusUseCase: GetAppSetupStatusUseCase,
     private val syncSoundsIfNecessaryUseCase: SyncSoundsIfNecessaryUseCase
-) : ScreenModel {
+) : ViewModel() {
 
     private val _effect = Channel<SplashEffect>()
     val effect = _effect.receiveAsFlow()
@@ -27,7 +27,7 @@ class SplashViewModel(
 
     @OptIn(ExperimentalTime::class)
     private fun startInitialization() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             val startTime = Clock.System.now().toEpochMilliseconds()
             val minSplashDuration = 2000L
 

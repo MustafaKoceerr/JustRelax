@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.player
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
@@ -33,7 +33,7 @@ class PlayerViewModel(
     private val togglePauseResumeUseCase: TogglePauseResumeUseCase,
     private val stopAllSoundsUseCase: StopAllSoundsUseCase,
     private val saveCurrentMixUseCase: SaveCurrentMixUseCase
-) : ScreenModel {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(PlayerContract.State())
     val state: StateFlow<PlayerContract.State> = _state.asStateFlow()
@@ -46,7 +46,7 @@ class PlayerViewModel(
     }
 
     private fun observePlayerState() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             combine(
                 soundRepository.getSounds(),
                 getGlobalMixerStateUseCase()
@@ -69,11 +69,11 @@ class PlayerViewModel(
     fun onEvent(event: PlayerContract.Event) {
         when (event) {
             PlayerContract.Event.StopAll -> {
-                screenModelScope.launch { stopAllSoundsUseCase() }
+                viewModelScope.launch { stopAllSoundsUseCase() }
             }
 
             PlayerContract.Event.ToggleMasterPlayPause -> {
-                screenModelScope.launch { togglePauseResumeUseCase() }
+                viewModelScope.launch { togglePauseResumeUseCase() }
             }
 
             PlayerContract.Event.OpenSaveDialog -> {
@@ -91,7 +91,7 @@ class PlayerViewModel(
     }
 
     private fun saveMix(name: String) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             _state.update { it.copy(isSaving = true) }
 
             val result = saveCurrentMixUseCase(name)

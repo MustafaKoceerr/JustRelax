@@ -20,23 +20,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.koin.koinScreenModel
-import com.mustafakoceerr.justrelax.core.navigation.AppScreen
+import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerPortraitLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerSetupScreen
 import com.mustafakoceerr.justrelax.feature.timer.mvi.TimerContract
 
-object TimerScreen : AppScreen {
-    @Composable
-    override fun Content() {
-        val viewModel = koinScreenModel<TimerViewModel>()
-        val state by viewModel.state.collectAsState()
+@Composable
+fun TimerRoute() {
+    val viewModel = koinViewModel<TimerViewModel>()
+    val state by viewModel.state.collectAsState()
 
-        TimerScreenContent(
-            state = state,
-            onEvent = viewModel::onEvent
-        )
-    }
+    TimerScreenContent(
+        state = state,
+        onEvent = viewModel::onEvent
+    )
 }
 
 @Composable

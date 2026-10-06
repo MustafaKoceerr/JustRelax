@@ -5,6 +5,7 @@ import com.mustafakoceerr.justrelax.feature.ai.data.repository.OpenAiRepositoryI
 import com.mustafakoceerr.justrelax.feature.ai.domain.repository.AiRepository
 import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.GenerateAiMixUseCase
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val aiModule = module {
@@ -13,5 +14,5 @@ val aiModule = module {
     }
 
     factoryOf(::GenerateAiMixUseCase)
-    factoryOf(::AiViewModel)
+    viewModelOf(::AiViewModel)
 }

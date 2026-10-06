@@ -18,10 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
-import com.mustafakoceerr.justrelax.core.navigation.AppScreen
-import com.mustafakoceerr.justrelax.core.navigation.TabProvider
+import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesEmptyScreen
@@ -32,58 +29,55 @@ import justrelax.feature.saved.generated.resources.saved_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-data object SavedScreen : AppScreen {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SavedRoute(
+    onOpenMixer: () -> Unit,
+) {
+    val viewModel = koinViewModel<SavedViewModel>()
+    val state by viewModel.state.collectAsState()
+    val snackbarController = koinInject<GlobalSnackbarController>()
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    override fun Content() {
-        val tabNavigator = LocalTabNavigator.current
-        val tabProvider = koinInject<TabProvider>()
-        val viewModel = koinScreenModel<SavedViewModel>()
-        val state by viewModel.state.collectAsState()
-        val snackbarController = koinInject<GlobalSnackbarController>()
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is SavedContract.Effect.NavigateToMixer -> {
+                    onOpenMixer()
+                }
 
-        LaunchedEffect(Unit) {
-            viewModel.effect.collect { effect ->
-                when (effect) {
-                    is SavedContract.Effect.NavigateToMixer -> {
-                        tabNavigator.current = tabProvider.mixerTab
-                    }
+                is SavedContract.Effect.ShowUndoSnackbar -> {
+                    val messageStr = effect.message.resolve()
+                    val actionStr = effect.actionLabel?.resolve()
 
-                    is SavedContract.Effect.ShowUndoSnackbar -> {
-                        val messageStr = effect.message.resolve()
-                        val actionStr = effect.actionLabel?.resolve()
+                    val result = snackbarController.showSnackbar(
+                        message = messageStr,
+                        actionLabel = actionStr,
+                        duration = SnackbarDuration.Long
+                    )
 
-                        val result = snackbarController.showSnackbar(
-                            message = messageStr,
-                            actionLabel = actionStr,
-                            duration = SnackbarDuration.Long
-                        )
-
-                        if (result == SnackbarResult.ActionPerformed) {
-                            viewModel.onEvent(SavedContract.Event.UndoDelete)
-                        }
+                    if (result == SnackbarResult.ActionPerformed) {
+                        viewModel.onEvent(SavedContract.Event.UndoDelete)
                     }
                 }
             }
         }
+    }
 
-        Scaffold(
-            containerColor = Color.Transparent,
-            contentWindowInsets = WindowInsets(0.dp),
-            topBar = {
-                JustRelaxTopBar(
-                    title = stringResource(Res.string.saved_screen_title)
-                )
-            }
-        ) { innerPadding ->
-
-            SavedScreenContent(
-                state = state,
-                onEvent = viewModel::onEvent,
-                modifier = Modifier.padding(innerPadding)
+    Scaffold(
+        containerColor = Color.Transparent,
+        contentWindowInsets = WindowInsets(0.dp),
+        topBar = {
+            JustRelaxTopBar(
+                title = stringResource(Res.string.saved_screen_title)
             )
         }
+    ) { innerPadding ->
+
+        SavedScreenContent(
+            state = state,
+            onEvent = viewModel::onEvent,
+            modifier = Modifier.padding(innerPadding)
+        )
     }
 }
 

@@ -7,125 +7,55 @@ import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import cafe.adriel.voyager.navigator.tab.Tab
-import cafe.adriel.voyager.navigator.tab.TabOptions
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.mustafakoceerr.justrelax.composeapp.generated.resources.Res
-import com.mustafakoceerr.justrelax.composeapp.generated.resources.*
-import com.mustafakoceerr.justrelax.feature.ai.AiScreen
-import com.mustafakoceerr.justrelax.feature.home.HomeScreen
-import com.mustafakoceerr.justrelax.feature.mixer.MixerScreen
-import com.mustafakoceerr.justrelax.feature.saved.SavedScreen
-import com.mustafakoceerr.justrelax.feature.timer.TimerScreen
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_ai
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_home
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_mixer
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_saved
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_timer
+import com.mustafakoceerr.justrelax.core.navigation.MainTab
+import com.mustafakoceerr.justrelax.feature.ai.AiRoute
+import com.mustafakoceerr.justrelax.feature.home.HomeRoute
+import com.mustafakoceerr.justrelax.feature.mixer.MixerRoute
+import com.mustafakoceerr.justrelax.feature.saved.SavedRoute
+import com.mustafakoceerr.justrelax.feature.timer.TimerRoute
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
-object HomeTab : Tab {
-    override val options: TabOptions
-        @Composable
-        get() {
-            val title = stringResource(Res.string.tab_home)
-            val icon = rememberVectorPainter(Icons.Rounded.Home)
-
-            return remember {
-                TabOptions(
-                    index = 0u,
-                    title = title,
-                    icon = icon
-                )
-            }
-        }
-
-    @Composable
-    override fun Content() {
-        HomeScreen.Content()
+val MainTab.icon: ImageVector
+    get() = when (this) {
+        MainTab.HOME -> Icons.Rounded.Home
+        MainTab.TIMER -> Icons.Rounded.AccessTime
+        MainTab.AI -> Icons.Rounded.AutoAwesome
+        MainTab.SAVED -> Icons.Rounded.Bookmark
+        MainTab.MIXER -> Icons.Rounded.Tune
     }
-}
 
-object TimerTab : Tab {
-    override val options: TabOptions
-        @Composable
-        get() {
-            val title = stringResource(Res.string.tab_timer)
-            val icon = rememberVectorPainter(Icons.Rounded.AccessTime)
-
-            return remember {
-                TabOptions(
-                    index = 1u,
-                    title = title,
-                    icon = icon
-                )
-            }
-        }
-
-    @Composable
-    override fun Content() {
-        TimerScreen.Content()
+private val MainTab.titleRes: StringResource
+    get() = when (this) {
+        MainTab.HOME -> Res.string.tab_home
+        MainTab.TIMER -> Res.string.tab_timer
+        MainTab.AI -> Res.string.tab_ai
+        MainTab.SAVED -> Res.string.tab_saved
+        MainTab.MIXER -> Res.string.tab_mixer
     }
-}
 
-object AiTab : Tab {
-    override val options: TabOptions
-        @Composable
-        get() {
-            val title = stringResource(Res.string.tab_ai)
-            val icon = rememberVectorPainter(Icons.Rounded.AutoAwesome)
+@Composable
+fun MainTab.title(): String = stringResource(titleRes)
 
-            return remember {
-                TabOptions(
-                    index = 2u,
-                    title = title,
-                    icon = icon
-                )
-            }
-        }
-
-    @Composable
-    override fun Content() {
-        AiScreen.Content()
-    }
-}
-
-object SavedTab : Tab {
-    override val options: TabOptions
-        @Composable
-        get() {
-            val title = stringResource(Res.string.tab_saved)
-            val icon = rememberVectorPainter(Icons.Rounded.Bookmark)
-
-            return remember {
-                TabOptions(
-                    index = 3u,
-                    title = title,
-                    icon = icon
-                )
-            }
-        }
-
-    @Composable
-    override fun Content() {
-        SavedScreen.Content()
-    }
-}
-
-object MixerTab : Tab {
-    override val options: TabOptions
-        @Composable
-        get() {
-            val title = stringResource(Res.string.tab_mixer)
-            val icon = rememberVectorPainter(Icons.Rounded.Tune)
-
-            return remember {
-                TabOptions(
-                    index = 4u,
-                    title = title,
-                    icon = icon
-                )
-            }
-        }
-
-    @Composable
-    override fun Content() {
-        MixerScreen.Content()
+/** Content of a bottom-bar tab. Navigation leaving the tab is passed in as callbacks. */
+@Composable
+fun MainTabContent(
+    tab: MainTab,
+    onOpenSettings: () -> Unit,
+    onSelectTab: (MainTab) -> Unit,
+) {
+    when (tab) {
+        MainTab.HOME -> HomeRoute(onOpenSettings = onOpenSettings)
+        MainTab.TIMER -> TimerRoute()
+        MainTab.AI -> AiRoute()
+        MainTab.SAVED -> SavedRoute(onOpenMixer = { onSelectTab(MainTab.MIXER) })
+        MainTab.MIXER -> MixerRoute()
     }
 }
