@@ -5,13 +5,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
@@ -20,47 +21,36 @@ import com.mustafakoceerr.justrelax.feature.onboarding.components.DownloadingVie
 import com.mustafakoceerr.justrelax.feature.onboarding.components.LoadingConfigView
 import com.mustafakoceerr.justrelax.feature.onboarding.components.NoInternetView
 import com.mustafakoceerr.justrelax.feature.onboarding.components.OnboardingScreenContent
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingEffect
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingIntent
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingScreenStatus
-import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingState
-import kotlinx.coroutines.flow.collectLatest
-import org.koin.compose.koinInject
 
 @Composable
 fun OnboardingRoute(
     onFinished: () -> Unit,
+    viewModel: OnboardingViewModel = koinViewModel(),
 ) {
-    val viewModel = koinViewModel<OnboardingViewModel>()
-    val state by viewModel.state.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(Unit) {
-        viewModel.effect.collectLatest { effect ->
-            when (effect) {
-                is OnboardingEffect.NavigateToMainScreen -> {
-                    onFinished()
-                }
-
-                is OnboardingEffect.ShowError -> {
-                    snackbarHostState.showSnackbar(effect.message.resolve())
-                }
-            }
-        }
+    LaunchedEffect(uiState.status) {
+        if (uiState.status == OnboardingStatus.COMPLETED) onFinished()
     }
+    UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarHostState.showSnackbar(it) }
 
-    OnboardingUi(
-        state = state,
+    OnboardingScreen(
+        uiState = uiState,
         snackbarHostState = snackbarHostState,
-        onIntent = viewModel::processIntent
+        onRetry = viewModel::retryLoadingConfig,
+        onDownloadStarterPack = viewModel::downloadStarterPack,
+        onDownloadFullLibrary = viewModel::downloadFullLibrary,
     )
 }
 
 @Composable
-internal fun OnboardingUi(
-    state: OnboardingState,
+internal fun OnboardingScreen(
+    uiState: OnboardingUiState,
     snackbarHostState: SnackbarHostState,
-    onIntent: (OnboardingIntent) -> Unit
+    onRetry: () -> Unit,
+    onDownloadStarterPack: () -> Unit,
+    onDownloadFullLibrary: () -> Unit,
 ) {
     JustRelaxBackground {
         Scaffold(
@@ -69,53 +59,46 @@ internal fun OnboardingUi(
         ) { padding ->
             val contentModifier = Modifier.padding(padding)
 
-            when (state.status) {
-                OnboardingScreenStatus.LOADING_CONFIG -> {
+            when (uiState.status) {
+                OnboardingStatus.LOADING_CONFIG -> {
                     LoadingConfigView(modifier = contentModifier)
                 }
 
-                OnboardingScreenStatus.NO_INTERNET -> {
+                OnboardingStatus.NO_INTERNET -> {
                     NoInternetView(
-                        onRetryClick = { onIntent(OnboardingIntent.RetryLoadingConfig) },
+                        onRetryClick = onRetry,
                         modifier = contentModifier
                     )
                 }
 
-                OnboardingScreenStatus.CHOOSING -> {
+                OnboardingStatus.CHOOSING -> {
                     var selectedOption by remember { mutableStateOf(DownloadOptionType.STARTER) }
 
                     OnboardingScreenContent(
                         selectedOption = selectedOption,
-                        state = state,
+                        uiState = uiState,
                         onOptionSelected = { selectedOption = it },
                         onConfirmClick = {
-                            val intent = when (selectedOption) {
-                                DownloadOptionType.STARTER -> OnboardingIntent.DownloadInitial
-                                DownloadOptionType.FULL -> OnboardingIntent.DownloadAll
+                            when (selectedOption) {
+                                DownloadOptionType.STARTER -> onDownloadStarterPack()
+                                DownloadOptionType.FULL -> onDownloadFullLibrary()
                             }
-                            onIntent(intent)
                         },
                         modifier = contentModifier
                     )
                 }
 
-                OnboardingScreenStatus.DOWNLOADING -> {
+                OnboardingStatus.DOWNLOADING -> {
                     DownloadingView(
-                        progress = state.downloadProgress,
+                        progress = uiState.downloadProgress,
                         modifier = contentModifier
                     )
                 }
 
-                OnboardingScreenStatus.COMPLETED -> {
+                OnboardingStatus.COMPLETED -> {
                     DownloadingView(progress = 1f, modifier = contentModifier)
                 }
 
-                OnboardingScreenStatus.ERROR -> {
-                    NoInternetView(
-                        onRetryClick = { onIntent(OnboardingIntent.RetryLoadingConfig) },
-                        modifier = contentModifier
-                    )
-                }
             }
         }
     }

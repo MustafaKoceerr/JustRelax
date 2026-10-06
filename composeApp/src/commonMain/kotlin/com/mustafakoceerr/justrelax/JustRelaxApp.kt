@@ -2,12 +2,10 @@ package com.mustafakoceerr.justrelax
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import coil3.compose.setSingletonImageLoaderFactory
 import com.mustafakoceerr.justrelax.core.model.AppTheme
-import com.mustafakoceerr.justrelax.core.ui.compositionlocal.LocalLanguageCode
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.core.ui.util.getAsyncImageLoader
 import com.mustafakoceerr.justrelax.feature.splash.SplashRoute
@@ -35,7 +33,7 @@ fun JustRelaxApp() {
     }
 
     val mainViewModel = koinViewModel<MainViewModel>()
-    val currentTheme by mainViewModel.currentTheme.collectAsState()
+    val currentTheme by mainViewModel.theme.collectAsStateWithLifecycle()
 
     val isDarkTheme = when (currentTheme) {
         AppTheme.SYSTEM -> isSystemInDarkTheme()

@@ -4,126 +4,94 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
+import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetGlobalMixerStateUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.StopAllSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.TogglePauseResumeUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.savedmix.SaveCurrentMixUseCase
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerContract
 import justrelax.feature.player.generated.resources.Res
 import justrelax.feature.player.generated.resources.err_mix_save_empty_name
 import justrelax.feature.player.generated.resources.err_mix_save_name_exists
 import justrelax.feature.player.generated.resources.err_mix_save_no_sound
 import justrelax.feature.player.generated.resources.err_unknown
 import justrelax.feature.player.generated.resources.msg_mix_saved_success
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/** The mini player shown above the bottom bar while sounds are active. */
 class PlayerViewModel(
-    private val soundRepository: SoundRepository,
-    private val getGlobalMixerStateUseCase: GetGlobalMixerStateUseCase,
-    private val togglePauseResumeUseCase: TogglePauseResumeUseCase,
-    private val stopAllSoundsUseCase: StopAllSoundsUseCase,
-    private val saveCurrentMixUseCase: SaveCurrentMixUseCase
+    soundRepository: SoundRepository,
+    private val audioMixer: AudioMixer,
+    private val saveCurrentMixUseCase: SaveCurrentMixUseCase,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(PlayerContract.State())
-    val state: StateFlow<PlayerContract.State> = _state.asStateFlow()
+    private data class ScreenState(
+        val isSaveDialogVisible: Boolean = false,
+        val isSaving: Boolean = false,
+        val userMessage: UiText? = null,
+    )
 
-    private val _effect = Channel<PlayerContract.Effect>()
-    val effect: Flow<PlayerContract.Effect> = _effect.receiveAsFlow()
+    private val screenState = MutableStateFlow(ScreenState())
 
-    init {
-        observePlayerState()
-    }
+    val uiState: StateFlow<PlayerUiState> = combine(
+        soundRepository.getSounds(),
+        audioMixer.state,
+        screenState,
+    ) { sounds, mixer, screen ->
+        val soundsById = sounds.associateBy { it.id }
+        PlayerUiState(
+            activeSounds = mixer.activeSounds.mapNotNull { soundsById[it.id] },
+            isPlaying = mixer.isPlaying,
+            isSaveDialogVisible = screen.isSaveDialogVisible,
+            isSaving = screen.isSaving,
+            userMessage = screen.userMessage,
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PlayerUiState())
 
-    private fun observePlayerState() {
+    fun togglePlayPause() {
         viewModelScope.launch {
-            combine(
-                soundRepository.getSounds(),
-                getGlobalMixerStateUseCase()
-            ) { allSounds, mixerState ->
-                val activeSoundList = mixerState.activeSounds.mapNotNull { config ->
-                    allSounds.find { it.id == config.id }
-                }
-                activeSoundList to mixerState.isPlaying
-            }.collect { (activeSounds, isPlaying) ->
-                _state.update { current ->
-                    current.copy(
-                        activeSounds = activeSounds,
-                        isPlaying = isPlaying
-                    )
-                }
-            }
+            if (audioMixer.state.value.isPlaying) audioMixer.pauseAll() else audioMixer.resumeAll()
         }
     }
 
-    fun onEvent(event: PlayerContract.Event) {
-        when (event) {
-            PlayerContract.Event.StopAll -> {
-                viewModelScope.launch { stopAllSoundsUseCase() }
-            }
-
-            PlayerContract.Event.ToggleMasterPlayPause -> {
-                viewModelScope.launch { togglePauseResumeUseCase() }
-            }
-
-            PlayerContract.Event.OpenSaveDialog -> {
-                _state.update { it.copy(isSaveDialogVisible = true) }
-            }
-
-            PlayerContract.Event.DismissSaveDialog -> {
-                _state.update { it.copy(isSaveDialogVisible = false) }
-            }
-
-            is PlayerContract.Event.SaveMix -> {
-                saveMix(event.name)
-            }
-        }
+    fun stopAll() {
+        viewModelScope.launch { audioMixer.stopAll() }
     }
 
-    private fun saveMix(name: String) {
-        viewModelScope.launch {
-            _state.update { it.copy(isSaving = true) }
+    fun openSaveDialog() = screenState.update { it.copy(isSaveDialogVisible = true) }
 
+    fun dismissSaveDialog() = screenState.update { it.copy(isSaveDialogVisible = false) }
+
+    fun saveMix(name: String) {
+        viewModelScope.launch {
+            screenState.update { it.copy(isSaving = true) }
             val result = saveCurrentMixUseCase(name)
-
-            _state.update {
+            screenState.update {
                 it.copy(
                     isSaving = false,
-                    isSaveDialogVisible = result !is Resource.Success
+                    isSaveDialogVisible = result !is Resource.Success,
+                    userMessage = result.toMessage(name),
                 )
             }
-
-            when (result) {
-                is Resource.Success -> {
-                    _effect.send(
-                        PlayerContract.Effect.ShowSnackbar(
-                            UiText.Resource(Res.string.msg_mix_saved_success, listOf(name))
-                        )
-                    )
-                }
-
-                is Resource.Error -> {
-                    val errorText = when (result.error) {
-                        is AppError.SaveMix.EmptyName -> UiText.Resource(Res.string.err_mix_save_empty_name)
-                        is AppError.SaveMix.NameAlreadyExists -> UiText.Resource(Res.string.err_mix_save_name_exists)
-                        is AppError.SaveMix.NoSoundsPlaying -> UiText.Resource(Res.string.err_mix_save_no_sound)
-                        else -> UiText.Resource(Res.string.err_unknown)
-                    }
-                    _effect.send(PlayerContract.Effect.ShowSnackbar(errorText))
-                }
-
-                else -> {}
-            }
         }
+    }
+
+    fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
+
+    private fun Resource<Unit>.toMessage(name: String): UiText? = when (this) {
+        is Resource.Success -> UiText.Resource(Res.string.msg_mix_saved_success, listOf(name))
+        is Resource.Error -> UiText.Resource(
+            when (error) {
+                is AppError.SaveMix.EmptyName -> Res.string.err_mix_save_empty_name
+                is AppError.SaveMix.NameAlreadyExists -> Res.string.err_mix_save_name_exists
+                is AppError.SaveMix.NoSoundsPlaying -> Res.string.err_mix_save_no_sound
+                else -> Res.string.err_unknown
+            }
+        )
+        Resource.Loading -> null
     }
 }

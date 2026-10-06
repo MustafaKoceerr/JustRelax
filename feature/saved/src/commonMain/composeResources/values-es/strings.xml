@@ -6,12 +6,7 @@
     <string name="saved_mix_metadata">%1$d sonidos • %2$s</string>
     <string name="saved_screen_title">Mezclas guardadas</string>
     <string name="action_create_new_mix">Crear nueva mezcla</string>
-    <string name="action_delete">Eliminar</string>
-    <string name="action_more_options">Opciones</string>
-    <string name="action_pause">Pausar</string>
     <string name="action_play">Reproducir</string>
-    <string name="action_rename">Renombrar</string>
-    <string name="action_share">Compartir</string>
     <string name="action_undo">Deshacer</string>
     <string name="msg_mix_deleted">Mezcla eliminada</string>
     <string name="date_format_short">dd/MM/yyyy</string>

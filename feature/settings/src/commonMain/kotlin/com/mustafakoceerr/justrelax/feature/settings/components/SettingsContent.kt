@@ -21,11 +21,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsIntent
-import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsState
+import com.mustafakoceerr.justrelax.core.model.AppTheme
+import com.mustafakoceerr.justrelax.feature.settings.SettingsUiState
 import justrelax.feature.settings.generated.resources.Res
 import justrelax.feature.settings.generated.resources.feedback_subtitle
 import justrelax.feature.settings.generated.resources.feedback_title
@@ -40,8 +39,14 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SettingsContent(
-    state: SettingsState,
-    onIntent: (SettingsIntent) -> Unit
+    uiState: SettingsUiState,
+    onThemeChange: (AppTheme) -> Unit,
+    onDownloadLibrary: () -> Unit,
+    onOpenLanguageSelection: () -> Unit,
+    onRateApp: () -> Unit,
+    onSendFeedback: () -> Unit,
+    onOpenPrivacyPolicy: () -> Unit,
+    onOpenTermsAndConditions: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -51,22 +56,22 @@ fun SettingsContent(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         ThemeSelector(
-            currentTheme = state.currentTheme,
-            onThemeSelected = { onIntent(SettingsIntent.ChangeTheme(it)) }
+            currentTheme = uiState.theme,
+            onThemeSelected = onThemeChange
         )
 
         SectionGroup(title = stringResource(Res.string.section_content)) {
             DownloadAllCard(
-                isDownloaded = state.isLibraryComplete,
-                isDownloading = state.isDownloadingLibrary,
-                progress = state.downloadProgress,
-                onClick = { onIntent(SettingsIntent.DownloadAllLibrary) }
+                isDownloaded = uiState.isLibraryComplete,
+                isDownloading = uiState.isDownloadingLibrary,
+                progress = uiState.downloadProgress,
+                onClick = onDownloadLibrary
             )
             SettingsTile(
                 icon = Icons.Rounded.Language,
                 title = stringResource(Res.string.settings_language_title),
-                subtitle = state.currentLanguage.nativeName,
-                onClick = { onIntent(SettingsIntent.OpenLanguageSelection) }
+                subtitle = uiState.language.nativeName,
+                onClick = onOpenLanguageSelection
             )
         }
 
@@ -75,13 +80,13 @@ fun SettingsContent(
                 icon = Icons.Rounded.StarRate,
                 title = stringResource(Res.string.rate_app_title),
                 subtitle = stringResource(Res.string.rate_app_subtitle),
-                onClick = { onIntent(SettingsIntent.RateApp) }
+                onClick = onRateApp
             )
             SettingsTile(
                 icon = Icons.Rounded.Mail,
                 title = stringResource(Res.string.feedback_title),
                 subtitle = stringResource(Res.string.feedback_subtitle),
-                onClick = { onIntent(SettingsIntent.SendFeedback) }
+                onClick = onSendFeedback
             )
 
             HorizontalDivider(
@@ -92,12 +97,12 @@ fun SettingsContent(
             SettingsTile(
                 icon = Icons.Rounded.PrivacyTip,
                 title = stringResource(Res.string.privacy_policy_title),
-                onClick = { onIntent(SettingsIntent.OpenPrivacyPolicy) }
+                onClick = onOpenPrivacyPolicy
             )
             SettingsTile(
                 icon = Icons.Rounded.Description,
                 title = stringResource(Res.string.terms_conditions_title),
-                onClick = { onIntent(SettingsIntent.OpenTermsAndConditions) }
+                onClick = onOpenTermsAndConditions
             )
 
             VersionInfoTile(versionName = "v1.0.0")

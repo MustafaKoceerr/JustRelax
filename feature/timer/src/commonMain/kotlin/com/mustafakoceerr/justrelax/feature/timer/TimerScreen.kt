@@ -15,31 +15,33 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerPortraitLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerSetupScreen
-import com.mustafakoceerr.justrelax.feature.timer.mvi.TimerContract
 
 @Composable
-fun TimerRoute() {
-    val viewModel = koinViewModel<TimerViewModel>()
-    val state by viewModel.state.collectAsState()
+fun TimerRoute(viewModel: TimerViewModel = koinViewModel()) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    TimerScreenContent(
-        state = state,
-        onEvent = viewModel::onEvent
+    TimerScreen(
+        uiState = uiState,
+        onStart = viewModel::startTimer,
+        onToggle = viewModel::toggleTimer,
+        onCancel = viewModel::cancelTimer,
     )
 }
 
 @Composable
-fun TimerScreenContent(
-    state: TimerContract.State,
-    onEvent: (TimerContract.Event) -> Unit
+fun TimerScreen(
+    uiState: TimerUiState,
+    onStart: (seconds: Long) -> Unit,
+    onToggle: () -> Unit,
+    onCancel: () -> Unit,
 ) {
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
@@ -48,24 +50,22 @@ fun TimerScreenContent(
     ) { paddingValues ->
 
         AnimatedContent(
-            targetState = state.isSetupMode,
+            targetState = uiState.isSetupMode,
             transitionSpec = { timerTransitionSpec() },
             label = "TimerTransition",
             modifier = Modifier.padding(paddingValues)
         ) { isSetup ->
             if (isSetup) {
                 TimerSetupScreen(
-                    onStartClick = { totalSeconds ->
-                        onEvent(TimerContract.Event.StartTimer(totalSeconds))
-                    }
+                    onStartClick = onStart
                 )
             } else {
                 TimerPortraitLayout(
-                    totalTimeSeconds = state.totalSeconds,
-                    timeLeftSeconds = state.remainingSeconds,
-                    isPaused = state.isPaused,
-                    onToggleClick = { onEvent(TimerContract.Event.ToggleTimer) },
-                    onCancelClick = { onEvent(TimerContract.Event.CancelTimer) }
+                    totalTimeSeconds = uiState.totalSeconds,
+                    timeLeftSeconds = uiState.remainingSeconds,
+                    isPaused = uiState.isPaused,
+                    onToggleClick = onToggle,
+                    onCancelClick = onCancel
                 )
             }
         }

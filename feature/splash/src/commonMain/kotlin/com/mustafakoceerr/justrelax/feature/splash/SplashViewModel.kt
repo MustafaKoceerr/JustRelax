@@ -2,53 +2,43 @@ package com.mustafakoceerr.justrelax.feature.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.GetAppSetupStatusUseCase
+import com.mustafakoceerr.justrelax.core.domain.repository.appsetup.AppSetupRepository
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsIfNecessaryUseCase
-import com.mustafakoceerr.justrelax.feature.splash.mvi.SplashEffect
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
 
 class SplashViewModel(
-    private val getAppSetupStatusUseCase: GetAppSetupStatusUseCase,
-    private val syncSoundsIfNecessaryUseCase: SyncSoundsIfNecessaryUseCase
+    private val appSetupRepository: AppSetupRepository,
+    private val syncSoundsIfNecessaryUseCase: SyncSoundsIfNecessaryUseCase,
 ) : ViewModel() {
 
-    private val _effect = Channel<SplashEffect>()
-    val effect = _effect.receiveAsFlow()
+    private val _uiState = MutableStateFlow<SplashUiState>(SplashUiState.Loading)
+    val uiState: StateFlow<SplashUiState> = _uiState.asStateFlow()
 
     init {
-        startInitialization()
+        viewModelScope.launch {
+            val start = TimeSource.Monotonic.markNow()
+
+            // A failed sync is fine: the app works with the sounds it already has.
+            syncSoundsIfNecessaryUseCase()
+            val isSetupFinished = appSetupRepository.isStarterPackInstalled.first()
+
+            val remaining = MIN_SPLASH_DURATION - start.elapsedNow()
+            if (remaining.isPositive()) delay(remaining)
+
+            _uiState.value = SplashUiState.Ready(
+                if (isSetupFinished) StartDestination.MAIN else StartDestination.ONBOARDING
+            )
+        }
     }
 
-    @OptIn(ExperimentalTime::class)
-    private fun startInitialization() {
-        viewModelScope.launch {
-            val startTime = Clock.System.now().toEpochMilliseconds()
-            val minSplashDuration = 2000L
-
-            try {
-                syncSoundsIfNecessaryUseCase()
-            } catch (e: Exception) {
-                // Ignored: Proceed even if sync fails
-            }
-
-            val isInstalled = getAppSetupStatusUseCase().first()
-
-            val elapsedTime = Clock.System.now().toEpochMilliseconds() - startTime
-            if (elapsedTime < minSplashDuration) {
-                delay(minSplashDuration - elapsedTime)
-            }
-
-            if (isInstalled) {
-                _effect.send(SplashEffect.NavigateToMain)
-            } else {
-                _effect.send(SplashEffect.NavigateToOnboarding)
-            }
-        }
+    private companion object {
+        val MIN_SPLASH_DURATION = 2.seconds
     }
 }

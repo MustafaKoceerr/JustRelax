@@ -3,13 +3,13 @@ package com.mustafakoceerr.justrelax.core.domain.usecase.savedmix
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMixRepository
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetGlobalMixerStateUseCase
+import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 
 class SaveCurrentMixUseCase(
     private val savedMixRepository: SavedMixRepository,
-    private val getGlobalMixerStateUseCase: GetGlobalMixerStateUseCase
+    private val audioMixer: AudioMixer
 ) {
     suspend operator fun invoke(name: String): Resource<Unit> {
         val trimmedName = name.trim()
@@ -17,7 +17,7 @@ class SaveCurrentMixUseCase(
             return Resource.Error(AppError.SaveMix.EmptyName())
         }
 
-        val activeSounds = getGlobalMixerStateUseCase().value.activeSounds
+        val activeSounds = audioMixer.state.value.activeSounds
         if (activeSounds.isEmpty()) {
             return Resource.Error(AppError.SaveMix.NoSoundsPlaying())
         }
