@@ -7,10 +7,11 @@ fun testSound(
     localPath: String? = null,
     isInitial: Boolean = false,
     remoteUrl: String = "https://cdn.test/$id.mp3",
+    categoryId: String = "NATURE",
 ) = Sound(
     id = id,
     names = mapOf("en" to id),
-    categoryId = "NATURE",
+    categoryId = categoryId,
     iconUrl = "https://cdn.test/$id.svg",
     remoteUrl = remoteUrl,
     localPath = localPath,

@@ -15,32 +15,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.feature.home.mvi.HomeContract
+import com.mustafakoceerr.justrelax.core.model.SoundCategory
+import com.mustafakoceerr.justrelax.core.model.SoundUi
+import com.mustafakoceerr.justrelax.feature.home.HomeUiState
 
 @Composable
 fun HomeScreenContent(
-    state: HomeContract.State,
-    onEvent: (HomeContract.Event) -> Unit,
+    uiState: HomeUiState,
+    onCategorySelected: (SoundCategory) -> Unit,
+    onSoundClick: (SoundUi) -> Unit,
+    onVolumeChange: (soundId: String, volume: Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val categories = state.categories.keys.toList()
-    val selectedCategory = state.selectedCategory
-
-    val playingSoundIds = state.playerState.activeSounds.map { it.id }.toSet()
-    val soundVolumes = state.playerState.activeSounds.associate { it.id to it.initialVolume }
+    val categories = uiState.categories.keys.toList()
+    val selectedCategory = uiState.selectedCategory
 
     Column(modifier = modifier.fillMaxSize()) {
         if (categories.isNotEmpty() && selectedCategory != null) {
             HomeTabRow(
                 categories = categories,
                 selectedCategory = selectedCategory,
-                onCategorySelected = { category ->
-                    onEvent(HomeContract.Event.OnCategorySelected(category))
-                }
+                onCategorySelected = onCategorySelected
             )
         }
 
-        if (state.isLoading) {
+        if (uiState.isLoading) {
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
@@ -54,22 +53,15 @@ fun HomeScreenContent(
                 label = "CategoryTransition",
                 modifier = Modifier.weight(1f)
             ) { currentCategory ->
-                val soundsToShow = state.categories[currentCategory] ?: emptyList()
+                val soundsToShow = uiState.categories[currentCategory] ?: emptyList()
 
                 SoundCardGrid(
                     sounds = soundsToShow,
-                    playingSoundIds = playingSoundIds,
-                    soundVolumes = soundVolumes,
-                    downloadingSoundIds = state.downloadingSoundIds,
-                    onSoundClick = { sound -> onEvent(HomeContract.Event.OnSoundClick(sound)) },
-                    onVolumeChange = { soundId, volume ->
-                        onEvent(
-                            HomeContract.Event.OnVolumeChange(
-                                soundId,
-                                volume
-                            )
-                        )
-                    },
+                    playingSoundIds = uiState.playingSoundIds,
+                    soundVolumes = uiState.soundVolumes,
+                    downloadingSoundIds = uiState.downloadingSoundIds,
+                    onSoundClick = onSoundClick,
+                    onVolumeChange = onVolumeChange,
                     contentPadding = PaddingValues(16.dp)
                 )
             }
