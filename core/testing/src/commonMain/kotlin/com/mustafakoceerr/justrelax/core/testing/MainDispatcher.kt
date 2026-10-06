@@ -17,6 +17,9 @@ fun runMainTest(testBody: suspend TestScope.() -> Unit) = runTest {
     Dispatchers.setMain(StandardTestDispatcher(testScheduler))
     try {
         testBody()
+        // Let pending ViewModel work (e.g. stateIn's WhileSubscribed stop timeout) finish
+        // in virtual time before Main goes away.
+        testScheduler.advanceUntilIdle()
     } finally {
         Dispatchers.resetMain()
     }

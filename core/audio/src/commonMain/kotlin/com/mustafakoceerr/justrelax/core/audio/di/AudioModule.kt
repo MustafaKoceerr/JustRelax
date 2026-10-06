@@ -33,7 +33,7 @@ val audioCoreModule = module {
     single<TimerManager> {
         TimerManagerImpl(
             externalScope = get(qualifier = ApplicationScope),
-            stopAllSoundsUseCase = get()
+            audioMixer = get()
         )
     }
 }
