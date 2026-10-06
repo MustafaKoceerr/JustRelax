@@ -2,70 +2,40 @@ package com.mustafakoceerr.justrelax.core.audio.controller
 
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.domain.controller.SoundController
+import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
 import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.AdjustVolumeUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetGlobalMixerStateUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.StopSoundUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 
+/**
+ * Plays/stops single sounds while remembering each sound's last volume, so a sound toggled
+ * off and on again (e.g. inside a generated mix) comes back at the same level.
+ */
 class SoundControllerImpl(
-    private val getGlobalMixerStateUseCase: GetGlobalMixerStateUseCase,
+    private val audioMixer: AudioMixer,
     private val playSoundUseCase: PlaySoundUseCase,
-    private val stopSoundUseCase: StopSoundUseCase,
-    private val adjustVolumeUseCase: AdjustVolumeUseCase
 ) : SoundController {
 
-    private val volumeCache = MutableStateFlow<Map<String, Float>>(emptyMap())
+    private val volumes = mutableMapOf<String, Float>()
 
-    override val state: StateFlow<GlobalMixerState> = getGlobalMixerStateUseCase()
+    override val state: StateFlow<GlobalMixerState> = audioMixer.state
 
     override suspend fun toggleSound(soundId: String) {
-        val activeSound = state.value.activeSounds.find { it.id == soundId }
-
-        if (activeSound != null) {
-            stopSoundUseCase(soundId)
+        if (state.value.activeSounds.any { it.id == soundId }) {
+            audioMixer.stopSound(soundId)
         } else {
-            val targetVolume = volumeCache.value[soundId] ?: AudioDefaults.BASE_VOLUME
-            playSoundUseCase(soundId, targetVolume)
+            playSoundUseCase(soundId, volumes[soundId] ?: AudioDefaults.BASE_VOLUME)
         }
     }
 
     override fun changeVolume(soundId: String, volume: Float) {
-        volumeCache.update { current ->
-            current + (soundId to volume)
-        }
-        adjustVolumeUseCase(soundId, volume)
+        volumes[soundId] = volume
+        audioMixer.setVolume(soundId, volume)
     }
 
     override fun setVolumes(volumes: Map<String, Float>) {
-        volumeCache.update { current ->
-            current + volumes
-        }
-
-        volumes.forEach { (id, vol) ->
-            if (state.value.activeSounds.any { it.id == id }) {
-                adjustVolumeUseCase(id, vol)
-            }
-        }
-    }
-
-    class Factory(
-        private val getGlobalMixerStateUseCase: GetGlobalMixerStateUseCase,
-        private val playSoundUseCase: PlaySoundUseCase,
-        private val stopSoundUseCase: StopSoundUseCase,
-        private val adjustVolumeUseCase: AdjustVolumeUseCase
-    ) : SoundController.Factory {
-        override fun create(scope: CoroutineScope): SoundController {
-            return SoundControllerImpl(
-                getGlobalMixerStateUseCase,
-                playSoundUseCase,
-                stopSoundUseCase,
-                adjustVolumeUseCase
-            )
-        }
+        this.volumes += volumes
+        val activeIds = state.value.activeSounds.map { it.id }.toSet()
+        volumes.filterKeys { it in activeIds }.forEach { (id, volume) -> audioMixer.setVolume(id, volume) }
     }
 }

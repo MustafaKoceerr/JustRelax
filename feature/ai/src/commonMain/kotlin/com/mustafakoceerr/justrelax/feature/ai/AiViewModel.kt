@@ -7,123 +7,93 @@ import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.controller.SoundController
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
+import com.mustafakoceerr.justrelax.feature.ai.domain.model.AiGeneratedMix
 import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.GenerateAiMixUseCase
-import com.mustafakoceerr.justrelax.feature.ai.mvi.AiContract
 import justrelax.feature.ai.generated.resources.Res
 import justrelax.feature.ai.generated.resources.err_ai_empty_response
 import justrelax.feature.ai.generated.resources.err_ai_no_sounds
 import justrelax.feature.ai.generated.resources.err_unknown
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AiViewModel(
     private val generateAiMixUseCase: GenerateAiMixUseCase,
     private val setMixUseCase: SetMixUseCase,
-    soundControllerFactory: SoundController.Factory
+    private val soundController: SoundController,
 ) : ViewModel() {
 
-    val soundController: SoundController = soundControllerFactory.create(viewModelScope)
+    private data class ScreenState(
+        val prompt: String = "",
+        val isLoading: Boolean = false,
+        val mix: AiGeneratedMix? = null,
+        val userMessage: UiText? = null,
+    )
 
-    private val _state = MutableStateFlow(AiContract.State())
-    val state = _state.asStateFlow()
+    private val screenState = MutableStateFlow(ScreenState())
 
-    private val _effect = Channel<AiContract.Effect>()
-    val effect = _effect.receiveAsFlow()
+    val uiState: StateFlow<AiUiState> = combine(screenState, soundController.state) { screen, mixer ->
+        AiUiState(
+            prompt = screen.prompt,
+            isLoading = screen.isLoading,
+            mixName = screen.mix?.name.orEmpty(),
+            mixDescription = screen.mix?.description.orEmpty(),
+            mixSounds = screen.mix?.sounds?.keys?.toList().orEmpty(),
+            // A paused mix shows its sounds as not playing.
+            playingSoundIds = if (mixer.isPlaying) mixer.activeSounds.mapTo(mutableSetOf()) { it.id } else emptySet(),
+            soundVolumes = mixer.activeSounds.associate { it.id to it.initialVolume },
+            userMessage = screen.userMessage,
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AiUiState())
 
-    fun onEvent(event: AiContract.Event) {
-        when (event) {
-            is AiContract.Event.UpdatePrompt -> {
-                _state.update { it.copy(prompt = event.text) }
-            }
+    /** Typing in the field and picking a suggestion both set the prompt. */
+    fun updatePrompt(text: String) = screenState.update { it.copy(prompt = text) }
 
-            is AiContract.Event.SelectSuggestion -> {
-                _state.update { it.copy(prompt = event.text) }
-            }
-
-            is AiContract.Event.GenerateMix -> generateMix()
-
-            is AiContract.Event.RegenerateMix -> generateMix()
-
-            is AiContract.Event.EditPrompt -> {
-                _state.update {
-                    it.copy(
-                        generatedMixName = "",
-                        generatedMixDescription = "",
-                        generatedSounds = emptyList()
-                    )
-                }
-            }
-
-            is AiContract.Event.ClearMix -> {
-                _state.update { AiContract.State() }
-            }
-
-            is AiContract.Event.ToggleSound -> {
-                viewModelScope.launch {
-                    soundController.toggleSound(event.soundId)
-                }
-            }
-
-            is AiContract.Event.ChangeVolume -> {
-                soundController.changeVolume(event.soundId, event.volume)
-            }
-        }
-    }
-
-    private fun generateMix() {
-        val prompt = _state.value.prompt
+    /** Generates a mix for the current prompt; also used to regenerate. */
+    fun generateMix() {
+        val prompt = screenState.value.prompt
         if (prompt.isBlank()) return
 
         viewModelScope.launch {
             generateAiMixUseCase(prompt).collect { result ->
                 when (result) {
-                    is Resource.Loading -> {
-                        _state.update { it.copy(isLoading = true) }
-                    }
-
+                    is Resource.Loading -> screenState.update { it.copy(isLoading = true) }
                     is Resource.Success -> {
                         val mix = result.data
-
-                        val volumeMap = mix.sounds.map { (soundUi, volume) ->
-                            soundUi.id to volume
-                        }.toMap()
-
-                        soundController.setVolumes(volumeMap)
-
+                        soundController.setVolumes(mix.sounds.mapKeys { (sound, _) -> sound.id })
                         setMixUseCase(mix.sounds)
-
-                        _state.update {
-                            it.copy(
-                                isLoading = false,
-                                generatedMixName = mix.name,
-                                generatedMixDescription = mix.description,
-                                generatedSounds = mix.sounds.keys.toList()
-                            )
-                        }
+                        screenState.update { it.copy(isLoading = false, mix = mix) }
                     }
-
-                    is Resource.Error -> {
-                        _state.update { it.copy(isLoading = false) }
-                        handleError(result.error)
+                    is Resource.Error -> screenState.update {
+                        it.copy(isLoading = false, userMessage = result.error.toMessage())
                     }
                 }
             }
         }
     }
-    private fun handleError(error: AppError) {
-        val message = when (error) {
-            is AppError.Ai.NoDownloadedSounds -> UiText.Resource(Res.string.err_ai_no_sounds)
-            is AppError.Ai.EmptyResponse -> UiText.Resource(Res.string.err_ai_empty_response)
-            else -> UiText.Resource(Res.string.err_unknown)
-        }
-        sendEffect(AiContract.Effect.ShowSnackbar(message))
+
+    /** Back to the prompt, keeping what the user typed. */
+    fun editPrompt() = screenState.update { it.copy(mix = null) }
+
+    fun clearMix() = screenState.update { ScreenState() }
+
+    fun toggleSound(soundId: String) {
+        viewModelScope.launch { soundController.toggleSound(soundId) }
     }
 
-    private fun sendEffect(effect: AiContract.Effect) {
-        viewModelScope.launch { _effect.send(effect) }
-    }
+    fun changeVolume(soundId: String, volume: Float) = soundController.changeVolume(soundId, volume)
+
+    fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
+
+    private fun AppError.toMessage() = UiText.Resource(
+        when (this) {
+            is AppError.Ai.NoDownloadedSounds -> Res.string.err_ai_no_sounds
+            is AppError.Ai.EmptyResponse -> Res.string.err_ai_empty_response
+            else -> Res.string.err_unknown
+        }
+    )
 }
