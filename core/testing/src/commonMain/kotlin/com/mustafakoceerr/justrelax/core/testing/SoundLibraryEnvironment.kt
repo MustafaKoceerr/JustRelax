@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.core.testing
 
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.GetSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadAllSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadBatchSoundsUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadInitialSoundsUseCase
@@ -33,7 +32,6 @@ class SoundLibraryEnvironment(sounds: List<Sound> = emptyList()) {
         override fun now(): Instant = Instant.fromEpochMilliseconds(1_000_000_000_000)
     }
 
-    val getSounds = GetSoundsUseCase(soundRepository)
     val syncSounds = SyncSoundsUseCase(syncRepository, dataSourceState)
     val syncSoundsIfNecessary = SyncSoundsIfNecessaryUseCase(dataSourceState, syncRepository, clock)
 

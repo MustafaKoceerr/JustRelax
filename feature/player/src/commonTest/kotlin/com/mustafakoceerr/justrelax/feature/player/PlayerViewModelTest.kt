@@ -2,7 +2,6 @@ package com.mustafakoceerr.justrelax.feature.player
 
 import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
 import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetGlobalMixerStateUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.savedmix.SaveCurrentMixUseCase
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository
@@ -32,7 +31,7 @@ class PlayerViewModelTest {
     private fun TestScope.viewModel() = PlayerViewModel(
         soundRepository = FakeSoundRepository(listOf(testSound("rain"), testSound("fire"))),
         audioMixer = mixer,
-        saveCurrentMixUseCase = SaveCurrentMixUseCase(savedMixes, GetGlobalMixerStateUseCase(mixer)),
+        saveCurrentMixUseCase = SaveCurrentMixUseCase(savedMixes, mixer),
     ).also { observe(it.uiState) }
 
     private fun PlayerViewModel.messageRes() = (uiState.value.userMessage as UiText.Resource).resId
