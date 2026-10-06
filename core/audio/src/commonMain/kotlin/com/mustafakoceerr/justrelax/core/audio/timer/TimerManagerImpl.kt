@@ -3,7 +3,7 @@ package com.mustafakoceerr.justrelax.core.audio.timer
 import com.mustafakoceerr.justrelax.core.domain.timer.TimerManager
 import com.mustafakoceerr.justrelax.core.domain.timer.TimerState
 import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class TimerManagerImpl(
     private val externalScope: CoroutineScope,
-    private val audioMixer: AudioMixer
+    private val soundscapeEngine: SoundscapeEngine
 ) : TimerManager {
     private val _state = MutableStateFlow(TimerState())
     override val state = _state.asStateFlow()
@@ -69,7 +69,7 @@ class TimerManagerImpl(
 
     private fun onTimerFinished() {
         externalScope.launch {
-            audioMixer.stopAll()
+            soundscapeEngine.stopAll()
         }
         _state.update { TimerState(status = TimerStatus.IDLE) }
     }

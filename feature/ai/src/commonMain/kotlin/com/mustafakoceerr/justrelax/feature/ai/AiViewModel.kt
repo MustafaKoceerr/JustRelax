@@ -44,8 +44,8 @@ class AiViewModel(
             mixDescription = screen.mix?.description.orEmpty(),
             mixSounds = screen.mix?.sounds?.keys?.toList().orEmpty(),
             // A paused mix shows its sounds as not playing.
-            playingSoundIds = if (mixer.isPlaying) mixer.activeSounds.mapTo(mutableSetOf()) { it.id } else emptySet(),
-            soundVolumes = mixer.activeSounds.associate { it.id to it.initialVolume },
+            playingSoundIds = if (mixer.isPlaying) mixer.layers.mapTo(mutableSetOf()) { it.soundId } else emptySet(),
+            soundVolumes = mixer.layers.associate { it.soundId to it.volume },
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AiUiState())

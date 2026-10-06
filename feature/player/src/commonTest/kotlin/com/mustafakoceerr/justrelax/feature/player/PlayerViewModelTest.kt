@@ -1,9 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.player
 
-import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
-import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
 import com.mustafakoceerr.justrelax.core.domain.usecase.savedmix.SaveCurrentMixUseCase
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
@@ -23,14 +21,14 @@ import kotlin.test.assertTrue
 
 class PlayerViewModelTest {
 
-    private val mixer = FakeAudioMixer().apply {
-        setState(GlobalMixerState(isPlaying = true, activeSounds = listOf(SoundConfig("rain", "/rain.mp3"))))
+    private val mixer = FakeSoundscapeEngine().apply {
+        playBeds("rain")
     }
     private val savedMixes = FakeSavedMixRepository()
 
     private fun TestScope.viewModel() = PlayerViewModel(
         soundRepository = FakeSoundRepository(listOf(testSound("rain"), testSound("fire"))),
-        audioMixer = mixer,
+        soundscapeEngine = mixer,
         saveCurrentMixUseCase = SaveCurrentMixUseCase(savedMixes, mixer),
     ).also { observe(it.uiState) }
 
@@ -107,7 +105,7 @@ class PlayerViewModelTest {
         viewModel.stopAll()
         advanceUntilIdle()
 
-        assertTrue(mixer.state.value.activeSounds.isEmpty())
+        assertTrue(mixer.state.value.layers.isEmpty())
         assertFalse(viewModel.uiState.value.isVisible)
     }
 }

@@ -3,13 +3,13 @@ package com.mustafakoceerr.justrelax.core.domain.usecase.savedmix
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMixRepository
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 
 class SaveCurrentMixUseCase(
     private val savedMixRepository: SavedMixRepository,
-    private val audioMixer: AudioMixer
+    private val soundscapeEngine: SoundscapeEngine
 ) {
     suspend operator fun invoke(name: String): Resource<Unit> {
         val trimmedName = name.trim()
@@ -17,8 +17,8 @@ class SaveCurrentMixUseCase(
             return Resource.Error(AppError.SaveMix.EmptyName())
         }
 
-        val activeSounds = audioMixer.state.value.activeSounds
-        if (activeSounds.isEmpty()) {
+        val layers = soundscapeEngine.state.value.layers
+        if (layers.isEmpty()) {
             return Resource.Error(AppError.SaveMix.NoSoundsPlaying())
         }
 
@@ -28,8 +28,8 @@ class SaveCurrentMixUseCase(
             return Resource.Error(AppError.SaveMix.NameAlreadyExists())
         }
 
-        val soundsToSave = activeSounds.associate { config ->
-            config.id to config.initialVolume
+        val soundsToSave = layers.associate { layer ->
+            layer.soundId to layer.volume
         }
 
         return try {

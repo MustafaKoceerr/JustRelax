@@ -25,6 +25,12 @@ class EventSchedulerTest {
         override fun play(soundId: String, clip: String, volume: Float, pan: Float) {
             plays += Play(now(), soundId, clip, volume, pan)
         }
+
+        override suspend fun load(soundId: String, clips: List<String>) = Unit
+        override fun unload(soundId: String) = Unit
+        override fun pauseAll() = Unit
+        override fun resumeAll() = Unit
+        override fun stopAll() = Unit
     }
 
     private fun TestScope.scheduler(player: RecordingPlayer) =

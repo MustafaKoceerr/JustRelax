@@ -2,18 +2,19 @@ package com.mustafakoceerr.justrelax.core.domain.usecase.player
 
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
+import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.testSound
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
+import kotlinx.coroutines.test.runTest
 
 class PlaySoundUseCaseTest {
 
-    private val mixer = FakeAudioMixer()
+    private val mixer = FakeSoundscapeEngine()
     private val repository = FakeSoundRepository(
         listOf(testSound("rain", localPath = "/sounds/rain.mp3"), testSound("fire"))
     )
@@ -21,19 +22,19 @@ class PlaySoundUseCaseTest {
 
     @Test
     fun downloadedSound_isPlayedFromLocalPath() = runTest {
-        val result = useCase("rain", initialVolume = 0.4f)
+        val result = useCase("rain", volume = 0.4f)
 
         assertIs<Resource.Success<Unit>>(result)
-        val config = mixer.playedConfigs.single()
-        assertEquals("/sounds/rain.mp3", config.url)
-        assertEquals(0.4f, config.initialVolume)
+        val layer = assertIs<Layer.Bed>(mixer.addedLayers.single())
+        assertEquals("/sounds/rain.mp3", layer.clip)
+        assertEquals(0.4f, layer.volume)
     }
 
     @Test
     fun volumeIsClampedToValidRange() = runTest {
-        useCase("rain", initialVolume = 3f)
+        useCase("rain", volume = 3f)
 
-        assertEquals(1f, mixer.playedConfigs.single().initialVolume)
+        assertEquals(1f, mixer.addedLayers.single().volume)
     }
 
     @Test
@@ -41,7 +42,7 @@ class PlaySoundUseCaseTest {
         val result = useCase("fire")
 
         assertIs<AppError.Storage.FileNotFound>(assertIs<Resource.Error>(result).error)
-        assertTrue(mixer.playedConfigs.isEmpty())
+        assertTrue(mixer.addedLayers.isEmpty())
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.mustafakoceerr.justrelax.core.audio.controller
 
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import kotlinx.coroutines.test.runTest
@@ -13,16 +13,16 @@ import kotlin.test.assertTrue
 /** Toggling sounds on and off within a generated mix keeps each sound's volume. */
 class SoundControllerImplTest {
 
-    private val mixer = FakeAudioMixer()
+    private val mixer = FakeSoundscapeEngine()
     private val controller = SoundControllerImpl(
-        audioMixer = mixer,
+        soundscapeEngine = mixer,
         playSoundUseCase = PlaySoundUseCase(
             FakeSoundRepository(listOf(testSound("rain", localPath = "/sounds/rain.mp3"))),
             mixer,
         ),
     )
 
-    private fun volumeOf(id: String) = mixer.state.value.activeSounds.single { it.id == id }.initialVolume
+    private fun volumeOf(id: String) = mixer.state.value.layers.single { it.soundId == id }.volume
 
     @Test
     fun unknownSound_startsAtTheDefaultVolume() = runTest {
@@ -46,7 +46,7 @@ class SoundControllerImplTest {
         controller.changeVolume("rain", 0.3f)
 
         controller.toggleSound("rain") // off
-        assertTrue(mixer.state.value.activeSounds.isEmpty())
+        assertTrue(mixer.state.value.layers.isEmpty())
         controller.toggleSound("rain") // on again
 
         assertEquals(0.3f, volumeOf("rain"))

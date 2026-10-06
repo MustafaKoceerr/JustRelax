@@ -1,31 +1,19 @@
 package com.mustafakoceerr.justrelax.core.domain.usecase.player
 
-import com.mustafakoceerr.justrelax.core.common.AudioDefaults
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
-import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
+import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
+import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 
+/** Plays a mix as the current scene; sounds that are not downloaded are skipped. */
 class SetMixUseCase(
-    private val audioMixer: AudioMixer
+    private val soundscapeEngine: SoundscapeEngine,
 ) {
-    suspend operator fun invoke(
-        mix: Map<LocalizedSound, Float>,
-        useFadeIn: Boolean = true
-    ) {
-        val configs = mix.mapNotNull { (sound, volume) ->
+    suspend operator fun invoke(mix: Map<LocalizedSound, Float>) {
+        val layers = mix.mapNotNull { (sound, volume) ->
             val path = sound.localPath
-
-            if (path.isNullOrBlank()) {
-                null
-            } else {
-                SoundConfig(
-                    id = sound.id,
-                    url = path,
-                    initialVolume = volume.coerceIn(0f, 1f),
-                    fadeInDurationMs = if (useFadeIn) AudioDefaults.FADE_IN_MS else 0L
-                )
-            }
+            if (path.isNullOrBlank()) null else Layer.Bed(sound.id, clip = path, volume = volume.coerceIn(0f, 1f))
         }
-        audioMixer.setMix(configs)
+        soundscapeEngine.play(Scene(layers.distinctBy { it.soundId }.take(Scene.MAX_LAYERS)))
     }
 }

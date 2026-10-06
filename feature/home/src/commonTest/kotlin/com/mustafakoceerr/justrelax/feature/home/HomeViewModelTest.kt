@@ -4,7 +4,7 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSingleSoundUseCase
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.testing.SoundLibraryEnvironment
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
@@ -29,11 +29,11 @@ class HomeViewModelTest {
             testSound("forest", localPath = "/sounds/forest.mp3", categoryId = "NATURE"),
         )
     )
-    private val mixer = FakeAudioMixer()
+    private val mixer = FakeSoundscapeEngine()
 
     private fun TestScope.viewModel() = HomeViewModel(
         getLocalizedCategorizedSoundsUseCase = GetLocalizedCategorizedSoundsUseCase(library.soundRepository, FakeLanguageController()),
-        audioMixer = mixer,
+        soundscapeEngine = mixer,
         playSoundUseCase = PlaySoundUseCase(library.soundRepository, mixer),
         downloadSingleSoundUseCase = DownloadSingleSoundUseCase(library.storage, library.downloader, library.soundRepository),
     ).also { observe(it.uiState) }
@@ -116,6 +116,6 @@ class HomeViewModelTest {
         advanceUntilIdle()
 
         assertEquals(0.9f, viewModel.uiState.value.soundVolumes["rain"])
-        assertEquals(0.9f, mixer.state.value.activeSounds.single().initialVolume)
+        assertEquals(0.9f, mixer.state.value.layers.single().volume)
     }
 }

@@ -3,18 +3,19 @@ package com.mustafakoceerr.justrelax.core.domain.usecase.player
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
-import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
+import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import kotlinx.coroutines.flow.first
 
+/** Adds a downloaded sound to the current scene. */
 class PlaySoundUseCase(
     private val soundRepository: SoundRepository,
-    private val audioMixer: AudioMixer
+    private val soundscapeEngine: SoundscapeEngine,
 ) {
     suspend operator fun invoke(
         soundId: String,
-        initialVolume: Float = AudioDefaults.BASE_VOLUME
+        volume: Float = AudioDefaults.BASE_VOLUME,
     ): Resource<Unit> {
         val sound = soundRepository.getSound(soundId).first()
             ?: return Resource.Error(AppError.Storage.FileNotFound())
@@ -24,13 +25,7 @@ class PlaySoundUseCase(
             return Resource.Error(AppError.Storage.FileNotFound())
         }
 
-        val config = SoundConfig(
-            id = sound.id,
-            url = localPath,
-            initialVolume = initialVolume.coerceIn(0f, 1f),
-            fadeInDurationMs = AudioDefaults.FADE_IN_MS
-        )
-
-        return audioMixer.playSound(config)
+        // Every catalog sound is a bed until the v2 catalog brings event sounds.
+        return soundscapeEngine.addLayer(Layer.Bed(sound.id, clip = localPath, volume = volume.coerceIn(0f, 1f)))
     }
 }

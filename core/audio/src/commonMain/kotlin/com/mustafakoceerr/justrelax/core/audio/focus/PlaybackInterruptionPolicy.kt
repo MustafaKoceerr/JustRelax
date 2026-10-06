@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.core.audio.focus
 
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -23,7 +23,7 @@ interface AudioFocus {
  * Ducking (notifications, navigation prompts) is left to the system.
  */
 class PlaybackInterruptionPolicy(
-    private val audioMixer: AudioMixer,
+    private val soundscapeEngine: SoundscapeEngine,
     private val audioFocus: AudioFocus,
     private val scope: CoroutineScope,
 ) {
@@ -35,8 +35,8 @@ class PlaybackInterruptionPolicy(
 
     fun start() {
         observeJob = scope.launch {
-            audioMixer.state
-                .map { MixStatus(isPlaying = it.isPlaying, hasSounds = it.activeSounds.isNotEmpty()) }
+            soundscapeEngine.state
+                .map { MixStatus(isPlaying = it.isPlaying, hasSounds = it.layers.isNotEmpty()) }
                 .distinctUntilChanged()
                 .collect(::onMixChanged)
         }
@@ -49,7 +49,7 @@ class PlaybackInterruptionPolicy(
     }
 
     fun onFocusLost(transient: Boolean) {
-        val wasPlaying = audioMixer.state.value.isPlaying
+        val wasPlaying = soundscapeEngine.state.value.isPlaying
         resumeOnGain = transient && wasPlaying
         if (!transient) hasFocus = false
         if (wasPlaying) pause()
@@ -58,12 +58,12 @@ class PlaybackInterruptionPolicy(
     fun onFocusGained() {
         if (!resumeOnGain) return
         resumeOnGain = false
-        scope.launch { audioMixer.resumeAll() }
+        scope.launch { soundscapeEngine.resumeAll() }
     }
 
     fun onBecomingNoisy() {
         resumeOnGain = false
-        if (audioMixer.state.value.isPlaying) pause()
+        if (soundscapeEngine.state.value.isPlaying) pause()
     }
 
     private fun onMixChanged(status: MixStatus) {
@@ -85,7 +85,7 @@ class PlaybackInterruptionPolicy(
 
     private fun pause() {
         pausedByPolicy = true
-        scope.launch { audioMixer.pauseAll() }
+        scope.launch { soundscapeEngine.pauseAll() }
     }
 
     private fun releaseFocus() {
