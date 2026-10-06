@@ -35,11 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
-import cafe.adriel.voyager.navigator.tab.Tab
-import cafe.adriel.voyager.navigator.tab.TabNavigator
-import com.mustafakoceerr.justrelax.core.navigation.AppScreen
+import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
@@ -47,85 +43,111 @@ import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
 import com.mustafakoceerr.justrelax.feature.player.components.PlayerBottomBar
 import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerContract
-import com.mustafakoceerr.justrelax.tabs.AiTab
-import com.mustafakoceerr.justrelax.tabs.HomeTab
-import com.mustafakoceerr.justrelax.tabs.MixerTab
-import com.mustafakoceerr.justrelax.tabs.SavedTab
-import com.mustafakoceerr.justrelax.tabs.TimerTab
 import org.koin.compose.koinInject
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
+import com.mustafakoceerr.justrelax.core.navigation.MainTab
+import com.mustafakoceerr.justrelax.core.navigation.MainTabState
+import com.mustafakoceerr.justrelax.tabs.MainTabContent
+import com.mustafakoceerr.justrelax.tabs.icon
+import com.mustafakoceerr.justrelax.tabs.title
 
-object MainScreen : AppScreen {
-    @Composable
-    override fun Content() {
-        val playerViewModel = koinScreenModel<PlayerViewModel>()
-        val playerState by playerViewModel.state.collectAsState()
-        val snackbarController = koinInject<GlobalSnackbarController>()
+/**
+ * Bottom-bar shell. Tab ViewModels are scoped to this destination, so they survive tab switches
+ * (as with Voyager) and are cleared when the user leaves Main.
+ */
+@Composable
+fun MainRoute(onOpenSettings: () -> Unit) {
+    val playerViewModel = koinViewModel<PlayerViewModel>()
+    val playerState by playerViewModel.state.collectAsState()
+    val snackbarController = koinInject<GlobalSnackbarController>()
 
-        LaunchedEffect(Unit) {
-            playerViewModel.effect.collect { effect ->
-                when (effect) {
-                    is PlayerContract.Effect.ShowSnackbar -> {
-                        snackbarController.showSnackbar(effect.message.resolve())
-                    }
+    LaunchedEffect(Unit) {
+        playerViewModel.effect.collect { effect ->
+            when (effect) {
+                is PlayerContract.Effect.ShowSnackbar -> {
+                    snackbarController.showSnackbar(effect.message.resolve())
                 }
             }
         }
+    }
 
-        if (playerState.isSaveDialogVisible) {
-            SaveMixDialog(
-                isOpen = true,
-                onDismiss = { playerViewModel.onEvent(PlayerContract.Event.DismissSaveDialog) },
-                onConfirm = { name -> playerViewModel.onEvent(PlayerContract.Event.SaveMix(name)) }
-            )
-        }
-
-        MainScreenLayout(
-            playerState = playerState,
-            onPlayerEvent = playerViewModel::onEvent,
-            snackbarHostState = snackbarController.hostState
+    if (playerState.isSaveDialogVisible) {
+        SaveMixDialog(
+            isOpen = true,
+            onDismiss = { playerViewModel.onEvent(PlayerContract.Event.DismissSaveDialog) },
+            onConfirm = { name -> playerViewModel.onEvent(PlayerContract.Event.SaveMix(name)) }
         )
     }
+
+    MainScreenLayout(
+        tabState = rememberSaveable(saver = MainTabState.Saver) { MainTabState() },
+        playerState = playerState,
+        onPlayerEvent = playerViewModel::onEvent,
+        onOpenSettings = onOpenSettings,
+        snackbarHostState = snackbarController.hostState
+    )
 }
 
 @Composable
 private fun MainScreenLayout(
+    tabState: MainTabState,
     playerState: PlayerContract.State,
     onPlayerEvent: (PlayerContract.Event) -> Unit,
+    onOpenSettings: () -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
     val density = LocalDensity.current
     val isKeyboardOpen = WindowInsets.ime.getBottom(density) > 0
+    // Keeps each tab's UI state (scroll position etc.) while another tab is shown.
+    val tabStateHolder = rememberSaveableStateHolder()
 
-    TabNavigator(HomeTab) { tabNavigator ->
-        JustRelaxBackground {
-            Scaffold(
-                contentWindowInsets = WindowInsets(0.dp),
-                containerColor = Color.Transparent,
-                snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) },
-                bottomBar = {
-                    if (!isKeyboardOpen) {
-                        MainBottomBarContent(
-                            onPlayerEvent = onPlayerEvent,
-                            playerState = playerState
-                        )
-                    }
+    // Back on a tab other than Home goes to Home; on Home the system handles it (leaves the app).
+    NavigationBackHandler(
+        state = rememberNavigationEventState(NavigationEventInfo.None),
+        isBackEnabled = tabState.interceptsBack,
+        onBackCompleted = { tabState.onBack() },
+    )
+
+    JustRelaxBackground {
+        Scaffold(
+            contentWindowInsets = WindowInsets(0.dp),
+            containerColor = Color.Transparent,
+            snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) },
+            bottomBar = {
+                if (!isKeyboardOpen) {
+                    MainBottomBarContent(
+                        selectedTab = tabState.selected,
+                        onSelectTab = tabState::select,
+                        onPlayerEvent = onPlayerEvent,
+                        playerState = playerState
+                    )
                 }
-            ) { innerPadding ->
+            }
+        ) { innerPadding ->
 
-                Box(
-                    modifier = Modifier
-                        .padding(innerPadding)
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
 
-                ) {
-                    AnimatedContent(
-                        targetState = tabNavigator.current,
-                        transitionSpec = {
-                            fadeIn(animationSpec = tween(300)) togetherWith
-                                    fadeOut(animationSpec = tween(300))
-                        },
-                        label = "TabTransition"
-                    ) { tab ->
-                        tab.Content()
+            ) {
+                AnimatedContent(
+                    targetState = tabState.selected,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(300)) togetherWith
+                                fadeOut(animationSpec = tween(300))
+                    },
+                    label = "TabTransition"
+                ) { tab ->
+                    tabStateHolder.SaveableStateProvider(tab.name) {
+                        MainTabContent(
+                            tab = tab,
+                            onOpenSettings = onOpenSettings,
+                            onSelectTab = tabState::select,
+                        )
                     }
                 }
             }
@@ -135,6 +157,8 @@ private fun MainScreenLayout(
 
 @Composable
 private fun MainBottomBarContent(
+    selectedTab: MainTab,
+    onSelectTab: (MainTab) -> Unit,
     playerState: PlayerContract.State,
     onPlayerEvent: (PlayerContract.Event) -> Unit
 ) {
@@ -165,31 +189,24 @@ private fun MainBottomBarContent(
             containerColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.primary,
         ) {
-            TabNavigationItem(HomeTab)
-            TabNavigationItem(TimerTab)
-            TabNavigationItem(AiTab)
-            TabNavigationItem(SavedTab)
-            TabNavigationItem(MixerTab)
+            MainTab.entries.forEach { tab ->
+                TabNavigationItem(tab = tab, isSelected = tab == selectedTab, onClick = { onSelectTab(tab) })
+            }
         }
     }
 }
 
 @Composable
-private fun RowScope.TabNavigationItem(tab: Tab) {
-    val tabNavigator = LocalTabNavigator.current
-    val isSelected = tabNavigator.current == tab
+private fun RowScope.TabNavigationItem(tab: MainTab, isSelected: Boolean, onClick: () -> Unit) {
+    val title = tab.title()
 
     NavigationBarItem(
         selected = isSelected,
-        onClick = { tabNavigator.current = tab },
-        icon = {
-            tab.options.icon?.let {
-                Icon(painter = it, contentDescription = tab.options.title)
-            }
-        },
+        onClick = onClick,
+        icon = { Icon(imageVector = tab.icon, contentDescription = title) },
         label = {
             Text(
-                text = tab.options.title,
+                text = title,
                 style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center
             )

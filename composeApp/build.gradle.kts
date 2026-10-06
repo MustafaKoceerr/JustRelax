@@ -48,6 +48,9 @@ kotlin {
 
             implementation(libs.findLibrary("koin-core").get())
             implementation(libs.findLibrary("koin-compose").get())
+            implementation(libs.findLibrary("koin-compose-viewmodel").get())
+            implementation(libs.findLibrary("androidx-lifecycle-viewmodel-compose").get())
+            implementation(libs.findLibrary("androidx-lifecycle-viewmodel-navigation3").get())
 
             implementation(compose.runtime)
             implementation(compose.foundation)

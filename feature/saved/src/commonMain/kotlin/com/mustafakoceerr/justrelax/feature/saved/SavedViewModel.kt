@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.saved
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMix
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
@@ -29,7 +29,7 @@ class SavedViewModel(
     private val playSavedMixUseCase: PlaySavedMixUseCase,
     private val deleteSavedMixUseCase: DeleteSavedMixUseCase,
     private val restoreSavedMixUseCase: RestoreSavedMixUseCase
-) : ScreenModel {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(SavedContract.State())
     val state = _state.asStateFlow()
@@ -55,7 +55,7 @@ class SavedViewModel(
     }
 
     private fun observeMixes() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
             observeSavedMixesUseCase().collectLatest { domainMixes ->
@@ -78,7 +78,7 @@ class SavedViewModel(
 
         val mixToPlay = _state.value.mixes.find { it.id == mixId }?.domainModel ?: return
 
-        playbackJob = screenModelScope.launch {
+        playbackJob = viewModelScope.launch {
             try {
                 playSavedMixUseCase(mixToPlay)
             } catch (e: Exception) {
@@ -92,7 +92,7 @@ class SavedViewModel(
     }
 
     private fun deleteMix(uiMix: SavedContract.SavedMixUiModel) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             try {
                 lastDeletedMix = uiMix.domainModel
                 deleteSavedMixUseCase(uiMix.id)
@@ -114,7 +114,7 @@ class SavedViewModel(
 
     private fun undoDelete() {
         val mixToRestore = lastDeletedMix ?: return
-        screenModelScope.launch {
+        viewModelScope.launch {
             try {
                 restoreSavedMixUseCase(mixToRestore)
                 lastDeletedMix = null
@@ -125,7 +125,7 @@ class SavedViewModel(
     }
 
     private fun sendEffect(effect: SavedContract.Effect) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             _effect.send(effect)
         }
     }

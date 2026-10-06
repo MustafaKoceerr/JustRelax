@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppLanguageUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppThemeUseCase
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class MainViewModel(
      getAppThemeUseCase: GetAppThemeUseCase,
-) : ScreenModel {
+) : ViewModel() {
     val currentTheme = getAppThemeUseCase()
-        .stateIn(screenModelScope, SharingStarted.WhileSubscribed(5000), AppTheme.SYSTEM)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AppTheme.SYSTEM)
 }

@@ -23,9 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.koin.koinScreenModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
-import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
@@ -39,44 +38,41 @@ import justrelax.feature.mixer.generated.resources.mixer_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-object MixerScreen : AppScreen {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MixerRoute() {
+    val snackbarController = koinInject<GlobalSnackbarController>()
+    val viewModel = koinViewModel<MixerViewModel>()
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    override fun Content() {
-        val snackbarController = koinInject<GlobalSnackbarController>()
-        val viewModel = koinScreenModel<MixerViewModel>()
+    val mixerState by viewModel.state.collectAsState()
+    val soundControllerState by viewModel.soundController.state.collectAsState()
 
-        val mixerState by viewModel.state.collectAsState()
-        val soundControllerState by viewModel.soundController.state.collectAsState()
-
-        LaunchedEffect(Unit) {
-            viewModel.effect.collect { effect ->
-                when (effect) {
-                    is MixerContract.Effect.ShowSnackbar -> {
-                        snackbarController.showSnackbar(effect.message.resolve())
-                    }
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is MixerContract.Effect.ShowSnackbar -> {
+                    snackbarController.showSnackbar(effect.message.resolve())
                 }
             }
         }
+    }
 
-        Scaffold(
-            containerColor = Color.Transparent,
-            contentWindowInsets = WindowInsets(0.dp),
-            topBar = {
-                JustRelaxTopBar(title = stringResource(Res.string.mixer_screen_title))
-            },
-            snackbarHost = {
-                JustRelaxSnackbarHost(hostState = snackbarController.hostState)
-            }
-        ) { innerPadding ->
-            MixerScreenContent(
-                mixerState = mixerState,
-                soundControllerState = soundControllerState,
-                onEvent = viewModel::onEvent,
-                modifier = Modifier.padding(innerPadding)
-            )
+    Scaffold(
+        containerColor = Color.Transparent,
+        contentWindowInsets = WindowInsets(0.dp),
+        topBar = {
+            JustRelaxTopBar(title = stringResource(Res.string.mixer_screen_title))
+        },
+        snackbarHost = {
+            JustRelaxSnackbarHost(hostState = snackbarController.hostState)
         }
+    ) { innerPadding ->
+        MixerScreenContent(
+            mixerState = mixerState,
+            soundControllerState = soundControllerState,
+            onEvent = viewModel::onEvent,
+            modifier = Modifier.padding(innerPadding)
+        )
     }
 }
 
