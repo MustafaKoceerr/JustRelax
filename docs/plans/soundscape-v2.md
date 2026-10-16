@@ -1,5 +1,18 @@
 # JustRelax v2 — Soundscape motoru ve uygulamanın yeniden inşası
 
+> **Durum (2026-10-16):** Aşama 1–3 tamamlandı. Kalan aşamalar daha geniş bir yeniden inşa planına dağıtıldı:
+> - Aşama 4 → Faz 5 (SoundPool olay player'ı)
+> - Aşama 5 → Faz 4 (veri v2)
+> - Aşama 6 → Faz 7a/7b (ekranlar), adaptive kabuktan (Faz 6) sonra
+> - Aşama 7 → Faz 8 (~15 seslik yerleşik paket)
+>
+> Yeni plandaki öteki fazlar:
+> - build-logic ve CocoaPods temizliği
+> - NiA modül yapısı
+> - Media3'te tek gerçek player (`MediaController` + `SceneRepository`)
+> - Benim seslerim (içe aktarma, kayıt, kırpma)
+> - Freesound
+
 ## Context
 Kullanıcının asıl şikayetleri: uygulama yeterince işlevsel değil; AI hep aynı/alakasız sesleri seçiyor ("kamptayım" → sadece kamp ateşi). İnceleme sonucu kök nedenler:
 - **AI sesleri tanımıyor.** `feature/ai/.../OpenAiRepositoryImpl.kt` modele sadece ID listesi gönderiyor; üstelik yalnızca indirilmiş sesleri (starter pack = 17 ses).
