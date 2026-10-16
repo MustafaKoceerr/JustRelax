@@ -23,10 +23,8 @@ kotlin {
             api(project(":core:ui"))
             implementation(project(":core:network"))
             implementation(project(":core:database"))
-            implementation(project(":core:system"))
             implementation(project(":core:audio"))
-            implementation(project(":core:navigation"))
-            implementation(project(":data:repository"))
+            implementation(project(":core:data"))
 
             implementation(project(":feature:home"))
             implementation(project(":feature:mixer"))
@@ -41,6 +39,8 @@ kotlin {
             implementation(libs.bundles.koin.compose)
             implementation(libs.bundles.lifecycle.compose)
             implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+            implementation(libs.navigation3.ui)
+            implementation(libs.kotlinx.serialization.json)
 
             implementation(libs.coil.compose)
             implementation(libs.coil.network)

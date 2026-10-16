@@ -4,11 +4,9 @@ import com.mustafakoceerr.justrelax.MainViewModel
 import com.mustafakoceerr.justrelax.core.audio.di.audioCoreModule
 import com.mustafakoceerr.justrelax.core.common.di.commonModule
 import com.mustafakoceerr.justrelax.core.database.di.databaseModule
-import com.mustafakoceerr.justrelax.core.domain.di.domainModule
 import com.mustafakoceerr.justrelax.core.network.di.networkModule
-import com.mustafakoceerr.justrelax.core.system.di.systemModule
 import com.mustafakoceerr.justrelax.core.ui.di.uiModule
-import com.mustafakoceerr.justrelax.data.repository.di.repositoryModule
+import com.mustafakoceerr.justrelax.core.data.di.dataModule
 import com.mustafakoceerr.justrelax.feature.ai.di.aiModule
 import com.mustafakoceerr.justrelax.feature.home.di.homeModule
 import com.mustafakoceerr.justrelax.feature.mixer.di.mixerModule
@@ -35,12 +33,10 @@ val appModule = module {
 val appModules: List<Module>
     get() = listOf(
         commonModule,
-        domainModule,
         databaseModule,
         networkModule,
-        repositoryModule,
+        dataModule,
         uiModule,
-        systemModule,
 
         audioCoreModule,
 

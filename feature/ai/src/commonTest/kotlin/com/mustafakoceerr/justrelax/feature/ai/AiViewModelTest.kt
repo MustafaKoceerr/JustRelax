@@ -1,23 +1,23 @@
 package com.mustafakoceerr.justrelax.feature.ai
 
 import com.mustafakoceerr.justrelax.core.audio.controller.SoundControllerImpl
+import com.mustafakoceerr.justrelax.core.audio.usecase.PlaySoundUseCase
+import com.mustafakoceerr.justrelax.core.audio.usecase.SetMixUseCase
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
+import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
+import com.mustafakoceerr.justrelax.core.model.AiGeneratedMix
+import com.mustafakoceerr.justrelax.core.model.localized
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.ai.domain.model.AiMixResponse
-import com.mustafakoceerr.justrelax.feature.ai.domain.model.AiMixSound
-import com.mustafakoceerr.justrelax.feature.ai.domain.repository.AiRepository
-import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.GenerateAiMixUseCase
 import justrelax.feature.ai.generated.resources.Res
 import justrelax.feature.ai.generated.resources.err_ai_empty_response
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -27,30 +27,32 @@ import kotlin.test.assertTrue
 
 class AiViewModelTest {
 
-    private class FakeAiRepository : AiRepository {
-        var response: Resource<AiMixResponse> = Resource.Success(
-            AiMixResponse(
-                mixName = "Rainy Night",
+    private val rain = testSound("rain", localPath = "/sounds/rain.mp3")
+    private val fire = testSound("fire", localPath = "/sounds/fire.mp3")
+
+    private inner class FakeAiMixRepository : AiMixRepository {
+        var result: Resource<AiGeneratedMix> = Resource.Success(
+            AiGeneratedMix(
+                name = "Rainy Night",
                 description = "Soft rain and a fire",
-                sounds = listOf(AiMixSound("rain", 0.6f), AiMixSound("fire", 0.3f), AiMixSound("unknown", 0.5f)),
+                sounds = mapOf(rain.localized("en") to 0.6f, fire.localized("en") to 0.3f),
             )
         )
         var lastPrompt: String? = null
 
-        override suspend fun generateMix(prompt: String, availableSoundIds: List<String>): Resource<AiMixResponse> {
+        override fun generateMix(prompt: String): Flow<Resource<AiGeneratedMix>> = flow {
             lastPrompt = prompt
-            return response
+            emit(Resource.Loading)
+            emit(result)
         }
     }
 
-    private val ai = FakeAiRepository()
-    private val repository = FakeSoundRepository(
-        listOf(testSound("rain", localPath = "/sounds/rain.mp3"), testSound("fire", localPath = "/sounds/fire.mp3"))
-    )
+    private val ai = FakeAiMixRepository()
+    private val repository = FakeSoundRepository(listOf(rain, fire))
     private val mixer = FakeSoundscapeEngine()
 
     private fun TestScope.viewModel() = AiViewModel(
-        generateAiMixUseCase = GenerateAiMixUseCase(ai, repository, FakeLanguageController()),
+        aiMixRepository = ai,
         setMixUseCase = SetMixUseCase(mixer),
         soundController = SoundControllerImpl(mixer, PlaySoundUseCase(repository, mixer)),
     ).also { observe(it.uiState) }
@@ -79,12 +81,12 @@ class AiViewModelTest {
         assertEquals(setOf("rain", "fire"), state.mixSounds.map { it.id }.toSet())
         assertEquals(setOf("rain", "fire"), state.playingSoundIds)
         assertEquals(0.6f, state.soundVolumes["rain"])
-        assertTrue(ai.lastPrompt!!.startsWith("rainy evening by the fire"))
+        assertEquals("rainy evening by the fire", ai.lastPrompt)
     }
 
     @Test
     fun aiReturningNoUsableSounds_explainsWhy() = runMainTest {
-        ai.response = Resource.Success(AiMixResponse("x", "y", listOf(AiMixSound("unknown", 0.5f))))
+        ai.result = Resource.Error(AppError.Ai.EmptyResponse())
         val viewModel = viewModel()
         viewModel.updatePrompt("anything")
 
@@ -98,7 +100,7 @@ class AiViewModelTest {
 
     @Test
     fun aiError_stopsLoading_andShowsAMessage() = runMainTest {
-        ai.response = Resource.Error(AppError.Ai.ApiError(500, "down"))
+        ai.result = Resource.Error(AppError.Ai.ApiError(500, "down"))
         val viewModel = viewModel()
         viewModel.updatePrompt("anything")
 

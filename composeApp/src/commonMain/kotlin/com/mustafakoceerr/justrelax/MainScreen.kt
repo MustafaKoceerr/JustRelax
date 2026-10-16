@@ -46,8 +46,8 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
-import com.mustafakoceerr.justrelax.core.navigation.MainTab
-import com.mustafakoceerr.justrelax.core.navigation.MainTabState
+import com.mustafakoceerr.justrelax.navigation.MainTab
+import com.mustafakoceerr.justrelax.navigation.MainTabState
 import com.mustafakoceerr.justrelax.tabs.MainTabContent
 import com.mustafakoceerr.justrelax.tabs.icon
 import com.mustafakoceerr.justrelax.tabs.title

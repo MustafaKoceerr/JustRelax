@@ -2,13 +2,12 @@ package com.mustafakoceerr.justrelax.feature.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.domain.repository.settings.UserPreferencesRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
-import com.mustafakoceerr.justrelax.core.domain.system.LanguageController
-import com.mustafakoceerr.justrelax.core.domain.system.LanguageStrategy
-import com.mustafakoceerr.justrelax.core.domain.system.SystemLauncher
-import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetLegalUrlUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadAllSoundsUseCase
+import com.mustafakoceerr.justrelax.core.data.repository.UserPreferencesRepository
+import com.mustafakoceerr.justrelax.core.data.repository.LegalRepository
+import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.data.language.LanguageController
+import com.mustafakoceerr.justrelax.core.data.language.LanguageStrategy
+import com.mustafakoceerr.justrelax.core.ui.system.SystemLauncher
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
@@ -26,9 +25,8 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val preferences: UserPreferencesRepository,
-    soundRepository: SoundRepository,
-    private val downloadAllSoundsUseCase: DownloadAllSoundsUseCase,
-    private val getLegalUrlUseCase: GetLegalUrlUseCase,
+    private val soundRepository: SoundRepository,
+    private val legalRepository: LegalRepository,
     private val systemLauncher: SystemLauncher,
     private val languageController: LanguageController,
 ) : ViewModel() {
@@ -94,11 +92,11 @@ class SettingsViewModel(
     )
 
     fun openPrivacyPolicy() {
-        viewModelScope.launch { systemLauncher.openUrl(getLegalUrlUseCase.getPrivacyPolicy()) }
+        viewModelScope.launch { systemLauncher.openUrl(legalRepository.getPrivacyPolicyUrl()) }
     }
 
     fun openTermsAndConditions() {
-        viewModelScope.launch { systemLauncher.openUrl(getLegalUrlUseCase.getTermsAndConditions()) }
+        viewModelScope.launch { systemLauncher.openUrl(legalRepository.getTermsAndConditionsUrl()) }
     }
 
     fun downloadLibrary() {
@@ -107,7 +105,7 @@ class SettingsViewModel(
 
         // viewModelScope cancels the download when the user leaves Settings.
         viewModelScope.launch {
-            downloadAllSoundsUseCase().collect { status ->
+            soundRepository.downloadAll().collect { status ->
                 when (status) {
                     is DownloadStatus.Progress -> screenState.update { it.copy(downloadProgress = status.percentage) }
                     is DownloadStatus.Completed -> screenState.update {

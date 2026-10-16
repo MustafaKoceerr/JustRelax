@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.core.audio.controller
 
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
+import com.mustafakoceerr.justrelax.core.audio.usecase.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.testSound

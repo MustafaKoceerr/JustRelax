@@ -7,7 +7,7 @@ kotlin {
         commonMain.dependencies {
             api(project(":core:common"))
             api(project(":core:model"))
-            api(project(":core:domain"))
+            implementation(project(":core:data"))
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)

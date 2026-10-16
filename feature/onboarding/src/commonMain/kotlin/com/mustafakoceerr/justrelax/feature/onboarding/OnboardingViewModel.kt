@@ -3,11 +3,8 @@ package com.mustafakoceerr.justrelax.feature.onboarding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.repository.appsetup.AppSetupRepository
-import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadAllSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadInitialSoundsUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsUseCase
+import com.mustafakoceerr.justrelax.core.data.repository.AppSetupRepository
+import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.extensions.calculateTotalSizeInMb
@@ -23,9 +20,6 @@ import kotlinx.coroutines.launch
 class OnboardingViewModel(
     private val soundRepository: SoundRepository,
     private val appSetupRepository: AppSetupRepository,
-    private val syncSoundsUseCase: SyncSoundsUseCase,
-    private val downloadInitialSoundsUseCase: DownloadInitialSoundsUseCase,
-    private val downloadAllSoundsUseCase: DownloadAllSoundsUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(OnboardingUiState())
@@ -37,9 +31,9 @@ class OnboardingViewModel(
 
     fun retryLoadingConfig() = loadConfig()
 
-    fun downloadStarterPack() = download(downloadInitialSoundsUseCase())
+    fun downloadStarterPack() = download(soundRepository.downloadStarterPack())
 
-    fun downloadFullLibrary() = download(downloadAllSoundsUseCase())
+    fun downloadFullLibrary() = download(soundRepository.downloadAll())
 
     fun onMessageShown() = _uiState.update { it.copy(userMessage = null) }
 
@@ -48,7 +42,7 @@ class OnboardingViewModel(
             _uiState.update { it.copy(status = OnboardingStatus.LOADING_CONFIG) }
 
             val sounds = soundRepository.getSounds().first().ifEmpty {
-                if (syncSoundsUseCase() !is Resource.Success) {
+                if (soundRepository.sync() !is Resource.Success) {
                     _uiState.update { it.copy(status = OnboardingStatus.NO_INTERNET) }
                     return@launch
                 }

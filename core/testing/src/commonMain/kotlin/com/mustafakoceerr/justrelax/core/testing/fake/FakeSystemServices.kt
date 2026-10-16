@@ -1,9 +1,9 @@
 package com.mustafakoceerr.justrelax.core.testing.fake
 
-import com.mustafakoceerr.justrelax.core.domain.repository.legal.LegalRepository
-import com.mustafakoceerr.justrelax.core.domain.system.LanguageController
-import com.mustafakoceerr.justrelax.core.domain.system.LanguageStrategy
-import com.mustafakoceerr.justrelax.core.domain.system.SystemLauncher
+import com.mustafakoceerr.justrelax.core.data.repository.LegalRepository
+import com.mustafakoceerr.justrelax.core.data.language.LanguageController
+import com.mustafakoceerr.justrelax.core.data.language.LanguageStrategy
+import com.mustafakoceerr.justrelax.core.ui.system.SystemLauncher
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -43,7 +43,7 @@ class FakeLanguageController(
     override fun getCurrentLanguage(): AppLanguage = currentLanguage.value
 }
 
-class FakeLegalRepository : LegalRepository {
-    override fun getPrivacyPolicyUrl(languageCode: String) = "https://legal.test/$languageCode/privacy"
-    override fun getTermsAndConditionsUrl(languageCode: String) = "https://legal.test/$languageCode/terms"
+class FakeLegalRepository(private val languageCode: String = "en") : LegalRepository {
+    override suspend fun getPrivacyPolicyUrl() = "https://legal.test/$languageCode/privacy"
+    override suspend fun getTermsAndConditionsUrl() = "https://legal.test/$languageCode/terms"
 }

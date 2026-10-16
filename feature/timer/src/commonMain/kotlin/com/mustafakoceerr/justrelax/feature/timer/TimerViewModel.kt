@@ -2,8 +2,8 @@ package com.mustafakoceerr.justrelax.feature.timer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.domain.timer.TimerManager
-import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
+import com.mustafakoceerr.justrelax.core.audio.timer.TimerManager
+import com.mustafakoceerr.justrelax.core.audio.timer.TimerStatus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

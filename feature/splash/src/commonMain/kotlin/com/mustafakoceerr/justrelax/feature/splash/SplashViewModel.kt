@@ -2,8 +2,8 @@ package com.mustafakoceerr.justrelax.feature.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.domain.repository.appsetup.AppSetupRepository
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.sync.SyncSoundsIfNecessaryUseCase
+import com.mustafakoceerr.justrelax.core.data.repository.AppSetupRepository
+import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,7 @@ import kotlin.time.TimeSource
 
 class SplashViewModel(
     private val appSetupRepository: AppSetupRepository,
-    private val syncSoundsIfNecessaryUseCase: SyncSoundsIfNecessaryUseCase,
+    private val soundRepository: SoundRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<SplashUiState>(SplashUiState.Loading)
@@ -26,7 +26,7 @@ class SplashViewModel(
             val start = TimeSource.Monotonic.markNow()
 
             // A failed sync is fine: the app works with the sounds it already has.
-            syncSoundsIfNecessaryUseCase()
+            soundRepository.syncIfStale()
             val isSetupFinished = appSetupRepository.isStarterPackInstalled.first()
 
             val remaining = MIN_SPLASH_DURATION - start.elapsedNow()

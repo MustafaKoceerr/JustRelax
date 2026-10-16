@@ -1,9 +1,9 @@
 package com.mustafakoceerr.justrelax.core.audio.timer
 
-import com.mustafakoceerr.justrelax.core.domain.timer.TimerManager
-import com.mustafakoceerr.justrelax.core.domain.timer.TimerState
-import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
-import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.audio.timer.TimerManager
+import com.mustafakoceerr.justrelax.core.audio.timer.TimerState
+import com.mustafakoceerr.justrelax.core.audio.timer.TimerStatus
+import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

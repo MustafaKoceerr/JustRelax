@@ -2,7 +2,7 @@ package com.mustafakoceerr.justrelax
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.domain.repository.settings.UserPreferencesRepository
+import com.mustafakoceerr.justrelax.core.data.repository.UserPreferencesRepository
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

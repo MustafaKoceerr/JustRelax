@@ -3,9 +3,9 @@ package com.mustafakoceerr.justrelax.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSingleSoundUseCase
+import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.audio.usecase.PlaySoundUseCase
+import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
@@ -24,7 +24,7 @@ class HomeViewModel(
     getLocalizedCategorizedSoundsUseCase: GetLocalizedCategorizedSoundsUseCase,
     private val soundscapeEngine: SoundscapeEngine,
     private val playSoundUseCase: PlaySoundUseCase,
-    private val downloadSingleSoundUseCase: DownloadSingleSoundUseCase,
+    private val soundRepository: SoundRepository,
 ) : ViewModel() {
 
     private data class ScreenState(
@@ -78,7 +78,7 @@ class HomeViewModel(
 
     private suspend fun downloadAndPlay(sound: LocalizedSound) {
         screenState.update { it.copy(downloadingSoundIds = it.downloadingSoundIds + sound.id) }
-        val downloaded = downloadSingleSoundUseCase(soundId = sound.id, remoteUrl = sound.remoteUrl)
+        val downloaded = soundRepository.download(sound.id)
         screenState.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - sound.id) }
 
         if (downloaded) play(sound.id) else showMessage(UiText.Resource(Res.string.download_failed))

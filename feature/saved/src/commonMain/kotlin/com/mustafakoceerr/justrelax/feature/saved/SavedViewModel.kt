@@ -2,10 +2,10 @@ package com.mustafakoceerr.justrelax.feature.saved
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMix
-import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMixRepository
+import com.mustafakoceerr.justrelax.core.audio.usecase.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.model.SavedMix
+import com.mustafakoceerr.justrelax.core.data.repository.SavedMixRepository
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.saved.usecase.PlaySavedMixUseCase
 import justrelax.feature.saved.generated.resources.Res
 import justrelax.feature.saved.generated.resources.action_undo
 import justrelax.feature.saved.generated.resources.err_play_mix_failed
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class SavedViewModel(
     private val savedMixRepository: SavedMixRepository,
-    private val playSavedMixUseCase: PlaySavedMixUseCase,
+    private val setMixUseCase: SetMixUseCase,
 ) : ViewModel() {
 
     private val message = MutableStateFlow<SavedMessage?>(null)
@@ -41,7 +41,7 @@ class SavedViewModel(
         playbackJob = viewModelScope.launch {
             val mix = findMix(mixId) ?: return@launch
             try {
-                playSavedMixUseCase(mix)
+                setMixUseCase(mix.sounds)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

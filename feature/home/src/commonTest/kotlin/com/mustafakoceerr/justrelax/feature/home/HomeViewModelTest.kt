@@ -1,9 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.home
 
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSingleSoundUseCase
+import com.mustafakoceerr.justrelax.core.audio.usecase.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
-import com.mustafakoceerr.justrelax.core.testing.SoundLibraryEnvironment
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.observe
@@ -22,7 +21,7 @@ import kotlin.test.assertTrue
 
 class HomeViewModelTest {
 
-    private val library = SoundLibraryEnvironment(
+    private val repository = FakeSoundRepository(
         listOf(
             testSound("rain", localPath = "/sounds/rain.mp3", categoryId = "RAIN"),
             testSound("storm", categoryId = "RAIN"),
@@ -32,10 +31,10 @@ class HomeViewModelTest {
     private val mixer = FakeSoundscapeEngine()
 
     private fun TestScope.viewModel() = HomeViewModel(
-        getLocalizedCategorizedSoundsUseCase = GetLocalizedCategorizedSoundsUseCase(library.soundRepository, FakeLanguageController()),
+        getLocalizedCategorizedSoundsUseCase = GetLocalizedCategorizedSoundsUseCase(repository, FakeLanguageController()),
         soundscapeEngine = mixer,
-        playSoundUseCase = PlaySoundUseCase(library.soundRepository, mixer),
-        downloadSingleSoundUseCase = DownloadSingleSoundUseCase(library.storage, library.downloader, library.soundRepository),
+        playSoundUseCase = PlaySoundUseCase(repository, mixer),
+        soundRepository = repository,
     ).also { observe(it.uiState) }
 
     private fun HomeViewModel.sound(id: String) =
@@ -93,7 +92,7 @@ class HomeViewModelTest {
 
     @Test
     fun failedDownload_explainsWhy_andDoesNotPlay() = runMainTest {
-        library.downloader.onDownload = { false }
+        repository.onDownload = { false }
         val viewModel = viewModel()
         advanceUntilIdle()
 
