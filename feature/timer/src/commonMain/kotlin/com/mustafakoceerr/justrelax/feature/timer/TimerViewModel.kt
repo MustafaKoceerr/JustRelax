@@ -2,7 +2,7 @@ package com.mustafakoceerr.justrelax.feature.timer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.playback.timer.TimerManager
+import com.mustafakoceerr.justrelax.core.playback.timer.SleepTimer
 import com.mustafakoceerr.justrelax.core.playback.timer.TimerStatus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 class TimerViewModel(
-    private val timerManager: TimerManager,
+    private val sleepTimer: SleepTimer,
 ) : ViewModel() {
 
-    val uiState: StateFlow<TimerUiState> = timerManager.state
+    val uiState: StateFlow<TimerUiState> = sleepTimer.state
         .map { timer ->
             TimerUiState(
                 isSetupMode = timer.status == TimerStatus.IDLE,
@@ -24,15 +24,15 @@ class TimerViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TimerUiState())
 
-    fun startTimer(seconds: Long) = timerManager.startTimer(seconds)
+    fun startTimer(seconds: Long) = sleepTimer.start(seconds)
 
     fun toggleTimer() {
-        when (timerManager.state.value.status) {
-            TimerStatus.RUNNING -> timerManager.pauseTimer()
-            TimerStatus.PAUSED -> timerManager.resumeTimer()
+        when (sleepTimer.state.value.status) {
+            TimerStatus.RUNNING -> sleepTimer.pause()
+            TimerStatus.PAUSED -> sleepTimer.resume()
             TimerStatus.IDLE -> Unit
         }
     }
 
-    fun cancelTimer() = timerManager.cancelTimer()
+    fun cancelTimer() = sleepTimer.cancel()
 }

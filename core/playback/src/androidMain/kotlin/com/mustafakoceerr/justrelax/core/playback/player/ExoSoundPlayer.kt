@@ -31,9 +31,10 @@ internal class ExoSoundPlayer(
         targetVolume = volume
         exoPlayer = ExoPlayer.Builder(context)
             .setLooper(Looper.getMainLooper())
-            // Focus is requested once for the whole mix (PlaybackInterruptionPolicy); if every
-            // player handled it, the mix's own players would take focus from each other.
+            // Focus and the wake lock belong to SoundscapePlayer, once for the whole mix; if every
+            // layer handled focus, the mix's own players would take it from each other.
             .setAudioAttributes(MEDIA_AUDIO_ATTRIBUTES, /* handleAudioFocus = */ false)
+            .setWakeMode(C.WAKE_MODE_NONE)
             .build()
             .apply {
                 repeatMode = Player.REPEAT_MODE_ONE

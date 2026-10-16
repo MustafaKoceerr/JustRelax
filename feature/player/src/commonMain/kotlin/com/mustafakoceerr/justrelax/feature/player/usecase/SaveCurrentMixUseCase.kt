@@ -3,13 +3,13 @@ package com.mustafakoceerr.justrelax.feature.player.usecase
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.data.repository.SavedMixRepository
-import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 
 class SaveCurrentMixUseCase(
     private val savedMixRepository: SavedMixRepository,
-    private val soundscapeEngine: SoundscapeEngine
+    private val sceneRepository: SceneRepository
 ) {
     suspend operator fun invoke(name: String): Resource<Unit> {
         val trimmedName = name.trim()
@@ -17,7 +17,7 @@ class SaveCurrentMixUseCase(
             return Resource.Error(AppError.SaveMix.EmptyName())
         }
 
-        val layers = soundscapeEngine.state.value.layers
+        val layers = sceneRepository.scene.value.layers
         if (layers.isEmpty()) {
             return Resource.Error(AppError.SaveMix.NoSoundsPlaying())
         }

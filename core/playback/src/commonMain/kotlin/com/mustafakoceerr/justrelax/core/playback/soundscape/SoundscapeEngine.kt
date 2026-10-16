@@ -1,38 +1,24 @@
 package com.mustafakoceerr.justrelax.core.playback.soundscape
 
-import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
-import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import kotlinx.coroutines.flow.StateFlow
 
-data class SoundscapeState(
-    val isPlaying: Boolean = false,
-    val scene: Scene = Scene.EMPTY,
-    val error: String? = null,
-) {
-    val layers: List<Layer> get() = scene.layers
-}
-
 /**
- * Plays a [Scene]: bed layers loop continuously, event layers play short clips at random
- * intervals. Holds at most [Scene.MAX_LAYERS] layers.
+ * Renders a [PlayableScene]: bed layers loop continuously, event layers play short clips at random
+ * intervals. Whether it makes sound at all is decided separately by [setRunning], so the player
+ * (not the scene) owns play/pause.
  */
-interface SoundscapeEngine {
-    val state: StateFlow<SoundscapeState>
+internal interface SoundscapeEngine {
+    /** Ids of the layers that are loaded and ready. */
+    val activeSoundIds: StateFlow<Set<String>>
 
-    /** Adds one layer to the current scene (no-op if it is already there). */
-    suspend fun addLayer(layer: Layer): Resource<Unit>
-    suspend fun removeLayer(soundId: String)
+    /** Makes the loaded layers match [scene]: loads new ones, releases removed ones, updates the rest. */
+    suspend fun apply(scene: PlayableScene)
 
-    /** Replaces the current scene; layers already playing keep playing with the new settings. */
-    suspend fun play(scene: Scene)
+    suspend fun setRunning(running: Boolean)
 
-    fun setVolume(soundId: String, volume: Float)
-    suspend fun setFrequency(soundId: String, frequency: EventFrequency)
+    /** Scales every layer's volume; used for ducking and the sleep timer's fade-out. */
+    suspend fun setMasterVolume(volume: Float)
 
-    suspend fun pauseAll()
-    suspend fun resumeAll()
-    suspend fun stopAll()
-    fun clearError()
+    /** Releases every layer. */
+    suspend fun stop()
 }

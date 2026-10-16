@@ -11,7 +11,9 @@ import com.mustafakoceerr.justrelax.core.data.repository.AppSetupRepositoryImpl
 import com.mustafakoceerr.justrelax.core.data.repository.LegalRepository
 import com.mustafakoceerr.justrelax.core.data.repository.LegalRepositoryImpl
 import com.mustafakoceerr.justrelax.core.data.repository.OfflineFirstSoundRepository
+import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SavedMixRepository
+import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SavedMixRepositoryImpl
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.data.repository.UserPreferencesRepository
@@ -46,4 +48,5 @@ val dataModule = module {
     singleOf(::AppSetupRepositoryImpl) { bind<AppSetupRepository>() }
     singleOf(::LegalRepositoryImpl) { bind<LegalRepository>() }
     singleOf(::AiMixRepositoryImpl) { bind<AiMixRepository>() }
+    singleOf(::InMemorySceneRepository) { bind<SceneRepository>() }
 }

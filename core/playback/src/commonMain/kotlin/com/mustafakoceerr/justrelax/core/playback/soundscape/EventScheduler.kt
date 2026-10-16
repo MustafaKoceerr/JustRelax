@@ -1,6 +1,5 @@
 package com.mustafakoceerr.justrelax.core.playback.soundscape
 
-import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,19 +20,19 @@ import kotlin.time.TimeSource
  *
  * Not thread-safe: call it from one coroutine at a time (the engine does so under its lock).
  */
-class EventScheduler(
+internal class EventScheduler(
     private val scope: CoroutineScope,
     private val player: OneShotPlayer,
     private val random: Random = Random.Default,
     private val timeSource: TimeSource = TimeSource.Monotonic,
 ) {
-    private class Running(val layer: MutableStateFlow<Layer.Event>, val job: Job)
+    private class Running(val layer: MutableStateFlow<PlayableLayer.Event>, val job: Job)
 
     private val running = mutableMapOf<String, Running>()
     private val paused = MutableStateFlow(false)
 
     /** Makes the running events match [events]: starts new ones, stops removed ones, updates the rest. */
-    fun sync(events: List<Layer.Event>) {
+    fun sync(events: List<PlayableLayer.Event>) {
         val ids = events.map { it.soundId }.toSet()
         (running.keys - ids).forEach { running.remove(it)?.job?.cancel() }
         events.forEach { event ->
@@ -55,12 +54,12 @@ class EventScheduler(
         running.clear()
     }
 
-    private fun start(event: Layer.Event) {
+    private fun start(event: PlayableLayer.Event) {
         val layer = MutableStateFlow(event)
         running[event.soundId] = Running(layer, scope.launch { playRepeatedly(layer) })
     }
 
-    private suspend fun playRepeatedly(layer: MutableStateFlow<Layer.Event>) {
+    private suspend fun playRepeatedly(layer: MutableStateFlow<PlayableLayer.Event>) {
         var lastClip: String? = null
         // The first occurrence comes early so the scene comes alive quickly and layers don't line up.
         var waitMs = random.nextLong(FIRST_EVENT_MIN_MS, layer.value.frequency.minIntervalMs + 1)

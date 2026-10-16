@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
+import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.feature.player.usecase.SaveCurrentMixUseCase
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
@@ -25,7 +26,8 @@ import kotlinx.coroutines.launch
 /** The mini player shown above the bottom bar while sounds are active. */
 class PlayerViewModel(
     soundRepository: SoundRepository,
-    private val soundscapeEngine: SoundscapeEngine,
+    private val sceneRepository: SceneRepository,
+    private val playbackController: PlaybackController,
     private val saveCurrentMixUseCase: SaveCurrentMixUseCase,
 ) : ViewModel() {
 
@@ -39,13 +41,14 @@ class PlayerViewModel(
 
     val uiState: StateFlow<PlayerUiState> = combine(
         soundRepository.getSounds(),
-        soundscapeEngine.state,
+        sceneRepository.scene,
+        playbackController.isPlaying,
         screenState,
-    ) { sounds, mixer, screen ->
+    ) { sounds, scene, isPlaying, screen ->
         val soundsById = sounds.associateBy { it.id }
         PlayerUiState(
-            activeSounds = mixer.layers.mapNotNull { soundsById[it.soundId] },
-            isPlaying = mixer.isPlaying,
+            activeSounds = scene.layers.mapNotNull { soundsById[it.soundId] },
+            isPlaying = isPlaying,
             isSaveDialogVisible = screen.isSaveDialogVisible,
             isSaving = screen.isSaving,
             userMessage = screen.userMessage,
@@ -53,13 +56,11 @@ class PlayerViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PlayerUiState())
 
     fun togglePlayPause() {
-        viewModelScope.launch {
-            if (soundscapeEngine.state.value.isPlaying) soundscapeEngine.pauseAll() else soundscapeEngine.resumeAll()
-        }
+        if (playbackController.isPlaying.value) playbackController.pause() else playbackController.play()
     }
 
     fun stopAll() {
-        viewModelScope.launch { soundscapeEngine.stopAll() }
+        sceneRepository.clear()
     }
 
     fun openSaveDialog() = screenState.update { it.copy(isSaveDialogVisible = true) }

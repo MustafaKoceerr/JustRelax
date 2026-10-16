@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.di
 
 import com.mustafakoceerr.justrelax.MainViewModel
-import com.mustafakoceerr.justrelax.core.playback.di.audioCoreModule
+import com.mustafakoceerr.justrelax.core.playback.di.playbackModule
 import com.mustafakoceerr.justrelax.core.common.di.commonModule
 import com.mustafakoceerr.justrelax.core.database.di.databaseModule
 import com.mustafakoceerr.justrelax.core.network.di.networkModule
@@ -38,7 +38,7 @@ val appModules: List<Module>
         dataModule,
         uiModule,
 
-        audioCoreModule,
+        playbackModule,
 
         appModule,
 

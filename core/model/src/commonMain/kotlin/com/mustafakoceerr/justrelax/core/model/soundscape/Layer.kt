@@ -1,13 +1,13 @@
 package com.mustafakoceerr.justrelax.core.model.soundscape
 
-/** One sound in a scene, ready to play (clips are local file paths). */
+/** One sound in a scene. Which files it plays is resolved by the player from the sound's id. */
 sealed interface Layer {
     val soundId: String
     val volume: Float
 
+    /** Loops continuously. */
     data class Bed(
         override val soundId: String,
-        val clip: String,
         override val volume: Float,
     ) : Layer {
         init {
@@ -15,15 +15,14 @@ sealed interface Layer {
         }
     }
 
+    /** Plays short clips at random intervals. */
     data class Event(
         override val soundId: String,
-        val clips: List<String>,
         override val volume: Float,
         val frequency: EventFrequency,
     ) : Layer {
         init {
             requireValidVolume(volume)
-            require(clips.isNotEmpty()) { "An event needs at least one clip: $soundId" }
         }
     }
 }

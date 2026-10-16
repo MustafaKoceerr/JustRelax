@@ -1,11 +1,6 @@
 package com.mustafakoceerr.justrelax.core.playback.soundscape
 
-import com.mustafakoceerr.justrelax.core.playback.AudioServiceController
-import com.mustafakoceerr.justrelax.core.common.AppError
-import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
-import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
@@ -16,29 +11,30 @@ import kotlinx.coroutines.test.testTimeSource
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
-import kotlin.test.assertIs
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.minutes
 
 class DefaultSoundscapeEngineTest {
 
     private val beds = FakeSoundPlayerFactory()
-    private var serviceStarts = 0
-    private val serviceController = AudioServiceController { serviceStarts++ }
     private lateinit var events: FakeOneShotPlayer
 
-    private fun TestScope.engine(): DefaultSoundscapeEngine {
+    private suspend fun TestScope.engine(running: Boolean = true): DefaultSoundscapeEngine {
         events = FakeOneShotPlayer { testScheduler.currentTime }
-        return DefaultSoundscapeEngine(beds, events, serviceController, backgroundScope, Random(seed = 3), testTimeSource)
+        return DefaultSoundscapeEngine(beds, events, backgroundScope, Random(seed = 3), testTimeSource)
+            .also { if (running) it.setRunning(true) }
     }
 
-    private fun bed(id: String, volume: Float = 0.5f) = Layer.Bed(id, clip = "/sounds/$id.ogg", volume = volume)
+    private fun bed(id: String, volume: Float = 0.5f) = PlayableLayer.Bed(id, clip = clip(id), volume = volume)
 
     private fun event(id: String, volume: Float = 0.5f, frequency: EventFrequency = EventFrequency.OFTEN) =
-        Layer.Event(id, clips = listOf("/sounds/${id}_1.ogg", "/sounds/${id}_2.ogg"), volume = volume, frequency = frequency)
+        PlayableLayer.Event(id, clips = listOf("/sounds/${id}_1.ogg", "/sounds/${id}_2.ogg"), volume = volume, frequency = frequency)
 
-    private fun DefaultSoundscapeEngine.ids() = state.value.layers.map { it.soundId }
+    private suspend fun DefaultSoundscapeEngine.apply(vararg layers: PlayableLayer) = apply(PlayableScene(layers.toList()))
+
+    private fun DefaultSoundscapeEngine.ids() = activeSoundIds.value
 
     private fun clip(id: String) = "/sounds/$id.ogg"
 
@@ -48,18 +44,16 @@ class DefaultSoundscapeEngineTest {
         runCurrent()
     }
 
-    // --- Beds (behaviour carried over from the previous mixer) ---
+    // --- Beds ---
 
     @Test
-    fun addingABed_startsServiceAndPlays() = runTest {
+    fun applyingABedWhileRunning_playsIt() = runTest {
         val engine = engine()
 
-        engine.addLayer(bed("rain"))
+        engine.apply(bed("rain"))
         settle()
 
-        assertEquals(1, serviceStarts)
-        assertTrue(engine.state.value.isPlaying)
-        assertEquals(listOf("rain"), engine.ids())
+        assertEquals(setOf("rain"), engine.ids())
         assertTrue(beds.live().getValue(clip("rain")).isPlaying)
     }
 
@@ -67,8 +61,7 @@ class DefaultSoundscapeEngineTest {
     fun bedsStartAtDifferentPoints_soTheirLoopsDontLineUp() = runTest {
         val engine = engine()
 
-        engine.addLayer(bed("rain"))
-        engine.addLayer(bed("wind"))
+        engine.apply(bed("rain"), bed("wind"))
         settle()
 
         val starts = beds.live().values.map { it.startAtFraction!! }
@@ -77,59 +70,34 @@ class DefaultSoundscapeEngineTest {
     }
 
     @Test
-    fun addingTheSameSoundTwice_keepsOneLayer() = runTest {
+    fun applyingTheSameSceneTwice_keepsOnePlayer() = runTest {
         val engine = engine()
 
-        engine.addLayer(bed("rain"))
-        engine.addLayer(bed("rain"))
+        engine.apply(bed("rain"))
+        engine.apply(bed("rain"))
 
         assertEquals(1, beds.live().size)
-        assertEquals(listOf("rain"), engine.ids())
     }
 
     @Test
-    fun addingBeyondTheLimit_returnsLimitExceeded() = runTest {
-        val engine = engine()
-        repeat(Scene.MAX_LAYERS) { engine.addLayer(bed("s$it")) }
-
-        val result = engine.addLayer(event("owl"))
-
-        assertIs<AppError.Player.LimitExceeded>(assertIs<Resource.Error>(result).error)
-        assertEquals(Scene.MAX_LAYERS, engine.ids().size)
-    }
-
-    @Test
-    fun concurrentAdds_neverExceedTheLimit() = runTest {
-        val engine = engine()
-        beds.prepareDelayMs = 100
-
-        repeat(Scene.MAX_LAYERS + 3) { launch { engine.addLayer(bed("s$it")) } }
-        settle()
-
-        assertEquals(Scene.MAX_LAYERS, beds.live().size)
-        assertEquals(Scene.MAX_LAYERS, engine.ids().size)
-    }
-
-    @Test
-    fun failedPrepare_returnsError_andReleasesPlayer() = runTest {
+    fun failedPrepare_releasesThePlayer_andSkipsTheLayer() = runTest {
         val engine = engine()
         beds.failingClips += clip("broken")
 
-        val result = engine.addLayer(bed("broken"))
+        engine.apply(bed("broken"))
 
-        assertIs<Resource.Error>(result)
         assertTrue(beds.live().isEmpty())
         assertTrue(engine.ids().isEmpty())
     }
 
     @Test
-    fun removingWhilePreparing_preventsTheSoundFromStarting() = runTest {
+    fun aLayerRemovedWhilePreparing_neverStarts() = runTest {
         val engine = engine()
         beds.prepareDelayMs = 100
 
-        launch { engine.addLayer(bed("rain")) }
+        launch { engine.apply(bed("rain")) }
         testScheduler.advanceTimeBy(50)
-        engine.removeLayer("rain")
+        engine.apply()
         settle()
 
         assertTrue(beds.live().isEmpty())
@@ -137,110 +105,105 @@ class DefaultSoundscapeEngineTest {
     }
 
     @Test
-    fun removingTheLastLayer_clearsState() = runTest {
+    fun applyingAnEmptyScene_releasesEverything() = runTest {
         val engine = engine()
-        engine.addLayer(bed("rain"))
+        engine.apply(bed("rain"))
 
-        engine.removeLayer("rain")
+        engine.apply()
 
-        assertFalse(engine.state.value.isPlaying)
         assertTrue(engine.ids().isEmpty())
         assertTrue(beds.live().isEmpty())
     }
 
     @Test
-    fun addingWhilePaused_resumesTheWholeScene() = runTest {
-        val engine = engine()
-        engine.addLayer(bed("rain"))
-        settle()
-        engine.pauseAll()
+    fun whileNotRunning_aSceneIsPreparedButSilent_untilRunning() = runTest {
+        val engine = engine(running = false)
 
-        engine.addLayer(bed("fire"))
+        engine.apply(bed("rain"))
         settle()
+        assertFalse(beds.live().getValue(clip("rain")).isPlaying)
 
-        assertTrue(engine.state.value.isPlaying)
-        assertTrue(beds.live().values.all { it.isPlaying })
+        engine.setRunning(true)
+        settle()
+        assertTrue(beds.live().getValue(clip("rain")).isPlaying)
     }
 
     @Test
-    fun pausingRightAfterAdding_keepsTheBedPaused() = runTest {
+    fun stoppingRightAfterApplying_keepsTheBedSilent() = runTest {
         val engine = engine()
 
-        engine.addLayer(bed("rain"))
-        engine.pauseAll() // fade-in has not started yet
+        engine.apply(bed("rain"))
+        engine.setRunning(false) // fade-in has not started yet
         settle()
 
-        assertFalse(engine.state.value.isPlaying)
         assertFalse(beds.live().getValue(clip("rain")).isPlaying)
     }
 
     @Test
-    fun setVolume_updatesPlayerAndState() = runTest {
+    fun applyingWhilePaused_doesNotResume() = runTest {
         val engine = engine()
-        engine.addLayer(bed("rain"))
+        engine.apply(bed("rain"))
+        settle()
+        engine.setRunning(false)
 
-        engine.setVolume("rain", 0.9f)
+        engine.apply(bed("rain"), bed("fire"))
+        settle()
 
-        assertEquals(0.9f, beds.live().getValue(clip("rain")).volume)
-        assertEquals(0.9f, engine.state.value.layers.single().volume)
+        assertTrue(beds.live().values.none { it.isPlaying })
     }
 
     @Test
-    fun play_replacesLayersNotInTheScene() = runTest {
+    fun apply_changesTheVolumeOfBedsAlreadyPlaying() = runTest {
         val engine = engine()
-        engine.addLayer(bed("rain"))
+        engine.apply(bed("rain", volume = 0.2f))
 
-        engine.play(Scene(listOf(bed("fire"), bed("wind"))))
+        engine.apply(bed("rain", volume = 0.8f))
+
+        assertEquals(0.8f, beds.live().getValue(clip("rain")).volume)
+    }
+
+    @Test
+    fun apply_replacesLayersNotInTheScene() = runTest {
+        val engine = engine()
+        engine.apply(bed("rain"))
+
+        engine.apply(bed("fire"), bed("wind"))
         settle()
 
         assertEquals(setOf(clip("fire"), clip("wind")), beds.live().keys)
-        assertEquals(listOf("fire", "wind"), engine.ids())
+        assertEquals(setOf("fire", "wind"), engine.ids())
     }
 
     @Test
-    fun play_withOneBrokenSound_playsTheRest() = runTest {
+    fun apply_withOneBrokenSound_playsTheRest() = runTest {
         val engine = engine()
         beds.failingClips += clip("broken")
 
-        engine.play(Scene(listOf(bed("rain"), bed("broken"), bed("fire"))))
+        engine.apply(bed("rain"), bed("broken"), bed("fire"))
         settle()
 
         assertEquals(setOf(clip("rain"), clip("fire")), beds.live().keys)
-        assertEquals(listOf("rain", "fire"), engine.ids())
+        assertEquals(setOf("rain", "fire"), engine.ids())
     }
 
     @Test
-    fun play_appliesNewVolumeToLayersAlreadyPlaying() = runTest {
+    fun masterVolume_scalesEveryBed() = runTest {
         val engine = engine()
-        engine.addLayer(bed("rain", volume = 0.2f))
+        engine.apply(bed("rain", volume = 0.5f))
 
-        engine.play(Scene(listOf(bed("rain", volume = 0.8f))))
+        engine.setMasterVolume(0.2f)
+        assertEquals(0.1f, beds.live().getValue(clip("rain")).volume!!, absoluteTolerance = 0.0001f)
 
-        assertEquals(0.8f, beds.live().getValue(clip("rain")).volume)
-        assertEquals(0.8f, engine.state.value.layers.single().volume)
+        engine.setMasterVolume(1f)
+        assertEquals(0.5f, beds.live().getValue(clip("rain")).volume)
     }
 
     @Test
-    fun play_whilePaused_resumesPlayback() = runTest {
+    fun stop_releasesEverything() = runTest {
         val engine = engine()
-        engine.addLayer(bed("rain"))
-        settle()
-        engine.pauseAll()
+        engine.apply(bed("rain"), event("owl"))
 
-        engine.play(Scene(listOf(bed("rain"), bed("fire"))))
-        settle()
-
-        assertTrue(engine.state.value.isPlaying)
-        assertTrue(beds.live().values.all { it.isPlaying })
-    }
-
-    @Test
-    fun stopAll_releasesEverything() = runTest {
-        val engine = engine()
-        engine.addLayer(bed("rain"))
-        engine.addLayer(event("owl"))
-
-        engine.stopAll()
+        engine.stop()
 
         assertTrue(beds.live().isEmpty())
         assertTrue(events.loaded.isEmpty())
@@ -250,37 +213,34 @@ class DefaultSoundscapeEngineTest {
     // --- Events ---
 
     @Test
-    fun addingAnEvent_loadsItsClips_andPlaysThemOverTime() = runTest {
+    fun anEvent_loadsItsClips_andPlaysThemOverTime() = runTest {
         val engine = engine()
 
-        engine.addLayer(event("owl"))
+        engine.apply(event("owl"))
         advanceTimeBy(5.minutes)
         runCurrent()
 
         assertEquals(listOf("/sounds/owl_1.ogg", "/sounds/owl_2.ogg"), events.loaded["owl"])
         assertTrue(events.plays.size > 5)
-        assertEquals(1, serviceStarts)
-        assertTrue(engine.state.value.isPlaying)
     }
 
     @Test
-    fun anEventThatCannotLoad_isNotAdded() = runTest {
+    fun anEventThatCannotLoad_isSkipped() = runTest {
         val engine = engine()
         events.failingSounds += "owl"
 
-        val result = engine.addLayer(event("owl"))
+        engine.apply(event("owl"))
 
-        assertIs<Resource.Error>(result)
         assertTrue(engine.ids().isEmpty())
     }
 
     @Test
     fun removingAnEvent_stopsAndUnloadsIt() = runTest {
         val engine = engine()
-        engine.addLayer(event("owl"))
+        engine.apply(event("owl"))
         advanceTimeBy(1.minutes)
 
-        engine.removeLayer("owl")
+        engine.apply()
         val count = events.plays.size
         advanceTimeBy(10.minutes)
         runCurrent()
@@ -290,19 +250,19 @@ class DefaultSoundscapeEngineTest {
     }
 
     @Test
-    fun pause_silencesEventsUntilResumed() = runTest {
+    fun notRunning_silencesEvents_untilRunningAgain() = runTest {
         val engine = engine()
-        engine.addLayer(event("owl"))
+        engine.apply(event("owl"))
         advanceTimeBy(1.minutes)
 
-        engine.pauseAll()
+        engine.setRunning(false)
         val count = events.plays.size
         advanceTimeBy(10.minutes)
         runCurrent()
         assertEquals(count, events.plays.size)
         assertTrue(events.isPaused)
 
-        engine.resumeAll()
+        engine.setRunning(true)
         advanceTimeBy(1.minutes)
         runCurrent()
         assertTrue(events.plays.size > count)
@@ -310,26 +270,25 @@ class DefaultSoundscapeEngineTest {
     }
 
     @Test
-    fun setFrequency_isReflectedInStateAndScheduling() = runTest {
+    fun aFrequencyChange_appliesToScheduling() = runTest {
         val engine = engine()
-        engine.addLayer(event("owl", frequency = EventFrequency.OFTEN))
+        engine.apply(event("owl", frequency = EventFrequency.OFTEN))
 
-        engine.setFrequency("owl", EventFrequency.RARE)
+        engine.apply(event("owl", frequency = EventFrequency.RARE))
         val changedAt = testScheduler.currentTime
         advanceTimeBy(30.minutes)
         runCurrent()
 
-        assertEquals(EventFrequency.RARE, (engine.state.value.layers.single() as Layer.Event).frequency)
         val gaps = events.plays.filter { it.atMs > changedAt }.drop(1).zipWithNext { a, b -> b.atMs - a.atMs }
         assertTrue(gaps.all { it >= EventFrequency.RARE.minIntervalMs }, "gaps: $gaps")
     }
 
     @Test
-    fun eventVolumeChange_appliesToItsNextOccurrences() = runTest {
+    fun anEventVolumeChange_appliesToItsNextOccurrences() = runTest {
         val engine = engine()
-        engine.addLayer(event("owl", volume = 0.2f))
+        engine.apply(event("owl", volume = 0.2f))
 
-        engine.setVolume("owl", 0.9f)
+        engine.apply(event("owl", volume = 0.9f))
         runCurrent()
         val changedAt = testScheduler.currentTime
         advanceTimeBy(5.minutes)
@@ -339,15 +298,36 @@ class DefaultSoundscapeEngineTest {
     }
 
     @Test
+    fun masterVolume_scalesEvents() = runTest {
+        val engine = engine()
+        engine.apply(event("owl", volume = 0.9f))
+
+        engine.setMasterVolume(0.2f)
+        runCurrent()
+        val changedAt = testScheduler.currentTime
+        advanceTimeBy(5.minutes)
+        runCurrent()
+
+        assertTrue(events.plays.filter { it.atMs > changedAt }.all { it.volume < 0.3f })
+    }
+
+    @Test
     fun aSceneWithBedsAndEvents_playsBoth() = runTest {
         val engine = engine()
 
-        engine.play(Scene(listOf(bed("wind"), event("owl"), event("crackle"))))
+        engine.apply(bed("wind"), event("owl"), event("crackle"))
         advanceTimeBy(5.minutes)
         runCurrent()
 
         assertEquals(setOf(clip("wind")), beds.live().keys)
         assertEquals(setOf("owl", "crackle"), events.plays.map { it.soundId }.toSet())
-        assertEquals(listOf("wind", "owl", "crackle"), engine.ids())
+        assertEquals(setOf("wind", "owl", "crackle"), engine.ids())
+    }
+
+    @Test
+    fun anEventNeedsAtLeastOneClip() {
+        assertFailsWith<IllegalArgumentException> {
+            PlayableLayer.Event("owl", clips = emptyList(), volume = 0.5f, frequency = EventFrequency.NORMAL)
+        }
     }
 }

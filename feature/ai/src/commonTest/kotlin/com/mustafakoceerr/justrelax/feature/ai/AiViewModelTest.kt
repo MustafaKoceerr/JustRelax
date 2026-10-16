@@ -1,15 +1,13 @@
 package com.mustafakoceerr.justrelax.feature.ai
 
-import com.mustafakoceerr.justrelax.core.playback.controller.SoundControllerImpl
-import com.mustafakoceerr.justrelax.core.playback.usecase.PlaySoundUseCase
-import com.mustafakoceerr.justrelax.core.playback.usecase.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
+import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
 import com.mustafakoceerr.justrelax.core.model.AiGeneratedMix
 import com.mustafakoceerr.justrelax.core.model.localized
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
@@ -49,12 +47,13 @@ class AiViewModelTest {
 
     private val ai = FakeAiMixRepository()
     private val repository = FakeSoundRepository(listOf(rain, fire))
-    private val mixer = FakeSoundscapeEngine()
+    private val scene = InMemorySceneRepository(repository)
+    private val playback = FakePlaybackController()
 
     private fun TestScope.viewModel() = AiViewModel(
         aiMixRepository = ai,
-        setMixUseCase = SetMixUseCase(mixer),
-        soundController = SoundControllerImpl(mixer, PlaySoundUseCase(repository, mixer)),
+        sceneRepository = scene,
+        playbackController = playback,
     ).also { observe(it.uiState) }
 
     @Test

@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.core.playback.soundscape
 
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -44,7 +43,7 @@ class EventSchedulerTest {
     }
 
     private fun owl(frequency: EventFrequency = EventFrequency.OFTEN, volume: Float = 0.5f, clips: Int = 3) =
-        Layer.Event("owl", clips = (1..clips).map { "/owl_$it.ogg" }, volume = volume, frequency = frequency)
+        PlayableLayer.Event("owl", clips = (1..clips).map { "/owl_$it.ogg" }, volume = volume, frequency = frequency)
 
     private fun List<Play>.gaps() = zipWithNext { a, b -> b.atMs - a.atMs }
 
@@ -173,7 +172,7 @@ class EventSchedulerTest {
     @Test
     fun eachEventLayerRunsIndependently() = runTest {
         val player = recorder()
-        val crackle = Layer.Event("crackle", listOf("/crackle.ogg"), volume = 0.5f, frequency = EventFrequency.OFTEN)
+        val crackle = PlayableLayer.Event("crackle", listOf("/crackle.ogg"), volume = 0.5f, frequency = EventFrequency.OFTEN)
         scheduler(player).sync(listOf(owl(EventFrequency.RARE), crackle))
 
         run(20.minutes)

@@ -1,16 +1,8 @@
 package com.mustafakoceerr.justrelax.core.playback.soundscape
 
-import com.mustafakoceerr.justrelax.core.playback.AudioServiceController
+import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.playback.player.SoundPlayer
 import com.mustafakoceerr.justrelax.core.playback.player.SoundPlayerFactory
-import com.mustafakoceerr.justrelax.core.common.AppError
-import com.mustafakoceerr.justrelax.core.common.AudioDefaults
-import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeEngine
-import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeState
-import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
-import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -19,8 +11,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -29,33 +21,36 @@ import kotlin.random.Random
 import kotlin.time.TimeSource
 
 /**
- * Plays a scene of up to [Scene.MAX_LAYERS] layers: beds loop on [SoundPlayer]s, events are
- * loaded into the [OneShotPlayer] and played at random intervals by an [EventScheduler].
+ * Beds loop on [SoundPlayer]s; events are loaded into the [OneShotPlayer] and played at random
+ * intervals by an [EventScheduler].
  *
  * All structural changes happen under [mutex]. Preparing a layer is slow, so it runs outside the
- * lock; a slot is reserved in [pendingIds] first so concurrent calls cannot exceed the limit, and a
- * layer removed while it was still preparing is released instead of being started.
+ * lock; its id is reserved in [pendingIds] first, and a layer that left the scene while it was
+ * preparing is released instead of being attached.
  */
 internal class DefaultSoundscapeEngine(
     private val bedPlayerFactory: SoundPlayerFactory,
     private val eventPlayer: OneShotPlayer,
-    private val serviceController: AudioServiceController,
     private val scope: CoroutineScope,
     private val random: Random = Random.Default,
     timeSource: TimeSource = TimeSource.Monotonic,
 ) : SoundscapeEngine {
 
-    private val _state = MutableStateFlow(SoundscapeState())
-    override val state = _state.asStateFlow()
+    private class Bed(val player: SoundPlayer, var volume: Float, var started: Boolean = false)
+
+    private val _activeSoundIds = MutableStateFlow<Set<String>>(emptySet())
+    override val activeSoundIds: StateFlow<Set<String>> = _activeSoundIds.asStateFlow()
 
     private val mutex = Mutex()
-    private val scheduler = EventScheduler(scope, eventPlayer, random, timeSource)
+    private val scheduler = EventScheduler(scope, eventPlayer, random, timeSource).apply { pause() }
 
-    // Immutable snapshot so the non-suspending setVolume can read it without taking the lock.
-    private val bedPlayers = MutableStateFlow<Map<String, SoundPlayer>>(emptyMap())
-    private val loadedEvents = mutableSetOf<String>()
+    private var target = PlayableScene.EMPTY
+    private val beds = mutableMapOf<String, Bed>()
+    private val events = mutableMapOf<String, PlayableLayer.Event>()
     private val startJobs = mutableMapOf<String, Job>()
     private val pendingIds = mutableSetOf<String>()
+    private var running = false
+    private var masterVolume = 1f
 
     /** What [prepare] produced for a layer, ready to attach under the lock. */
     private sealed interface Prepared {
@@ -63,150 +58,91 @@ internal class DefaultSoundscapeEngine(
         data object Event : Prepared
     }
 
-    private val scene: Scene get() = _state.value.scene
-    private val hasAttachedLayers: Boolean get() = bedPlayers.value.isNotEmpty() || loadedEvents.isNotEmpty()
-
-    override suspend fun addLayer(layer: Layer): Resource<Unit> {
-        mutex.withLock {
-            if (scene.layer(layer.soundId) != null || layer.soundId in pendingIds) return Resource.Success(Unit)
-            if (scene.layers.size + pendingIds.size >= Scene.MAX_LAYERS) {
-                val error = AppError.Player.LimitExceeded(Scene.MAX_LAYERS)
-                _state.update { it.copy(error = error.message) }
-                return Resource.Error(error)
-            }
-            pendingIds += layer.soundId
-        }
-
-        val prepared = try {
-            prepare(layer)
-        } catch (e: CancellationException) {
-            mutex.withLock { pendingIds -= layer.soundId }
-            throw e
-        } catch (e: Exception) {
-            mutex.withLock { pendingIds -= layer.soundId }
-            return Resource.Error(AppError.Player.InitializationError(e.message ?: "Unknown"))
-        }
-
-        mutex.withLock {
-            if (!pendingIds.remove(layer.soundId)) {
-                // Removed while preparing.
-                release(layer.soundId, prepared)
-                return Resource.Success(Unit)
-            }
-            if (!_state.value.isPlaying) resumeLocked()
-            attachLocked(layer, prepared)
-            _state.update { it.copy(isPlaying = true, scene = it.scene.add(layer)) }
+    override suspend fun apply(scene: PlayableScene) {
+        val toPrepare = mutex.withLock {
+            target = scene
+            (attachedIdsLocked() - scene.layers.map { it.soundId }.toSet()).forEach { detachLocked(it) }
+            scene.beds.forEach { layer -> beds[layer.soundId]?.let { it.volume = layer.volume; applyVolume(it) } }
+            scene.events.filter { it.soundId in events }.forEach { events[it.soundId] = it }
             syncEventsLocked()
+            publishLocked()
+
+            scene.layers.filter { it.soundId !in attachedIdsLocked() && it.soundId !in pendingIds }
+                .also { layers -> pendingIds += layers.map { it.soundId } }
         }
-        return Resource.Success(Unit)
-    }
-
-    override suspend fun removeLayer(soundId: String) = mutex.withLock {
-        pendingIds -= soundId
-        detachLocked(soundId)
-        _state.update { current ->
-            val remaining = current.scene.remove(soundId)
-            current.copy(scene = remaining, isPlaying = remaining.layers.isNotEmpty() && current.isPlaying)
-        }
-        syncEventsLocked()
-    }
-
-    override suspend fun stopAll() = mutex.withLock {
-        pendingIds.clear()
-        scheduler.stop()
-        eventPlayer.stopAll()
-        (bedPlayers.value.keys + loadedEvents).toList().forEach { detachLocked(it) }
-        _state.value = SoundscapeState()
-    }
-
-    override suspend fun play(scene: Scene) {
-        val targetIds = scene.layers.map { it.soundId }.toSet()
-
-        val toAdd = mutex.withLock {
-            pendingIds.clear()
-            (this.scene.layers.map { it.soundId } - targetIds).forEach { detachLocked(it) }
-            scene.beds.forEach { bed -> bedPlayers.value[bed.soundId]?.setVolume(bed.volume) }
-            scene.layers.filter { it.soundId !in attachedIdsLocked() }
-                .also { added -> pendingIds += added.map { it.soundId } }
-        }
+        if (toPrepare.isEmpty()) return
 
         val prepared = coroutineScope {
-            toAdd.map { layer ->
-                async {
-                    val result = try {
-                        prepare(layer)
-                    } catch (e: CancellationException) {
-                        throw e
-                    } catch (e: Exception) {
-                        null
-                    }
-                    layer to result
-                }
-            }.awaitAll()
+            toPrepare.map { layer -> async { layer.soundId to prepareOrNull(layer) } }.awaitAll()
         }
 
         mutex.withLock {
-            if (!_state.value.isPlaying) resumeLocked()
-            prepared.forEach { (layer, result) ->
-                val stillWanted = pendingIds.remove(layer.soundId)
+            prepared.forEach { (soundId, result) ->
+                pendingIds -= soundId
+                val wanted = target.layer(soundId)
                 when {
                     result == null -> Unit
-                    !stillWanted -> release(layer.soundId, result)
-                    else -> attachLocked(layer, result)
+                    wanted == null -> release(soundId, result)
+                    else -> attachLocked(wanted, result)
                 }
             }
-            val attached = attachedIdsLocked()
-            val active = Scene(scene.layers.filter { it.soundId in attached })
-            _state.update { it.copy(isPlaying = active.layers.isNotEmpty(), scene = active) }
             syncEventsLocked()
+            publishLocked()
         }
     }
 
-    override fun setVolume(soundId: String, volume: Float) {
-        bedPlayers.value[soundId]?.setVolume(volume)
-        _state.update { it.copy(scene = it.scene.withVolume(soundId, volume)) }
-        // Event volumes apply from their next occurrence.
-        scope.launch { mutex.withLock { syncEventsLocked() } }
+    override suspend fun setRunning(running: Boolean) = mutex.withLock {
+        if (this.running == running) return@withLock
+        this.running = running
+        if (running) {
+            beds.forEach { (soundId, bed) -> if (bed.started) bed.player.resume() else startLocked(soundId, bed) }
+            scheduler.resume()
+            eventPlayer.resumeAll()
+        } else {
+            // A fade-in that has not run yet would otherwise start the sound after the pause.
+            startJobs.values.forEach { it.cancel() }
+            startJobs.clear()
+            beds.values.forEach { it.player.pause() }
+            scheduler.pause()
+            eventPlayer.pauseAll()
+        }
     }
 
-    override suspend fun setFrequency(soundId: String, frequency: EventFrequency) = mutex.withLock {
-        _state.update { it.copy(scene = it.scene.withFrequency(soundId, frequency)) }
+    override suspend fun setMasterVolume(volume: Float) = mutex.withLock {
+        masterVolume = volume.coerceIn(0f, 1f)
+        beds.values.forEach(::applyVolume)
         syncEventsLocked()
     }
 
-    override suspend fun pauseAll() = mutex.withLock {
-        if (!hasAttachedLayers || !_state.value.isPlaying) return@withLock
-        // A fade-in that has not run yet would otherwise start the sound after the pause.
-        startJobs.values.forEach { it.cancel() }
-        startJobs.clear()
-        bedPlayers.value.values.forEach { it.pause() }
-        scheduler.pause()
-        eventPlayer.pauseAll()
-        _state.update { it.copy(isPlaying = false) }
+    override suspend fun stop() = mutex.withLock {
+        pendingIds.clear()
+        target = PlayableScene.EMPTY
+        scheduler.stop()
+        eventPlayer.stopAll()
+        attachedIdsLocked().forEach { detachLocked(it) }
+        publishLocked()
     }
 
-    override suspend fun resumeAll() = mutex.withLock {
-        if (!hasAttachedLayers || _state.value.isPlaying) return@withLock
-        resumeLocked()
-        _state.update { it.copy(isPlaying = true) }
+    private suspend fun prepareOrNull(layer: PlayableLayer): Prepared? = try {
+        prepare(layer)
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        null
     }
 
-    override fun clearError() {
-        _state.update { it.copy(error = null) }
-    }
-
-    private suspend fun prepare(layer: Layer): Prepared = when (layer) {
-        is Layer.Bed -> {
+    private suspend fun prepare(layer: PlayableLayer): Prepared = when (layer) {
+        is PlayableLayer.Bed -> {
             val player = bedPlayerFactory.create()
             try {
-                player.prepare(layer.clip, layer.volume)
+                player.prepare(layer.clip, layer.volume * masterVolume)
             } catch (e: Throwable) {
                 withContext(NonCancellable) { player.release() }
                 throw e
             }
             Prepared.Bed(player)
         }
-        is Layer.Event -> {
+        is PlayableLayer.Event -> {
             eventPlayer.load(layer.soundId, layer.clips)
             Prepared.Event
         }
@@ -217,35 +153,39 @@ internal class DefaultSoundscapeEngine(
         Prepared.Event -> eventPlayer.unload(soundId)
     }
 
-    private fun attachLocked(layer: Layer, prepared: Prepared) {
-        if (!hasAttachedLayers) serviceController.start()
-        when (prepared) {
-            is Prepared.Bed -> {
-                bedPlayers.update { it + (layer.soundId to prepared.player) }
-                startJobs[layer.soundId] = scope.launch {
-                    prepared.player.play(AudioDefaults.FADE_IN_MS, startAtFraction = random.nextFloat())
-                }
+    private fun attachLocked(layer: PlayableLayer, prepared: Prepared) {
+        when {
+            prepared is Prepared.Bed && layer is PlayableLayer.Bed -> {
+                val bed = Bed(prepared.player, layer.volume)
+                beds[layer.soundId] = bed
+                applyVolume(bed)
+                if (running) startLocked(layer.soundId, bed)
             }
-            Prepared.Event -> loadedEvents += layer.soundId
+            layer is PlayableLayer.Event -> events[layer.soundId] = layer
+        }
+    }
+
+    private fun startLocked(soundId: String, bed: Bed) {
+        bed.started = true
+        startJobs[soundId] = scope.launch {
+            bed.player.play(AudioDefaults.FADE_IN_MS, startAtFraction = random.nextFloat())
         }
     }
 
     private suspend fun detachLocked(soundId: String) {
         startJobs.remove(soundId)?.cancel()
-        bedPlayers.value[soundId]?.let { player ->
-            bedPlayers.update { it - soundId }
-            player.release()
-        }
-        if (loadedEvents.remove(soundId)) eventPlayer.unload(soundId)
+        beds.remove(soundId)?.player?.release()
+        if (events.remove(soundId) != null) eventPlayer.unload(soundId)
     }
 
-    private suspend fun resumeLocked() {
-        bedPlayers.value.values.forEach { it.resume() }
-        scheduler.resume()
-        eventPlayer.resumeAll()
+    private fun applyVolume(bed: Bed) = bed.player.setVolume(bed.volume * masterVolume)
+
+    private fun syncEventsLocked() =
+        scheduler.sync(events.values.map { it.copy(volume = it.volume * masterVolume) })
+
+    private fun attachedIdsLocked(): Set<String> = beds.keys + events.keys
+
+    private fun publishLocked() {
+        _activeSoundIds.value = attachedIdsLocked()
     }
-
-    private fun syncEventsLocked() = scheduler.sync(_state.value.scene.events)
-
-    private fun attachedIdsLocked(): Set<String> = bedPlayers.value.keys + loadedEvents
 }

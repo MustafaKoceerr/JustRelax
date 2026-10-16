@@ -1,17 +1,13 @@
 package com.mustafakoceerr.justrelax.service
 
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.IntentFilter
-import android.media.AudioManager
-import androidx.core.content.ContextCompat
-import com.mustafakoceerr.justrelax.core.playback.focus.PlaybackInterruptionPolicy
 import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.CommandButton
 import androidx.media3.session.DefaultMediaNotificationProvider
@@ -19,43 +15,25 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
-import android.os.Bundle
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.mustafakoceerr.justrelax.MainActivity
 import com.mustafakoceerr.justrelax.R
-import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeEngine
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
+import com.mustafakoceerr.justrelax.core.playback.SoundscapePlayer
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 /**
- * Hosts the media session for the sound mixer. Media3 owns the notification and the
- * foreground state: it promotes the service while the mix plays and demotes it when paused.
+ * Hosts the media session. The app's UI connects with a MediaController (which binds and starts
+ * this service); Media3 owns the notification and the foreground state.
  */
 @OptIn(UnstableApi::class)
 class PlaybackService : MediaSessionService() {
 
-    private val soundscapeEngine: SoundscapeEngine by inject()
-    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-
+    private val sceneRepository: SceneRepository by inject()
     private var mediaSession: MediaSession? = null
-    private lateinit var interruptionPolicy: PlaybackInterruptionPolicy
-
-    private val becomingNoisyReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
-                interruptionPolicy.onBecomingNoisy()
-            }
-        }
-    }
 
     override fun onCreate() {
         super.onCreate()
@@ -67,72 +45,30 @@ class PlaybackService : MediaSessionService() {
                 .apply { setSmallIcon(R.drawable.ic_notification_small) }
         )
 
-        val player = MixerSessionPlayer(soundscapeEngine, serviceScope, mixMetadata())
+        val player: SoundscapePlayer = get { parametersOf(mixMetadata()) }
+        player.addListener(object : Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                // Media3 started this service when playback began; an empty scene leaves nothing to
+                // play. While the app is bound, this only ends the started state.
+                if (playbackState == Player.STATE_IDLE) stopSelf()
+            }
+        })
         mediaSession = MediaSession.Builder(this, player)
             .setSessionActivity(openAppIntent())
             .setMediaButtonPreferences(listOf(stopButton()))
             .setCallback(SessionCallback())
             .build()
-            // Media3 only manages the notification/foreground state of sessions added to the
-            // service. Normally that happens when a MediaController binds; we are started with
-            // startService, so the session is added explicitly.
-            .also(::addSession)
-
-        startInterruptionHandling()
-        stopWhenMixBecomesEmpty()
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? = mediaSession
 
-    /** Keeps playing after the app is swiped away; a paused or empty mix is cleaned up. */
-    override fun onTaskRemoved(rootIntent: Intent?) {
-        val player = mediaSession?.player
-        if (player == null || !player.playWhenReady || player.mediaItemCount == 0) {
-            serviceScope.launch { soundscapeEngine.stopAll() }
-            stopSelf()
-        }
-    }
-
     override fun onDestroy() {
-        unregisterReceiver(becomingNoisyReceiver)
-        interruptionPolicy.stop()
         mediaSession?.run {
             player.release()
             release()
         }
         mediaSession = null
-        serviceScope.cancel()
         super.onDestroy()
-    }
-
-    /** Phone calls, other apps taking audio focus, and headphones being unplugged. */
-    private fun startInterruptionHandling() {
-        val audioFocus = AndroidAudioFocus(getSystemService(AudioManager::class.java)) { change ->
-            when (change) {
-                AudioManager.AUDIOFOCUS_LOSS -> interruptionPolicy.onFocusLost(transient = false)
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> interruptionPolicy.onFocusLost(transient = true)
-                AudioManager.AUDIOFOCUS_GAIN -> interruptionPolicy.onFocusGained()
-            }
-        }
-        interruptionPolicy = PlaybackInterruptionPolicy(soundscapeEngine, audioFocus, serviceScope).apply { start() }
-
-        ContextCompat.registerReceiver(
-            this,
-            becomingNoisyReceiver,
-            IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY),
-            ContextCompat.RECEIVER_NOT_EXPORTED,
-        )
-    }
-
-    private fun stopWhenMixBecomesEmpty() {
-        serviceScope.launch {
-            soundscapeEngine.state
-                .map { it.layers.isNotEmpty() }
-                .distinctUntilChanged()
-                .drop(1) // only react to changes, not to the state at service start
-                .filter { hasSounds -> !hasSounds }
-                .collect { stopSelf() }
-        }
     }
 
     private fun mixMetadata() = MediaMetadata.Builder()
@@ -173,7 +109,7 @@ class PlaybackService : MediaSessionService() {
             if (customCommand.customAction != ACTION_STOP) {
                 return super.onCustomCommand(session, controller, customCommand, args)
             }
-            serviceScope.launch { soundscapeEngine.stopAll() }
+            sceneRepository.clear()
             return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
     }

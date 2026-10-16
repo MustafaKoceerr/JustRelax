@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.playback.controller.SoundController
-import com.mustafakoceerr.justrelax.core.playback.usecase.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
+import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
 import com.mustafakoceerr.justrelax.core.model.AiGeneratedMix
@@ -23,8 +23,8 @@ import kotlinx.coroutines.launch
 
 class AiViewModel(
     private val aiMixRepository: AiMixRepository,
-    private val setMixUseCase: SetMixUseCase,
-    private val soundController: SoundController,
+    private val sceneRepository: SceneRepository,
+    private val playbackController: PlaybackController,
 ) : ViewModel() {
 
     private data class ScreenState(
@@ -36,7 +36,7 @@ class AiViewModel(
 
     private val screenState = MutableStateFlow(ScreenState())
 
-    val uiState: StateFlow<AiUiState> = combine(screenState, soundController.state) { screen, mixer ->
+    val uiState: StateFlow<AiUiState> = combine(screenState, sceneRepository.scene, playbackController.isPlaying) { screen, scene, isPlaying ->
         AiUiState(
             prompt = screen.prompt,
             isLoading = screen.isLoading,
@@ -44,8 +44,8 @@ class AiViewModel(
             mixDescription = screen.mix?.description.orEmpty(),
             mixSounds = screen.mix?.sounds?.keys?.toList().orEmpty(),
             // A paused mix shows its sounds as not playing.
-            playingSoundIds = if (mixer.isPlaying) mixer.layers.mapTo(mutableSetOf()) { it.soundId } else emptySet(),
-            soundVolumes = mixer.layers.associate { it.soundId to it.volume },
+            playingSoundIds = if (isPlaying) scene.layers.mapTo(mutableSetOf()) { it.soundId } else emptySet(),
+            soundVolumes = scene.layers.associate { it.soundId to it.volume },
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AiUiState())
@@ -64,8 +64,8 @@ class AiViewModel(
                     is Resource.Loading -> screenState.update { it.copy(isLoading = true) }
                     is Resource.Success -> {
                         val mix = result.data
-                        soundController.setVolumes(mix.sounds.mapKeys { (sound, _) -> sound.id })
-                        setMixUseCase(mix.sounds)
+                        sceneRepository.replaceWith(mix.sounds.mapKeys { (sound, _) -> sound.id })
+                        playbackController.play()
                         screenState.update { it.copy(isLoading = false, mix = mix) }
                     }
                     is Resource.Error -> screenState.update {
@@ -82,10 +82,13 @@ class AiViewModel(
     fun clearMix() = screenState.update { ScreenState() }
 
     fun toggleSound(soundId: String) {
-        viewModelScope.launch { soundController.toggleSound(soundId) }
+        viewModelScope.launch {
+            sceneRepository.toggle(soundId)
+            if (sceneRepository.scene.value.layer(soundId) != null) playbackController.play()
+        }
     }
 
-    fun changeVolume(soundId: String, volume: Float) = soundController.changeVolume(soundId, volume)
+    fun changeVolume(soundId: String, volume: Float) = sceneRepository.setVolume(soundId, volume)
 
     fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
 
