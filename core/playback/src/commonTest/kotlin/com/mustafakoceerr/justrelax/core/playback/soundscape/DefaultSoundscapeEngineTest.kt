@@ -207,6 +207,7 @@ class DefaultSoundscapeEngineTest {
 
         assertTrue(beds.live().isEmpty())
         assertTrue(events.loaded.isEmpty())
+        assertTrue(events.isReleased)
         assertTrue(engine.ids().isEmpty())
     }
 

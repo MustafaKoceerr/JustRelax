@@ -120,6 +120,7 @@ internal class DefaultSoundscapeEngine(
         scheduler.stop()
         eventPlayer.stopAll()
         attachedIdsLocked().forEach { detachLocked(it) }
+        eventPlayer.release()
         publishLocked()
     }
 

@@ -25,5 +25,11 @@ kotlin {
         commonTest.dependencies {
             implementation(project(":core:testing"))
         }
+
+        androidHostTest.dependencies {
+            implementation(libs.robolectric)
+            implementation(libs.androidx.test.core.ktx)
+            implementation(libs.kotlin.test.junit)
+        }
     }
 }

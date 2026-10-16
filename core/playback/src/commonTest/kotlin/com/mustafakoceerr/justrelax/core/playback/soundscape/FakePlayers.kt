@@ -64,6 +64,7 @@ class FakeOneShotPlayer(private val now: () -> Long = { 0L }) : OneShotPlayer {
     val failingSounds = mutableSetOf<String>()
     var isPaused = false
     var stopCount = 0
+    var isReleased = false
 
     override suspend fun load(soundId: String, clips: List<String>) {
         if (soundId in failingSounds) error("cannot load $soundId")
@@ -89,5 +90,9 @@ class FakeOneShotPlayer(private val now: () -> Long = { 0L }) : OneShotPlayer {
 
     override fun stopAll() {
         stopCount++
+    }
+
+    override fun release() {
+        isReleased = true
     }
 }
