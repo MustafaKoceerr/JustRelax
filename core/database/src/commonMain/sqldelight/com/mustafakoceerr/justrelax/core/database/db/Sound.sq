@@ -1,40 +1,93 @@
--- `soundEntity` adını `sound` olarak basitleştiriyoruz.
--- Tablo adı, içindeki varlığın adıyla aynı olursa daha anlaşılır olur.
+import com.mustafakoceerr.justrelax.core.model.License;
+import com.mustafakoceerr.justrelax.core.model.SoundCategory;
+import com.mustafakoceerr.justrelax.core.model.SoundIcon;
+import com.mustafakoceerr.justrelax.core.model.SoundSource;
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency;
+import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind;
+import kotlin.Boolean;
 import kotlin.String;
+import kotlin.collections.List;
 import kotlin.collections.Map;
-import kotlin.Boolean; -- Boolean tipini import et
 
+-- Every sound in the library, whatever its source. A catalog sync only touches BUILT_IN rows.
 CREATE TABLE sound (
     id TEXT NOT NULL PRIMARY KEY,
+    source TEXT AS SoundSource NOT NULL,
+    remote_id TEXT,
     names TEXT AS Map<String, String> NOT NULL,
-    categoryId TEXT NOT NULL,
-    iconUrl TEXT NOT NULL,
-    remoteUrl TEXT NOT NULL,
-    localPath TEXT,
-    isInitial INTEGER AS Boolean NOT NULL DEFAULT 0,
-    sizeBytes INTEGER NOT NULL DEFAULT 0
+    category TEXT AS SoundCategory NOT NULL,
+    icon TEXT AS SoundIcon NOT NULL,
+    kind TEXT AS SoundKind NOT NULL,
+    tags TEXT AS List<String> NOT NULL,
+    default_frequency TEXT AS EventFrequency NOT NULL,
+    license TEXT AS License NOT NULL,
+    attribution_title TEXT,
+    attribution_author TEXT,
+    attribution_url TEXT,
+    is_initial INTEGER AS Boolean NOT NULL DEFAULT 0
 );
--- Fonksiyon isimlerini daha standart hale getiriyoruz (selectAll -> selectAllSounds)
+
+-- A sound's audio files: one loop for a bed, one or more variations for an event.
+CREATE TABLE sound_clip (
+    sound_id TEXT NOT NULL REFERENCES sound(id) ON DELETE CASCADE,
+    idx INTEGER NOT NULL,
+    remote_url TEXT,
+    local_path TEXT,
+    duration_ms INTEGER NOT NULL,
+    size_bytes INTEGER NOT NULL,
+    PRIMARY KEY (sound_id, idx)
+);
+
 selectAllSounds:
 SELECT * FROM sound;
+
+-- One snapshot of the library: a sound and its clips change in the same transaction.
+selectSoundsWithClips:
+SELECT sound.*, sound_clip.remote_url, sound_clip.local_path, sound_clip.duration_ms, sound_clip.size_bytes
+FROM sound
+LEFT JOIN sound_clip ON sound_clip.sound_id = sound.id
+ORDER BY sound.rowid, sound_clip.idx;
 
 selectSoundById:
 SELECT * FROM sound WHERE id = ?;
 
-insertSound:
-INSERT INTO sound(id, names, categoryId, iconUrl, remoteUrl, localPath, isInitial, sizeBytes)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+selectAllClips:
+SELECT * FROM sound_clip ORDER BY sound_id, idx;
 
--- REPLACE kullanılmaz: satırı silip yeniden eklediği için saved_mix_sounds'a CASCADE eder.
--- localPath bilerek güncellenmez; indirme durumu sync'ten bağımsızdır.
+selectClipsForSound:
+SELECT * FROM sound_clip WHERE sound_id = ? ORDER BY idx;
+
+insertSound:
+INSERT INTO sound(
+    id, source, remote_id, names, category, icon, kind, tags, default_frequency, license,
+    attribution_title, attribution_author, attribution_url, is_initial
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+-- Never REPLACE a sound: deleting the row would cascade to its clips and to saved scenes.
 updateSoundMetadata:
 UPDATE sound
-SET names = :names, categoryId = :categoryId, iconUrl = :iconUrl, remoteUrl = :remoteUrl,
-    isInitial = :isInitial, sizeBytes = :sizeBytes
+SET names = :names, category = :category, icon = :icon, kind = :kind, tags = :tags,
+    default_frequency = :default_frequency, license = :license,
+    attribution_title = :attribution_title, attribution_author = :attribution_author,
+    attribution_url = :attribution_url, is_initial = :is_initial
 WHERE id = :id;
-
-updateLocalPath:
-UPDATE sound SET localPath = ? WHERE id = ?;
 
 deleteSoundById:
 DELETE FROM sound WHERE id = ?;
+
+insertClip:
+INSERT INTO sound_clip(sound_id, idx, remote_url, local_path, duration_ms, size_bytes)
+VALUES (?, ?, ?, ?, ?, ?);
+
+-- A clip whose file changed on the server must be downloaded again.
+replaceClipFile:
+UPDATE sound_clip
+SET remote_url = :remote_url, duration_ms = :duration_ms, size_bytes = :size_bytes, local_path = NULL
+WHERE sound_id = :sound_id AND idx = :idx;
+
+updateClipLocalPath:
+UPDATE sound_clip SET local_path = :local_path WHERE sound_id = :sound_id AND idx = :idx;
+
+deleteClipsFrom:
+DELETE FROM sound_clip WHERE sound_id = :sound_id AND idx >= :idx;

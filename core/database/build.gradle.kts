@@ -7,6 +7,10 @@ sqldelight {
     databases {
         create("JustRelaxDatabase") {
             packageName.set("com.mustafakoceerr.justrelax.core.database.db")
+            // Each released schema is kept as databases/<version>.db. From v2 on, every schema change
+            // ships with a .sqm migration, and `check` verifies the migrations reach the current schema.
+            schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
+            verifyMigrations.set(true)
         }
     }
 }

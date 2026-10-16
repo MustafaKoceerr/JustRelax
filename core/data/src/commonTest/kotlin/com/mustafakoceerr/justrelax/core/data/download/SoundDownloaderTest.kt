@@ -2,6 +2,7 @@ package com.mustafakoceerr.justrelax.core.data.download
 
 import app.cash.turbine.test
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
+import com.mustafakoceerr.justrelax.core.testing.testClip
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
@@ -16,78 +17,103 @@ import kotlin.test.assertTrue
 
 class SoundDownloaderTest {
 
-    private val storage = FakeSoundFileStorage(soundsDirectory = "/sounds")
+    private val storage = FakeSoundFileStorage(catalogDirectory = "/sounds")
     private val fileDownloader = FakeFileDownloader(storage)
     private val downloader = SoundDownloader(storage, fileDownloader)
 
-    private val sounds = (1..5).map { testSound("s$it") }
-    private val downloaded = mutableMapOf<String, String>()
-    private fun downloadAll() = downloader.downloadAll(sounds) { sound, path -> downloaded[sound.id] = path }
+    private val rain = testSound("rain")
+    private val birds = testSound(
+        "birds",
+        clips = (0..2).map { testClip("https://cdn.test/birds_$it.ogg") },
+    )
 
-    // --- single sound
+    private val sounds = (1..5).map { testSound("s$it") }
+    private val downloaded = mutableMapOf<String, List<String>>()
+    private fun downloadAll() = downloader.downloadAll(sounds) { sound, paths -> downloaded[sound.id] = paths }
+
+    // --- one sound
 
     @Test
-    fun successfulDownload_movesTempToFinalPath() = runTest {
-        val path = downloader.download("rain", "https://cdn.test/rain.mp3")
+    fun everyClip_isDownloadedToItsOwnFile_inOrder() = runTest {
+        val paths = downloader.download(birds)
 
-        assertEquals("/sounds/rain.mp3", path)
-        assertEquals(setOf("/sounds/rain.mp3"), storage.files)
+        assertEquals(listOf("/sounds/birds_0.ogg", "/sounds/birds_1.ogg", "/sounds/birds_2.ogg"), paths)
+        assertEquals(paths!!.toSet(), storage.files)
     }
 
     @Test
-    fun alreadyDownloadedFile_isNotDownloadedAgain() = runTest {
-        storage.files += "/sounds/rain.mp3"
+    fun aClipThatIsAlreadyDownloaded_isNotDownloadedAgain() = runTest {
+        val partlyDownloaded = birds.copy(clips = birds.clips.mapIndexed { index, clip ->
+            if (index == 0) clip.copy(localPath = "/sounds/birds_0.ogg") else clip
+        })
+        storage.files += "/sounds/birds_0.ogg"
 
-        val path = downloader.download("rain", "https://cdn.test/rain.mp3")
+        val paths = downloader.download(partlyDownloaded)
 
-        assertEquals("/sounds/rain.mp3", path)
+        assertEquals("/sounds/birds_0.ogg", paths?.first())
+        assertEquals(listOf("https://cdn.test/birds_1.ogg", "https://cdn.test/birds_2.ogg"), fileDownloader.requestedUrls)
+    }
+
+    @Test
+    fun aFileLeftFromAnEarlierAttempt_isReused() = runTest {
+        storage.files += "/sounds/rain_0.mp3"
+
+        val paths = downloader.download(rain)
+
+        assertEquals(listOf("/sounds/rain_0.mp3"), paths)
         assertTrue(fileDownloader.requestedUrls.isEmpty())
     }
 
     @Test
-    fun failedDownload_returnsNull_andLeavesNoFiles() = runTest {
-        fileDownloader.onDownload = { false }
+    fun oneFailedClip_failsTheSound_butKeepsTheOthersForTheNextTry() = runTest {
+        fileDownloader.onDownload = { url -> !url.endsWith("birds_1.ogg") }
 
-        val path = downloader.download("rain", "https://cdn.test/rain.mp3")
+        assertNull(downloader.download(birds))
+        assertEquals(setOf("/sounds/birds_0.ogg"), storage.files)
 
-        assertNull(path)
-        assertTrue(storage.files.isEmpty())
+        fileDownloader.onDownload = { true }
+        fileDownloader.requestedUrls.clear()
+        downloader.download(birds)
+        assertEquals(listOf("https://cdn.test/birds_1.ogg", "https://cdn.test/birds_2.ogg"), fileDownloader.requestedUrls)
+    }
+
+    @Test
+    fun aClipWithoutARemoteUrl_cannotBeDownloaded() = runTest {
+        assertNull(downloader.download(testSound("mine", clips = listOf(testClip(remoteUrl = null)))))
     }
 
     @Test
     fun staleTempFile_isDeletedBeforeDownload() = runTest {
-        storage.files += "/sounds/rain.mp3.tmp"
+        storage.files += "/sounds/rain_0.mp3.tmp"
         fileDownloader.onDownload = { false }
 
-        downloader.download("rain", "https://cdn.test/rain.mp3")
+        downloader.download(rain)
 
         assertTrue(storage.files.isEmpty())
     }
 
     @Test
     fun urlWithoutExtension_fallsBackToM4a() = runTest {
-        downloader.download("rain", "https://cdn.test/sounds/rain")
+        downloader.download(testSound("rain", clips = listOf(testClip("https://cdn.test/sounds/rain"))))
 
-        assertEquals(setOf("/sounds/rain.m4a"), storage.files)
+        assertEquals(setOf("/sounds/rain_0.m4a"), storage.files)
     }
 
     @Test
     fun urlWithQueryString_ignoresQueryWhenResolvingExtension() = runTest {
-        downloader.download("rain", "https://cdn.test/rain.ogg?v=2")
+        downloader.download(testSound("rain", clips = listOf(testClip("https://cdn.test/rain.ogg?v=2"))))
 
-        assertEquals(setOf("/sounds/rain.ogg"), storage.files)
+        assertEquals(setOf("/sounds/rain_0.ogg"), storage.files)
     }
 
     @Test
     fun cancellationDuringDownload_isPropagated() = runTest {
         fileDownloader.onDownload = { throw CancellationException("cancelled") }
 
-        assertFailsWith<CancellationException> {
-            downloader.download("rain", "https://cdn.test/rain.mp3")
-        }
+        assertFailsWith<CancellationException> { downloader.download(rain) }
     }
 
-    // --- batch
+    // --- many sounds
 
     @Test
     fun emptyList_completesImmediately() = runTest {
@@ -128,7 +154,7 @@ class SoundDownloaderTest {
     }
 
     @Test
-    fun atMostThreeDownloadsRunConcurrently() = runTest {
+    fun atMostThreeSoundsDownloadConcurrently() = runTest {
         var running = 0
         var maxRunning = 0
         fileDownloader.onDownload = {

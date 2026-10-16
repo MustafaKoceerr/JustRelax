@@ -11,5 +11,5 @@ val databaseModule = module {
     single { createDatabase(get<DriverFactory>().createDriver()) }
 
     single { get<JustRelaxDatabase>().soundQueries }
-    single { get<JustRelaxDatabase>().savedMixQueries }
+    single { get<JustRelaxDatabase>().savedSceneQueries }
 }

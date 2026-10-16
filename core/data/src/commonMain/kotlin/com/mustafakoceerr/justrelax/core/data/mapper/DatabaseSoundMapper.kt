@@ -1,24 +1,79 @@
 package com.mustafakoceerr.justrelax.core.data.mapper
 
-import com.mustafakoceerr.justrelax.core.database.db.Sound as DbSound
-import com.mustafakoceerr.justrelax.core.model.Sound as ModelSound
+import com.mustafakoceerr.justrelax.core.database.db.SelectSoundsWithClips
+import com.mustafakoceerr.justrelax.core.database.db.SoundQueries
+import com.mustafakoceerr.justrelax.core.model.Attribution
+import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.model.SoundClip
 
-internal class DatabaseSoundMapper {
-
-    fun toModel(dbSound: DbSound): ModelSound {
-        return ModelSound(
-            id = dbSound.id,
-            names = dbSound.names,
-            categoryId = dbSound.categoryId,
-            iconUrl = dbSound.iconUrl,
-            remoteUrl = dbSound.remoteUrl,
-            localPath = dbSound.localPath,
-            isInitial = dbSound.isInitial,
-            sizeBytes = dbSound.sizeBytes
+/** Rows of `selectSoundsWithClips` (one per clip, ordered) as sounds, in library order. */
+internal fun List<SelectSoundsWithClips>.asSounds(): List<Sound> =
+    groupBy { it.id }.values.map { rows ->
+        val sound = rows.first()
+        Sound(
+            id = sound.id,
+            names = sound.names,
+            category = sound.category,
+            kind = sound.kind,
+            source = sound.source,
+            // A sound without clips has one row with null clip columns.
+            clips = rows.mapNotNull { row ->
+                SoundClip(
+                    remoteUrl = row.remote_url,
+                    localPath = row.local_path,
+                    durationMs = row.duration_ms ?: return@mapNotNull null,
+                    sizeBytes = row.size_bytes ?: return@mapNotNull null,
+                )
+            },
+            license = sound.license,
+            icon = sound.icon,
+            tags = sound.tags,
+            defaultFrequency = sound.default_frequency,
+            attribution = sound.attribution_title?.let { title ->
+                Attribution(title = title, author = sound.attribution_author.orEmpty(), sourceUrl = sound.attribution_url.orEmpty())
+            },
+            remoteId = sound.remote_id,
+            isInitial = sound.is_initial,
         )
     }
 
-    fun toModelList(dbSounds: List<DbSound>): List<ModelSound> {
-        return dbSounds.map(::toModel)
+/** Inserts a sound and its clips; call inside a transaction. */
+internal fun SoundQueries.insert(sound: Sound) {
+    insertSound(
+        id = sound.id,
+        source = sound.source,
+        remote_id = sound.remoteId,
+        names = sound.names,
+        category = sound.category,
+        icon = sound.icon,
+        kind = sound.kind,
+        tags = sound.tags,
+        default_frequency = sound.defaultFrequency,
+        license = sound.license,
+        attribution_title = sound.attribution?.title,
+        attribution_author = sound.attribution?.author,
+        attribution_url = sound.attribution?.sourceUrl,
+        is_initial = sound.isInitial,
+    )
+    sound.clips.forEachIndexed { index, clip ->
+        insertClip(sound.id, index.toLong(), clip.remoteUrl, clip.localPath, clip.durationMs, clip.sizeBytes)
     }
+}
+
+/** Updates what the catalog owns; the clips are synced separately. */
+internal fun SoundQueries.updateMetadata(sound: Sound) {
+    updateSoundMetadata(
+        names = sound.names,
+        category = sound.category,
+        icon = sound.icon,
+        kind = sound.kind,
+        tags = sound.tags,
+        default_frequency = sound.defaultFrequency,
+        license = sound.license,
+        attribution_title = sound.attribution?.title,
+        attribution_author = sound.attribution?.author,
+        attribution_url = sound.attribution?.sourceUrl,
+        is_initial = sound.isInitial,
+        id = sound.id,
+    )
 }

@@ -61,6 +61,9 @@ dependencies {
     implementation(libs.androidx.media3.common)
     implementation(libs.kotlinx.coroutines.guava)
 
+    // The debug sound pack's catalog is read from assets (BuildTypeModule).
+    debugImplementation(libs.kotlinx.serialization.json)
+
     testImplementation(projects.core.testing)
     // Types whitelisted in KoinGraphTest (created inside lambdas, not via constructors)
     testImplementation(projects.core.database)

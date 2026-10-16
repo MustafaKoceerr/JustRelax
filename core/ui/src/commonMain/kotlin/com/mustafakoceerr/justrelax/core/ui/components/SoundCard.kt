@@ -35,8 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -45,8 +43,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
+import com.mustafakoceerr.justrelax.core.model.SoundIcon
+import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
@@ -115,8 +114,8 @@ fun SoundCard(
                     .fillMaxSize()
                     .offset(y = iconYOffset)
             ) {
-                SoundIcon(
-                    iconUrl = sound.iconUrl,
+                SoundIconCircle(
+                    icon = sound.icon,
                     isDownloaded = sound.isDownloaded,
                     colors = iconColors
                 )
@@ -191,8 +190,8 @@ private fun CardSurface(
 }
 
 @Composable
-private fun SoundIcon(
-    iconUrl: String,
+private fun SoundIconCircle(
+    icon: SoundIcon,
     isDownloaded: Boolean,
     colors: IconColors
 ) {
@@ -205,12 +204,11 @@ private fun SoundIcon(
         contentColor = colors.tintColor
     ) {
         Box(contentAlignment = Alignment.Center) {
-            AsyncImage(
-                model = iconUrl,
+            Icon(
+                imageVector = icon.imageVector,
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(colors.tintColor)
+                tint = colors.tintColor
             )
         }
     }

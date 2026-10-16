@@ -143,15 +143,15 @@ internal class SoundscapeSession(
     private fun updatePlayWhenReady(playWhenReady: Boolean, reason: PlayWhenReadyReason) =
         _state.update { it.copy(playWhenReady = playWhenReady, reason = reason) }
 
+    /** Only sounds with every clip on the device play: a bed loops its clip, an event varies between them. */
     private fun resolve(scene: Scene, sounds: List<Sound>): PlayableScene {
-        val paths = sounds.associate { it.id to it.localPath }
+        val clipPaths = sounds.filter { it.isDownloaded }.associate { sound -> sound.id to sound.clips.mapNotNull { it.localPath } }
         return PlayableScene(
             scene.layers.mapNotNull { layer ->
-                val path = paths[layer.soundId] ?: return@mapNotNull null
+                val paths = clipPaths[layer.soundId] ?: return@mapNotNull null
                 when (layer) {
-                    is Layer.Bed -> PlayableLayer.Bed(layer.soundId, path, layer.volume)
-                    // A v1 sound has one file; the v2 catalog brings several clips per event.
-                    is Layer.Event -> PlayableLayer.Event(layer.soundId, listOf(path), layer.volume, layer.frequency)
+                    is Layer.Bed -> PlayableLayer.Bed(layer.soundId, paths.first(), layer.volume)
+                    is Layer.Event -> PlayableLayer.Event(layer.soundId, paths, layer.volume, layer.frequency)
                 }
             }
         )

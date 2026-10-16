@@ -3,8 +3,10 @@ package com.mustafakoceerr.justrelax.core.data.repository
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.common.Resource
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
+import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import kotlinx.coroutines.test.runTest
@@ -16,7 +18,8 @@ import kotlin.test.assertTrue
 class InMemorySceneRepositoryTest {
 
     private val downloaded = (1..12).map { testSound("s$it", localPath = "/sounds/s$it.mp3") }
-    private val sounds = FakeSoundRepository(downloaded + testSound("cloud"))
+    private val owl = testSound("owl", localPath = "/sounds/owl.ogg", kind = SoundKind.EVENT, defaultFrequency = EventFrequency.RARE)
+    private val sounds = FakeSoundRepository(downloaded + owl + testSound("cloud"))
     private val repository = InMemorySceneRepository(sounds)
 
     private fun ids() = repository.scene.value.layers.map { it.soundId }
@@ -28,6 +31,24 @@ class InMemorySceneRepositoryTest {
 
         repository.toggle("s1")
         assertEquals(emptyList(), ids())
+    }
+
+    @Test
+    fun toggle_anEventSound_addsAnEventLayer_atTheSoundsDefaultFrequency() = runTest {
+        repository.toggle("owl")
+
+        assertEquals(Layer.Event("owl", AudioDefaults.BASE_VOLUME, EventFrequency.RARE), repository.scene.value.layer("owl"))
+    }
+
+    @Test
+    fun anEventComesBackAtItsLastFrequency() = runTest {
+        repository.toggle("owl")
+        repository.setFrequency("owl", EventFrequency.OFTEN)
+        repository.toggle("owl")
+
+        repository.toggle("owl")
+
+        assertEquals(EventFrequency.OFTEN, (repository.scene.value.layer("owl") as Layer.Event).frequency)
     }
 
     @Test
@@ -83,6 +104,25 @@ class InMemorySceneRepositoryTest {
         repository.toggle("s2")
 
         assertEquals(0.2f, repository.scene.value.layer("s2")?.volume)
+    }
+
+    @Test
+    fun replaceWith_aScene_followsEachSoundsKind_andKeepsVolumesAndFrequencies() = runTest {
+        repository.replaceWith(
+            Scene(listOf(Layer.Event("s1", 0.4f, EventFrequency.OFTEN), Layer.Bed("owl", 0.6f), Layer.Bed("cloud", 0.5f)))
+        )
+
+        assertEquals(
+            listOf(Layer.Bed("s1", 0.4f), Layer.Event("owl", 0.6f, EventFrequency.RARE)),
+            repository.scene.value.layers,
+        )
+    }
+
+    @Test
+    fun replaceWith_aScene_keepsAnEventsSavedFrequency() = runTest {
+        repository.replaceWith(Scene(listOf(Layer.Event("owl", 0.6f, EventFrequency.OFTEN))))
+
+        assertEquals(Layer.Event("owl", 0.6f, EventFrequency.OFTEN), repository.scene.value.layer("owl"))
     }
 
     @Test

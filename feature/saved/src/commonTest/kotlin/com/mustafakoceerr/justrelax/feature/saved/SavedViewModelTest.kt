@@ -1,10 +1,15 @@
 package com.mustafakoceerr.justrelax.feature.saved
 
-import com.mustafakoceerr.justrelax.core.model.SavedMix
 import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
+import com.mustafakoceerr.justrelax.core.model.SavedScene
+import com.mustafakoceerr.justrelax.core.model.SoundCategory
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
+import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
+import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
+import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedSceneRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
@@ -16,45 +21,51 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.time.Instant
 
 class SavedViewModelTest {
 
-    private val rain = testSound("rain", localPath = "/sounds/rain.mp3")
-    private val fire = testSound("fire", localPath = "/sounds/fire.mp3")
-    private val nightMix = SavedMix(id = 1, name = "Night", createdAt = "2026-10-06", sounds = mapOf(rain to 0.4f, fire to 0.7f))
+    private val rain = testSound("rain", localPath = "/sounds/rain.mp3", category = SoundCategory.RAIN)
+    private val fire = testSound("fire", localPath = "/sounds/fire.mp3", kind = SoundKind.EVENT)
+    private val night = SavedScene(
+        id = 1,
+        name = "Night",
+        createdAt = Instant.fromEpochMilliseconds(0),
+        scene = Scene(listOf(Layer.Bed("rain", 0.4f), Layer.Event("fire", 0.7f, EventFrequency.RARE))),
+    )
 
-    private val repository = FakeSavedMixRepository().apply { mixes.value = listOf(nightMix) }
-    private val scene = InMemorySceneRepository(FakeSoundRepository(listOf(rain, fire)))
+    private val repository = FakeSavedSceneRepository().apply { scenes.value = listOf(night) }
+    private val sounds = FakeSoundRepository(listOf(rain, fire))
+    private val scene = InMemorySceneRepository(sounds)
     private val playback = FakePlaybackController()
 
     private fun TestScope.viewModel() = SavedViewModel(
-        savedMixRepository = repository,
+        savedSceneRepository = repository,
+        soundRepository = sounds,
         sceneRepository = scene,
         playbackController = playback,
     ).also { observe(it.uiState) }
 
     @Test
-    fun savedMixesAreListed() = runMainTest {
+    fun savedScenesAreListed_withTheirSoundsIcons() = runMainTest {
         val viewModel = viewModel()
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
         assertFalse(state.isLoading)
         assertEquals(listOf("Night"), state.mixes.map { it.title })
-        assertEquals(2, state.mixes.single().icons.size)
+        assertEquals(listOf(rain.icon, fire.icon), state.mixes.single().icons)
     }
 
     @Test
-    fun playingAMix_loadsItIntoTheMixer() = runMainTest {
+    fun playingAScene_makesItTheCurrentScene_andPlays() = runMainTest {
         val viewModel = viewModel()
         advanceUntilIdle()
 
         viewModel.playMix(mixId = 1)
         advanceUntilIdle()
 
-        val active = scene.scene.value.layers
-        assertEquals(setOf("rain", "fire"), active.map { it.soundId }.toSet())
-        assertEquals(0.4f, active.first { it.soundId == "rain" }.volume)
+        assertEquals(night.scene, scene.scene.value)
         assertEquals(1, playback.playCount)
     }
 
@@ -82,7 +93,7 @@ class SavedViewModelTest {
         advanceUntilIdle()
 
         assertEquals(listOf("Night"), viewModel.uiState.value.mixes.map { it.title })
-        assertEquals(mapOf("rain" to 0.4f, "fire" to 0.7f), repository.savedVolumes["Night"])
+        assertEquals(night.scene, repository.scenes.value.single().scene)
     }
 
     @Test

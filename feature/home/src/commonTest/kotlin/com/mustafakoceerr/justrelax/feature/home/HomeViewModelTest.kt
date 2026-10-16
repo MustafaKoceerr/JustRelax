@@ -23,9 +23,9 @@ class HomeViewModelTest {
 
     private val repository = FakeSoundRepository(
         listOf(
-            testSound("rain", localPath = "/sounds/rain.mp3", categoryId = "RAIN"),
-            testSound("storm", categoryId = "RAIN"),
-            testSound("forest", localPath = "/sounds/forest.mp3", categoryId = "NATURE"),
+            testSound("rain", localPath = "/sounds/rain.mp3", category = SoundCategory.RAIN),
+            testSound("storm", category = SoundCategory.RAIN),
+            testSound("forest", localPath = "/sounds/forest.mp3", category = SoundCategory.NATURE),
         )
     )
     private val scene = InMemorySceneRepository(repository)

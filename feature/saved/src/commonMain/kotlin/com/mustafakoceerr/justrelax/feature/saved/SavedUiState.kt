@@ -1,12 +1,14 @@
 package com.mustafakoceerr.justrelax.feature.saved
 
+import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
+import kotlin.time.Instant
 
 data class SavedMixItem(
     val id: Long,
     val title: String,
-    val date: String,
-    val icons: List<String>,
+    val date: Instant,
+    val icons: List<SoundIcon>,
 )
 
 /** A one-off snackbar message, optionally with an action (e.g. undo). */

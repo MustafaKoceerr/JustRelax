@@ -175,7 +175,7 @@ private fun MainBottomBarContent(
         ) {
             PlayerBottomBar(
                 isVisible = true,
-                activeIcons = playerState.activeSounds.map { it.iconUrl },
+                activeIcons = playerState.activeSounds.map { it.icon },
                 isPlaying = playerState.isPlaying,
                 onPlayPauseClick = onPlayPause,
                 onStopAllClick = onStopAll,
