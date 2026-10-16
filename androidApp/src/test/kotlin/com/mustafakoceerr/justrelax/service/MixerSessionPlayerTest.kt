@@ -4,7 +4,7 @@ import android.app.Application
 import android.os.Looper
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
-import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeState
+import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeState
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine

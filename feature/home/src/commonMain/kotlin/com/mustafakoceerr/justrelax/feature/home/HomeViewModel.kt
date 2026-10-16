@@ -3,8 +3,8 @@ package com.mustafakoceerr.justrelax.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
-import com.mustafakoceerr.justrelax.core.audio.usecase.PlaySoundUseCase
+import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.playback.usecase.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound

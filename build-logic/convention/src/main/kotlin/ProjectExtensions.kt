@@ -18,7 +18,7 @@ internal val JVM_TARGET = JvmTarget.JVM_17
 
 private const val BASE_NAMESPACE = "com.mustafakoceerr.justrelax"
 
-/** `:core:audio` -> `com.mustafakoceerr.justrelax.core.audio` */
+/** `:core:playback` -> `com.mustafakoceerr.justrelax.core.playback` */
 val Project.defaultNamespace: String
     get() = BASE_NAMESPACE + path.replace(':', '.')
 

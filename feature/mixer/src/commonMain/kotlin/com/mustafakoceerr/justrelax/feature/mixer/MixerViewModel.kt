@@ -2,8 +2,8 @@ package com.mustafakoceerr.justrelax.feature.mixer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.audio.controller.SoundController
-import com.mustafakoceerr.justrelax.core.audio.usecase.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.playback.controller.SoundController
+import com.mustafakoceerr.justrelax.core.playback.usecase.SetMixUseCase
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.mixer.usecase.GenerateRandomMixUseCase

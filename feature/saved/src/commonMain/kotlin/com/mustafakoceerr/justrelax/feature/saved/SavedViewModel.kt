@@ -2,7 +2,7 @@ package com.mustafakoceerr.justrelax.feature.saved
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.audio.usecase.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.playback.usecase.SetMixUseCase
 import com.mustafakoceerr.justrelax.core.model.SavedMix
 import com.mustafakoceerr.justrelax.core.data.repository.SavedMixRepository
 import com.mustafakoceerr.justrelax.core.ui.util.UiText

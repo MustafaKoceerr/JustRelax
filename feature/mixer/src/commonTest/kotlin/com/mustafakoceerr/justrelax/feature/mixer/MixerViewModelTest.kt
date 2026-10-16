@@ -1,8 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
-import com.mustafakoceerr.justrelax.core.audio.controller.SoundControllerImpl
-import com.mustafakoceerr.justrelax.core.audio.usecase.PlaySoundUseCase
-import com.mustafakoceerr.justrelax.core.audio.usecase.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.playback.controller.SoundControllerImpl
+import com.mustafakoceerr.justrelax.core.playback.usecase.PlaySoundUseCase
+import com.mustafakoceerr.justrelax.core.playback.usecase.SetMixUseCase
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository

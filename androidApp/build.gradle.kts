@@ -47,7 +47,7 @@ android {
 
 dependencies {
     implementation(projects.composeApp)
-    implementation(projects.core.audio)
+    implementation(projects.core.playback)
     implementation(projects.core.network)
 
     implementation(libs.koin.android)

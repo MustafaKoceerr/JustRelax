@@ -3,7 +3,7 @@ package com.mustafakoceerr.justrelax.service
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.mustafakoceerr.justrelax.core.audio.AudioServiceController
+import com.mustafakoceerr.justrelax.core.playback.AudioServiceController
 
 class AndroidAudioServiceController(
     private val context: Context

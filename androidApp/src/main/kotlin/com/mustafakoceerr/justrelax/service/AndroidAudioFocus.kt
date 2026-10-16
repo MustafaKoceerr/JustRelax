@@ -5,7 +5,7 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.Handler
 import android.os.Looper
-import com.mustafakoceerr.justrelax.core.audio.focus.AudioFocus
+import com.mustafakoceerr.justrelax.core.playback.focus.AudioFocus
 
 /**
  * A single audio focus request for the whole mix. Focus changes are delivered on the main thread.

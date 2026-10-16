@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.saved
 
 import com.mustafakoceerr.justrelax.core.model.SavedMix
-import com.mustafakoceerr.justrelax.core.audio.usecase.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.playback.usecase.SetMixUseCase
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository

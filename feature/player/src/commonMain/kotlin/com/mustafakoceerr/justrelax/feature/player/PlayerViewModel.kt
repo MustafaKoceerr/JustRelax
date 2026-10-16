@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeEngine
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.feature.player.usecase.SaveCurrentMixUseCase
 import com.mustafakoceerr.justrelax.core.ui.util.UiText

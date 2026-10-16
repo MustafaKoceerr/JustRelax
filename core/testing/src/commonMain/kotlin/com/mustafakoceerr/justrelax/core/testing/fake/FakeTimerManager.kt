@@ -1,8 +1,8 @@
 package com.mustafakoceerr.justrelax.core.testing.fake
 
-import com.mustafakoceerr.justrelax.core.audio.timer.TimerManager
-import com.mustafakoceerr.justrelax.core.audio.timer.TimerState
-import com.mustafakoceerr.justrelax.core.audio.timer.TimerStatus
+import com.mustafakoceerr.justrelax.core.playback.timer.TimerManager
+import com.mustafakoceerr.justrelax.core.playback.timer.TimerState
+import com.mustafakoceerr.justrelax.core.playback.timer.TimerStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 

@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.IntentFilter
 import android.media.AudioManager
 import androidx.core.content.ContextCompat
-import com.mustafakoceerr.justrelax.core.audio.focus.PlaybackInterruptionPolicy
+import com.mustafakoceerr.justrelax.core.playback.focus.PlaybackInterruptionPolicy
 import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
@@ -24,7 +24,7 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.mustafakoceerr.justrelax.MainActivity
 import com.mustafakoceerr.justrelax.R
-import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

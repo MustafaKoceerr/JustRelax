@@ -2,7 +2,7 @@ package com.mustafakoceerr.justrelax.feature.player.usecase
 
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeState
+import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeState
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository

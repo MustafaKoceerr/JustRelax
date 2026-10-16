@@ -3,7 +3,7 @@ package com.mustafakoceerr.justrelax.feature.player.usecase
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.data.repository.SavedMixRepository
-import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeEngine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 

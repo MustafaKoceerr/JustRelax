@@ -10,7 +10,7 @@ import androidx.media3.common.SimpleBasePlayer
 import androidx.media3.common.util.UnstableApi
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.guava.future
 import kotlinx.coroutines.launch

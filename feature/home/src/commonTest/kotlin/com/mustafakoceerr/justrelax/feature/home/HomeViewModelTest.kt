@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.home
 
-import com.mustafakoceerr.justrelax.core.audio.usecase.PlaySoundUseCase
+import com.mustafakoceerr.justrelax.core.playback.usecase.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine

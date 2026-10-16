@@ -37,7 +37,7 @@ include(":composeApp")
 
 include(":core:common")
 include(":core:model")
-include(":core:audio")
+include(":core:playback")
 include(":core:ui")
 include(":core:database")
 include(":core:network")

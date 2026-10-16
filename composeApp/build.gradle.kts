@@ -23,7 +23,7 @@ kotlin {
             api(project(":core:ui"))
             implementation(project(":core:network"))
             implementation(project(":core:database"))
-            implementation(project(":core:audio"))
+            implementation(project(":core:playback"))
             implementation(project(":core:data"))
 
             implementation(project(":feature:home"))
