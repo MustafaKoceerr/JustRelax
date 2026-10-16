@@ -27,6 +27,7 @@ internal class SoundDownloader(
      * downloaded. Clips that did download are kept, so the next try only fetches the rest.
      */
     suspend fun download(sound: Sound): List<String>? {
+        if (!isSafeSoundId(sound.id)) return null
         val directory = storage.getCatalogDirectoryPath()
         return sound.clips.mapIndexed { index, clip ->
             clip.localPath

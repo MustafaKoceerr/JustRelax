@@ -83,6 +83,14 @@ class SoundDownloaderTest {
     }
 
     @Test
+    fun aSoundWhoseIdIsNotASafeFileName_isNeverWritten() = runTest {
+        assertNull(downloader.download(testSound("../../databases/justrelax_v2")))
+
+        assertTrue(fileDownloader.requestedUrls.isEmpty())
+        assertTrue(storage.files.isEmpty())
+    }
+
+    @Test
     fun staleTempFile_isDeletedBeforeDownload() = runTest {
         storage.files += "/sounds/rain_0.mp3.tmp"
         fileDownloader.onDownload = { false }

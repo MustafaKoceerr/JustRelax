@@ -67,6 +67,14 @@ class NetworkSoundMapperTest {
     }
 
     @Test
+    fun anIdThatCouldLeaveTheSoundsDirectory_isDropped() {
+        listOf("../../databases/justrelax_v2", "a/b", "rain\\x", "", "Rain Light").forEach { id ->
+            assertNull(birds.copy(id = id).asSoundOrNull(), id)
+        }
+        assertNotNull(birds.copy(id = "rain_light-2").asSoundOrNull())
+    }
+
+    @Test
     fun aLicenseTheAppDoesNotAccept_isDropped() {
         assertNull(birds.copy(license = "CC_BY_NC_4_0").asSoundOrNull())
     }
