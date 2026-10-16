@@ -43,9 +43,9 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
-import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
-import com.mustafakoceerr.justrelax.feature.player.components.PlayerBottomBar
-import com.mustafakoceerr.justrelax.feature.player.PlayerUiState
+import com.mustafakoceerr.justrelax.feature.scene.SceneViewModel
+import com.mustafakoceerr.justrelax.feature.scene.components.MiniPlayerBar
+import com.mustafakoceerr.justrelax.feature.scene.SceneUiState
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
@@ -67,7 +67,7 @@ import com.mustafakoceerr.justrelax.tabs.title
  */
 @Composable
 fun MainRoute(onOpenSettings: () -> Unit) {
-    val playerViewModel = koinViewModel<PlayerViewModel>()
+    val playerViewModel = koinViewModel<SceneViewModel>()
     val playerState by playerViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarController = koinInject<GlobalSnackbarController>()
 
@@ -97,7 +97,7 @@ fun MainRoute(onOpenSettings: () -> Unit) {
 @Composable
 private fun MainScreenLayout(
     tabState: MainTabState,
-    playerState: PlayerUiState,
+    playerState: SceneUiState,
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
     onSaveMix: () -> Unit,
@@ -184,7 +184,7 @@ private fun MainScreenLayout(
  */
 @Composable
 private fun MiniPlayer(
-    playerState: PlayerUiState,
+    playerState: SceneUiState,
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
     onSaveMix: () -> Unit,
@@ -207,7 +207,7 @@ private fun MiniPlayer(
                 targetOffsetY = { fullHeight -> fullHeight }
             ) + fadeOut(animationSpec = tween(150))
         ) {
-            PlayerBottomBar(
+            MiniPlayerBar(
                 isVisible = true,
                 activeIcons = playerState.activeSounds.map { it.icon },
                 isPlaying = playerState.isPlaying,

@@ -8,10 +8,10 @@ import com.mustafakoceerr.justrelax.core.network.di.networkModule
 import com.mustafakoceerr.justrelax.core.ui.di.uiModule
 import com.mustafakoceerr.justrelax.core.data.di.dataModule
 import com.mustafakoceerr.justrelax.feature.ai.di.aiModule
-import com.mustafakoceerr.justrelax.feature.home.di.homeModule
+import com.mustafakoceerr.justrelax.feature.library.di.libraryModule
 import com.mustafakoceerr.justrelax.feature.mixer.di.mixerModule
 import com.mustafakoceerr.justrelax.feature.onboarding.di.onboardingModule
-import com.mustafakoceerr.justrelax.feature.player.di.playerModule
+import com.mustafakoceerr.justrelax.feature.scene.di.sceneModule
 import com.mustafakoceerr.justrelax.feature.saved.di.savedModule
 import com.mustafakoceerr.justrelax.feature.settings.di.settingsModule
 import com.mustafakoceerr.justrelax.feature.splash.di.splashModule
@@ -42,9 +42,9 @@ val appModules: List<Module>
 
         appModule,
 
-        homeModule,
+        libraryModule,
         settingsModule,
-        playerModule,
+        sceneModule,
         onboardingModule,
         splashModule,
         timerModule,

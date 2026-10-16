@@ -46,8 +46,8 @@ include(":core:testing")
 include(":core:data")
 
 include(":feature:settings")
-include(":feature:player")
-include(":feature:home")
+include(":feature:scene")
+include(":feature:library")
 include(":feature:onboarding")
 include(":feature:splash")
 
