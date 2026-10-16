@@ -2,13 +2,12 @@ plugins {
     id("justrelax.kmp.library")
 }
 
-
-// Sadece test kaynak setlerinden (commonTest, androidUnitTest) bağımlılık olarak kullanılır.
+// Fakes and test utilities; only test source sets depend on this module.
 kotlin {
     sourceSets {
         commonMain.dependencies {
             api(project(":core:domain"))
-            api(libs.findLibrary("kotlinx-coroutines-test").get())
+            api(libs.kotlinx.coroutines.test)
         }
     }
 }

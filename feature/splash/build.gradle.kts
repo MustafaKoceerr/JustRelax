@@ -2,7 +2,6 @@ plugins {
     id("justrelax.kmp.feature")
 }
 
-
 kotlin {
     sourceSets {
         commonMain.dependencies {

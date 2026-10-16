@@ -1,10 +1,12 @@
 plugins {
-    // this is necessary to avoid the plugins to be loaded multiple times
-    // in each subproject's classloader
+    // Load every plugin once in the root classloader so subprojects and the convention plugins share it.
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.composeMultiplatform) apply false
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.android.kotlin.multiplatform.library) apply false
     alias(libs.plugins.android.lint) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.sqldelight) apply false
+    alias(libs.plugins.buildConfig) apply false
 }

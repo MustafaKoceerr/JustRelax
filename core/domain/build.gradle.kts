@@ -1,18 +1,15 @@
 plugins {
-    id("justrelax.kmp.library") // Convention plugin
+    id("justrelax.kmp.library")
 }
-
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(project(":core:model"))  // Sound, AppLanguage vb.
-            api(project(":core:common")) // Result, AppError
+            api(project(":core:model"))
+            api(project(":core:common"))
 
-            implementation(libs.findLibrary("kotlinx-coroutines-core").get()) // Flow için
-
-            // DI
-            implementation(libs.findLibrary("koin-core").get())
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.koin.core)
         }
 
         commonTest.dependencies {

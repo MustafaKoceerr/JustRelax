@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.buildConfig)
 }
 
-
 // OpenAI anahtarı local.properties'ten okunur (şimdilik APK'ya gömülü; ileride backend'e taşınacak).
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")
@@ -22,15 +21,15 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:audio"))
-            implementation(project.dependencies.platform(libs.findLibrary("openai-bom").get()))
-            implementation(libs.findLibrary("openai-client").get())
-            implementation(libs.findLibrary("kotlinx-serialization-json").get())
+            implementation(project.dependencies.platform(libs.openai.bom))
+            implementation(libs.openai.client)
+            implementation(libs.kotlinx.serialization.json)
         }
         androidMain.dependencies {
-            implementation(libs.findLibrary("ktor-client-okhttp").get())
+            implementation(libs.ktor.client.okhttp)
         }
         iosMainDependencies {
-            implementation(libs.findLibrary("ktor-client-darwin").get())
+            implementation(libs.ktor.client.darwin)
         }
     }
 }

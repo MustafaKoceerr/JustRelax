@@ -1,9 +1,0 @@
-platform :ios, '16.0'
-use_frameworks!
-
-target 'iosApp' do
-  project 'iosApp.xcodeproj'
-
-  # KMP modülünden üretilen framework/pod
-  pod 'composeApp', :path => '../composeApp'
-end

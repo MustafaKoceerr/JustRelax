@@ -6,6 +6,10 @@ android-minSdk = "29"
 android-targetSdk = "36"
 # Kotlin & Compose
 composeMultiplatform = "1.12.1"
+# Compose Material 3 is versioned separately from Compose Multiplatform.
+composeMaterial3 = "1.9.0"
+# Material icons are no longer published; this is the last version.
+composeMaterialIcons = "1.7.3"
 
 # AndroidX
 androidx-activity = "1.13.0"
@@ -46,6 +50,15 @@ navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui",
 androidx-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel-navigation3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
+
+# Compose Multiplatform (the `compose.*` accessors of the Gradle plugin are deprecated)
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "composeMaterial3" }
+compose-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "composeMaterialIcons" }
 
 # Koin (Dependency Injection)
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
@@ -129,6 +142,19 @@ koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "androidx-test-core" }
 sqldelight-sqlite-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+
+[bundles]
+compose = [
+    "compose-runtime",
+    "compose-foundation",
+    "compose-ui",
+    "compose-ui-tooling-preview",
+    "compose-components-resources",
+    "compose-material3",
+    "compose-material-icons-extended",
+]
+koin-compose = ["koin-core", "koin-compose", "koin-compose-viewmodel"]
+lifecycle-compose = ["androidx-lifecycle-viewmodel-compose", "androidx-lifecycle-runtime-compose"]
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

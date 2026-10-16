@@ -1,13 +1,11 @@
 plugins {
     id("justrelax.kmp.library")
-    alias(libs.plugins.sqldelight) // Veritabanı burada
+    alias(libs.plugins.sqldelight)
 }
-
 
 sqldelight {
     databases {
         create("JustRelaxDatabase") {
-            // SQLDelight'ın üreteceği Kotlin sınıflarının paketi
             packageName.set("com.mustafakoceerr.justrelax.core.database.db")
         }
     }
@@ -16,32 +14,24 @@ sqldelight {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // DB, Model'i bilmek zorunda (SoundEntity -> Sound dönüşümü için)
             api(project(":core:model"))
 
-            implementation(libs.findLibrary("sqldelight-runtime").get())
-            implementation(libs.findLibrary("sqldelight-coroutines-extensions").get())
-
-            // Koin (DI)
-            implementation(libs.findLibrary("koin-core").get())
-            implementation(libs.findLibrary("kotlinx-serialization-json").get())
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.coroutines.extensions)
+            implementation(libs.koin.core)
+            implementation(libs.kotlinx.serialization.json)
         }
 
         androidMain.dependencies {
-            // Android'e özel veritabanı sürücüsü
-            implementation(libs.findLibrary("sqldelight-android-driver").get())
+            implementation(libs.sqldelight.android.driver)
         }
 
         iosMainDependencies {
-            // iOS'e özel veritabanı sürücüsü
-            implementation(libs.findLibrary("sqldelight-native-driver").get())
+            implementation(libs.sqldelight.native.driver)
         }
-    }
-}
-kotlin {
-    sourceSets {
+
         androidHostTest.dependencies {
-            implementation(libs.findLibrary("sqldelight-sqlite-driver").get())
+            implementation(libs.sqldelight.sqlite.driver)
         }
     }
 }

@@ -3,14 +3,13 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-
 kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:audio"))
-            implementation(libs.findLibrary("coil-compose").get())
-            implementation(libs.findLibrary("coil-network").get())
-            implementation(libs.findLibrary("kotlinx-datetime").get())
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }

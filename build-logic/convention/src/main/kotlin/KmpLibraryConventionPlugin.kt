@@ -5,10 +5,9 @@ import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-class JustRelaxKmpConventionPlugin : Plugin<Project> {
+/** `justrelax.kmp.library`: a KMP module with an Android target, iOS targets when enabled, and common test libraries. */
+class KmpLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
@@ -27,14 +26,10 @@ class JustRelaxKmpConventionPlugin : Plugin<Project> {
                     iosSimulatorArm64()
                 }
 
-                sourceSets.commonMain.dependencies {
-                    implementation(kotlin("stdlib"))
-                }
-
                 sourceSets.commonTest.dependencies {
                     implementation(kotlin("test"))
-                    implementation(libs.findLibrary("kotlinx-coroutines-test").get())
-                    implementation(libs.findLibrary("turbine").get())
+                    implementation(library("kotlinx-coroutines-test"))
+                    implementation(library("turbine"))
                 }
             }
         }
