@@ -66,6 +66,9 @@ fun SavedMixCard(
     icons: List<SoundIcon>,
     onPlayClick: () -> Unit,
     modifier: Modifier = Modifier,
+    /** The card body; plays by default, selects the mix where a detail pane is shown. */
+    onClick: () -> Unit = onPlayClick,
+    isSelected: Boolean = false,
     shape: Shape = RoundedCornerShape(16.dp)
 ) {
     var clickTrigger by remember { mutableIntStateOf(0) }
@@ -85,7 +88,7 @@ fun SavedMixCard(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .clip(shape)
             .clickable {
-                onPlayClick()
+                onClick()
                 clickTrigger++
             }
             .clickShimmerEffect(
@@ -95,7 +98,7 @@ fun SavedMixCard(
             ),
         shape = shape,
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent,
+            containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.cardElevation(0.dp),

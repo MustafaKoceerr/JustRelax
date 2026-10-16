@@ -12,4 +12,10 @@
     <string name="action_cancel">Avbryt</string>
     <string name="sound_action_download">Ladda ned</string>
     <string name="action_dismiss">Stäng</string>
+    <string name="frequency_rare">Sällan</string>
+    <string name="frequency_normal">Normal</string>
+    <string name="frequency_often">Ofta</string>
+    <string name="frequency_label">Hur ofta</string>
+    <string name="sound_kind_event">Hörs då och då</string>
+    <string name="action_remove">Ta bort</string>
 </resources>

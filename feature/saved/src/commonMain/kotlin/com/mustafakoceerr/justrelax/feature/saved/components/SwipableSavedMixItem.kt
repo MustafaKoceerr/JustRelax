@@ -15,7 +15,9 @@ fun SwipableSavedMixItem(
     mix: SavedMixItem,
     onPlayClick: () -> Unit,
     onDelete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = onPlayClick,
+    isSelected: Boolean = false,
 ) {
     val dismissState = rememberSwipeToDismissBoxState()
 
@@ -39,6 +41,8 @@ fun SwipableSavedMixItem(
                 soundCount = mix.icons.size,
                 icons = mix.icons,
                 onPlayClick = onPlayClick,
+                onClick = onClick,
+                isSelected = isSelected,
             )
         },
         enableDismissFromStartToEnd = true,

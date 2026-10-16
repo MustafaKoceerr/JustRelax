@@ -7,6 +7,7 @@ import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedSceneRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
@@ -43,6 +44,7 @@ class SavedViewModelTest {
         savedSceneRepository = repository,
         soundRepository = sounds,
         sceneRepository = scene,
+        languageController = FakeLanguageController(),
         playbackController = playback,
     ).also { observe(it.uiState) }
 
@@ -107,5 +109,34 @@ class SavedViewModelTest {
         advanceUntilIdle()
 
         assertNull(viewModel.uiState.value.message)
+    }
+
+    // --- Detail (shown beside the list on wide windows)
+
+    @Test
+    fun selectingAScene_showsItsSounds() = runMainTest {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        viewModel.selectMix(mixId = 1)
+        advanceUntilIdle()
+
+        val detail = assertNotNull(viewModel.uiState.value.selected)
+        assertEquals("Night", detail.title)
+        assertEquals(listOf("rain", "fire"), detail.sounds.map { it.name })
+        assertEquals(listOf(0.4f, 0.7f), detail.sounds.map { it.volume })
+        assertEquals(listOf(null, EventFrequency.RARE), detail.sounds.map { it.frequency })
+    }
+
+    @Test
+    fun deletingTheSelectedScene_clearsTheSelection() = runMainTest {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        viewModel.selectMix(mixId = 1)
+
+        viewModel.deleteMix(mixId = 1)
+        advanceUntilIdle()
+
+        assertNull(viewModel.uiState.value.selected)
     }
 }

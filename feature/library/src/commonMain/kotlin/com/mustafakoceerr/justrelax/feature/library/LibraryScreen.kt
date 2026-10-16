@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.library
 
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -43,6 +44,7 @@ fun LibraryRoute(
         onCategorySelected = viewModel::selectCategory,
         onSoundClick = viewModel::toggleSound,
         onVolumeChange = viewModel::changeVolume,
+        onFrequencyChange = viewModel::changeFrequency,
     )
 }
 
@@ -54,6 +56,7 @@ fun LibraryScreen(
     onCategorySelected: (SoundCategory) -> Unit,
     onSoundClick: (LocalizedSound) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
+    onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
 ) {
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
@@ -77,6 +80,7 @@ fun LibraryScreen(
             onCategorySelected = onCategorySelected,
             onSoundClick = onSoundClick,
             onVolumeChange = onVolumeChange,
+            onFrequencyChange = onFrequencyChange,
             modifier = Modifier.padding(innerPadding)
         )
     }

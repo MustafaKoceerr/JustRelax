@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.library.components
 
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -25,6 +26,7 @@ fun LibraryContent(
     onCategorySelected: (SoundCategory) -> Unit,
     onSoundClick: (LocalizedSound) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
+    onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val categories = uiState.categories.keys.toList()
@@ -59,9 +61,11 @@ fun LibraryContent(
                     sounds = soundsToShow,
                     playingSoundIds = uiState.playingSoundIds,
                     soundVolumes = uiState.soundVolumes,
+                    soundFrequencies = uiState.soundFrequencies,
                     downloadingSoundIds = uiState.downloadingSoundIds,
                     onSoundClick = onSoundClick,
                     onVolumeChange = onVolumeChange,
+                    onFrequencyChange = onFrequencyChange,
                     contentPadding = PaddingValues(16.dp)
                 )
             }

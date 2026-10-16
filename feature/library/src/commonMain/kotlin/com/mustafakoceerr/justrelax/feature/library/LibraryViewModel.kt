@@ -7,6 +7,7 @@ import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.library.domain.usecase.GetLocalizedCategorizedSoundsUseCase
@@ -47,6 +48,7 @@ class LibraryViewModel(
             selectedCategory = screen.selectedCategory ?: categories.keys.firstOrNull(),
             playingSoundIds = scene.layers.mapTo(mutableSetOf()) { it.soundId },
             soundVolumes = scene.layers.associate { it.soundId to it.volume },
+            soundFrequencies = scene.events.associate { it.soundId to it.frequency },
             downloadingSoundIds = screen.downloadingSoundIds,
             userMessage = screen.userMessage,
         )
@@ -66,6 +68,8 @@ class LibraryViewModel(
     }
 
     fun changeVolume(soundId: String, volume: Float) = sceneRepository.setVolume(soundId, volume)
+
+    fun changeFrequency(soundId: String, frequency: EventFrequency) = sceneRepository.setFrequency(soundId, frequency)
 
     fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
 

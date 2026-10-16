@@ -1,6 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.library
 
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
+import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
@@ -26,6 +28,13 @@ class LibraryViewModelTest {
             testSound("rain", localPath = "/sounds/rain.mp3", category = SoundCategory.RAIN),
             testSound("storm", category = SoundCategory.RAIN),
             testSound("forest", localPath = "/sounds/forest.mp3", category = SoundCategory.NATURE),
+            testSound(
+                "owl",
+                localPath = "/sounds/owl.ogg",
+                category = SoundCategory.NATURE,
+                kind = SoundKind.EVENT,
+                defaultFrequency = EventFrequency.RARE,
+            ),
         )
     )
     private val scene = InMemorySceneRepository(repository)
@@ -118,5 +127,19 @@ class LibraryViewModelTest {
 
         assertEquals(0.9f, viewModel.uiState.value.soundVolumes["rain"])
         assertEquals(0.9f, scene.scene.value.layers.single().volume)
+    }
+
+    @Test
+    fun aPlayingEvent_showsItsFrequency_andItCanBeChanged() = runMainTest {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        viewModel.toggleSound(viewModel.sound("owl"))
+        advanceUntilIdle()
+        assertEquals(mapOf("owl" to EventFrequency.RARE), viewModel.uiState.value.soundFrequencies)
+
+        viewModel.changeFrequency("owl", EventFrequency.OFTEN)
+        advanceUntilIdle()
+
+        assertEquals(mapOf("owl" to EventFrequency.OFTEN), viewModel.uiState.value.soundFrequencies)
     }
 }

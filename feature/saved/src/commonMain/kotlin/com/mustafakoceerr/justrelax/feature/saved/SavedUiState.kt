@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.saved
 
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import kotlin.time.Instant
 
@@ -9,6 +10,22 @@ data class SavedMixItem(
     val title: String,
     val date: Instant,
     val icons: List<SoundIcon>,
+)
+
+/** A saved scene opened beside the list on wide windows. */
+data class SavedMixDetail(
+    val id: Long,
+    val title: String,
+    val date: Instant,
+    val sounds: List<SavedSoundItem>,
+)
+
+/** [frequency] is null for a bed. */
+data class SavedSoundItem(
+    val name: String,
+    val icon: SoundIcon,
+    val volume: Float,
+    val frequency: EventFrequency?,
 )
 
 /** A one-off snackbar message, optionally with an action (e.g. undo). */
@@ -20,5 +37,6 @@ data class SavedMessage(
 data class SavedUiState(
     val isLoading: Boolean = true,
     val mixes: List<SavedMixItem> = emptyList(),
+    val selected: SavedMixDetail? = null,
     val message: SavedMessage? = null,
 )

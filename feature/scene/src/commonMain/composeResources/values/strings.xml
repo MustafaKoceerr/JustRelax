@@ -12,4 +12,11 @@
     <string name="err_mix_save_name_exists">A mix with this name already exists.</string>
     <string name="err_mix_save_no_sound">There are no sounds playing to save.</string>
     <string name="err_unknown">An unexpected error occurred.</string>
+    <string name="scene_panel_title">Your scene</string>
+    <string name="scene_empty">Tap sounds in the library to build your scene.</string>
+    <string name="action_play">Play</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_stop_all">Stop all</string>
+    <string name="action_save_scene">Save</string>
+    <string name="action_show_scene">Show scene</string>
 </resources>

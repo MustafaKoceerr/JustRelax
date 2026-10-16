@@ -47,6 +47,7 @@ fun MiniPlayerBar(
     onPlayPauseClick: () -> Unit,
     onStopAllClick: () -> Unit,
     onSaveClick: () -> Unit,
+    onOpenScene: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
@@ -66,7 +67,8 @@ fun MiniPlayerBar(
             isPlaying = isPlaying,
             onPlayPauseClick = onPlayPauseClick,
             onStopAllClick = onStopAllClick,
-            onSaveClick = onSaveClick
+            onSaveClick = onSaveClick,
+            onOpenScene = onOpenScene,
         )
     }
 }
@@ -78,6 +80,7 @@ private fun MiniPlayerBarContent(
     onPlayPauseClick: () -> Unit,
     onStopAllClick: () -> Unit,
     onSaveClick: () -> Unit,
+    onOpenScene: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val debouncedOnPlayPauseClick = rememberThrottledOnClick(
@@ -93,7 +96,9 @@ private fun MiniPlayerBarContent(
         onClick = onStopAllClick
     )
 
+    // Tapping the bar (outside its buttons) opens the scene panel.
     Surface(
+        onClick = onOpenScene,
         modifier = modifier
             .fillMaxWidth()
             .height(80.dp)

@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.library.components
 
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -16,9 +17,11 @@ fun SoundCardGrid(
     sounds: List<LocalizedSound>,
     playingSoundIds: Set<String>,
     soundVolumes: Map<String, Float>,
+    soundFrequencies: Map<String, EventFrequency>,
     downloadingSoundIds: Set<String>,
     onSoundClick: (LocalizedSound) -> Unit,
     onVolumeChange: (String, Float) -> Unit,
+    onFrequencyChange: (String, EventFrequency) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -44,7 +47,9 @@ fun SoundCardGrid(
                 isDownloading = isDownloading,
                 volume = volume,
                 onCardClick = { onSoundClick(sound) },
-                onVolumeChange = { newVolume -> onVolumeChange(sound.id, newVolume) }
+                onVolumeChange = { newVolume -> onVolumeChange(sound.id, newVolume) },
+                frequency = soundFrequencies[sound.id],
+                onFrequencyChange = { frequency -> onFrequencyChange(sound.id, frequency) },
             )
         }
     }

@@ -12,4 +12,11 @@
     <string name="err_mix_save_name_exists">इस नाम का एक मिक्स पहले से मौजूद है।</string>
     <string name="err_mix_save_no_sound">सहेजने के लिए कोई साउंड चल नहीं रहा है।</string>
     <string name="err_unknown">एक अप्रत्याशित त्रुटि हुई।</string>
+    <string name="scene_panel_title">आपका दृश्य</string>
+    <string name="scene_empty">अपना दृश्य बनाने के लिए लाइब्रेरी में ध्वनियों पर टैप करें।</string>
+    <string name="action_play">चलाएँ</string>
+    <string name="action_pause">रोकें</string>
+    <string name="action_stop_all">सब बंद करें</string>
+    <string name="action_save_scene">सहेजें</string>
+    <string name="action_show_scene">दृश्य दिखाएँ</string>
 </resources>

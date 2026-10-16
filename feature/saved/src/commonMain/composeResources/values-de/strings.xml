@@ -12,4 +12,6 @@
     <string name="date_format_short">dd.MM.yyyy</string>
     <string name="err_play_mix_failed">Mix konnte nicht abgespielt werden</string>
     <string name="err_unknown">Ein unerwarteter Fehler ist aufgetreten.</string>
+    <string name="saved_detail_placeholder">Wähle einen gespeicherten Mix, um seine Klänge zu sehen.</string>
+    <string name="action_delete">Löschen</string>
 </resources>
