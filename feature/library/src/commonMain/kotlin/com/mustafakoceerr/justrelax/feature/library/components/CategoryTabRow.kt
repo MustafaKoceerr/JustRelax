@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.feature.library.util.icon
-import com.mustafakoceerr.justrelax.feature.library.util.titleRes
+import com.mustafakoceerr.justrelax.core.ui.util.titleRes
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)

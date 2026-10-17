@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mysounds_title">Meine Sounds</string>
+    <string name="mysounds_empty_title">Noch keine eigenen Sounds</string>
+    <string name="mysounds_empty_description">Importiere eine Audiodatei, behalte den Teil, der dir gefällt, und er landet in deiner Bibliothek.</string>
+    <string name="mysounds_import">Datei importieren</string>
+    <string name="mysounds_import_failed">Diese Datei konnte nicht geöffnet werden.</string>
+    <string name="mysounds_delete">Löschen</string>
+    <string name="mysounds_delete_title">Diesen Sound löschen?</string>
+    <string name="mysounds_delete_text">%1$s wird aus deiner Bibliothek und deinen gespeicherten Mixes entfernt.</string>
+    <string name="mysounds_cancel">Abbrechen</string>
+    <string name="mysounds_back">Zurück</string>
+    <string name="mysounds_kind_bed">Schleife</string>
+    <string name="mysounds_kind_event">Einzelklang</string>
+    <string name="mysounds_kind_bed_hint">Läuft ununterbrochen im Hintergrund, wie Regen.</string>
+    <string name="mysounds_kind_event_hint">Ertönt ab und zu, wie ein Vogelruf. Bis zu 10 Sekunden.</string>
+    <string name="mysounds_kind_bed_unavailable">Eine Schleife braucht eine Datei von mindestens 5 Sekunden.</string>
+    <string name="mysounds_editor_title">Neuer Sound</string>
+    <string name="mysounds_drag_hint">Ziehe die Griffe, um den Teil auszuwählen, den du behalten möchtest.</string>
+    <string name="mysounds_selection">%1$s – %2$s · %3$s</string>
+    <string name="mysounds_listen">Anhören</string>
+    <string name="mysounds_stop">Stopp</string>
+    <string name="mysounds_name">Name</string>
+    <string name="mysounds_category">Kategorie</string>
+    <string name="mysounds_icon">Symbol</string>
+    <string name="mysounds_save">In Bibliothek speichern</string>
+    <string name="mysounds_save_failed">Der Sound konnte nicht gespeichert werden. Versuche es erneut.</string>
+    <string name="mysounds_load_failed">Diese Datei kann nicht abgespielt werden. Versuche eine andere.</string>
+    <string name="mysounds_problem_too_short">Behalte mindestens 0,3 Sekunden.</string>
+    <string name="mysounds_problem_too_short_for_bed">Eine Schleife braucht mindestens 5 Sekunden.</string>
+    <string name="mysounds_problem_too_long_for_event">Ein Einzelklang darf höchstens 10 Sekunden lang sein.</string>
+    <string name="mysounds_problem_outside_file">Die Auswahl liegt außerhalb der Datei.</string>
+</resources>

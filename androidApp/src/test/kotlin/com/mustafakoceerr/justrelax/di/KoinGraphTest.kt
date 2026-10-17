@@ -33,6 +33,8 @@ class KoinGraphTest {
                 HttpClientConfig::class,
                 // StarterPackInstaller's app-wide scope is created in its definition
                 CoroutineScope::class,
+                // SoundEditorViewModel gets its file from the route with parametersOf
+                String::class,
             )
         )
     }

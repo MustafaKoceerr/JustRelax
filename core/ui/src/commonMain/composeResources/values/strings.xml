@@ -14,4 +14,14 @@
     <string name="frequency_often">Often</string>
     <string name="sound_kind_event">Plays now and then</string>
     <string name="action_remove">Remove</string>
+    <string name="category_air">Wind &amp; Atmosphere</string>
+    <string name="category_asmr">ASMR &amp; Triggers</string>
+    <string name="category_city">City &amp; Indoor</string>
+    <string name="category_music">Music &amp; Melodies</string>
+    <string name="category_nature">Nature &amp; Forest</string>
+    <string name="category_noise">White Noise &amp; Mechanical</string>
+    <string name="category_rain">Rain &amp; Storm</string>
+    <string name="category_travel">Travel &amp; Transport</string>
+    <string name="category_water">Water &amp; Ocean</string>
+    <string name="category_zen">Zen &amp; Meditation</string>
 </resources>

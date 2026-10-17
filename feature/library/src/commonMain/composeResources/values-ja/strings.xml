@@ -2,18 +2,9 @@
 <resources>
     <string name="download_failed">ダウンロードに失敗しました</string>
     <string name="home_screen_title">Just Relax</string>
-    <string name="category_air">風 &amp; 雰囲気</string>
-    <string name="category_asmr">ASMR &amp; トリガー</string>
-    <string name="category_city">街 &amp; 屋内</string>
-    <string name="category_music">音楽 &amp; メロディ</string>
-    <string name="category_nature">自然 &amp; 森</string>
-    <string name="category_noise">ホワイトノイズ &amp; 機械音</string>
-    <string name="category_rain">雨 &amp; 嵐</string>
-    <string name="category_travel">旅行 &amp; 交通</string>
-    <string name="category_water">水 &amp; 海</string>
-    <string name="category_zen">禅 &amp; 瞑想</string>
     <string name="action_settings">設定</string>
     <string name="library_empty_title">まだサウンドがありません</string>
     <string name="library_empty_message">サウンドライブラリをダウンロードするにはインターネットに接続してください。</string>
     <string name="action_retry">再試行</string>
+    <string name="action_my_sounds">マイサウンド</string>
 </resources>

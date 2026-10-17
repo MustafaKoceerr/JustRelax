@@ -80,7 +80,7 @@ import com.mustafakoceerr.justrelax.tabs.title
  * cleared when the user leaves Main.
  */
 @Composable
-fun MainRoute(onOpenSettings: () -> Unit) {
+fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit) {
     val sceneViewModel = koinViewModel<SceneViewModel>()
     val sceneState by sceneViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarController = koinInject<GlobalSnackbarController>()
@@ -116,6 +116,7 @@ fun MainRoute(onOpenSettings: () -> Unit) {
             )
         },
         onOpenSettings = onOpenSettings,
+        onOpenMySounds = onOpenMySounds,
         snackbarHostState = snackbarController.hostState
     )
 }
@@ -130,6 +131,7 @@ private fun MainScreenLayout(
     onSaveMix: () -> Unit,
     scenePanel: @Composable (Modifier) -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenMySounds: () -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
     val showsScenePane = rememberWindowSizeClass() == WindowWidthSize.EXPANDED && tabState.selected == MainTab.HOME
@@ -201,6 +203,7 @@ private fun MainScreenLayout(
                             MainTabContent(
                                 tab = tab,
                                 onOpenSettings = onOpenSettings,
+                                onOpenMySounds = onOpenMySounds,
                                 onSelectTab = tabState::select,
                             )
                         }

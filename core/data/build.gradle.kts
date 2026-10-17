@@ -10,6 +10,7 @@ kotlin {
             api(project(":core:model"))
             implementation(project(":core:database"))
             implementation(project(":core:network"))
+            api(project(":core:media"))
 
             implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.datastore)

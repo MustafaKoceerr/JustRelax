@@ -2,18 +2,9 @@
 <resources>
     <string name="download_failed">Download mislukt</string>
     <string name="home_screen_title">Just Relax</string>
-    <string name="category_air">Wind &amp; atmosfeer</string>
-    <string name="category_asmr">ASMR &amp; triggers</string>
-    <string name="category_city">Stad &amp; binnen</string>
-    <string name="category_music">Muziek &amp; melodieën</string>
-    <string name="category_nature">Natuur &amp; bos</string>
-    <string name="category_noise">Witte ruis &amp; mechanisch</string>
-    <string name="category_rain">Regen &amp; storm</string>
-    <string name="category_travel">Reizen &amp; vervoer</string>
-    <string name="category_water">Water &amp; oceaan</string>
-    <string name="category_zen">Zen &amp; meditatie</string>
     <string name="action_settings">INSTELLINGEN</string>
     <string name="library_empty_title">Nog geen geluiden</string>
     <string name="library_empty_message">Maak verbinding met internet om de geluidsbibliotheek te downloaden.</string>
     <string name="action_retry">Opnieuw proberen</string>
+    <string name="action_my_sounds">Mijn geluiden</string>
 </resources>

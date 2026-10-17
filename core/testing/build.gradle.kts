@@ -7,6 +7,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(project(":core:data"))
+            api(project(":core:media"))
             api(project(":core:playback"))
             api(project(":core:ui"))
             api(libs.kotlinx.coroutines.test)

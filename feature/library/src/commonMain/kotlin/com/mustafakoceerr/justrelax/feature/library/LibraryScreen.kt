@@ -4,6 +4,7 @@ import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,6 +24,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.library.components.LibraryContent
 import justrelax.feature.library.generated.resources.Res
+import justrelax.feature.library.generated.resources.action_my_sounds
 import justrelax.feature.library.generated.resources.action_settings
 import justrelax.feature.library.generated.resources.home_screen_title
 import org.jetbrains.compose.resources.stringResource
@@ -31,6 +33,7 @@ import org.koin.compose.koinInject
 @Composable
 fun LibraryRoute(
     onOpenSettings: () -> Unit,
+    onOpenMySounds: () -> Unit,
     viewModel: LibraryViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -41,6 +44,7 @@ fun LibraryRoute(
     LibraryScreen(
         uiState = uiState,
         onOpenSettings = onOpenSettings,
+        onOpenMySounds = onOpenMySounds,
         onCategorySelected = viewModel::selectCategory,
         onSoundClick = viewModel::toggleSound,
         onVolumeChange = viewModel::changeVolume,
@@ -54,6 +58,7 @@ fun LibraryRoute(
 fun LibraryScreen(
     uiState: LibraryUiState,
     onOpenSettings: () -> Unit,
+    onOpenMySounds: () -> Unit,
     onCategorySelected: (SoundCategory) -> Unit,
     onSoundClick: (LocalizedSound) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
@@ -67,6 +72,12 @@ fun LibraryScreen(
             JustRelaxTopBar(
                 title = stringResource(Res.string.home_screen_title),
                 actions = {
+                    IconButton(onClick = onOpenMySounds) {
+                        Icon(
+                            Icons.Outlined.LibraryMusic,
+                            stringResource(Res.string.action_my_sounds)
+                        )
+                    }
                     IconButton(onClick = onOpenSettings) {
                         Icon(
                             Icons.Outlined.Settings,

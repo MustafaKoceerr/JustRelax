@@ -14,4 +14,14 @@
     <string name="frequency_often">Spesso</string>
     <string name="sound_kind_event">Suona di tanto in tanto</string>
     <string name="action_remove">Rimuovi</string>
+    <string name="category_air">Vento &amp; atmosfera</string>
+    <string name="category_asmr">ASMR &amp; trigger</string>
+    <string name="category_city">Città &amp; interni</string>
+    <string name="category_music">Musica &amp; melodie</string>
+    <string name="category_nature">Natura &amp; foresta</string>
+    <string name="category_noise">Rumore bianco &amp; meccanico</string>
+    <string name="category_rain">Pioggia &amp; tempesta</string>
+    <string name="category_travel">Viaggi &amp; trasporti</string>
+    <string name="category_water">Acqua &amp; oceano</string>
+    <string name="category_zen">Zen &amp; meditazione</string>
 </resources>

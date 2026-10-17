@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mysounds_title">내 사운드</string>
+    <string name="mysounds_empty_title">아직 나만의 사운드가 없어요</string>
+    <string name="mysounds_empty_description">오디오 파일을 가져와 마음에 드는 부분만 남기면 라이브러리에 추가돼요.</string>
+    <string name="mysounds_import">파일 가져오기</string>
+    <string name="mysounds_import_failed">이 파일을 열 수 없어요.</string>
+    <string name="mysounds_delete">삭제</string>
+    <string name="mysounds_delete_title">이 사운드를 삭제할까요?</string>
+    <string name="mysounds_delete_text">%1$s 사운드가 라이브러리와 저장된 믹스에서 삭제돼요.</string>
+    <string name="mysounds_cancel">취소</string>
+    <string name="mysounds_back">뒤로</string>
+    <string name="mysounds_kind_bed">루프</string>
+    <string name="mysounds_kind_event">원샷</string>
+    <string name="mysounds_kind_bed_hint">비처럼 배경에서 계속 재생돼요.</string>
+    <string name="mysounds_kind_event_hint">새소리처럼 가끔 재생돼요. 최대 10초.</string>
+    <string name="mysounds_kind_bed_unavailable">루프를 만들려면 5초 이상의 파일이 필요해요.</string>
+    <string name="mysounds_editor_title">새 사운드</string>
+    <string name="mysounds_drag_hint">핸들을 드래그해 남길 부분을 선택하세요.</string>
+    <string name="mysounds_selection">%1$s – %2$s · %3$s</string>
+    <string name="mysounds_listen">듣기</string>
+    <string name="mysounds_stop">정지</string>
+    <string name="mysounds_name">이름</string>
+    <string name="mysounds_category">카테고리</string>
+    <string name="mysounds_icon">아이콘</string>
+    <string name="mysounds_save">라이브러리에 저장</string>
+    <string name="mysounds_save_failed">사운드를 저장할 수 없어요. 다시 시도하세요.</string>
+    <string name="mysounds_load_failed">이 파일은 재생할 수 없어요. 다른 파일을 시도하세요.</string>
+    <string name="mysounds_problem_too_short">0.3초 이상 남겨 주세요.</string>
+    <string name="mysounds_problem_too_short_for_bed">루프는 5초 이상이어야 해요.</string>
+    <string name="mysounds_problem_too_long_for_event">원샷은 최대 10초까지 가능해요.</string>
+    <string name="mysounds_problem_outside_file">선택 범위가 파일 밖에 있어요.</string>
+</resources>

@@ -14,4 +14,14 @@
     <string name="frequency_often">Vaak</string>
     <string name="sound_kind_event">Klinkt af en toe</string>
     <string name="action_remove">Verwijderen</string>
+    <string name="category_air">Wind &amp; atmosfeer</string>
+    <string name="category_asmr">ASMR &amp; triggers</string>
+    <string name="category_city">Stad &amp; binnen</string>
+    <string name="category_music">Muziek &amp; melodieën</string>
+    <string name="category_nature">Natuur &amp; bos</string>
+    <string name="category_noise">Witte ruis &amp; mechanisch</string>
+    <string name="category_rain">Regen &amp; storm</string>
+    <string name="category_travel">Reizen &amp; vervoer</string>
+    <string name="category_water">Water &amp; oceaan</string>
+    <string name="category_zen">Zen &amp; meditatie</string>
 </resources>

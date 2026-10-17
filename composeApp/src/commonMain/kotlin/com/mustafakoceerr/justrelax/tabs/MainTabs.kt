@@ -49,10 +49,11 @@ fun MainTab.title(): String = stringResource(titleRes)
 fun MainTabContent(
     tab: MainTab,
     onOpenSettings: () -> Unit,
+    onOpenMySounds: () -> Unit,
     onSelectTab: (MainTab) -> Unit,
 ) {
     when (tab) {
-        MainTab.HOME -> LibraryRoute(onOpenSettings = onOpenSettings)
+        MainTab.HOME -> LibraryRoute(onOpenSettings = onOpenSettings, onOpenMySounds = onOpenMySounds)
         MainTab.TIMER -> TimerRoute()
         MainTab.AI -> AiRoute()
         MainTab.SAVED -> SavedRoute(onOpenMixer = { onSelectTab(MainTab.MIXER) })

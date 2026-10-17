@@ -25,6 +25,7 @@ kotlin {
             implementation(project(":core:database"))
             implementation(project(":core:playback"))
             implementation(project(":core:data"))
+            implementation(project(":core:media"))
 
             implementation(project(":feature:library"))
             implementation(project(":feature:mixer"))
@@ -34,6 +35,7 @@ kotlin {
             implementation(project(":feature:settings"))
             implementation(project(":feature:scene"))
             implementation(project(":feature:splash"))
+            implementation(project(":feature:mysounds"))
 
             implementation(libs.bundles.koin.compose)
             implementation(libs.bundles.lifecycle.compose)
