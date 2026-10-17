@@ -11,7 +11,6 @@
     <string name="msg_mix_deleted">मिक्स हटाया गया</string>
     <string name="date_format_short">dd/MM/yyyy</string>
     <string name="err_play_mix_failed">मिक्स चलाने में असफल</string>
-    <string name="err_unknown">एक अप्रत्याशित त्रुटि हुई।</string>
     <string name="saved_detail_placeholder">इसकी ध्वनियाँ देखने के लिए कोई सहेजा गया मिक्स चुनें।</string>
     <string name="action_delete">हटाएँ</string>
 </resources>

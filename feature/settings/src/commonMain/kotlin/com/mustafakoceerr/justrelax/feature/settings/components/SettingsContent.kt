@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Description
+import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Mail
 import androidx.compose.material.icons.rounded.PrivacyTip
@@ -26,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.feature.settings.SettingsUiState
 import justrelax.feature.settings.generated.resources.Res
+import justrelax.feature.settings.generated.resources.credits_subtitle
+import justrelax.feature.settings.generated.resources.credits_title
 import justrelax.feature.settings.generated.resources.feedback_subtitle
 import justrelax.feature.settings.generated.resources.feedback_title
 import justrelax.feature.settings.generated.resources.privacy_policy_title
@@ -47,6 +50,7 @@ fun SettingsContent(
     onSendFeedback: () -> Unit,
     onOpenPrivacyPolicy: () -> Unit,
     onOpenTermsAndConditions: () -> Unit,
+    onOpenCredits: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -103,6 +107,12 @@ fun SettingsContent(
                 icon = Icons.Rounded.Description,
                 title = stringResource(Res.string.terms_conditions_title),
                 onClick = onOpenTermsAndConditions
+            )
+            SettingsTile(
+                icon = Icons.Rounded.Favorite,
+                title = stringResource(Res.string.credits_title),
+                subtitle = stringResource(Res.string.credits_subtitle),
+                onClick = onOpenCredits
             )
 
             VersionInfoTile(versionName = "v1.0.0")

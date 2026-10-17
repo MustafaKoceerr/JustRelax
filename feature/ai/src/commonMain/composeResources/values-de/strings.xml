@@ -6,8 +6,6 @@
     <string name="ai_suggestion_cafe">Café-Atmosphäre</string>
     <string name="ai_suggestion_meditation">Meditation</string>
     <string name="ai_prompt_placeholder">Beschreibe deine ideale Umgebung...</string>
-    <string name="action_save">Speichern</string>
-    <string name="msg_mix_saved_success">Mix '%1$s' wurde erfolgreich gespeichert!</string>
     <string name="err_ai_no_sounds">Keine heruntergeladenen Sounds gefunden. Die KI benötigt Sounds, um einen Mix zu erstellen.</string>
     <string name="err_ai_empty_response">Die KI hat eine leere oder ungültige Antwort zurückgegeben. Bitte versuche es erneut.</string>
     <string name="err_unknown">Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später erneut.</string>

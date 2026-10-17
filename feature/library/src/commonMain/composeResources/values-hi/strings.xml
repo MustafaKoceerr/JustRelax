@@ -13,4 +13,7 @@
     <string name="category_water">पानी &amp; समुद्र</string>
     <string name="category_zen">ज़ेन &amp; ध्यान</string>
     <string name="action_settings">सेटिंग्स</string>
+    <string name="library_empty_title">अभी कोई ध्वनि नहीं</string>
+    <string name="library_empty_message">ध्वनि लाइब्रेरी डाउनलोड करने के लिए इंटरनेट से जुड़ें।</string>
+    <string name="action_retry">फिर से कोशिश करें</string>
 </resources>

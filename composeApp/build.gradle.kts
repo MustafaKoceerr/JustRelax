@@ -33,7 +33,6 @@ kotlin {
             implementation(project(":feature:timer"))
             implementation(project(":feature:settings"))
             implementation(project(":feature:scene"))
-            implementation(project(":feature:onboarding"))
             implementation(project(":feature:splash"))
 
             implementation(libs.bundles.koin.compose)

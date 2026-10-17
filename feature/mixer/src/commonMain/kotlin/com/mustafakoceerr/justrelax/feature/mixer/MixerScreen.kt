@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -53,6 +54,7 @@ fun MixerRoute(viewModel: MixerViewModel = koinViewModel()) {
         onGenerateMix = viewModel::generateMix,
         onSoundClick = viewModel::toggleSound,
         onVolumeChange = viewModel::changeVolume,
+        onFrequencyChange = viewModel::changeFrequency,
     )
 }
 
@@ -65,6 +67,7 @@ fun MixerScreen(
     onGenerateMix: () -> Unit,
     onSoundClick: (soundId: String) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
+    onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
 ) {
     Scaffold(
         containerColor = Color.Transparent,
@@ -82,6 +85,7 @@ fun MixerScreen(
             onGenerateMix = onGenerateMix,
             onSoundClick = onSoundClick,
             onVolumeChange = onVolumeChange,
+            onFrequencyChange = onFrequencyChange,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -94,6 +98,7 @@ private fun MixerScreenContent(
     onGenerateMix: () -> Unit,
     onSoundClick: (soundId: String) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
+    onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -138,7 +143,9 @@ private fun MixerScreenContent(
                     isDownloading = false,
                     volume = volume,
                     onCardClick = { onSoundClick(sound.id) },
-                    onVolumeChange = { newVolume -> onVolumeChange(sound.id, newVolume) }
+                    onVolumeChange = { newVolume -> onVolumeChange(sound.id, newVolume) },
+                    frequency = uiState.soundFrequencies[sound.id],
+                    onFrequencyChange = { frequency -> onFrequencyChange(sound.id, frequency) },
                 )
             }
         } else {

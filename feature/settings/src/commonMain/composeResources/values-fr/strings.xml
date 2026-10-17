@@ -21,4 +21,8 @@
     <string name="privacy_policy_title">Politique de confidentialité</string>
     <string name="terms_conditions_title">Conditions générales</string>
     <string name="msg_all_sounds_downloaded">Tous les sons ont été téléchargés !</string>
+    <string name="credits_title">Crédits</string>
+    <string name="credits_subtitle">Les sons et leurs auteurs</string>
+    <string name="credits_empty">Pas encore de sons d’autres auteurs.</string>
+    <string name="credits_author">par %1$s</string>
 </resources>

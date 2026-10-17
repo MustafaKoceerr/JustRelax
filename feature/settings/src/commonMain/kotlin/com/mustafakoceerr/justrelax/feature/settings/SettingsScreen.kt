@@ -32,6 +32,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SettingsRoute(
     onBack: () -> Unit,
+    onOpenCredits: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -52,6 +53,7 @@ fun SettingsRoute(
         onSendFeedback = viewModel::sendFeedback,
         onOpenPrivacyPolicy = viewModel::openPrivacyPolicy,
         onOpenTermsAndConditions = viewModel::openTermsAndConditions,
+        onOpenCredits = onOpenCredits,
     )
 }
 
@@ -70,6 +72,7 @@ fun SettingsScreen(
     onSendFeedback: () -> Unit,
     onOpenPrivacyPolicy: () -> Unit,
     onOpenTermsAndConditions: () -> Unit,
+    onOpenCredits: () -> Unit,
 ) {
     JustRelaxBackground {
         Scaffold(
@@ -96,6 +99,7 @@ fun SettingsScreen(
                     onSendFeedback = onSendFeedback,
                     onOpenPrivacyPolicy = onOpenPrivacyPolicy,
                     onOpenTermsAndConditions = onOpenTermsAndConditions,
+                    onOpenCredits = onOpenCredits,
                 )
 
                 if (uiState.isLanguageSheetOpen) {

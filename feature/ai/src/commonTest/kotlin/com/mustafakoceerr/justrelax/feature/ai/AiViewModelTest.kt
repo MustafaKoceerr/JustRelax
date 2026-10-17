@@ -7,6 +7,10 @@ import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
 import com.mustafakoceerr.justrelax.core.model.AiGeneratedMix
 import com.mustafakoceerr.justrelax.core.model.localized
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
+import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
+import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
+import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
@@ -26,14 +30,15 @@ import kotlin.test.assertTrue
 class AiViewModelTest {
 
     private val rain = testSound("rain", localPath = "/sounds/rain.mp3")
-    private val fire = testSound("fire", localPath = "/sounds/fire.mp3")
+    private val fire = testSound("fire", localPath = "/sounds/fire.mp3", kind = SoundKind.EVENT)
 
     private inner class FakeAiMixRepository : AiMixRepository {
         var result: Resource<AiGeneratedMix> = Resource.Success(
             AiGeneratedMix(
                 name = "Rainy Night",
                 description = "Soft rain and a fire",
-                sounds = mapOf(rain.localized("en") to 0.6f, fire.localized("en") to 0.3f),
+                scene = Scene(listOf(Layer.Bed("rain", 0.6f), Layer.Event("fire", 0.3f, EventFrequency.OFTEN))),
+                sounds = listOf(rain.localized("en"), fire.localized("en")),
             )
         )
         var lastPrompt: String? = null
@@ -136,5 +141,19 @@ class AiViewModelTest {
 
         assertEquals("", viewModel.uiState.value.prompt)
         assertTrue(viewModel.uiState.value.mixSounds.isEmpty())
+    }
+
+    @Test
+    fun theGeneratedScene_keepsItsEventFrequencies_whichCanBeChanged() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.updatePrompt("campfire")
+        viewModel.generateMix()
+        advanceUntilIdle()
+        assertEquals(mapOf("fire" to EventFrequency.OFTEN), viewModel.uiState.value.soundFrequencies)
+
+        viewModel.changeFrequency("fire", EventFrequency.RARE)
+        advanceUntilIdle()
+
+        assertEquals(mapOf("fire" to EventFrequency.RARE), viewModel.uiState.value.soundFrequencies)
     }
 }

@@ -21,4 +21,8 @@
     <string name="privacy_policy_title">Privacybeleid</string>
     <string name="terms_conditions_title">Algemene voorwaarden</string>
     <string name="msg_all_sounds_downloaded">Alle geluiden gedownload!</string>
+    <string name="credits_title">Credits</string>
+    <string name="credits_subtitle">Geluiden en hun makers</string>
+    <string name="credits_empty">Nog geen geluiden van andere makers.</string>
+    <string name="credits_author">door %1$s</string>
 </resources>

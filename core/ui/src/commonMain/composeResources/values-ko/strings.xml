@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="theme_light">라이트</string>
-    <string name="theme_dark">다크</string>
-    <string name="theme_system">시스템</string>
     <string name="save_mix_dialog_title">믹스 저장</string>
     <string name="save_mix_dialog_description">이 믹스의 이름을 정하세요:</string>
     <string name="save_mix_dialog_name_label">믹스 이름</string>
@@ -15,7 +12,6 @@
     <string name="frequency_rare">드물게</string>
     <string name="frequency_normal">보통</string>
     <string name="frequency_often">자주</string>
-    <string name="frequency_label">빈도</string>
     <string name="sound_kind_event">가끔씩 재생돼요</string>
     <string name="action_remove">제거</string>
 </resources>

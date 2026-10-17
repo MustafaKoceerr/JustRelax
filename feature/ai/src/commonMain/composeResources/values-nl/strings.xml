@@ -6,8 +6,6 @@
     <string name="ai_suggestion_cafe">Café-ambiance</string>
     <string name="ai_suggestion_meditation">Meditatie</string>
     <string name="ai_prompt_placeholder">Beschrijf je ideale omgeving...</string>
-    <string name="action_save">Opslaan</string>
-    <string name="msg_mix_saved_success">Mix '%1$s' is succesvol opgeslagen!</string>
     <string name="err_ai_no_sounds">Geen gedownloade geluiden gevonden. De AI heeft geluiden nodig om een mix te maken.</string>
     <string name="err_ai_empty_response">De AI gaf een lege of ongeldige reactie terug. Probeer het opnieuw.</string>
     <string name="err_unknown">Er is een onverwachte fout opgetreden. Probeer het later opnieuw.</string>

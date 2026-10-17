@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="theme_light">हल्का</string>
-    <string name="theme_dark">डार्क</string>
-    <string name="theme_system">सिस्टम</string>
     <string name="save_mix_dialog_title">मिक्स सहेजें</string>
     <string name="save_mix_dialog_description">इस मिक्स को एक नाम दें:</string>
     <string name="save_mix_dialog_name_label">मिक्स का नाम</string>
@@ -15,7 +12,6 @@
     <string name="frequency_rare">कभी-कभार</string>
     <string name="frequency_normal">सामान्य</string>
     <string name="frequency_often">अक्सर</string>
-    <string name="frequency_label">कितनी बार</string>
     <string name="sound_kind_event">बीच-बीच में बजता है</string>
     <string name="action_remove">हटाएँ</string>
 </resources>

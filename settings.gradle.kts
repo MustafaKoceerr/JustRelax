@@ -48,7 +48,6 @@ include(":core:data")
 include(":feature:settings")
 include(":feature:scene")
 include(":feature:library")
-include(":feature:onboarding")
 include(":feature:splash")
 
 include(":feature:ai")

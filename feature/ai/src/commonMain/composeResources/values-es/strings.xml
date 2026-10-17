@@ -6,8 +6,6 @@
     <string name="ai_suggestion_cafe">Ambiente de cafetería</string>
     <string name="ai_suggestion_meditation">Meditación</string>
     <string name="ai_prompt_placeholder">Describe tu entorno ideal...</string>
-    <string name="action_save">Guardar</string>
-    <string name="msg_mix_saved_success">¡La mezcla '%1$s' se guardó correctamente!</string>
     <string name="err_ai_no_sounds">No se encontraron sonidos descargados. La IA necesita sonidos para crear una mezcla.</string>
     <string name="err_ai_empty_response">La IA devolvió una respuesta vacía o no válida. Inténtalo de nuevo.</string>
     <string name="err_unknown">Ocurrió un error inesperado. Inténtalo más tarde.</string>

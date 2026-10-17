@@ -27,7 +27,7 @@ class BackStackTest {
 
     @Test
     fun resetTo_clearsHistory() {
-        val backStack = mutableListOf<Route>(Route.Splash, Route.Onboarding)
+        val backStack = mutableListOf<Route>(Route.Splash, Route.Settings)
 
         backStack.resetTo(Route.Main)
 

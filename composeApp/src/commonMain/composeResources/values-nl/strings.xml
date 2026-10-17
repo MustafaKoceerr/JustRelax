@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="theme_dark">Donker</string>
-    <string name="theme_light">Licht</string>
-    <string name="theme_system">Systeem</string>
-    <string name="category_air">Wind &amp; atmosfeer</string>
-    <string name="category_city">Stad &amp; binnen</string>
-    <string name="category_nature">Natuur &amp; bos</string>
-    <string name="category_noise">Witte ruis &amp; mechanisch</string>
-    <string name="category_water">Water &amp; regen</string>
-    <string name="duration_hour_short">u</string>
-    <string name="duration_minute_short">min</string>
-    <string name="duration_second_short">s</string>
-    <string name="msg_mix_saved_success">%1$s is succesvol opgeslagen!</string>
-    <string name="action_settings">INSTELLINGEN</string>
     <string name="tab_ai">AI</string>
     <string name="tab_home">Home</string>
     <string name="tab_mixer">Mixer</string>

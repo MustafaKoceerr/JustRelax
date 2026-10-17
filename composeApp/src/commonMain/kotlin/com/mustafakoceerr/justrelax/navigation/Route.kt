@@ -12,9 +12,6 @@ sealed interface Route : NavKey {
     @Serializable
     data object Splash : Route
 
-    @Serializable
-    data object Onboarding : Route
-
     /** Bottom-bar shell hosting the [MainTab]s. */
     @Serializable
     data object Main : Route
@@ -22,14 +19,17 @@ sealed interface Route : NavKey {
     @Serializable
     data object Settings : Route
 
+    @Serializable
+    data object Credits : Route
+
     companion object {
         /** Needed to save/restore the back stack on non-JVM targets (iOS), where reflection is unavailable. */
         val serializersModule = SerializersModule {
             polymorphic(NavKey::class) {
                 subclass(Splash::class)
-                subclass(Onboarding::class)
                 subclass(Main::class)
                 subclass(Settings::class)
+                subclass(Credits::class)
             }
         }
     }
@@ -40,7 +40,7 @@ fun <T : NavKey> MutableList<T>.navigate(route: T) {
     if (lastOrNull() != route) add(route)
 }
 
-/** Clears the history and makes [route] the only destination (e.g. after onboarding). */
+/** Clears the history and makes [route] the only destination (e.g. after the splash). */
 fun <T : NavKey> MutableList<T>.resetTo(route: T) {
     clear()
     add(route)

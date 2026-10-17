@@ -5,6 +5,8 @@ import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
+import com.mustafakoceerr.justrelax.core.data.repository.StarterPackInstaller
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeAppSetupRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.observe
@@ -39,12 +41,14 @@ class LibraryViewModelTest {
     )
     private val scene = InMemorySceneRepository(repository)
     private val playback = FakePlaybackController()
+    private val setup = FakeAppSetupRepository(installed = true)
 
     private fun TestScope.viewModel() = LibraryViewModel(
         getLocalizedCategorizedSoundsUseCase = GetLocalizedCategorizedSoundsUseCase(repository, FakeLanguageController()),
         sceneRepository = scene,
         playbackController = playback,
         soundRepository = repository,
+        starterPackInstaller = StarterPackInstaller(repository, setup, scope = this),
     ).also { observe(it.uiState) }
 
     private fun LibraryViewModel.sound(id: String) =
@@ -141,5 +145,22 @@ class LibraryViewModelTest {
         advanceUntilIdle()
 
         assertEquals(mapOf("owl" to EventFrequency.OFTEN), viewModel.uiState.value.soundFrequencies)
+    }
+
+    @Test
+    fun anEmptyLibrary_saysSo_andRetryFetchesTheCatalogAndStarterPack() = runMainTest {
+        repository.sounds.value = emptyList()
+        setup.isStarterPackInstalled.value = false
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        assertTrue(viewModel.uiState.value.isEmpty)
+
+        repository.sounds.value = listOf(testSound("rain", isInitial = true))
+        viewModel.retry()
+        advanceUntilIdle()
+
+        assertTrue(repository.syncCount > 0)
+        assertEquals(listOf("rain"), repository.downloadRequests)
+        assertFalse(viewModel.uiState.value.isEmpty)
     }
 }

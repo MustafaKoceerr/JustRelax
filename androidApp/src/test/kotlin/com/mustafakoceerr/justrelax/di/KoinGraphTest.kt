@@ -6,6 +6,7 @@ import com.mustafakoceerr.justrelax.core.database.db.Saved_scene_layer
 import com.mustafakoceerr.justrelax.core.database.db.Sound
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
+import kotlinx.coroutines.CoroutineScope
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.dsl.module
 import org.koin.test.verify.verify
@@ -30,6 +31,8 @@ class KoinGraphTest {
                 // HttpClient lambda ile hazır KtorClient'tan gelir
                 HttpClientEngine::class,
                 HttpClientConfig::class,
+                // StarterPackInstaller's app-wide scope is created in its definition
+                CoroutineScope::class,
             )
         )
     }

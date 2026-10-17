@@ -1,11 +1,11 @@
 package com.mustafakoceerr.justrelax.feature.mixer.di
 
 import com.mustafakoceerr.justrelax.feature.mixer.MixerViewModel
-import com.mustafakoceerr.justrelax.feature.mixer.usecase.GenerateRandomMixUseCase
+import com.mustafakoceerr.justrelax.feature.mixer.RandomSceneGenerator
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val mixerModule = module {
-    factory { GenerateRandomMixUseCase(get(), get()) }
+    factory { RandomSceneGenerator() }
     viewModelOf(::MixerViewModel)
 }
