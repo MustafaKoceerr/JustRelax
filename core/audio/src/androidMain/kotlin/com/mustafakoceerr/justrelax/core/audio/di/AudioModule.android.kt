@@ -1,9 +1,11 @@
 package com.mustafakoceerr.justrelax.core.audio.di
 
-import com.mustafakoceerr.justrelax.core.audio.mixer.DefaultAudioMixer
 import com.mustafakoceerr.justrelax.core.audio.player.ExoSoundPlayer
 import com.mustafakoceerr.justrelax.core.audio.player.SoundPlayerFactory
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
+import com.mustafakoceerr.justrelax.core.audio.soundscape.DefaultSoundscapeEngine
+import com.mustafakoceerr.justrelax.core.audio.soundscape.OneShotPlayer
+import com.mustafakoceerr.justrelax.core.audio.soundscape.PendingEventPlayer
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -13,11 +15,14 @@ internal actual val platformAudioCoreModule = module {
         SoundPlayerFactory { ExoSoundPlayer(context) }
     }
 
-    single<AudioMixer> {
-        DefaultAudioMixer(
-            playerFactory = get(),
+    single<OneShotPlayer> { PendingEventPlayer() }
+
+    single<SoundscapeEngine> {
+        DefaultSoundscapeEngine(
+            bedPlayerFactory = get(),
+            eventPlayer = get(),
             serviceController = get(),
-            scope = get(ApplicationScope)
+            scope = get(ApplicationScope),
         )
     }
 }

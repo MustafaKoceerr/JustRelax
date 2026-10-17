@@ -4,9 +4,15 @@ import android.app.Application
 import android.os.Looper
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
-import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
-import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeState
+import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
+import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
+import kotlin.test.AfterTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -16,18 +22,13 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
-import kotlin.test.AfterTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
 // Plain Application: the real one starts Koin, which this test does not need.
 @Config(sdk = [35], application = Application::class)
 class MixerSessionPlayerTest {
 
-    private val mixer = FakeAudioMixer()
+    private val mixer = FakeSoundscapeEngine()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val metadata = MediaMetadata.Builder().setTitle("Calming Sounds").build()
     private val player = MixerSessionPlayer(mixer, scope, metadata)
@@ -41,7 +42,7 @@ class MixerSessionPlayerTest {
     private fun idle() = shadowOf(Looper.getMainLooper()).idle()
 
     private fun mixerPlaying(isPlaying: Boolean = true) = mixer.setState(
-        GlobalMixerState(isPlaying = isPlaying, activeSounds = listOf(SoundConfig("rain", "/rain.mp3")))
+        SoundscapeState(isPlaying = isPlaying, scene = Scene(listOf(Layer.Bed("rain", clip = "/rain.ogg", volume = 0.5f))))
     )
 
     @Test
@@ -97,7 +98,7 @@ class MixerSessionPlayerTest {
         player.stop()
         idle()
 
-        assertTrue(mixer.state.value.activeSounds.isEmpty())
+        assertTrue(mixer.state.value.layers.isEmpty())
         assertEquals(Player.STATE_IDLE, player.playbackState)
     }
 }

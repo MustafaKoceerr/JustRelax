@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
 import com.mustafakoceerr.justrelax.core.domain.usecase.savedmix.SaveCurrentMixUseCase
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 /** The mini player shown above the bottom bar while sounds are active. */
 class PlayerViewModel(
     soundRepository: SoundRepository,
-    private val audioMixer: AudioMixer,
+    private val soundscapeEngine: SoundscapeEngine,
     private val saveCurrentMixUseCase: SaveCurrentMixUseCase,
 ) : ViewModel() {
 
@@ -39,12 +39,12 @@ class PlayerViewModel(
 
     val uiState: StateFlow<PlayerUiState> = combine(
         soundRepository.getSounds(),
-        audioMixer.state,
+        soundscapeEngine.state,
         screenState,
     ) { sounds, mixer, screen ->
         val soundsById = sounds.associateBy { it.id }
         PlayerUiState(
-            activeSounds = mixer.activeSounds.mapNotNull { soundsById[it.id] },
+            activeSounds = mixer.layers.mapNotNull { soundsById[it.soundId] },
             isPlaying = mixer.isPlaying,
             isSaveDialogVisible = screen.isSaveDialogVisible,
             isSaving = screen.isSaving,
@@ -54,12 +54,12 @@ class PlayerViewModel(
 
     fun togglePlayPause() {
         viewModelScope.launch {
-            if (audioMixer.state.value.isPlaying) audioMixer.pauseAll() else audioMixer.resumeAll()
+            if (soundscapeEngine.state.value.isPlaying) soundscapeEngine.pauseAll() else soundscapeEngine.resumeAll()
         }
     }
 
     fun stopAll() {
-        viewModelScope.launch { audioMixer.stopAll() }
+        viewModelScope.launch { soundscapeEngine.stopAll() }
     }
 
     fun openSaveDialog() = screenState.update { it.copy(isSaveDialogVisible = true) }

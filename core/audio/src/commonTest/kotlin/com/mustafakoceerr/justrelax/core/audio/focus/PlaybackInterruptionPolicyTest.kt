@@ -1,8 +1,6 @@
 package com.mustafakoceerr.justrelax.core.audio.focus
 
-import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
-import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -25,7 +23,7 @@ class PlaybackInterruptionPolicyTest {
         }
     }
 
-    private val mixer = FakeAudioMixer()
+    private val mixer = FakeSoundscapeEngine()
     private val focus = FakeAudioFocus()
 
     private fun TestScope.policy() = PlaybackInterruptionPolicy(mixer, focus, backgroundScope).also {
@@ -34,7 +32,7 @@ class PlaybackInterruptionPolicyTest {
     }
 
     private fun TestScope.startPlaying() {
-        mixer.setState(GlobalMixerState(isPlaying = true, activeSounds = listOf(SoundConfig("rain", "/rain.mp3"))))
+        mixer.playBeds("rain")
         runCurrent()
     }
 

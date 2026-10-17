@@ -5,7 +5,7 @@ import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
@@ -47,7 +47,7 @@ class AiViewModelTest {
     private val repository = FakeSoundRepository(
         listOf(testSound("rain", localPath = "/sounds/rain.mp3"), testSound("fire", localPath = "/sounds/fire.mp3"))
     )
-    private val mixer = FakeAudioMixer()
+    private val mixer = FakeSoundscapeEngine()
 
     private fun TestScope.viewModel() = AiViewModel(
         generateAiMixUseCase = GenerateAiMixUseCase(ai, repository, FakeLanguageController()),

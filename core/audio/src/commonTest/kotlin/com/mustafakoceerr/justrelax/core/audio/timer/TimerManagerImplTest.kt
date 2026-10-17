@@ -1,9 +1,7 @@
 package com.mustafakoceerr.justrelax.core.audio.timer
 
-import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
-import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
 import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -16,11 +14,11 @@ import kotlin.time.Duration.Companion.seconds
 /** The sleep timer: counts down and stops all sounds when it reaches zero. */
 class TimerManagerImplTest {
 
-    private val mixer = FakeAudioMixer().apply {
-        setState(GlobalMixerState(isPlaying = true, activeSounds = listOf(SoundConfig("rain", "/rain.mp3"))))
+    private val mixer = FakeSoundscapeEngine().apply {
+        playBeds("rain")
     }
 
-    private fun TestScope.timer() = TimerManagerImpl(externalScope = backgroundScope, audioMixer = mixer)
+    private fun TestScope.timer() = TimerManagerImpl(externalScope = backgroundScope, soundscapeEngine = mixer)
 
     @Test
     fun countsDownEverySecond() = runTest {
@@ -42,7 +40,7 @@ class TimerManagerImplTest {
         advanceTimeBy(6.seconds)
         runCurrent()
 
-        assertTrue(mixer.state.value.activeSounds.isEmpty())
+        assertTrue(mixer.state.value.layers.isEmpty())
         assertEquals(TimerStatus.IDLE, timer.state.value.status)
     }
 

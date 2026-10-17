@@ -10,13 +10,13 @@ import androidx.media3.common.SimpleBasePlayer
 import androidx.media3.common.util.UnstableApi
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.guava.future
 import kotlinx.coroutines.launch
 
 /**
- * Exposes the whole [AudioMixer] to Media3 as a single endless "mix" item, so the media
+ * Exposes the whole [SoundscapeEngine] to Media3 as a single endless "mix" item, so the media
  * notification, lock screen and Bluetooth buttons can control it.
  *
  * The mixer stays the single source of truth: [getState] always reads its current state and
@@ -24,18 +24,18 @@ import kotlinx.coroutines.launch
  */
 @OptIn(UnstableApi::class)
 internal class MixerSessionPlayer(
-    private val audioMixer: AudioMixer,
+    private val soundscapeEngine: SoundscapeEngine,
     private val scope: CoroutineScope,
     private val mixMetadata: MediaMetadata,
 ) : SimpleBasePlayer(Looper.getMainLooper()) {
 
     private val observeJob = scope.launch {
-        audioMixer.state.collect { invalidateState() }
+        soundscapeEngine.state.collect { invalidateState() }
     }
 
     override fun getState(): State {
-        val mixerState = audioMixer.state.value
-        val hasSounds = mixerState.activeSounds.isNotEmpty()
+        val mixerState = soundscapeEngine.state.value
+        val hasSounds = mixerState.layers.isNotEmpty()
 
         return State.Builder()
             .setAvailableCommands(AVAILABLE_COMMANDS)
@@ -46,11 +46,11 @@ internal class MixerSessionPlayer(
     }
 
     override fun handleSetPlayWhenReady(playWhenReady: Boolean): ListenableFuture<*> = scope.future {
-        if (playWhenReady) audioMixer.resumeAll() else audioMixer.pauseAll()
+        if (playWhenReady) soundscapeEngine.resumeAll() else soundscapeEngine.pauseAll()
     }
 
     override fun handleStop(): ListenableFuture<*> = scope.future {
-        audioMixer.stopAll()
+        soundscapeEngine.stopAll()
     }
 
     override fun handleRelease(): ListenableFuture<*> {

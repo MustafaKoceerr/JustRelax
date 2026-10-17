@@ -2,8 +2,8 @@ package com.mustafakoceerr.justrelax.core.audio.controller
 
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.domain.controller.SoundController
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
-import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeState
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
 import kotlinx.coroutines.flow.StateFlow
 
@@ -12,17 +12,17 @@ import kotlinx.coroutines.flow.StateFlow
  * off and on again (e.g. inside a generated mix) comes back at the same level.
  */
 class SoundControllerImpl(
-    private val audioMixer: AudioMixer,
+    private val soundscapeEngine: SoundscapeEngine,
     private val playSoundUseCase: PlaySoundUseCase,
 ) : SoundController {
 
     private val volumes = mutableMapOf<String, Float>()
 
-    override val state: StateFlow<GlobalMixerState> = audioMixer.state
+    override val state: StateFlow<SoundscapeState> = soundscapeEngine.state
 
     override suspend fun toggleSound(soundId: String) {
-        if (state.value.activeSounds.any { it.id == soundId }) {
-            audioMixer.stopSound(soundId)
+        if (state.value.layers.any { it.soundId == soundId }) {
+            soundscapeEngine.removeLayer(soundId)
         } else {
             playSoundUseCase(soundId, volumes[soundId] ?: AudioDefaults.BASE_VOLUME)
         }
@@ -30,12 +30,12 @@ class SoundControllerImpl(
 
     override fun changeVolume(soundId: String, volume: Float) {
         volumes[soundId] = volume
-        audioMixer.setVolume(soundId, volume)
+        soundscapeEngine.setVolume(soundId, volume)
     }
 
     override fun setVolumes(volumes: Map<String, Float>) {
         this.volumes += volumes
-        val activeIds = state.value.activeSounds.map { it.id }.toSet()
-        volumes.filterKeys { it in activeIds }.forEach { (id, volume) -> audioMixer.setVolume(id, volume) }
+        val activeIds = state.value.layers.map { it.soundId }.toSet()
+        volumes.filterKeys { it in activeIds }.forEach { (id, volume) -> soundscapeEngine.setVolume(id, volume) }
     }
 }

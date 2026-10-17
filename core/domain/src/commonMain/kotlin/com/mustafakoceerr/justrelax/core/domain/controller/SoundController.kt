@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.core.domain.controller
 
-import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeState
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
  * Simplifies playback control and state observation.
  */
 interface SoundController {
-    val state: StateFlow<GlobalMixerState>
+    val state: StateFlow<SoundscapeState>
 
     suspend fun toggleSound(soundId: String)
 

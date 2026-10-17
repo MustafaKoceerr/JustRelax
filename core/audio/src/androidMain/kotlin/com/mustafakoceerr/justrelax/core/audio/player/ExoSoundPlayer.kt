@@ -9,10 +9,12 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
-import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.coroutines.resume
 import kotlin.math.min
 
 /** One looping ExoPlayer instance. All player access is confined to the main thread. */
@@ -24,9 +26,9 @@ internal class ExoSoundPlayer(
     private var exoPlayer: ExoPlayer? = null
     private var targetVolume: Float = AudioDefaults.BASE_VOLUME
 
-    override suspend fun prepare(config: SoundConfig) = withContext(Dispatchers.Main) {
+    override suspend fun prepare(clip: String, volume: Float) = withContext(Dispatchers.Main) {
         releasePlayer()
-        targetVolume = config.initialVolume
+        targetVolume = volume
         exoPlayer = ExoPlayer.Builder(context)
             .setLooper(Looper.getMainLooper())
             // Focus is requested once for the whole mix (PlaybackInterruptionPolicy); if every
@@ -35,15 +37,38 @@ internal class ExoSoundPlayer(
             .build()
             .apply {
                 repeatMode = Player.REPEAT_MODE_ONE
-                setMediaItem(MediaItem.fromUri(config.url))
-                volume = 0f
+                setMediaItem(MediaItem.fromUri(clip))
+                this.volume = 0f
                 prepare()
             }
     }
 
-    override suspend fun play(fadeInDurationMs: Long) = withContext(Dispatchers.Main) {
-        exoPlayer?.play()
+    override suspend fun play(fadeInDurationMs: Long, startAtFraction: Float) = withContext(Dispatchers.Main) {
+        val player = exoPlayer ?: return@withContext
+        // The duration is only known once the source is ready.
+        if (player.awaitReady() && player.duration > 0) {
+            player.seekTo((player.duration * startAtFraction.coerceIn(0f, 1f)).toLong())
+        }
+        player.play()
         fadeIn(fadeInDurationMs)
+    }
+
+    private suspend fun ExoPlayer.awaitReady(): Boolean {
+        if (playbackState == Player.STATE_READY) return true
+        return withTimeoutOrNull(READY_TIMEOUT_MS) {
+            suspendCancellableCoroutine { continuation ->
+                val listener = object : Player.Listener {
+                    override fun onPlaybackStateChanged(playbackState: Int) {
+                        if (playbackState == Player.STATE_READY) {
+                            removeListener(this)
+                            continuation.resume(Unit)
+                        }
+                    }
+                }
+                addListener(listener)
+                continuation.invokeOnCancellation { mainHandler.post { removeListener(listener) } }
+            }
+        } != null
     }
 
     override suspend fun pause() = withContext(Dispatchers.Main) {
@@ -93,6 +118,7 @@ internal class ExoSoundPlayer(
 
     private companion object {
         const val FADE_STEPS = 20
+        const val READY_TIMEOUT_MS = 3_000L
 
         val MEDIA_AUDIO_ATTRIBUTES: AudioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)

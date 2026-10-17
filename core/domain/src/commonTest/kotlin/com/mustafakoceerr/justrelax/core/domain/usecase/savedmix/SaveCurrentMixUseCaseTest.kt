@@ -2,26 +2,27 @@ package com.mustafakoceerr.justrelax.core.domain.usecase.savedmix
 
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
-import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeState
+import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
+import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository
-import kotlinx.coroutines.test.runTest
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
+import kotlinx.coroutines.test.runTest
 
 class SaveCurrentMixUseCaseTest {
 
-    private val mixer = FakeAudioMixer()
+    private val mixer = FakeSoundscapeEngine()
     private val repository = FakeSavedMixRepository()
     private val useCase = SaveCurrentMixUseCase(repository, mixer)
 
     private fun playing(vararg volumes: Pair<String, Float>) = mixer.setState(
-        GlobalMixerState(
+        SoundscapeState(
             isPlaying = true,
-            activeSounds = volumes.map { (id, volume) -> SoundConfig(id, "/sounds/$id.mp3", volume) },
+            scene = Scene(volumes.map { (id, volume) -> Layer.Bed(id, clip = "/sounds/$id.ogg", volume = volume) }),
         )
     )
 

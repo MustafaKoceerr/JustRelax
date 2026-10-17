@@ -9,10 +9,8 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import androidx.test.core.app.ApplicationProvider
 import android.os.Looper
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
-import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
-import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import org.junit.runner.RunWith
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -38,11 +36,11 @@ import kotlin.test.assertTrue
 @Config(sdk = [35], application = Application::class)
 class PlaybackServiceTest {
 
-    private val mixer = FakeAudioMixer()
+    private val mixer = FakeSoundscapeEngine()
 
     @BeforeTest
     fun setUp() {
-        startKoin { modules(module { single<AudioMixer> { mixer } }) }
+        startKoin { modules(module { single<SoundscapeEngine> { mixer } }) }
     }
 
     private val serviceController = Robolectric.buildService(PlaybackService::class.java)
@@ -66,7 +64,7 @@ class PlaybackServiceTest {
     fun playingMix_promotesServiceToForegroundWithNotification() {
         val service = serviceController.create().startCommand(0, 1).get()
 
-        mixer.setState(GlobalMixerState(isPlaying = true, activeSounds = listOf(SoundConfig("rain", "/rain.mp3"))))
+        mixer.playBeds("rain")
         idle()
         Thread.sleep(500) // Media3 builds the notification (bitmap loading) off the main thread
         idle()
@@ -78,7 +76,7 @@ class PlaybackServiceTest {
         get() = ApplicationProvider.getApplicationContext<Context>().getSystemService(AudioManager::class.java)
 
     private fun startPlaying() {
-        mixer.setState(GlobalMixerState(isPlaying = true, activeSounds = listOf(SoundConfig("rain", "/rain.mp3"))))
+        mixer.playBeds("rain")
         idle()
     }
 
@@ -161,7 +159,7 @@ class PlaybackServiceTest {
         controller.sendCustomCommand(SessionCommand(PlaybackService.ACTION_STOP, Bundle.EMPTY), Bundle.EMPTY)
         idle()
 
-        assertTrue(mixer.state.value.activeSounds.isEmpty())
+        assertTrue(mixer.state.value.layers.isEmpty())
         controller.release()
     }
 }

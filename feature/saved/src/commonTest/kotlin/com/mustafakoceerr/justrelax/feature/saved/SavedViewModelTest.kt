@@ -2,7 +2,7 @@ package com.mustafakoceerr.justrelax.feature.saved
 
 import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMix
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
@@ -25,7 +25,7 @@ class SavedViewModelTest {
     private val nightMix = SavedMix(id = 1, name = "Night", createdAt = "2026-10-06", sounds = mapOf(rain to 0.4f, fire to 0.7f))
 
     private val repository = FakeSavedMixRepository().apply { mixes.value = listOf(nightMix) }
-    private val mixer = FakeAudioMixer()
+    private val mixer = FakeSoundscapeEngine()
 
     private fun TestScope.viewModel() = SavedViewModel(
         savedMixRepository = repository,
@@ -51,9 +51,9 @@ class SavedViewModelTest {
         viewModel.playMix(mixId = 1)
         advanceUntilIdle()
 
-        val active = mixer.state.value.activeSounds
-        assertEquals(setOf("rain", "fire"), active.map { it.id }.toSet())
-        assertEquals(0.4f, active.first { it.id == "rain" }.initialVolume)
+        val active = mixer.state.value.layers
+        assertEquals(setOf("rain", "fire"), active.map { it.soundId }.toSet())
+        assertEquals(0.4f, active.first { it.soundId == "rain" }.volume)
     }
 
     @Test

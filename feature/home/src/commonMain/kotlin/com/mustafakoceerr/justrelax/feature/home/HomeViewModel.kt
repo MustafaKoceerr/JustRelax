@@ -3,7 +3,7 @@ package com.mustafakoceerr.justrelax.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSingleSoundUseCase
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     getLocalizedCategorizedSoundsUseCase: GetLocalizedCategorizedSoundsUseCase,
-    private val audioMixer: AudioMixer,
+    private val soundscapeEngine: SoundscapeEngine,
     private val playSoundUseCase: PlaySoundUseCase,
     private val downloadSingleSoundUseCase: DownloadSingleSoundUseCase,
 ) : ViewModel() {
@@ -37,7 +37,7 @@ class HomeViewModel(
 
     val uiState: StateFlow<HomeUiState> = combine(
         getLocalizedCategorizedSoundsUseCase(),
-        audioMixer.state,
+        soundscapeEngine.state,
         screenState,
     ) { sounds, mixer, screen ->
         val categories = (sounds as? Resource.Success)?.data.orEmpty()
@@ -45,8 +45,8 @@ class HomeViewModel(
             isLoading = sounds is Resource.Loading,
             categories = categories,
             selectedCategory = screen.selectedCategory ?: categories.keys.firstOrNull(),
-            playingSoundIds = mixer.activeSounds.mapTo(mutableSetOf()) { it.id },
-            soundVolumes = mixer.activeSounds.associate { it.id to it.initialVolume },
+            playingSoundIds = mixer.layers.mapTo(mutableSetOf()) { it.soundId },
+            soundVolumes = mixer.layers.associate { it.soundId to it.volume },
             downloadingSoundIds = screen.downloadingSoundIds,
             userMessage = screen.userMessage,
         )
@@ -58,14 +58,14 @@ class HomeViewModel(
     fun toggleSound(sound: LocalizedSound) {
         viewModelScope.launch {
             when {
-                audioMixer.state.value.activeSounds.any { it.id == sound.id } -> audioMixer.stopSound(sound.id)
+                soundscapeEngine.state.value.layers.any { it.soundId == sound.id } -> soundscapeEngine.removeLayer(sound.id)
                 sound.isDownloaded -> play(sound.id)
                 else -> downloadAndPlay(sound)
             }
         }
     }
 
-    fun changeVolume(soundId: String, volume: Float) = audioMixer.setVolume(soundId, volume)
+    fun changeVolume(soundId: String, volume: Float) = soundscapeEngine.setVolume(soundId, volume)
 
     fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
 

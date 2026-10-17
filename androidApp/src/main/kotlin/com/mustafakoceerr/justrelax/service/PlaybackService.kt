@@ -24,7 +24,7 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.mustafakoceerr.justrelax.MainActivity
 import com.mustafakoceerr.justrelax.R
-import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
+import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -43,7 +43,7 @@ import org.koin.android.ext.android.inject
 @OptIn(UnstableApi::class)
 class PlaybackService : MediaSessionService() {
 
-    private val audioMixer: AudioMixer by inject()
+    private val soundscapeEngine: SoundscapeEngine by inject()
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private var mediaSession: MediaSession? = null
@@ -67,7 +67,7 @@ class PlaybackService : MediaSessionService() {
                 .apply { setSmallIcon(R.drawable.ic_notification_small) }
         )
 
-        val player = MixerSessionPlayer(audioMixer, serviceScope, mixMetadata())
+        val player = MixerSessionPlayer(soundscapeEngine, serviceScope, mixMetadata())
         mediaSession = MediaSession.Builder(this, player)
             .setSessionActivity(openAppIntent())
             .setMediaButtonPreferences(listOf(stopButton()))
@@ -88,7 +88,7 @@ class PlaybackService : MediaSessionService() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         val player = mediaSession?.player
         if (player == null || !player.playWhenReady || player.mediaItemCount == 0) {
-            serviceScope.launch { audioMixer.stopAll() }
+            serviceScope.launch { soundscapeEngine.stopAll() }
             stopSelf()
         }
     }
@@ -114,7 +114,7 @@ class PlaybackService : MediaSessionService() {
                 AudioManager.AUDIOFOCUS_GAIN -> interruptionPolicy.onFocusGained()
             }
         }
-        interruptionPolicy = PlaybackInterruptionPolicy(audioMixer, audioFocus, serviceScope).apply { start() }
+        interruptionPolicy = PlaybackInterruptionPolicy(soundscapeEngine, audioFocus, serviceScope).apply { start() }
 
         ContextCompat.registerReceiver(
             this,
@@ -126,8 +126,8 @@ class PlaybackService : MediaSessionService() {
 
     private fun stopWhenMixBecomesEmpty() {
         serviceScope.launch {
-            audioMixer.state
-                .map { it.activeSounds.isNotEmpty() }
+            soundscapeEngine.state
+                .map { it.layers.isNotEmpty() }
                 .distinctUntilChanged()
                 .drop(1) // only react to changes, not to the state at service start
                 .filter { hasSounds -> !hasSounds }
@@ -173,7 +173,7 @@ class PlaybackService : MediaSessionService() {
             if (customCommand.customAction != ACTION_STOP) {
                 return super.onCustomCommand(session, controller, customCommand, args)
             }
-            serviceScope.launch { audioMixer.stopAll() }
+            serviceScope.launch { soundscapeEngine.stopAll() }
             return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
     }

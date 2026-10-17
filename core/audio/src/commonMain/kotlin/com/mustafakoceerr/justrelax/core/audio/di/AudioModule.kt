@@ -18,7 +18,7 @@ val audioCoreModule = module {
     includes(platformAudioCoreModule)
 
     // One per screen: each screen keeps its own remembered volumes.
-    factory<SoundController> { SoundControllerImpl(audioMixer = get(), playSoundUseCase = get()) }
+    factory<SoundController> { SoundControllerImpl(soundscapeEngine = get(), playSoundUseCase = get()) }
 
     single<CoroutineScope>(qualifier = ApplicationScope) {
         CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -27,7 +27,7 @@ val audioCoreModule = module {
     single<TimerManager> {
         TimerManagerImpl(
             externalScope = get(qualifier = ApplicationScope),
-            audioMixer = get()
+            soundscapeEngine = get()
         )
     }
 }
