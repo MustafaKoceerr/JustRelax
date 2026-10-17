@@ -3,54 +3,159 @@
   "sounds": [
     {
       "id": "air_breeze",
-      "names": {"en": "Soft Breeze", "tr": "Hafif Esinti"},
+      "names": {
+        "en": "Soft Breeze",
+        "tr": "Hafif Esinti",
+        "es": "Brisa Suave",
+        "de": "Sanfte Brise",
+        "fr": "Brise légère",
+        "pt": "Brisa suave",
+        "it": "Brezza leggera",
+        "nl": "Zachte bries",
+        "sv": "Mjuk bris",
+        "hi": "हल्की बयार",
+        "ja": "そよ風",
+        "ko": "부드러운 산들바람"
+      },
       "category": "AIR",
       "kind": "BED",
-      "tags": ["wind", "breeze", "calm", "outdoors"],
       "license": "OWN",
-      "is_initial": true,
-      "clips": [{"url": "air_breeze.ogg", "duration_ms": 30006, "size_bytes": 201291}]
+      "clips": [
+        {
+          "url": "audio/air_breeze.ogg",
+          "duration_ms": 30006,
+          "size_bytes": 201919
+        }
+      ],
+      "tags": [
+        "wind",
+        "breeze",
+        "calm",
+        "outdoors"
+      ],
+      "is_initial": true
     },
     {
       "id": "water_creek",
-      "names": {"en": "Mountain Creek", "tr": "Dağ Deresi"},
+      "names": {
+        "en": "Mountain Creek",
+        "tr": "Dağ Deresi",
+        "es": "Arroyo de Montaña",
+        "de": "Gebirgsbach",
+        "fr": "Ruisseau de montagne",
+        "pt": "Córrego de montanha",
+        "it": "Ruscello di montagna",
+        "nl": "Bergbeek",
+        "sv": "Bergsbäck",
+        "hi": "पहाड़ी झरना",
+        "ja": "山の小川",
+        "ko": "산골짜기 개울"
+      },
       "category": "WATER",
-      "icon": "STREAM",
       "kind": "BED",
-      "tags": ["water", "stream", "forest", "flowing"],
       "license": "OWN",
-      "is_initial": true,
-      "clips": [{"url": "water_creek.ogg", "duration_ms": 30006, "size_bytes": 270992}]
+      "clips": [
+        {
+          "url": "audio/water_creek.ogg",
+          "duration_ms": 30006,
+          "size_bytes": 271272
+        }
+      ],
+      "icon": "STREAM",
+      "tags": [
+        "water",
+        "stream",
+        "forest",
+        "flowing"
+      ],
+      "is_initial": true
     },
     {
       "id": "nature_birds",
-      "names": {"en": "Forest Birds", "tr": "Orman Kuşları"},
+      "names": {
+        "en": "Forest Birds",
+        "tr": "Orman Kuşları",
+        "es": "Aves del Bosque",
+        "de": "Waldvögel",
+        "fr": "Oiseaux de la forêt",
+        "pt": "Pássaros da floresta",
+        "it": "Uccelli del bosco",
+        "nl": "Bosvogels",
+        "sv": "Skogsfåglar",
+        "hi": "जंगल के पक्षी",
+        "ja": "森の鳥",
+        "ko": "숲의 새소리"
+      },
       "category": "NATURE",
-      "icon": "BIRD",
       "kind": "EVENT",
-      "tags": ["birds", "forest", "morning", "birdsong"],
-      "default_frequency": "NORMAL",
       "license": "OWN",
-      "is_initial": true,
       "clips": [
-        {"url": "nature_birds_0.ogg", "duration_ms": 3006, "size_bytes": 19865},
-        {"url": "nature_birds_1.ogg", "duration_ms": 2906, "size_bytes": 16847},
-        {"url": "nature_birds_2.ogg", "duration_ms": 2206, "size_bytes": 13593}
-      ]
+        {
+          "url": "audio/nature_birds_0.ogg",
+          "duration_ms": 3006,
+          "size_bytes": 19648
+        },
+        {
+          "url": "audio/nature_birds_1.ogg",
+          "duration_ms": 2906,
+          "size_bytes": 16865
+        },
+        {
+          "url": "audio/nature_birds_2.ogg",
+          "duration_ms": 2206,
+          "size_bytes": 13603
+        }
+      ],
+      "icon": "BIRD",
+      "tags": [
+        "birds",
+        "forest",
+        "morning",
+        "birdsong"
+      ],
+      "default_frequency": "NORMAL",
+      "is_initial": true
     },
     {
       "id": "nature_campfire",
-      "names": {"en": "Crackling Fire", "tr": "Çıtırdayan Ateş"},
+      "names": {
+        "en": "Campfire",
+        "tr": "Kamp Ateşi",
+        "es": "Fogata",
+        "de": "Lagerfeuer",
+        "fr": "Feu de camp",
+        "pt": "Fogueira",
+        "it": "Falò",
+        "nl": "Kampvuur",
+        "sv": "Lägereld",
+        "hi": "अलाव",
+        "ja": "焚き火",
+        "ko": "모닥불"
+      },
       "category": "NATURE",
-      "icon": "FIRE",
       "kind": "EVENT",
-      "tags": ["fire", "campfire", "crackle", "camping", "night"],
-      "default_frequency": "OFTEN",
       "license": "OWN",
       "clips": [
-        {"url": "nature_campfire_0.ogg", "duration_ms": 1606, "size_bytes": 11069},
-        {"url": "nature_campfire_1.ogg", "duration_ms": 1606, "size_bytes": 11108}
-      ]
+        {
+          "url": "audio/nature_campfire_0.ogg",
+          "duration_ms": 1606,
+          "size_bytes": 11173
+        },
+        {
+          "url": "audio/nature_campfire_1.ogg",
+          "duration_ms": 1606,
+          "size_bytes": 11063
+        }
+      ],
+      "icon": "FIRE",
+      "tags": [
+        "fire",
+        "campfire",
+        "crackle",
+        "camping",
+        "night"
+      ],
+      "default_frequency": "OFTEN"
     }
   ]
 }

@@ -1,0 +1,79 @@
+{
+  "sounds": [
+    {
+      "id": "rain_light", "source": "v1:rain_light", "category": "RAIN", "kind": "BED", "license": "TODO",
+      "tags": ["rain", "light", "calm", "sleep"], "is_initial": true,
+      "bed": {"start": 5, "length": 40, "crossfade": 3}
+    },
+    {
+      "id": "water_ocean", "source": "v1:water_ocean", "category": "WATER", "icon": "WAVES", "kind": "BED", "license": "TODO",
+      "tags": ["ocean", "waves", "beach", "sea"], "is_initial": true,
+      "bed": {"start": 5, "length": 60, "crossfade": 4}
+    },
+    {
+      "id": "water_creek", "source": "v1:water_creek", "category": "WATER", "icon": "STREAM", "kind": "BED", "license": "TODO",
+      "tags": ["water", "stream", "forest", "flowing"],
+      "bed": {"start": 10, "length": 40, "crossfade": 3}
+    },
+    {
+      "id": "air_breeze", "source": "v1:air_breeze", "category": "AIR", "kind": "BED", "license": "TODO",
+      "tags": ["wind", "breeze", "calm", "outdoors"], "is_initial": true,
+      "bed": {"start": 5, "length": 45, "crossfade": 3}
+    },
+    {
+      "id": "nature_crickets", "source": "v1:nature_crickets", "category": "NATURE", "icon": "INSECT", "kind": "BED", "license": "TODO",
+      "tags": ["crickets", "night", "summer", "insects"],
+      "bed": {"start": 1, "length": 26, "crossfade": 2}
+    },
+    {
+      "id": "nature_campfire", "source": "v1:nature_campfire", "category": "NATURE", "icon": "FIRE", "kind": "BED", "license": "TODO",
+      "tags": ["fire", "campfire", "crackle", "warm", "night"],
+      "bed": {"start": 5, "length": 50, "crossfade": 3}
+    },
+    {
+      "id": "city_cafe", "source": "v1:city_cafe", "category": "CITY", "icon": "CAFE", "kind": "BED", "license": "TODO",
+      "tags": ["cafe", "coffee", "people", "chatter", "focus"],
+      "bed": {"start": 3, "length": 38, "crossfade": 3}
+    },
+    {
+      "id": "travel_train", "source": "v1:travel_train", "category": "TRAVEL", "icon": "TRAIN", "kind": "BED", "license": "TODO",
+      "tags": ["train", "journey", "rhythm", "travel"],
+      "bed": {"start": 10, "length": 50, "crossfade": 3}
+    },
+    {
+      "id": "noise_brown", "source": "v1:noise_brown", "category": "NOISE", "kind": "BED", "license": "TODO",
+      "tags": ["brown noise", "deep", "focus", "sleep"],
+      "bed": {"start": 1, "length": 30, "crossfade": 2}
+    },
+    {
+      "id": "noise_fan", "source": "v1:noise_fan", "category": "NOISE", "icon": "FAN", "kind": "BED", "license": "TODO",
+      "tags": ["fan", "hum", "white noise", "sleep"],
+      "bed": {"start": 1, "length": 32, "crossfade": 2}
+    },
+    {
+      "id": "nature_birds", "source": "v1:nature_birds", "category": "NATURE", "icon": "BIRD", "kind": "EVENT", "license": "TODO",
+      "tags": ["birds", "forest", "morning", "birdsong"], "default_frequency": "NORMAL", "is_initial": true,
+      "detect": {"count": 4, "min_length": 0.4, "max_length": 4}
+    },
+    {
+      "id": "rain_thunder", "source": "v1:rain_thunder", "category": "RAIN", "icon": "THUNDER", "kind": "EVENT", "license": "TODO",
+      "tags": ["thunder", "storm", "rumble"], "default_frequency": "RARE", "is_initial": true,
+      "detect": {"count": 3, "min_length": 1.0, "max_length": 8}
+    },
+    {
+      "id": "zen_wind_chime", "source": "v1:zen_wind_chime", "category": "ZEN", "icon": "BELL", "kind": "EVENT", "license": "TODO",
+      "tags": ["wind chime", "chimes", "porch", "calm"], "default_frequency": "NORMAL",
+      "detect": {"count": 3, "min_length": 0.5, "max_length": 5}
+    },
+    {
+      "id": "city_bells", "source": "v1:city_bells", "category": "CITY", "icon": "BELL", "kind": "EVENT", "license": "TODO",
+      "tags": ["church bells", "town", "distant"], "default_frequency": "RARE",
+      "clips": [{"start": 0, "length": 9.5}]
+    },
+    {
+      "id": "zen_tibetan_bowl", "source": "v1:zen_tibetan_bowl", "category": "ZEN", "icon": "MEDITATION", "kind": "EVENT", "license": "TODO",
+      "tags": ["singing bowl", "meditation", "ring"], "default_frequency": "RARE",
+      "detect": {"count": 3, "min_length": 1.0, "max_length": 9}
+    }
+  ]
+}

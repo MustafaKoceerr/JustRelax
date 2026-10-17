@@ -1,0 +1,25 @@
+{
+  "sounds": [
+    {
+      "id": "air_breeze", "source": "v1:air_breeze", "category": "AIR", "kind": "BED",
+      "tags": ["wind", "breeze", "calm", "outdoors"], "license": "OWN", "is_initial": true,
+      "bed": {"start": 10, "length": 30, "crossfade": 2}
+    },
+    {
+      "id": "water_creek", "source": "v1:water_creek", "category": "WATER", "icon": "STREAM", "kind": "BED",
+      "tags": ["water", "stream", "forest", "flowing"], "license": "OWN", "is_initial": true,
+      "bed": {"start": 10, "length": 30, "crossfade": 2}
+    },
+    {
+      "id": "nature_birds", "source": "v1:nature_birds", "category": "NATURE", "icon": "BIRD", "kind": "EVENT",
+      "tags": ["birds", "forest", "morning", "birdsong"], "default_frequency": "NORMAL", "license": "OWN",
+      "is_initial": true,
+      "clips": [{"start": 0.6, "length": 3.0}, {"start": 6.1, "length": 2.9}, {"start": 18.0, "length": 2.2}]
+    },
+    {
+      "id": "nature_campfire", "source": "v1:nature_campfire", "category": "NATURE", "icon": "FIRE", "kind": "EVENT",
+      "tags": ["fire", "campfire", "crackle", "camping", "night"], "default_frequency": "OFTEN", "license": "OWN",
+      "clips": [{"start": 4.0, "length": 1.6}, {"start": 56.2, "length": 1.6}]
+    }
+  ]
+}

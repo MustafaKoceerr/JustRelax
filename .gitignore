@@ -327,3 +327,8 @@ Pods/
 
 
 /composeApp/src/commonMain/kotlin/com/mustafakoceerr/justrelax/feature/ai/data/ApiKeyConstant.kt
+
+# Sound pipeline: Python cache, downloaded sources and built packs
+tools/sound-pipeline/__pycache__/
+tools/sound-pipeline/.cache/
+tools/sound-pipeline/dist/
