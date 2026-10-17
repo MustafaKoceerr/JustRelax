@@ -9,7 +9,7 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import androidx.test.core.app.ApplicationProvider
 import android.os.Looper
-import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import org.junit.runner.RunWith
 import org.koin.core.context.startKoin

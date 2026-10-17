@@ -1,10 +1,9 @@
 package com.mustafakoceerr.justrelax.feature.settings
 
-import com.mustafakoceerr.justrelax.core.domain.system.LanguageStrategy
-import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetLegalUrlUseCase
+import com.mustafakoceerr.justrelax.core.data.language.LanguageStrategy
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
-import com.mustafakoceerr.justrelax.core.testing.SoundLibraryEnvironment
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLegalRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSystemLauncher
@@ -26,13 +25,12 @@ class SettingsViewModelTest {
 
     private val preferences = FakeUserPreferencesRepository()
     private val launcher = FakeSystemLauncher()
-    private val library = SoundLibraryEnvironment(listOf(testSound("rain"), testSound("fire")))
+    private val repository = FakeSoundRepository(listOf(testSound("rain"), testSound("fire")))
 
     private fun viewModel(strategy: LanguageStrategy = LanguageStrategy.IN_APP) = SettingsViewModel(
         preferences = preferences,
-        soundRepository = library.soundRepository,
-        downloadAllSoundsUseCase = library.downloadAll,
-        getLegalUrlUseCase = GetLegalUrlUseCase(preferences, FakeLegalRepository()),
+        soundRepository = repository,
+        legalRepository = FakeLegalRepository(),
         systemLauncher = launcher,
         languageController = FakeLanguageController(strategy),
     )
@@ -53,7 +51,7 @@ class SettingsViewModelTest {
 
     @Test
     fun libraryAlreadyDownloaded_isShownAsComplete() = runMainTest {
-        library.soundRepository.sounds.value = listOf(
+        repository.sounds.value = listOf(
             testSound("rain", localPath = "/sounds/rain.mp3"),
             testSound("fire", localPath = "/sounds/fire.mp3"),
         )
@@ -79,7 +77,7 @@ class SettingsViewModelTest {
 
     @Test
     fun failedLibraryDownload_showsErrorAndAllowsRetry() = runMainTest {
-        library.downloader.onDownload = { false }
+        repository.onDownload = { false }
         val viewModel = observedViewModel()
 
         viewModel.downloadLibrary()

@@ -14,7 +14,7 @@ import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_home
 import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_mixer
 import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_saved
 import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_timer
-import com.mustafakoceerr.justrelax.core.navigation.MainTab
+import com.mustafakoceerr.justrelax.navigation.MainTab
 import com.mustafakoceerr.justrelax.feature.ai.AiRoute
 import com.mustafakoceerr.justrelax.feature.home.HomeRoute
 import com.mustafakoceerr.justrelax.feature.mixer.MixerRoute

@@ -11,10 +11,10 @@ import com.mustafakoceerr.justrelax.core.ui.util.getAsyncImageLoader
 import com.mustafakoceerr.justrelax.feature.splash.SplashRoute
 import com.mustafakoceerr.justrelax.feature.onboarding.OnboardingRoute
 import com.mustafakoceerr.justrelax.feature.settings.SettingsRoute
-import com.mustafakoceerr.justrelax.core.navigation.Route
-import com.mustafakoceerr.justrelax.core.navigation.goBack
-import com.mustafakoceerr.justrelax.core.navigation.navigate
-import com.mustafakoceerr.justrelax.core.navigation.resetTo
+import com.mustafakoceerr.justrelax.navigation.Route
+import com.mustafakoceerr.justrelax.navigation.goBack
+import com.mustafakoceerr.justrelax.navigation.navigate
+import com.mustafakoceerr.justrelax.navigation.resetTo
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith

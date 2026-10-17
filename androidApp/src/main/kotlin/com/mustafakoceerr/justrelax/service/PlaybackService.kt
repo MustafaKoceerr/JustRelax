@@ -24,7 +24,7 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.mustafakoceerr.justrelax.MainActivity
 import com.mustafakoceerr.justrelax.R
-import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

@@ -2,7 +2,7 @@ package com.mustafakoceerr.justrelax.feature.onboarding
 
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.testing.SoundLibraryEnvironment
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeAppSetupRepository
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
@@ -16,17 +16,14 @@ import kotlin.test.assertTrue
 
 class OnboardingViewModelTest {
 
-    private val library = SoundLibraryEnvironment(
+    private val repository = FakeSoundRepository(
         listOf(testSound("rain", isInitial = true), testSound("fire", isInitial = true), testSound("city"))
     )
     private val appSetup = FakeAppSetupRepository(installed = false)
 
     private fun viewModel() = OnboardingViewModel(
-        soundRepository = library.soundRepository,
+        soundRepository = repository,
         appSetupRepository = appSetup,
-        syncSoundsUseCase = library.syncSounds,
-        downloadInitialSoundsUseCase = library.downloadInitial,
-        downloadAllSoundsUseCase = library.downloadAll,
     )
 
     @Test
@@ -42,14 +39,14 @@ class OnboardingViewModelTest {
 
     @Test
     fun noSoundsAndNoInternet_showsNoInternet_andRetryRecovers() = runMainTest {
-        library.soundRepository.sounds.value = emptyList()
-        library.syncRepository.result = Resource.Error(AppError.Network.NoInternet())
+        repository.sounds.value = emptyList()
+        repository.syncResult = Resource.Error(AppError.Network.NoInternet())
         val viewModel = viewModel()
         advanceUntilIdle()
         assertEquals(OnboardingStatus.NO_INTERNET, viewModel.uiState.value.status)
 
-        library.syncRepository.result = Resource.Success(Unit)
-        library.soundRepository.sounds.value = listOf(testSound("rain", isInitial = true))
+        repository.syncResult = Resource.Success(Unit)
+        repository.sounds.value = listOf(testSound("rain", isInitial = true))
         viewModel.retryLoadingConfig()
         advanceUntilIdle()
 
@@ -70,7 +67,7 @@ class OnboardingViewModelTest {
 
     @Test
     fun failedDownload_showsMessage_andLetsUserRetry() = runMainTest {
-        library.downloader.onDownload = { url -> !url.contains("fire") }
+        repository.onDownload = { sound -> sound.id != "fire" }
         val viewModel = viewModel()
         advanceUntilIdle()
 
@@ -94,7 +91,7 @@ class OnboardingViewModelTest {
         viewModel.downloadFullLibrary()
         advanceUntilIdle()
 
-        assertEquals(3, library.downloader.requestedUrls.size)
+        assertEquals(3, repository.downloadRequests.size)
         assertEquals(OnboardingStatus.COMPLETED, viewModel.uiState.value.status)
     }
 }

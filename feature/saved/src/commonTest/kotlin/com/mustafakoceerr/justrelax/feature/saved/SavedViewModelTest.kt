@@ -1,14 +1,13 @@
 package com.mustafakoceerr.justrelax.feature.saved
 
-import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMix
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.model.SavedMix
+import com.mustafakoceerr.justrelax.core.audio.usecase.SetMixUseCase
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
-import com.mustafakoceerr.justrelax.feature.saved.usecase.PlaySavedMixUseCase
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -29,7 +28,7 @@ class SavedViewModelTest {
 
     private fun TestScope.viewModel() = SavedViewModel(
         savedMixRepository = repository,
-        playSavedMixUseCase = PlaySavedMixUseCase(SetMixUseCase(mixer), FakeLanguageController()),
+        setMixUseCase = SetMixUseCase(mixer),
     ).also { observe(it.uiState) }
 
     @Test

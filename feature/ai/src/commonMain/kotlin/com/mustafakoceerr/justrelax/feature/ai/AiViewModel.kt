@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.controller.SoundController
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.audio.controller.SoundController
+import com.mustafakoceerr.justrelax.core.audio.usecase.SetMixUseCase
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.ai.domain.model.AiGeneratedMix
-import com.mustafakoceerr.justrelax.feature.ai.domain.usecase.GenerateAiMixUseCase
+import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
+import com.mustafakoceerr.justrelax.core.model.AiGeneratedMix
 import justrelax.feature.ai.generated.resources.Res
 import justrelax.feature.ai.generated.resources.err_ai_empty_response
 import justrelax.feature.ai.generated.resources.err_ai_no_sounds
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AiViewModel(
-    private val generateAiMixUseCase: GenerateAiMixUseCase,
+    private val aiMixRepository: AiMixRepository,
     private val setMixUseCase: SetMixUseCase,
     private val soundController: SoundController,
 ) : ViewModel() {
@@ -59,7 +59,7 @@ class AiViewModel(
         if (prompt.isBlank()) return
 
         viewModelScope.launch {
-            generateAiMixUseCase(prompt).collect { result ->
+            aiMixRepository.generateMix(prompt).collect { result ->
                 when (result) {
                     is Resource.Loading -> screenState.update { it.copy(isLoading = true) }
                     is Resource.Success -> {

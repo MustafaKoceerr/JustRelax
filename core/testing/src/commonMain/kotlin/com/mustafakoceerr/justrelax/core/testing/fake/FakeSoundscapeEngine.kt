@@ -1,8 +1,8 @@
 package com.mustafakoceerr.justrelax.core.testing.fake
 
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
-import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeState
+import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeState
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import com.mustafakoceerr.justrelax.core.model.soundscape.Scene

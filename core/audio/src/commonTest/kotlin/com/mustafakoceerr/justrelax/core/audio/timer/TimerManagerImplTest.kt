@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.core.audio.timer
 
-import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
+import com.mustafakoceerr.justrelax.core.audio.timer.TimerStatus
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy

@@ -1,10 +1,10 @@
 package com.mustafakoceerr.justrelax.core.audio.controller
 
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
-import com.mustafakoceerr.justrelax.core.domain.controller.SoundController
-import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
-import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeState
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
+import com.mustafakoceerr.justrelax.core.audio.controller.SoundController
+import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeState
+import com.mustafakoceerr.justrelax.core.audio.usecase.PlaySoundUseCase
 import kotlinx.coroutines.flow.StateFlow
 
 /**

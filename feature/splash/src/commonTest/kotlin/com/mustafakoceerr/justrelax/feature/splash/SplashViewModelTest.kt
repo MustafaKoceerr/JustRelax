@@ -2,8 +2,8 @@ package com.mustafakoceerr.justrelax.feature.splash
 
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.testing.SoundLibraryEnvironment
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeAppSetupRepository
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -11,11 +11,11 @@ import kotlin.test.assertEquals
 
 class SplashViewModelTest {
 
-    private val library = SoundLibraryEnvironment()
+    private val repository = FakeSoundRepository()
 
     private fun viewModel(installed: Boolean) = SplashViewModel(
         appSetupRepository = FakeAppSetupRepository(installed),
-        syncSoundsIfNecessaryUseCase = library.syncSoundsIfNecessary,
+        soundRepository = repository,
     )
 
     @Test
@@ -43,7 +43,7 @@ class SplashViewModelTest {
 
     @Test
     fun failedSync_doesNotBlockStartup() = runMainTest {
-        library.syncRepository.result = Resource.Error(AppError.Network.NoInternet())
+        repository.syncResult = Resource.Error(AppError.Network.NoInternet())
         val viewModel = viewModel(installed = true)
         advanceUntilIdle()
 

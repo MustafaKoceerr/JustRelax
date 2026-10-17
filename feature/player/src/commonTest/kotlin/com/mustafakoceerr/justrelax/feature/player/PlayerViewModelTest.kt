@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.player
 
-import com.mustafakoceerr.justrelax.core.domain.usecase.savedmix.SaveCurrentMixUseCase
+import com.mustafakoceerr.justrelax.feature.player.usecase.SaveCurrentMixUseCase
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository

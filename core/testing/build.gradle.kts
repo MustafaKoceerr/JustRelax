@@ -6,7 +6,9 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(project(":core:domain"))
+            api(project(":core:data"))
+            api(project(":core:audio"))
+            api(project(":core:ui"))
             api(libs.kotlinx.coroutines.test)
         }
     }

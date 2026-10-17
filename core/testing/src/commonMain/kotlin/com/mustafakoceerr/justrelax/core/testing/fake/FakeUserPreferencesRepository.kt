@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.core.testing.fake
 
-import com.mustafakoceerr.justrelax.core.domain.repository.settings.UserPreferencesRepository
+import com.mustafakoceerr.justrelax.core.data.repository.UserPreferencesRepository
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import kotlinx.coroutines.flow.Flow

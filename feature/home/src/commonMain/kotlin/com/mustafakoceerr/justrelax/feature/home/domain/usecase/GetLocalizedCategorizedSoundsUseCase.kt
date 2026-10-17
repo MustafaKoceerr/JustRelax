@@ -2,8 +2,8 @@ package com.mustafakoceerr.justrelax.feature.home.domain.usecase
 
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.common.asResource
-import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
-import com.mustafakoceerr.justrelax.core.domain.system.LanguageController
+import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.data.language.LanguageController
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.model.localized

@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.core.testing.fake
 
-import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMix
-import com.mustafakoceerr.justrelax.core.domain.repository.savedmix.SavedMixRepository
+import com.mustafakoceerr.justrelax.core.model.SavedMix
+import com.mustafakoceerr.justrelax.core.data.repository.SavedMixRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update

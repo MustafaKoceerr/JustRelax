@@ -5,7 +5,7 @@ import com.mustafakoceerr.justrelax.core.audio.player.SoundPlayerFactory
 import com.mustafakoceerr.justrelax.core.audio.soundscape.DefaultSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.audio.soundscape.OneShotPlayer
 import com.mustafakoceerr.justrelax.core.audio.soundscape.PendingEventPlayer
-import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

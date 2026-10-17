@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.core.network.source
 
 import com.mustafakoceerr.justrelax.core.common.AppError
-import com.mustafakoceerr.justrelax.core.domain.source.SoundRemoteDataSource
+import com.mustafakoceerr.justrelax.core.network.source.SoundRemoteDataSource
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkSound
 import com.mustafakoceerr.justrelax.core.network.mapper.NetworkSoundToDomainMapper

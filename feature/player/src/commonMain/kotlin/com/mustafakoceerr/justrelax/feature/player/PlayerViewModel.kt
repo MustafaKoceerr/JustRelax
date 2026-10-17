@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.player.SoundscapeEngine
-import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
-import com.mustafakoceerr.justrelax.core.domain.usecase.savedmix.SaveCurrentMixUseCase
+import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeEngine
+import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
+import com.mustafakoceerr.justrelax.feature.player.usecase.SaveCurrentMixUseCase
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import justrelax.feature.player.generated.resources.Res
 import justrelax.feature.player.generated.resources.err_mix_save_empty_name
