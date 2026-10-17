@@ -2,18 +2,9 @@
 <resources>
     <string name="download_failed">Falha no download</string>
     <string name="home_screen_title">Just Relax</string>
-    <string name="category_air">Vento &amp; atmosfera</string>
-    <string name="category_asmr">ASMR &amp; gatilhos</string>
-    <string name="category_city">Cidade &amp; interior</string>
-    <string name="category_music">Música &amp; melodias</string>
-    <string name="category_nature">Natureza &amp; floresta</string>
-    <string name="category_noise">Ruído branco &amp; mecânico</string>
-    <string name="category_rain">Chuva &amp; tempestade</string>
-    <string name="category_travel">Viagem &amp; transporte</string>
-    <string name="category_water">Água &amp; oceano</string>
-    <string name="category_zen">Zen &amp; meditação</string>
     <string name="action_settings">CONFIGURAÇÕES</string>
     <string name="library_empty_title">Ainda não há sons</string>
     <string name="library_empty_message">Conecte-se à internet para baixar a biblioteca de sons.</string>
     <string name="action_retry">Tentar novamente</string>
+    <string name="action_my_sounds">Meus sons</string>
 </resources>

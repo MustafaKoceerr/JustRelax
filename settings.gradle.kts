@@ -44,6 +44,7 @@ include(":core:network")
 include(":core:testing")
 
 include(":core:data")
+include(":core:media")
 
 include(":feature:settings")
 include(":feature:scene")
@@ -54,3 +55,4 @@ include(":feature:ai")
 include(":feature:saved")
 include(":feature:mixer")
 include(":feature:timer")
+include(":feature:mysounds")

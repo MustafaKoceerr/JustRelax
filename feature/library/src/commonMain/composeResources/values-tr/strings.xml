@@ -2,18 +2,9 @@
 <resources>
     <string name="download_failed">İndirme başarısız</string>
     <string name="home_screen_title">Just Relax</string>
-    <string name="category_air">Rüzgar &amp; Atmosfer</string>
-    <string name="category_asmr">ASMR &amp; Tetikleyiciler</string>
-    <string name="category_city">Şehir &amp; İç Mekan</string>
-    <string name="category_music">Müzik &amp; Melodiler</string>
-    <string name="category_nature">Doğa &amp; Orman</string>
-    <string name="category_noise">Beyaz Gürültü &amp; Mekanik</string>
-    <string name="category_rain">Yağmur &amp; Fırtına</string>
-    <string name="category_travel">Seyahat &amp; Ulaşım</string>
-    <string name="category_water">Su &amp; Okyanus</string>
-    <string name="category_zen">Zen &amp; Meditasyon</string>
     <string name="action_settings">AYARLAR</string>
     <string name="library_empty_title">Henüz ses yok</string>
     <string name="library_empty_message">Ses kütüphanesini indirmek için internete bağlan.</string>
     <string name="action_retry">Tekrar dene</string>
+    <string name="action_my_sounds">Seslerim</string>
 </resources>

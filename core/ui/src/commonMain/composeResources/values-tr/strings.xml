@@ -14,4 +14,14 @@
     <string name="frequency_often">Sık</string>
     <string name="sound_kind_event">Ara ara çalar</string>
     <string name="action_remove">Çıkar</string>
+    <string name="category_air">Rüzgar &amp; Atmosfer</string>
+    <string name="category_asmr">ASMR &amp; Tetikleyiciler</string>
+    <string name="category_city">Şehir &amp; İç Mekan</string>
+    <string name="category_music">Müzik &amp; Melodiler</string>
+    <string name="category_nature">Doğa &amp; Orman</string>
+    <string name="category_noise">Beyaz Gürültü &amp; Mekanik</string>
+    <string name="category_rain">Yağmur &amp; Fırtına</string>
+    <string name="category_travel">Seyahat &amp; Ulaşım</string>
+    <string name="category_water">Su &amp; Okyanus</string>
+    <string name="category_zen">Zen &amp; Meditasyon</string>
 </resources>

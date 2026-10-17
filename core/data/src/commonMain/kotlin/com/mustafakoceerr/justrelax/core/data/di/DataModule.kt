@@ -14,6 +14,8 @@ import com.mustafakoceerr.justrelax.core.data.repository.SavedSceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.data.repository.StarterPackInstaller
+import com.mustafakoceerr.justrelax.core.data.repository.DatabaseUserSoundRepository
+import com.mustafakoceerr.justrelax.core.data.repository.UserSoundRepository
 import com.mustafakoceerr.justrelax.core.common.dispatcher.DispatcherProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -29,7 +31,10 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import kotlin.time.Clock
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 val dataModule = module {
     includes(platformDataModule)
 
@@ -48,5 +53,8 @@ val dataModule = module {
     singleOf(::LegalRepositoryImpl) { bind<LegalRepository>() }
     singleOf(::AiMixRepositoryImpl) { bind<AiMixRepository>() }
     singleOf(::InMemorySceneRepository) { bind<SceneRepository>() }
+    single<UserSoundRepository> {
+        DatabaseUserSoundRepository(get(), get(), get(), get(), get(), newId = { "user-${Uuid.random()}" })
+    }
     single { StarterPackInstaller(get(), get(), CoroutineScope(SupervisorJob() + get<DispatcherProvider>().io)) }
 }

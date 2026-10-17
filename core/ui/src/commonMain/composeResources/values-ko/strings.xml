@@ -14,4 +14,14 @@
     <string name="frequency_often">자주</string>
     <string name="sound_kind_event">가끔씩 재생돼요</string>
     <string name="action_remove">제거</string>
+    <string name="category_air">바람 &amp; 분위기</string>
+    <string name="category_asmr">ASMR &amp; 트리거</string>
+    <string name="category_city">도시 &amp; 실내</string>
+    <string name="category_music">음악 &amp; 멜로디</string>
+    <string name="category_nature">자연 &amp; 숲</string>
+    <string name="category_noise">화이트 노이즈 &amp; 기계음</string>
+    <string name="category_rain">비 &amp; 폭풍</string>
+    <string name="category_travel">여행 &amp; 교통</string>
+    <string name="category_water">물 &amp; 바다</string>
+    <string name="category_zen">젠 &amp; 명상</string>
 </resources>

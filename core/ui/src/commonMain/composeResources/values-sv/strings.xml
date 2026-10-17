@@ -14,4 +14,14 @@
     <string name="frequency_often">Ofta</string>
     <string name="sound_kind_event">Hörs då och då</string>
     <string name="action_remove">Ta bort</string>
+    <string name="category_air">Vind &amp; atmosfär</string>
+    <string name="category_asmr">ASMR &amp; triggers</string>
+    <string name="category_city">Stad &amp; inomhus</string>
+    <string name="category_music">Musik &amp; melodier</string>
+    <string name="category_nature">Natur &amp; skog</string>
+    <string name="category_noise">Vitt brus &amp; mekaniskt</string>
+    <string name="category_rain">Regn &amp; storm</string>
+    <string name="category_travel">Resor &amp; transport</string>
+    <string name="category_water">Vatten &amp; hav</string>
+    <string name="category_zen">Zen &amp; meditation</string>
 </resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mysounds_title">Seslerim</string>
+    <string name="mysounds_empty_title">Henüz kendi sesin yok</string>
+    <string name="mysounds_empty_description">Bir ses dosyası içe aktar, beğendiğin kısmı seç; kütüphanene eklensin.</string>
+    <string name="mysounds_import">Dosya içe aktar</string>
+    <string name="mysounds_import_failed">Bu dosya açılamadı.</string>
+    <string name="mysounds_delete">Sil</string>
+    <string name="mysounds_delete_title">Bu ses silinsin mi?</string>
+    <string name="mysounds_delete_text">%1$s kütüphanenden ve kayıtlı karışımlarından kaldırılacak.</string>
+    <string name="mysounds_cancel">Vazgeç</string>
+    <string name="mysounds_back">Geri</string>
+    <string name="mysounds_kind_bed">Döngü</string>
+    <string name="mysounds_kind_event">Tek seferlik</string>
+    <string name="mysounds_kind_bed_hint">Arka planda sürekli çalar, yağmur gibi.</string>
+    <string name="mysounds_kind_event_hint">Ara ara çalar, bir kuş sesi gibi. En fazla 10 saniye.</string>
+    <string name="mysounds_kind_bed_unavailable">Döngü için dosya en az 5 saniye olmalı.</string>
+    <string name="mysounds_editor_title">Yeni ses</string>
+    <string name="mysounds_drag_hint">Saklamak istediğin kısmı seçmek için tutamaçları sürükle.</string>
+    <string name="mysounds_selection">%1$s – %2$s · %3$s</string>
+    <string name="mysounds_listen">Dinle</string>
+    <string name="mysounds_stop">Durdur</string>
+    <string name="mysounds_name">Ad</string>
+    <string name="mysounds_category">Kategori</string>
+    <string name="mysounds_icon">Simge</string>
+    <string name="mysounds_save">Kütüphaneye kaydet</string>
+    <string name="mysounds_save_failed">Ses kaydedilemedi. Tekrar dene.</string>
+    <string name="mysounds_load_failed">Bu dosya çalınamıyor. Başka bir dosya dene.</string>
+    <string name="mysounds_problem_too_short">En az 0,3 saniye seç.</string>
+    <string name="mysounds_problem_too_short_for_bed">Döngü en az 5 saniye olmalı.</string>
+    <string name="mysounds_problem_too_long_for_event">Tek seferlik ses en fazla 10 saniye olabilir.</string>
+    <string name="mysounds_problem_outside_file">Seçim dosyanın dışında.</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mysounds_title">मेरी ध्वनियाँ</string>
+    <string name="mysounds_empty_title">अभी तक आपकी अपनी कोई ध्वनि नहीं</string>
+    <string name="mysounds_empty_description">कोई ऑडियो फ़ाइल इम्पोर्ट करें, पसंद का हिस्सा रखें और वह आपकी लाइब्रेरी में जुड़ जाएगा।</string>
+    <string name="mysounds_import">फ़ाइल इम्पोर्ट करें</string>
+    <string name="mysounds_import_failed">यह फ़ाइल खोली नहीं जा सकी।</string>
+    <string name="mysounds_delete">हटाएँ</string>
+    <string name="mysounds_delete_title">यह ध्वनि हटाएँ?</string>
+    <string name="mysounds_delete_text">%1$s आपकी लाइब्रेरी और सहेजे गए मिक्स से हटा दी जाएगी।</string>
+    <string name="mysounds_cancel">रद्द करें</string>
+    <string name="mysounds_back">वापस</string>
+    <string name="mysounds_kind_bed">लूप</string>
+    <string name="mysounds_kind_event">एक बार</string>
+    <string name="mysounds_kind_bed_hint">पृष्ठभूमि में लगातार बजती है, बारिश की तरह।</string>
+    <string name="mysounds_kind_event_hint">बीच-बीच में बजती है, किसी पक्षी की आवाज़ की तरह। अधिकतम 10 सेकंड।</string>
+    <string name="mysounds_kind_bed_unavailable">लूप के लिए फ़ाइल कम से कम 5 सेकंड की होनी चाहिए।</string>
+    <string name="mysounds_editor_title">नई ध्वनि</string>
+    <string name="mysounds_drag_hint">रखने वाला हिस्सा चुनने के लिए हैंडल खींचें।</string>
+    <string name="mysounds_selection">%1$s – %2$s · %3$s</string>
+    <string name="mysounds_listen">सुनें</string>
+    <string name="mysounds_stop">रोकें</string>
+    <string name="mysounds_name">नाम</string>
+    <string name="mysounds_category">श्रेणी</string>
+    <string name="mysounds_icon">आइकन</string>
+    <string name="mysounds_save">लाइब्रेरी में सहेजें</string>
+    <string name="mysounds_save_failed">ध्वनि सहेजी नहीं जा सकी। फिर से कोशिश करें।</string>
+    <string name="mysounds_load_failed">यह फ़ाइल चलाई नहीं जा सकती। कोई दूसरी फ़ाइल आज़माएँ।</string>
+    <string name="mysounds_problem_too_short">कम से कम 0.3 सेकंड रखें।</string>
+    <string name="mysounds_problem_too_short_for_bed">लूप कम से कम 5 सेकंड का होना चाहिए।</string>
+    <string name="mysounds_problem_too_long_for_event">एक बार वाली ध्वनि अधिकतम 10 सेकंड की हो सकती है।</string>
+    <string name="mysounds_problem_outside_file">चयन फ़ाइल से बाहर है।</string>
+</resources>

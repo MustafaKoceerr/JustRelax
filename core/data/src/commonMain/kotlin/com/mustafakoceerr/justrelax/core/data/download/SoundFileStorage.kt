@@ -15,6 +15,9 @@ internal interface SoundFileStorage {
 
     /** Where downloaded catalog clips are kept; created on first use. */
     suspend fun getCatalogDirectoryPath(): String
+
+    /** Where the user's own sounds are kept; created on first use. */
+    suspend fun getUserDirectoryPath(): String
     suspend fun moveFile(sourcePath: String, destinationPath: String)
 }
 
@@ -29,6 +32,7 @@ internal class FileSystemSoundFileStorage(
 ) : SoundFileStorage {
 
     private val catalogDirectory = appFilesDirectory / AUDIO_DIRECTORY / CATALOG_DIRECTORY
+    private val userDirectory = appFilesDirectory / AUDIO_DIRECTORY / USER_DIRECTORY
     private val setupLock = Mutex()
     private var isSetUp = false
 
@@ -51,6 +55,11 @@ internal class FileSystemSoundFileStorage(
         catalogDirectory.toString()
     }
 
+    override suspend fun getUserDirectoryPath(): String = withContext(dispatchers.io) {
+        fileSystem.createDirectories(userDirectory)
+        userDirectory.toString()
+    }
+
     override suspend fun moveFile(sourcePath: String, destinationPath: String) = withContext(dispatchers.io) {
         fileSystem.atomicMove(sourcePath.toPath(), destinationPath.toPath())
     }
@@ -58,6 +67,7 @@ internal class FileSystemSoundFileStorage(
     private companion object {
         const val AUDIO_DIRECTORY = "audio"
         const val CATALOG_DIRECTORY = "catalog"
+        const val USER_DIRECTORY = "user"
         const val LEGACY_SOUNDS_DIRECTORY = "sounds"
     }
 }

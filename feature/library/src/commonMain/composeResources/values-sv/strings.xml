@@ -2,18 +2,9 @@
 <resources>
     <string name="download_failed">Nedladdning misslyckades</string>
     <string name="home_screen_title">Just Relax</string>
-    <string name="category_air">Vind &amp; atmosfär</string>
-    <string name="category_asmr">ASMR &amp; triggers</string>
-    <string name="category_city">Stad &amp; inomhus</string>
-    <string name="category_music">Musik &amp; melodier</string>
-    <string name="category_nature">Natur &amp; skog</string>
-    <string name="category_noise">Vitt brus &amp; mekaniskt</string>
-    <string name="category_rain">Regn &amp; storm</string>
-    <string name="category_travel">Resor &amp; transport</string>
-    <string name="category_water">Vatten &amp; hav</string>
-    <string name="category_zen">Zen &amp; meditation</string>
     <string name="action_settings">INSTÄLLNINGAR</string>
     <string name="library_empty_title">Inga ljud än</string>
     <string name="library_empty_message">Anslut till internet för att ladda ner ljudbiblioteket.</string>
     <string name="action_retry">Försök igen</string>
+    <string name="action_my_sounds">Mina ljud</string>
 </resources>

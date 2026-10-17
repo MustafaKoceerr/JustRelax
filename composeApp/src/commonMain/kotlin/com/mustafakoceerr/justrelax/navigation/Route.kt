@@ -22,6 +22,13 @@ sealed interface Route : NavKey {
     @Serializable
     data object Credits : Route
 
+    @Serializable
+    data object MySounds : Route
+
+    /** Cuts a new sound out of a file that was copied into the cache. */
+    @Serializable
+    data class SoundEditor(val sourcePath: String, val suggestedName: String?) : Route
+
     companion object {
         /** Needed to save/restore the back stack on non-JVM targets (iOS), where reflection is unavailable. */
         val serializersModule = SerializersModule {
@@ -30,6 +37,8 @@ sealed interface Route : NavKey {
                 subclass(Main::class)
                 subclass(Settings::class)
                 subclass(Credits::class)
+                subclass(MySounds::class)
+                subclass(SoundEditor::class)
             }
         }
     }

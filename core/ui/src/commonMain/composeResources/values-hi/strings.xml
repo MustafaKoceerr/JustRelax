@@ -14,4 +14,14 @@
     <string name="frequency_often">अक्सर</string>
     <string name="sound_kind_event">बीच-बीच में बजता है</string>
     <string name="action_remove">हटाएँ</string>
+    <string name="category_air">हवा &amp; वातावरण</string>
+    <string name="category_asmr">ASMR &amp; ट्रिगर्स</string>
+    <string name="category_city">शहर &amp; इनडोर</string>
+    <string name="category_music">संगीत &amp; धुनें</string>
+    <string name="category_nature">प्रकृति &amp; जंगल</string>
+    <string name="category_noise">व्हाइट नॉइज़ &amp; मैकेनिकल</string>
+    <string name="category_rain">बारिश &amp; तूफ़ान</string>
+    <string name="category_travel">यात्रा &amp; परिवहन</string>
+    <string name="category_water">पानी &amp; समुद्र</string>
+    <string name="category_zen">ज़ेन &amp; ध्यान</string>
 </resources>

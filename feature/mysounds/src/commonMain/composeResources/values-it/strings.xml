@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mysounds_title">I miei suoni</string>
+    <string name="mysounds_empty_title">Ancora nessun suono tuo</string>
+    <string name="mysounds_empty_description">Importa un file audio, tieni la parte che ti piace ed entrerà nella tua libreria.</string>
+    <string name="mysounds_import">Importa file</string>
+    <string name="mysounds_import_failed">Impossibile aprire questo file.</string>
+    <string name="mysounds_delete">Elimina</string>
+    <string name="mysounds_delete_title">Eliminare questo suono?</string>
+    <string name="mysounds_delete_text">%1$s verrà rimosso dalla tua libreria e dai mix salvati.</string>
+    <string name="mysounds_cancel">Annulla</string>
+    <string name="mysounds_back">Indietro</string>
+    <string name="mysounds_kind_bed">Loop</string>
+    <string name="mysounds_kind_event">Singolo</string>
+    <string name="mysounds_kind_bed_hint">Suona di continuo in sottofondo, come la pioggia.</string>
+    <string name="mysounds_kind_event_hint">Suona ogni tanto, come il canto di un uccello. Fino a 10 secondi.</string>
+    <string name="mysounds_kind_bed_unavailable">Un loop richiede un file di almeno 5 secondi.</string>
+    <string name="mysounds_editor_title">Nuovo suono</string>
+    <string name="mysounds_drag_hint">Trascina le maniglie per scegliere la parte da tenere.</string>
+    <string name="mysounds_selection">%1$s – %2$s · %3$s</string>
+    <string name="mysounds_listen">Ascolta</string>
+    <string name="mysounds_stop">Ferma</string>
+    <string name="mysounds_name">Nome</string>
+    <string name="mysounds_category">Categoria</string>
+    <string name="mysounds_icon">Icona</string>
+    <string name="mysounds_save">Salva nella libreria</string>
+    <string name="mysounds_save_failed">Impossibile salvare il suono. Riprova.</string>
+    <string name="mysounds_load_failed">Questo file non può essere riprodotto. Provane un altro.</string>
+    <string name="mysounds_problem_too_short">Tieni almeno 0,3 secondi.</string>
+    <string name="mysounds_problem_too_short_for_bed">Un loop richiede almeno 5 secondi.</string>
+    <string name="mysounds_problem_too_long_for_event">Un suono singolo può durare al massimo 10 secondi.</string>
+    <string name="mysounds_problem_outside_file">La selezione è fuori dal file.</string>
+</resources>

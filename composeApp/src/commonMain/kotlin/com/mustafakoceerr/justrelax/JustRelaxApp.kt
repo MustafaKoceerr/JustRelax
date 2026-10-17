@@ -9,6 +9,8 @@ import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.feature.splash.SplashRoute
 import com.mustafakoceerr.justrelax.feature.settings.SettingsRoute
 import com.mustafakoceerr.justrelax.feature.settings.credits.CreditsRoute
+import com.mustafakoceerr.justrelax.feature.mysounds.MySoundsRoute
+import com.mustafakoceerr.justrelax.feature.mysounds.editor.SoundEditorRoute
 import com.mustafakoceerr.justrelax.navigation.Route
 import com.mustafakoceerr.justrelax.navigation.goBack
 import com.mustafakoceerr.justrelax.navigation.navigate
@@ -67,7 +69,10 @@ private fun JustRelaxNavDisplay() {
                 SplashRoute(onNavigateToMain = { backStack.resetTo(Route.Main) })
             }
             entry<Route.Main> {
-                MainRoute(onOpenSettings = { backStack.navigate(Route.Settings) })
+                MainRoute(
+                    onOpenSettings = { backStack.navigate(Route.Settings) },
+                    onOpenMySounds = { backStack.navigate(Route.MySounds) },
+                )
             }
             entry<Route.Settings> {
                 SettingsRoute(
@@ -77,6 +82,15 @@ private fun JustRelaxNavDisplay() {
             }
             entry<Route.Credits> {
                 CreditsRoute(onBack = { backStack.goBack() })
+            }
+            entry<Route.MySounds> {
+                MySoundsRoute(
+                    onBack = { backStack.goBack() },
+                    onOpenEditor = { backStack.navigate(Route.SoundEditor(it.path, it.displayName)) },
+                )
+            }
+            entry<Route.SoundEditor> { route ->
+                SoundEditorRoute(route.sourcePath, route.suggestedName, onBack = { backStack.goBack() })
             }
         },
     )
