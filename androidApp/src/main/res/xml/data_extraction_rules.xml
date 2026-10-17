@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android 12+: only the user's settings (theme, language) go to the Google account backup and to
+    a new phone. Sounds, saved mixes and the app's state stay out: catalog sounds download again,
+    and a restored download state would skip the downloads a new phone needs.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <include domain="file" path="justrelax_settings.preferences_pb" />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="file" path="justrelax_settings.preferences_pb" />
+    </device-transfer>
+</data-extraction-rules>

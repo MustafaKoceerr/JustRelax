@@ -3,6 +3,7 @@ package com.mustafakoceerr.justrelax.core.data.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.mustafakoceerr.justrelax.core.data.DataConstants
+import com.mustafakoceerr.justrelax.core.data.SettingsOnlyMigration
 import com.mustafakoceerr.justrelax.core.data.download.FileDownloader
 import com.mustafakoceerr.justrelax.core.data.download.FileSystemSoundFileStorage
 import com.mustafakoceerr.justrelax.core.data.download.KtorFileDownloader
@@ -15,6 +16,7 @@ import okio.Path.Companion.toPath
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
@@ -23,8 +25,14 @@ import platform.Foundation.NSUserDomainMask
 
 @OptIn(ExperimentalForeignApi::class)
 internal actual val platformDataModule: Module = module {
-    single<DataStore<Preferences>> {
-        createDataStore(producePath = { documentDirectoryPath() + "/${DataConstants.SETTINGS_DATASTORE_NAME}" })
+    single<DataStore<Preferences>>(named(DataConstants.SETTINGS)) {
+        createDataStore(
+            producePath = { documentDirectoryPath() + "/${DataConstants.SETTINGS_DATASTORE_NAME}" },
+            migrations = listOf(SettingsOnlyMigration),
+        )
+    }
+    single<DataStore<Preferences>>(named(DataConstants.STATE)) {
+        createDataStore(producePath = { documentDirectoryPath() + "/${DataConstants.STATE_DATASTORE_NAME}" })
     }
 
     single<SoundFileStorage> { FileSystemSoundFileStorage(get(), documentDirectoryPath().toPath(), get()) }
