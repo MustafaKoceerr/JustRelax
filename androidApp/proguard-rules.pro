@@ -61,9 +61,3 @@
 # ----------------------------------------------------------------------------------
 # Voyager ekranları (Screen) reflection ile state saklıyorsa class isimleri lazım olabilir.
 -keepnames class * implements cafe.adriel.voyager.core.screen.Screen
-
-# ----------------------------------------------------------------------------------
-# 8. OPENAI (Optimize Edildi)
-# ----------------------------------------------------------------------------------
-# Sadece modelleri korumak yeterli (Serialization kuralları bunu zaten kapsar ama garanti olsun)
--dontwarn com.aallam.openai.**

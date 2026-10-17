@@ -1,23 +1,12 @@
-import java.util.Properties
-
 plugins {
     id("justrelax.kmp.library")
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.buildConfig)
 }
 
-// The OpenAI and Freesound keys come from local.properties and is built into the app for now; it moves to a
-// server before the next release.
-val localProperties = Properties().apply {
-    val file = rootProject.file("local.properties")
-    if (file.exists()) file.inputStream().use { load(it) }
-}
-
 buildConfig {
     packageName("com.mustafakoceerr.justrelax.core.network")
     buildConfigField("String", "CDN_BASE_URL", "\"https://cdn.mustafakoceerr.com/\"")
-    buildConfigField("String", "OPENAI_API_KEY", "\"${localProperties.getProperty("OPENAI_API_KEY")}\"")
-    buildConfigField("String", "FREESOUND_API_KEY", "\"${localProperties.getProperty("FREESOUND_API_KEY").orEmpty()}\"")
 }
 
 kotlin {
@@ -30,13 +19,15 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
-            implementation(project.dependencies.platform(libs.openai.bom))
-            implementation(libs.openai.client)
             implementation(libs.koin.core)
+            implementation(libs.okio)
         }
 
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.play.integrity)
+            implementation(libs.kotlinx.coroutines.play.services)
+            implementation(libs.koin.android)
         }
 
         iosMainDependencies {

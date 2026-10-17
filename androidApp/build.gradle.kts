@@ -1,7 +1,15 @@
 // Android entry point: Application, Activity, playback service and app resources.
 // Shared UI and logic come from :composeApp.
+import java.util.Properties
+
 plugins {
     id("justrelax.android.application")
+}
+
+// Not secret, but specific to the Play Console account: the Google Cloud project linked for Play Integrity.
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
 }
 
 android {
@@ -11,10 +19,16 @@ android {
         applicationId = "com.mustafakoceerr.justrelax"
         versionCode = 5
         versionName = "1.2.0"
+        buildConfigField(
+            "long",
+            "PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER",
+            "${localProperties.getProperty("PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER") ?: "0"}L",
+        )
     }
 
     buildTypes {
         getByName("release") {
+            buildConfigField("String", "API_BASE_URL", "\"https://api.mustafakoceerr.com/\"")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -24,6 +38,8 @@ android {
         }
 
         getByName("debug") {
+            // The local API proxy (npm run dev in server/api-proxy), reached with `adb reverse tcp:8787 tcp:8787`.
+            buildConfigField("String", "API_BASE_URL", "\"http://localhost:8787/\"")
             isMinifyEnabled = false
             isShrinkResources = false
         }

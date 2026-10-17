@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.di
 
 import android.content.Context
+import com.mustafakoceerr.justrelax.core.network.api.IntegrityTokenProvider
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkSound
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkSoundCatalog
 import com.mustafakoceerr.justrelax.core.network.dto.withClipUrlsResolvedAgainst
@@ -16,6 +17,8 @@ import org.koin.dsl.module
  */
 val buildTypeModule = module {
     single<SoundRemoteDataSource> { AssetSoundCatalog(androidContext()) }
+    // The local API proxy runs with INTEGRITY_REQUIRED=false; a debug build is never Play-recognized anyway.
+    single<IntegrityTokenProvider> { IntegrityTokenProvider { "debug" } }
 }
 
 private class AssetSoundCatalog(private val context: Context) : SoundRemoteDataSource {

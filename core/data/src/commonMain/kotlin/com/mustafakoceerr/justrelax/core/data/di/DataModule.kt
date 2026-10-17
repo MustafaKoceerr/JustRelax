@@ -28,6 +28,8 @@ import com.mustafakoceerr.justrelax.core.data.sync.DatabaseSoundCatalogSync
 import com.mustafakoceerr.justrelax.core.data.sync.SoundCatalogSync
 import com.mustafakoceerr.justrelax.core.data.sync.SyncTimestampStore
 import com.mustafakoceerr.justrelax.core.data.DataConstants
+import com.mustafakoceerr.justrelax.core.data.DataStoreInstallIdProvider
+import com.mustafakoceerr.justrelax.core.network.api.InstallIdProvider
 import okio.FileSystem
 import org.koin.core.qualifier.named
 import okio.SYSTEM
@@ -57,6 +59,7 @@ val dataModule = module {
     singleOf(::LegalRepositoryImpl) { bind<LegalRepository>() }
     singleOf(::AiMixRepositoryImpl) { bind<AiMixRepository>() }
     singleOf(::InMemorySceneRepository) { bind<SceneRepository>() }
+    single<InstallIdProvider> { DataStoreInstallIdProvider(get(named(DataConstants.STATE)), newId = { Uuid.random().toString() }) }
     single<FreesoundRepository> { NetworkFreesoundRepository(get(), get(), get()) }
     single<UserSoundRepository> {
         DatabaseUserSoundRepository(get(), get(), get(), get(), get(), newId = { "user-${Uuid.random()}" })
