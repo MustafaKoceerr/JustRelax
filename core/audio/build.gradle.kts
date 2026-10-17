@@ -22,11 +22,10 @@ kotlin {
             implementation(libs.findLibrary("androidx-media3-exoplayer").get())
             implementation(libs.findLibrary("koin-android").get())
             implementation(libs.findLibrary("androidx-core-ktx").get())
-            implementation(libs.findLibrary("androidx-media-session-compat").get())
         }
 
-        iosMain.dependencies {
-
+        commonTest.dependencies {
+            implementation(project(":core:testing"))
         }
     }
 }

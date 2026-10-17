@@ -57,6 +57,10 @@ android {
         compose = true
     }
 
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
+
 
 }
 
@@ -138,13 +142,18 @@ kotlin {
 
             // Android Ses Motoru (ExoPlayer / Media3)
             implementation(libs.androidx.media3.exoplayer)
-            implementation(libs.androidx.media.session.compat)
+            implementation(libs.androidx.media3.session)
+            implementation(libs.kotlinx.coroutines.guava)
             implementation(libs.androidx.media3.common)
         }
 
         androidUnitTest.dependencies {
             implementation(kotlin("test"))
+            implementation(project(":core:testing"))
             implementation(libs.koin.test)
+            implementation(libs.robolectric)
+            implementation(libs.androidx.test.core.ktx)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }

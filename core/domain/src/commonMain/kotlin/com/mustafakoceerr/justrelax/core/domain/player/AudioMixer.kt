@@ -26,6 +26,5 @@ interface AudioMixer {
     suspend fun pauseAll()
     suspend fun resumeAll()
     suspend fun stopAll()
-    fun release()
     fun clearError()
 }
