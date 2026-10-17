@@ -3,14 +3,13 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-
 kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:audio"))
-            implementation(libs.findLibrary("compottie").get())
-            implementation(libs.findLibrary("compottie-resources").get())
-            implementation(libs.findLibrary("compottie-dot").get())
+            implementation(libs.compottie)
+            implementation(libs.compottie.resources)
+            implementation(libs.compottie.dot)
         }
     }
 }

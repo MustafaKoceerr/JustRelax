@@ -3,15 +3,18 @@ import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
 import org.gradle.api.JavaVersion
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
+import org.gradle.api.artifacts.MinimalExternalModuleDependency
+import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
-/** Tüm modüller için tek JVM hedefi. */
-val JAVA_VERSION = JavaVersion.VERSION_17
-val JVM_TARGET = JvmTarget.JVM_17
+/** One JVM target for every module. */
+internal val JAVA_VERSION = JavaVersion.VERSION_17
+internal val JVM_TARGET = JvmTarget.JVM_17
 
 private const val BASE_NAMESPACE = "com.mustafakoceerr.justrelax"
 
@@ -36,14 +39,26 @@ fun NamedDomainObjectContainer<KotlinSourceSet>.iosMainDependencies(
     matching { it.name == "iosMain" }.configureEach { dependencies(configure) }
 }
 
-val Project.libs
+/**
+ * The version catalog for convention plugins. Internal and not named `libs` on purpose: a public
+ * `Project.libs` here would shadow the type-safe `libs` accessors in every module build script.
+ */
+internal val Project.versionCatalog: VersionCatalog
     get() = extensions.getByType<VersionCatalogsExtension>().named("libs")
+
+internal fun Project.library(alias: String): Provider<MinimalExternalModuleDependency> =
+    versionCatalog.findLibrary(alias).get()
+
+internal fun Project.bundle(alias: String) = versionCatalog.findBundle(alias).get()
+
+internal fun Project.intVersion(alias: String): Int =
+    versionCatalog.findVersion(alias).get().requiredVersion.toInt()
 
 /** Shared settings for every KMP library's Android target (AGP 9 `com.android.kotlin.multiplatform.library`). */
 internal fun KotlinMultiplatformAndroidLibraryExtension.configureAndroidLibrary(project: Project) {
     namespace = project.defaultNamespace
-    compileSdk = project.libs.findVersion("android-compileSdk").get().toString().toInt()
-    minSdk = project.libs.findVersion("android-minSdk").get().toString().toInt()
+    compileSdk = project.intVersion("android-compileSdk")
+    minSdk = project.intVersion("android-minSdk")
 
     // Unit tests run on the JVM (androidHostTest); Robolectric tests need merged resources.
     withHostTest {

@@ -1,50 +1,39 @@
 plugins {
     id("justrelax.kmp.library")
     alias(libs.plugins.kotlin.serialization)
-    // 1. Eklentiyi buraya ekle
     alias(libs.plugins.buildConfig)
 }
 
-
 buildConfig {
-    // Üretilecek BuildConfig.kt dosyasının paket adı
     packageName("com.mustafakoceerr.justrelax.core.network")
-
-    // Release ve debug sürümleri farklı olabilir. kullanılan url'ler farklı olabilir.
     buildConfigField("String", "CDN_BASE_URL", "\"https://cdn.mustafakoceerr.com/\"")
 }
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // Sunucudan gelen verileri hangi data class'a dönüştüreceğini bilmeli
             api(project(":core:model"))
-            // Result, AppError gibi yapıları kullanacak
             api(project(":core:common"))
             api(project(":core:domain"))
 
-            // Ktor kütüphaneleri
-            implementation(libs.findLibrary("ktor-client-core").get())
-            implementation(libs.findLibrary("ktor-client-content-negotiation").get())
-            implementation(libs.findLibrary("ktor-serialization-kotlinx-json").get())
-            implementation(libs.findLibrary("ktor-client-logging").get()) // İstekleri loglamak için
-
-            // Koin (DI)
-            implementation(libs.findLibrary("koin-core").get())
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.koin.core)
         }
 
         androidMain.dependencies {
-            // YENİ: Ktor için OkHttp motorunu ekliyoruz
-            implementation(libs.findLibrary("ktor-client-okhttp").get())
+            implementation(libs.ktor.client.okhttp)
+        }
+
+        iosMainDependencies {
+            implementation(libs.ktor.client.darwin)
         }
 
         commonTest.dependencies {
             implementation(project(":core:testing"))
-            implementation(libs.findLibrary("ktor-client-mock").get())
-        }
-
-        iosMainDependencies {
-            implementation(libs.findLibrary("ktor-client-darwin").get())
+            implementation(libs.ktor.client.mock)
         }
     }
 }

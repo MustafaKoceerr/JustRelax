@@ -1,29 +1,21 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 // Android entry point: Application, Activity, playback service and app resources.
-// Shared UI and logic come from :composeApp. Kotlin is built into AGP 9, so no kotlin-android plugin.
+// Shared UI and logic come from :composeApp.
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.composeCompiler)
+    id("justrelax.android.application")
 }
 
 android {
     namespace = "com.mustafakoceerr.justrelax"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.mustafakoceerr.justrelax"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 5
         versionName = "1.2.0"
     }
 
     buildTypes {
         getByName("release") {
-            // R8: kod küçültme + obfuscation
             isMinifyEnabled = true
-            // Kullanılmayan kaynakları siler
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -31,20 +23,13 @@ android {
             )
         }
 
-        // Geliştirme yaparken hızlı derlensin diye debug'da kapalı kalsın
         getByName("debug") {
             isMinifyEnabled = false
             isShrinkResources = false
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
     buildFeatures {
-        compose = true
         buildConfig = true
     }
 
@@ -57,12 +42,6 @@ android {
 
     testOptions {
         unitTests.isIncludeAndroidResources = true
-    }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 

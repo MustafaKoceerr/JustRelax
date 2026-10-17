@@ -13,23 +13,23 @@ kotlin {
             implementation(project(":core:common"))
             implementation(project(":core:model"))
 
-            implementation(libs.findLibrary("androidx-datastore-preferences").get())
-            implementation(libs.findLibrary("androidx-datastore").get())
-            implementation(libs.findLibrary("koin-core").get())
-            implementation(libs.findLibrary("ktor-client-core").get())
-            implementation(libs.findLibrary("okio").get())
-            implementation(libs.findLibrary("sqldelight-coroutines-extensions").get())
-            implementation(libs.findLibrary("kotlinx-coroutines-core").get())
+            implementation(libs.androidx.datastore.preferences)
+            implementation(libs.androidx.datastore)
+            implementation(libs.koin.core)
+            implementation(libs.ktor.client.core)
+            implementation(libs.okio)
+            implementation(libs.sqldelight.coroutines.extensions)
+            implementation(libs.kotlinx.coroutines.core)
         }
 
         commonTest.dependencies {
             implementation(project(":core:testing"))
-            implementation(libs.findLibrary("ktor-client-mock").get())
-            implementation(libs.findLibrary("okio-fakefilesystem").get())
+            implementation(libs.ktor.client.mock)
+            implementation(libs.okio.fakefilesystem)
         }
 
         androidHostTest.dependencies {
-            implementation(libs.findLibrary("sqldelight-sqlite-driver").get())
+            implementation(libs.sqldelight.sqlite.driver)
         }
     }
 }

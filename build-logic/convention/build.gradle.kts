@@ -5,40 +5,30 @@ plugins {
 group = "com.mustafakoceerr.justrelax.buildlogic"
 
 dependencies {
-    // Plugin kodlarını yazarken ihtiyaç duyacağımız sınıflar (Artifacts)
-
-    // 1. Android Gradle Plugin (LibraryExtension vb. için)
-    implementation(libs.android.gradlePlugin)
-
-    // 2. Kotlin Gradle Plugin
-    implementation(libs.kotlin.gradlePlugin)
-
-    // 3. Compose Multiplatform Plugin
-    implementation(libs.compose.gradlePlugin)
-
-    // 4. Compose Compiler Plugin
-    implementation(libs.composeCompiler.gradlePlugin)
+    // Plugin APIs used by the convention plugins (compile only: the build already loads them).
+    compileOnly(libs.android.gradlePlugin)
+    compileOnly(libs.kotlin.gradlePlugin)
+    compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.composeCompiler.gradlePlugin)
 }
-
 
 gradlePlugin {
     plugins {
-        // KMP library modülleri: Android + (bayrak açıksa) iOS hedefleri, ortak test bağımlılıkları
         register("kmpLibrary") {
             id = "justrelax.kmp.library"
-            implementationClass = "JustRelaxKmpConventionPlugin"
+            implementationClass = "KmpLibraryConventionPlugin"
         }
-
-        // UI içeren modüllerde Compose'u açar
-        register("androidCompose") {
-            id = "justrelax.android.library.compose"
-            implementationClass = "JustRelaxComposeConventionPlugin"
+        register("kmpCompose") {
+            id = "justrelax.kmp.compose"
+            implementationClass = "KmpComposeConventionPlugin"
         }
-
-        // Feature modülleri: KMP + Compose + ortak core modülleri + Koin + test fake'leri
         register("kmpFeature") {
             id = "justrelax.kmp.feature"
-            implementationClass = "JustRelaxFeatureConventionPlugin"
+            implementationClass = "KmpFeatureConventionPlugin"
+        }
+        register("androidApplication") {
+            id = "justrelax.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
         }
     }
 }
