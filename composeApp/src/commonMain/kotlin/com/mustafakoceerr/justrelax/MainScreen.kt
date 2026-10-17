@@ -9,6 +9,10 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
@@ -25,13 +29,18 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,10 +52,13 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
-import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
-import com.mustafakoceerr.justrelax.feature.player.components.PlayerBottomBar
-import com.mustafakoceerr.justrelax.feature.player.PlayerUiState
+import com.mustafakoceerr.justrelax.feature.scene.SceneViewModel
+import com.mustafakoceerr.justrelax.feature.scene.components.MiniPlayerBar
+import com.mustafakoceerr.justrelax.feature.scene.SceneUiState
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
+import com.mustafakoceerr.justrelax.core.ui.util.WindowWidthSize
+import com.mustafakoceerr.justrelax.core.ui.util.rememberWindowSizeClass
+import com.mustafakoceerr.justrelax.feature.scene.components.ScenePanel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -62,48 +74,67 @@ import com.mustafakoceerr.justrelax.tabs.title
 
 /**
  * The main shell: a navigation bar on phones and a rail on wider windows (Material's navigation
- * suite), with the mini player at the bottom of the content. Tab ViewModels are scoped to this
- * destination, so they survive tab switches and rotation, and are cleared when the user leaves Main.
+ * suite). The scene that is playing shows as a mini player at the bottom, which opens the scene
+ * panel in a bottom sheet; on expanded windows the panel sits beside the library instead. Tab
+ * ViewModels are scoped to this destination, so they survive tab switches and rotation, and are
+ * cleared when the user leaves Main.
  */
 @Composable
 fun MainRoute(onOpenSettings: () -> Unit) {
-    val playerViewModel = koinViewModel<PlayerViewModel>()
-    val playerState by playerViewModel.uiState.collectAsStateWithLifecycle()
+    val sceneViewModel = koinViewModel<SceneViewModel>()
+    val sceneState by sceneViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarController = koinInject<GlobalSnackbarController>()
 
-    UserMessageEffect(playerState.userMessage, playerViewModel::onMessageShown) {
+    UserMessageEffect(sceneState.userMessage, sceneViewModel::onMessageShown) {
         snackbarController.showSnackbar(it)
     }
 
-    if (playerState.isSaveDialogVisible) {
+    if (sceneState.isSaveDialogVisible) {
         SaveMixDialog(
             isOpen = true,
-            onDismiss = playerViewModel::dismissSaveDialog,
-            onConfirm = playerViewModel::saveMix,
+            onDismiss = sceneViewModel::dismissSaveDialog,
+            onConfirm = sceneViewModel::saveMix,
         )
     }
 
     MainScreenLayout(
         tabState = rememberSaveable(saver = MainTabState.Saver) { MainTabState() },
-        playerState = playerState,
-        onPlayPause = playerViewModel::togglePlayPause,
-        onStopAll = playerViewModel::stopAll,
-        onSaveMix = playerViewModel::openSaveDialog,
+        sceneState = sceneState,
+        onPlayPause = sceneViewModel::togglePlayPause,
+        onStopAll = sceneViewModel::stopAll,
+        onSaveMix = sceneViewModel::openSaveDialog,
+        scenePanel = { modifier ->
+            ScenePanel(
+                state = sceneState,
+                onPlayPause = sceneViewModel::togglePlayPause,
+                onStopAll = sceneViewModel::stopAll,
+                onSave = sceneViewModel::openSaveDialog,
+                onVolumeChange = sceneViewModel::changeVolume,
+                onFrequencyChange = sceneViewModel::changeFrequency,
+                onRemove = sceneViewModel::remove,
+                modifier = modifier,
+            )
+        },
         onOpenSettings = onOpenSettings,
         snackbarHostState = snackbarController.hostState
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainScreenLayout(
     tabState: MainTabState,
-    playerState: PlayerUiState,
+    sceneState: SceneUiState,
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
     onSaveMix: () -> Unit,
+    scenePanel: @Composable (Modifier) -> Unit,
     onOpenSettings: () -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
+    val showsScenePane = rememberWindowSizeClass() == WindowWidthSize.EXPANDED && tabState.selected == MainTab.HOME
+    var isSceneSheetOpen by rememberSaveable { mutableStateOf(false) }
+
     val density = LocalDensity.current
     val isKeyboardOpen = WindowInsets.ime.getBottom(density) > 0
     // Keeps each tab's UI state (scroll position etc.) while another tab is shown.
@@ -145,18 +176,20 @@ private fun MainScreenLayout(
                 containerColor = Color.Transparent,
                 snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) },
                 bottomBar = {
-                    if (!isKeyboardOpen) {
+                    if (!isKeyboardOpen && !showsScenePane) {
                         MiniPlayer(
-                            playerState = playerState,
+                            sceneState = sceneState,
                             onPlayPause = onPlayPause,
                             onStopAll = onStopAll,
                             onSaveMix = onSaveMix,
+                            onOpenScene = { isSceneSheetOpen = true },
                         )
                     }
                 }
             ) { innerPadding ->
-                Box(modifier = Modifier.padding(innerPadding)) {
+                Row(modifier = Modifier.padding(innerPadding)) {
                     AnimatedContent(
+                        modifier = Modifier.weight(1f),
                         targetState = tabState.selected,
                         transitionSpec = {
                             fadeIn(animationSpec = tween(300)) togetherWith
@@ -172,8 +205,27 @@ private fun MainScreenLayout(
                             )
                         }
                     }
+                    if (showsScenePane) {
+                        Surface(
+                            color = MaterialTheme.colorScheme.surfaceContainerLow,
+                            shape = MaterialTheme.shapes.large,
+                            modifier = Modifier
+                                .width(SCENE_PANE_WIDTH)
+                                .fillMaxHeight()
+                                .padding(8.dp)
+                                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical + WindowInsetsSides.End)),
+                        ) {
+                            scenePanel(Modifier.padding(top = 16.dp))
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    if (isSceneSheetOpen && !showsScenePane) {
+        ModalBottomSheet(onDismissRequest = { isSceneSheetOpen = false }) {
+            scenePanel(Modifier)
         }
     }
 }
@@ -184,10 +236,11 @@ private fun MainScreenLayout(
  */
 @Composable
 private fun MiniPlayer(
-    playerState: PlayerUiState,
+    sceneState: SceneUiState,
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
     onSaveMix: () -> Unit,
+    onOpenScene: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -196,7 +249,7 @@ private fun MiniPlayer(
         contentAlignment = Alignment.BottomCenter,
     ) {
         AnimatedVisibility(
-            visible = playerState.isVisible,
+            visible = sceneState.isVisible,
             modifier = Modifier.widthIn(max = MINI_PLAYER_MAX_WIDTH),
             enter = slideInVertically(
                 animationSpec = tween(220),
@@ -207,13 +260,14 @@ private fun MiniPlayer(
                 targetOffsetY = { fullHeight -> fullHeight }
             ) + fadeOut(animationSpec = tween(150))
         ) {
-            PlayerBottomBar(
+            MiniPlayerBar(
                 isVisible = true,
-                activeIcons = playerState.activeSounds.map { it.icon },
-                isPlaying = playerState.isPlaying,
+                activeIcons = sceneState.layers.map { it.icon },
+                isPlaying = sceneState.isPlaying,
                 onPlayPauseClick = onPlayPause,
                 onStopAllClick = onStopAll,
                 onSaveClick = onSaveMix,
+                onOpenScene = onOpenScene,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
@@ -245,3 +299,4 @@ private fun TabNavigationItem(
 }
 
 private val MINI_PLAYER_MAX_WIDTH = 640.dp
+private val SCENE_PANE_WIDTH = 380.dp

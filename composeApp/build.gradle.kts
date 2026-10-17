@@ -26,13 +26,13 @@ kotlin {
             implementation(project(":core:playback"))
             implementation(project(":core:data"))
 
-            implementation(project(":feature:home"))
+            implementation(project(":feature:library"))
             implementation(project(":feature:mixer"))
             implementation(project(":feature:saved"))
             implementation(project(":feature:ai"))
             implementation(project(":feature:timer"))
             implementation(project(":feature:settings"))
-            implementation(project(":feature:player"))
+            implementation(project(":feature:scene"))
             implementation(project(":feature:onboarding"))
             implementation(project(":feature:splash"))
 

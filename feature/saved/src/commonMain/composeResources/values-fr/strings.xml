@@ -12,4 +12,6 @@
     <string name="date_format_short">dd/MM/yyyy</string>
     <string name="err_play_mix_failed">Impossible de lire le mix</string>
     <string name="err_unknown">Une erreur inattendue s’est produite.</string>
+    <string name="saved_detail_placeholder">Choisis un mix enregistré pour voir ses sons.</string>
+    <string name="action_delete">Supprimer</string>
 </resources>

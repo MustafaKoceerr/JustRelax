@@ -2,6 +2,10 @@ package com.mustafakoceerr.justrelax.feature.saved
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import com.mustafakoceerr.justrelax.core.ui.util.WindowWidthSize
+import com.mustafakoceerr.justrelax.core.ui.util.rememberWindowSizeClass
+import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixDetailPane
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -53,6 +57,7 @@ fun SavedRoute(
         onCreateMix = onOpenMixer,
         onPlayMix = viewModel::playMix,
         onDeleteMix = viewModel::deleteMix,
+        onSelectMix = viewModel::selectMix,
     )
 }
 
@@ -63,7 +68,10 @@ fun SavedScreen(
     onCreateMix: () -> Unit,
     onPlayMix: (mixId: Long) -> Unit,
     onDeleteMix: (mixId: Long) -> Unit,
+    onSelectMix: (mixId: Long) -> Unit,
 ) {
+    // On expanded windows the list keeps a detail pane beside it.
+    val showsDetail = rememberWindowSizeClass() == WindowWidthSize.EXPANDED
     Scaffold(
         containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0.dp),
@@ -88,6 +96,25 @@ fun SavedScreen(
                 state.mixes.isEmpty() -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         SavedMixesEmptyScreen(onCreateClick = onCreateMix)
+                    }
+                }
+
+                showsDetail -> {
+                    Row(modifier = Modifier.fillMaxSize()) {
+                        SavedMixesList(
+                            mixes = state.mixes,
+                            onMixClick = { mix -> onPlayMix(mix.id) },
+                            onMixDelete = { mix -> onDeleteMix(mix.id) },
+                            onMixSelect = { mix -> onSelectMix(mix.id) },
+                            selectedMixId = state.selected?.id,
+                            modifier = Modifier.weight(1f),
+                        )
+                        SavedMixDetailPane(
+                            detail = state.selected,
+                            onPlay = onPlayMix,
+                            onDelete = onDeleteMix,
+                            modifier = Modifier.weight(1f),
+                        )
                     }
                 }
 

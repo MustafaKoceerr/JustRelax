@@ -12,4 +12,10 @@
     <string name="action_cancel">रद्द करें</string>
     <string name="sound_action_download">डाउनलोड</string>
     <string name="action_dismiss">हटाएँ</string>
+    <string name="frequency_rare">कभी-कभार</string>
+    <string name="frequency_normal">सामान्य</string>
+    <string name="frequency_often">अक्सर</string>
+    <string name="frequency_label">कितनी बार</string>
+    <string name="sound_kind_event">बीच-बीच में बजता है</string>
+    <string name="action_remove">हटाएँ</string>
 </resources>

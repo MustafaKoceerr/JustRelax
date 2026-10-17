@@ -16,7 +16,10 @@ fun SavedMixesList(
     mixes: List<SavedMixItem>,
     onMixClick: (SavedMixItem) -> Unit,
     onMixDelete: (SavedMixItem) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    /** Set where a detail pane is shown: tapping a card selects it, its play button still plays. */
+    onMixSelect: ((SavedMixItem) -> Unit)? = null,
+    selectedMixId: Long? = null,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -31,6 +34,8 @@ fun SavedMixesList(
                 mix = mix,
                 onPlayClick = { onMixClick(mix) },
                 onDelete = { onMixDelete(mix) },
+                onClick = { onMixSelect?.invoke(mix) ?: onMixClick(mix) },
+                isSelected = mix.id == selectedMixId,
             )
         }
     }

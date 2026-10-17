@@ -12,4 +12,6 @@
     <string name="date_format_short">yyyy.MM.dd</string>
     <string name="err_play_mix_failed">믹스 재생에 실패했습니다</string>
     <string name="err_unknown">예기치 않은 오류가 발생했습니다.</string>
+    <string name="saved_detail_placeholder">저장한 믹스를 선택하면 소리를 볼 수 있어요.</string>
+    <string name="action_delete">삭제</string>
 </resources>

@@ -12,4 +12,10 @@
     <string name="action_cancel">İptal</string>
     <string name="sound_action_download">İndir</string>
     <string name="action_dismiss">Kapat</string>
+    <string name="frequency_rare">Seyrek</string>
+    <string name="frequency_normal">Normal</string>
+    <string name="frequency_often">Sık</string>
+    <string name="frequency_label">Sıklık</string>
+    <string name="sound_kind_event">Ara ara çalar</string>
+    <string name="action_remove">Çıkar</string>
 </resources>

@@ -12,4 +12,6 @@
     <string name="date_format_short">dd-MM-yyyy</string>
     <string name="err_play_mix_failed">Mix afspelen mislukt</string>
     <string name="err_unknown">Er is een onverwachte fout opgetreden.</string>
+    <string name="saved_detail_placeholder">Kies een opgeslagen mix om de geluiden te zien.</string>
+    <string name="action_delete">Verwijderen</string>
 </resources>

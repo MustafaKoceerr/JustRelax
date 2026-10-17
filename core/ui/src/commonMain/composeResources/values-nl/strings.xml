@@ -12,4 +12,10 @@
     <string name="action_cancel">Annuleren</string>
     <string name="sound_action_download">Downloaden</string>
     <string name="action_dismiss">Sluiten</string>
+    <string name="frequency_rare">Zelden</string>
+    <string name="frequency_normal">Normaal</string>
+    <string name="frequency_often">Vaak</string>
+    <string name="frequency_label">Hoe vaak</string>
+    <string name="sound_kind_event">Klinkt af en toe</string>
+    <string name="action_remove">Verwijderen</string>
 </resources>

@@ -13,6 +13,9 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,11 +26,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CloudDownload
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,10 +50,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
+import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_kind_event
 import org.jetbrains.compose.resources.stringResource
 
 private const val ANIM_COLOR_DURATION = 300
@@ -64,7 +72,10 @@ fun SoundCard(
     volume: Float,
     onCardClick: () -> Unit,
     onVolumeChange: (Float) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    /** Set for a playing event sound; a tap on it moves to the next frequency. */
+    frequency: EventFrequency? = null,
+    onFrequencyChange: (EventFrequency) -> Unit = {},
 ) {
     val debouncedClick = rememberThrottledOnClick(throttleMs = 500, onClick = onCardClick)
 
@@ -124,6 +135,17 @@ fun SoundCard(
                     isDownloading = isDownloading
                 )
             }
+            if (sound.kind == SoundKind.EVENT) {
+                Icon(
+                    imageVector = Icons.Rounded.Shuffle,
+                    contentDescription = stringResource(Res.string.sound_kind_event),
+                    tint = iconColors.tintColor.copy(alpha = 0.6f),
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                        .size(16.dp)
+                )
+            }
         }
 
         BottomControls(
@@ -133,6 +155,16 @@ fun SoundCard(
             volume = volume,
             onVolumeChange = onVolumeChange
         )
+
+        if (isPlaying && frequency != null) {
+            TextButton(
+                onClick = { onFrequencyChange(frequency.next()) },
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                modifier = Modifier.height(28.dp),
+            ) {
+                Text(text = frequency.label(), style = MaterialTheme.typography.labelMedium)
+            }
+        }
     }
 }
 
@@ -144,7 +176,7 @@ private fun CardSurface(
     containerColor: Color,
     isPlaying: Boolean,
     soundName: String,
-    content: @Composable () -> Unit
+    content: @Composable BoxScope.() -> Unit
 ) {
     Surface(
         onClick = onClick,

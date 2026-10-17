@@ -16,7 +16,7 @@ import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_saved
 import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_timer
 import com.mustafakoceerr.justrelax.navigation.MainTab
 import com.mustafakoceerr.justrelax.feature.ai.AiRoute
-import com.mustafakoceerr.justrelax.feature.home.HomeRoute
+import com.mustafakoceerr.justrelax.feature.library.LibraryRoute
 import com.mustafakoceerr.justrelax.feature.mixer.MixerRoute
 import com.mustafakoceerr.justrelax.feature.saved.SavedRoute
 import com.mustafakoceerr.justrelax.feature.timer.TimerRoute
@@ -52,7 +52,7 @@ fun MainTabContent(
     onSelectTab: (MainTab) -> Unit,
 ) {
     when (tab) {
-        MainTab.HOME -> HomeRoute(onOpenSettings = onOpenSettings)
+        MainTab.HOME -> LibraryRoute(onOpenSettings = onOpenSettings)
         MainTab.TIMER -> TimerRoute()
         MainTab.AI -> AiRoute()
         MainTab.SAVED -> SavedRoute(onOpenMixer = { onSelectTab(MainTab.MIXER) })

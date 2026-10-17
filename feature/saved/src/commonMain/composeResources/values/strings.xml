@@ -12,4 +12,6 @@
     <string name="date_format_short">MM/dd/yyyy</string>
     <string name="err_play_mix_failed">Failed to play mix</string>
     <string name="err_unknown">An unexpected error occurred.</string>
+    <string name="saved_detail_placeholder">Choose a saved mix to see its sounds.</string>
+    <string name="action_delete">Delete</string>
 </resources>
