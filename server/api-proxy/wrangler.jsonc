@@ -1,0 +1,21 @@
+{
+  // JustRelax API proxy: keeps the OpenAI and Freesound keys off the app. Free Workers plan.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "justrelax-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "routes": [{ "pattern": "api.mustafakoceerr.com", "custom_domain": true }],
+  "workers_dev": false,
+  "observability": { "enabled": true },
+  "vars": {
+    "PACKAGE_NAME": "com.mustafakoceerr.justrelax",
+    "INTEGRITY_REQUIRED": "true"
+  },
+  // Secrets (wrangler secret put): OPENAI_API_KEY, FREESOUND_API_KEY, SESSION_SECRET,
+  // GOOGLE_SERVICE_ACCOUNT_JSON. Locally they come from .dev.vars.
+  "ratelimits": [
+    { "name": "SESSION_LIMITER", "namespace_id": "4101", "simple": { "limit": 10, "period": 60 } },
+    { "name": "AI_LIMITER", "namespace_id": "4102", "simple": { "limit": 5, "period": 60 } },
+    { "name": "SEARCH_LIMITER", "namespace_id": "4103", "simple": { "limit": 30, "period": 60 } }
+  ]
+}

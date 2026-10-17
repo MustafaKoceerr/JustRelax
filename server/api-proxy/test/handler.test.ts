@@ -1,0 +1,248 @@
+import { beforeEach, describe, expect, it } from "vitest";
+import { handle, type Deps, type Env } from "../src/handler";
+import { issueSession } from "../src/session";
+
+const NOW: number = 1_800_000_000_000;
+const SECRET: string = "session-secret";
+const INSTALL: string = "1b4e28ba-2fa1-11d2-883f-0016d3cca427";
+
+class FakeLimiter implements RateLimit {
+  readonly keys: string[] = [];
+  allow: boolean = true;
+  async limit(options: RateLimitOptions): Promise<RateLimitOutcome> {
+    this.keys.push(options.key);
+    return { success: this.allow };
+  }
+}
+
+interface Upstream {
+  url: string;
+  headers: Headers;
+  body: string | null;
+}
+
+let env: Env;
+let upstream: Upstream[];
+let upstreamResponse: Response;
+let verdict: unknown;
+let deps: Deps;
+
+function fakeEnv(): Env {
+  return {
+    OPENAI_API_KEY: "sk-test",
+    FREESOUND_API_KEY: "fs-test",
+    SESSION_SECRET: SECRET,
+    GOOGLE_SERVICE_ACCOUNT_JSON: "{}",
+    PACKAGE_NAME: "com.mustafakoceerr.justrelax",
+    INTEGRITY_REQUIRED: "true",
+    SESSION_LIMITER: new FakeLimiter(),
+    AI_LIMITER: new FakeLimiter(),
+    SEARCH_LIMITER: new FakeLimiter(),
+  };
+}
+
+beforeEach((): void => {
+  env = fakeEnv();
+  upstream = [];
+  upstreamResponse = Response.json({});
+  verdict = null;
+  deps = {
+    now: (): number => NOW,
+    fetch: async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+      upstream.push({ url: String(input), headers: new Headers(init?.headers), body: typeof init?.body === "string" ? init.body : null });
+      return upstreamResponse;
+    },
+    decodeIntegrity: async (): Promise<unknown> => verdict,
+  };
+});
+
+async function session(): Promise<string> {
+  return issueSession(INSTALL, NOW, SECRET);
+}
+
+function request(path: string, init: RequestInit = {}): Request {
+  return new Request(`https://api.test${path}`, {
+    ...init,
+    headers: { "cf-connecting-ip": "203.0.113.7", ...(init.headers as Record<string, string> | undefined) },
+  });
+}
+
+async function json(response: Response): Promise<unknown> {
+  return response.json();
+}
+
+function genuineVerdict(hash: string): unknown {
+  return {
+    requestDetails: { requestPackageName: "com.mustafakoceerr.justrelax", requestHash: hash, timestampMillis: String(NOW - 1_000) },
+    appIntegrity: { appRecognitionVerdict: "PLAY_RECOGNIZED" },
+    deviceIntegrity: { deviceRecognitionVerdict: ["MEETS_DEVICE_INTEGRITY"] },
+  };
+}
+
+const SESSION_HASH: string = "b19f76277ff87a14d93396b5552ae5b71806ab94625a5a44fd0db9a917eebee6";
+
+describe("POST /v1/session", () => {
+  const install1: string = "install-1";
+
+  it("issues an hour-long session to the genuine app", async () => {
+    verdict = genuineVerdict(SESSION_HASH);
+
+    const response: Response = await handle(
+      request("/v1/session", { method: "POST", body: JSON.stringify({ installId: install1, integrityToken: "tok" }) }),
+      env,
+      deps,
+    );
+
+    expect(response.status).toBe(200);
+    const body = (await json(response)) as { token: string; expiresAt: number };
+    expect(typeof body.token).toBe("string");
+    expect(body.expiresAt).toBe(NOW + 3_600_000);
+    expect((env.SESSION_LIMITER as FakeLimiter).keys).toEqual(["ip:203.0.113.7"]);
+  });
+
+  it("refuses a failing verdict, an unreachable Google and a bad body", async () => {
+    verdict = { ...(genuineVerdict(SESSION_HASH) as Record<string, unknown>), appIntegrity: { appRecognitionVerdict: "UNEVALUATED" } };
+    const refused: Response = await handle(
+      request("/v1/session", { method: "POST", body: JSON.stringify({ installId: install1, integrityToken: "tok" }) }),
+      env,
+      deps,
+    );
+    expect(refused.status).toBe(403);
+    expect(await json(refused)).toEqual({ error: "integrity_app" });
+
+    verdict = null;
+    const unavailable: Response = await handle(
+      request("/v1/session", { method: "POST", body: JSON.stringify({ installId: install1, integrityToken: "tok" }) }),
+      env,
+      deps,
+    );
+    expect(unavailable.status).toBe(503);
+
+    const bad: Response = await handle(request("/v1/session", { method: "POST", body: "{" }), env, deps);
+    expect(bad.status).toBe(400);
+  });
+
+  it("skips the integrity check only when the environment turns it off (local development)", async () => {
+    env.INTEGRITY_REQUIRED = "false";
+
+    const response: Response = await handle(
+      request("/v1/session", { method: "POST", body: JSON.stringify({ installId: install1, integrityToken: "none" }) }),
+      env,
+      deps,
+    );
+
+    expect(response.status).toBe(200);
+  });
+
+  it("is rate limited per IP", async () => {
+    (env.SESSION_LIMITER as FakeLimiter).allow = false;
+
+    const response: Response = await handle(
+      request("/v1/session", { method: "POST", body: JSON.stringify({ installId: install1, integrityToken: "tok" }) }),
+      env,
+      deps,
+    );
+
+    expect(response.status).toBe(429);
+  });
+});
+
+describe("POST /v1/ai/mix", () => {
+  const body: string = JSON.stringify({
+    prompt: "rain",
+    sounds: [{ id: "rain_light", name: "Light Rain", category: "RAIN", kind: "BED", tags: [] }],
+  });
+
+  it("needs a valid session", async () => {
+    const missing: Response = await handle(request("/v1/ai/mix", { method: "POST", body }), env, deps);
+    const wrong: Response = await handle(
+      request("/v1/ai/mix", { method: "POST", body, headers: { authorization: "Bearer forged.token" } }),
+      env,
+      deps,
+    );
+
+    expect(missing.status).toBe(401);
+    expect(wrong.status).toBe(401);
+    expect(upstream).toEqual([]);
+  });
+
+  it("asks OpenAI with the server key and returns the checked mix", async () => {
+    upstreamResponse = Response.json({
+      choices: [{ message: { content: JSON.stringify({ mix_name: "Rain", description: "d", sounds: [{ id: "rain_light", volume: 0.6 }] }) } }],
+    });
+
+    const response: Response = await handle(
+      request("/v1/ai/mix", { method: "POST", body, headers: { authorization: `Bearer ${await session()}` } }),
+      env,
+      deps,
+    );
+
+    expect(response.status).toBe(200);
+    expect(await json(response)).toEqual({ mix_name: "Rain", description: "d", sounds: [{ id: "rain_light", volume: 0.6 }] });
+    expect(upstream[0]?.url).toBe("https://api.openai.com/v1/chat/completions");
+    expect(upstream[0]?.headers.get("authorization")).toBe("Bearer sk-test");
+    expect((env.AI_LIMITER as FakeLimiter).keys).toEqual([`install:${INSTALL}`]);
+  });
+
+  it("is rate limited per install and reports an OpenAI failure as a bad gateway", async () => {
+    (env.AI_LIMITER as FakeLimiter).allow = false;
+    const limited: Response = await handle(
+      request("/v1/ai/mix", { method: "POST", body, headers: { authorization: `Bearer ${await session()}` } }),
+      env,
+      deps,
+    );
+    expect(limited.status).toBe(429);
+    expect(upstream).toEqual([]);
+
+    (env.AI_LIMITER as FakeLimiter).allow = true;
+    upstreamResponse = new Response("boom", { status: 500 });
+    const failed: Response = await handle(
+      request("/v1/ai/mix", { method: "POST", body, headers: { authorization: `Bearer ${await session()}` } }),
+      env,
+      deps,
+    );
+    expect(failed.status).toBe(502);
+  });
+});
+
+describe("GET /v1/freesound/search", () => {
+  it("searches with the server key in the header and returns the page", async () => {
+    upstreamResponse = Response.json({ count: 0, next: null, results: [] });
+
+    const response: Response = await handle(
+      request("/v1/freesound/search?query=rain&page=2", { headers: { authorization: `Bearer ${await session()}` } }),
+      env,
+      deps,
+    );
+
+    expect(response.status).toBe(200);
+    expect(await json(response)).toEqual({ count: 0, next: null, results: [] });
+    expect(upstream[0]?.headers.get("authorization")).toBe("Token fs-test");
+    expect(new URL(upstream[0]?.url ?? "").searchParams.get("page")).toBe("2");
+    expect((env.SEARCH_LIMITER as FakeLimiter).keys).toEqual([`install:${INSTALL}`]);
+  });
+
+  it("passes Freesound's rate limit on and rejects a bad query", async () => {
+    upstreamResponse = new Response("slow down", { status: 429 });
+    const throttled: Response = await handle(
+      request("/v1/freesound/search?query=rain", { headers: { authorization: `Bearer ${await session()}` } }),
+      env,
+      deps,
+    );
+    expect(throttled.status).toBe(429);
+
+    const bad: Response = await handle(
+      request("/v1/freesound/search?query=", { headers: { authorization: `Bearer ${await session()}` } }),
+      env,
+      deps,
+    );
+    expect(bad.status).toBe(400);
+  });
+});
+
+describe("routing", () => {
+  it("answers unknown paths with 404 and wrong methods with 405", async () => {
+    expect((await handle(request("/v1/nope"), env, deps)).status).toBe(404);
+    expect((await handle(request("/v1/session"), env, deps)).status).toBe(405);
+  });
+});
