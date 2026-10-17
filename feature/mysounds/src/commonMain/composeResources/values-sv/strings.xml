@@ -30,4 +30,11 @@
     <string name="mysounds_problem_too_short_for_bed">En slinga behöver minst 5 sekunder.</string>
     <string name="mysounds_problem_too_long_for_event">Ett enstaka ljud får vara högst 10 sekunder.</string>
     <string name="mysounds_problem_outside_file">Markeringen ligger utanför filen.</string>
+    <string name="mysounds_record">Spela in</string>
+    <string name="mysounds_record_title">Spela in ett ljud</string>
+    <string name="mysounds_record_hint">Håll telefonen nära ljudet. Inspelningen stoppas efter 5 minuter eller när du lämnar appen.</string>
+    <string name="mysounds_record_start">Starta inspelning</string>
+    <string name="mysounds_record_stop">Stoppa och redigera</string>
+    <string name="mysounds_record_failed">Inspelningen misslyckades. Försök igen.</string>
+    <string name="mysounds_record_permission_denied">JustRelax behöver mikrofonen för att spela in ett ljud. Du kan tillåta det i systeminställningarna.</string>
 </resources>

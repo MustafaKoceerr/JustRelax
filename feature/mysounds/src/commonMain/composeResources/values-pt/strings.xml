@@ -30,4 +30,11 @@
     <string name="mysounds_problem_too_short_for_bed">Um loop precisa de pelo menos 5 segundos.</string>
     <string name="mysounds_problem_too_long_for_event">Um som pontual pode ter até 10 segundos.</string>
     <string name="mysounds_problem_outside_file">A seleção está fora do arquivo.</string>
+    <string name="mysounds_record">Gravar</string>
+    <string name="mysounds_record_title">Gravar um som</string>
+    <string name="mysounds_record_hint">Aproxime o telefone do som. A gravação para após 5 minutos ou quando você sai do app.</string>
+    <string name="mysounds_record_start">Começar a gravar</string>
+    <string name="mysounds_record_stop">Parar e editar</string>
+    <string name="mysounds_record_failed">Não foi possível gravar. Tente novamente.</string>
+    <string name="mysounds_record_permission_denied">O JustRelax precisa do microfone para gravar um som. Você pode permitir nas configurações do sistema.</string>
 </resources>

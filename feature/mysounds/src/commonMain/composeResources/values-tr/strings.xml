@@ -30,4 +30,11 @@
     <string name="mysounds_problem_too_short_for_bed">Döngü en az 5 saniye olmalı.</string>
     <string name="mysounds_problem_too_long_for_event">Tek seferlik ses en fazla 10 saniye olabilir.</string>
     <string name="mysounds_problem_outside_file">Seçim dosyanın dışında.</string>
+    <string name="mysounds_record">Kaydet</string>
+    <string name="mysounds_record_title">Ses kaydet</string>
+    <string name="mysounds_record_hint">Telefonu sese yakın tut. Kayıt 5 dakika sonra ya da uygulamadan çıkınca durur.</string>
+    <string name="mysounds_record_start">Kaydı başlat</string>
+    <string name="mysounds_record_stop">Durdur ve düzenle</string>
+    <string name="mysounds_record_failed">Kayıt yapılamadı. Tekrar dene.</string>
+    <string name="mysounds_record_permission_denied">Ses kaydetmek için JustRelax’in mikrofona erişmesi gerekiyor. Sistem ayarlarından izin verebilirsin.</string>
 </resources>

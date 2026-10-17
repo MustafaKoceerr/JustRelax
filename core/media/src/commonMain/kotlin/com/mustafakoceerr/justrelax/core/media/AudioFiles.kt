@@ -38,3 +38,18 @@ interface AudioImporter {
     /** @throws MediaException if the document at [uri] cannot be read. */
     suspend fun import(uri: String): ImportedAudio
 }
+
+/** Records the microphone to a file in the cache. Only the latest recording is kept. */
+interface AudioRecorder {
+    /** @return where the recording is written. @throws MediaException if the microphone is unavailable. */
+    fun start(): String
+
+    /** How loud the microphone was since the last call, from 0 to 1. */
+    fun level(): Float
+
+    /** Finishes the file. @throws MediaException if nothing usable was recorded. */
+    fun stop()
+
+    /** Stops and deletes the recording. */
+    fun cancel()
+}

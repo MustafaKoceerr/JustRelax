@@ -25,6 +25,9 @@ sealed interface Route : NavKey {
     @Serializable
     data object MySounds : Route
 
+    @Serializable
+    data object Recorder : Route
+
     /** Cuts a new sound out of a file that was copied into the cache. */
     @Serializable
     data class SoundEditor(val sourcePath: String, val suggestedName: String?) : Route
@@ -38,6 +41,7 @@ sealed interface Route : NavKey {
                 subclass(Settings::class)
                 subclass(Credits::class)
                 subclass(MySounds::class)
+                subclass(Recorder::class)
                 subclass(SoundEditor::class)
             }
         }

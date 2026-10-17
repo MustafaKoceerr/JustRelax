@@ -30,4 +30,11 @@
     <string name="mysounds_problem_too_short_for_bed">Eine Schleife braucht mindestens 5 Sekunden.</string>
     <string name="mysounds_problem_too_long_for_event">Ein Einzelklang darf höchstens 10 Sekunden lang sein.</string>
     <string name="mysounds_problem_outside_file">Die Auswahl liegt außerhalb der Datei.</string>
+    <string name="mysounds_record">Aufnehmen</string>
+    <string name="mysounds_record_title">Sound aufnehmen</string>
+    <string name="mysounds_record_hint">Halte dein Handy in die Nähe des Geräuschs. Die Aufnahme endet nach 5 Minuten oder wenn du die App verlässt.</string>
+    <string name="mysounds_record_start">Aufnahme starten</string>
+    <string name="mysounds_record_stop">Stoppen und bearbeiten</string>
+    <string name="mysounds_record_failed">Die Aufnahme hat nicht funktioniert. Versuche es erneut.</string>
+    <string name="mysounds_record_permission_denied">JustRelax braucht das Mikrofon, um einen Sound aufzunehmen. Du kannst es in den Systemeinstellungen erlauben.</string>
 </resources>
