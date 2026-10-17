@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.onboarding
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.usecase.appsetup.SetAppSetupFinishedUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.GetSoundsUseCase
@@ -36,7 +36,7 @@ class OnboardingViewModel(
     private val downloadInitialSoundsUseCase: DownloadInitialSoundsUseCase,
     private val downloadAllSoundsUseCase: DownloadAllSoundsUseCase,
     private val setAppSetupFinishedUseCase: SetAppSetupFinishedUseCase
-) : ScreenModel {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(OnboardingState())
     val state: StateFlow<OnboardingState> = _state.asStateFlow()
@@ -59,7 +59,7 @@ class OnboardingViewModel(
     }
 
     private fun checkDataAndLoadConfig() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             _state.update { it.copy(status = OnboardingScreenStatus.LOADING_CONFIG) }
 
             val currentSounds = getSoundsUseCase().first()
@@ -113,19 +113,19 @@ class OnboardingViewModel(
                 }
                 else -> {}
             }
-        }.launchIn(screenModelScope)
+        }.launchIn(viewModelScope)
     }
 
     private fun finishSetup() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             setAppSetupFinishedUseCase()
             _state.update { it.copy(status = OnboardingScreenStatus.COMPLETED) }
             _effect.send(OnboardingEffect.NavigateToMainScreen)
         }
     }
 
-    override fun onDispose() {
+    override fun onCleared() {
         downloadJob?.cancel()
-        super.onDispose()
+        super.onCleared()
     }
 }

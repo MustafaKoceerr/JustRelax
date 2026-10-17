@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.domain.controller.SoundController
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.SetMixUseCase
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
@@ -20,9 +20,9 @@ class MixerViewModel(
     private val generateRandomMixUseCase: GenerateRandomMixUseCase,
     private val setMixUseCase: SetMixUseCase,
     soundControllerFactory: SoundController.Factory
-) : ScreenModel {
+) : ViewModel() {
 
-    val soundController: SoundController = soundControllerFactory.create(screenModelScope)
+    val soundController: SoundController = soundControllerFactory.create(viewModelScope)
 
     private val _state = MutableStateFlow(MixerContract.State())
     val state = _state.asStateFlow()
@@ -42,7 +42,7 @@ class MixerViewModel(
             }
 
             is MixerContract.Event.ToggleSound -> {
-                screenModelScope.launch {
+                viewModelScope.launch {
                     soundController.toggleSound(event.soundId)
                 }
             }
@@ -56,7 +56,7 @@ class MixerViewModel(
     private fun generateAndPlayMix() {
         if (_state.value.isGenerating) return
 
-        screenModelScope.launch {
+        viewModelScope.launch {
             _state.update { it.copy(isGenerating = true) }
             try {
                 val mixMap = generateRandomMixUseCase(_state.value.selectedSoundCount)
@@ -84,7 +84,7 @@ class MixerViewModel(
     }
 
     private fun sendEffect(effect: MixerContract.Effect) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             _effect.send(effect)
         }
     }

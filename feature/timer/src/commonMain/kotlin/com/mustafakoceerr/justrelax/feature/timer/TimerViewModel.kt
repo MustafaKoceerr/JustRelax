@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.timer
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.domain.timer.TimerManager
 import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
 import com.mustafakoceerr.justrelax.feature.timer.mvi.TimerContract
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.update
 
 class TimerViewModel(
     private val timerManager: TimerManager
-) : ScreenModel {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(TimerContract.State())
     val state = _state.asStateFlow()
@@ -53,6 +53,6 @@ class TimerViewModel(
                     remainingSeconds = domainState.remainingSeconds
                 )
             }
-        }.launchIn(screenModelScope)
+        }.launchIn(viewModelScope)
     }
 }

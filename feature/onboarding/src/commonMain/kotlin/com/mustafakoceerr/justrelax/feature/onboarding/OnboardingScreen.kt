@@ -12,10 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
-import com.mustafakoceerr.justrelax.core.navigation.AppScreen
+import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.feature.onboarding.components.DownloadOptionType
@@ -27,40 +24,36 @@ import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingEffect
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingIntent
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingScreenStatus
 import com.mustafakoceerr.justrelax.feature.onboarding.mvi.OnboardingState
-import com.mustafakoceerr.justrelax.feature.onboarding.navigation.OnboardingNavigator
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.koinInject
 
-data object OnboardingScreen : AppScreen {
+@Composable
+fun OnboardingRoute(
+    onFinished: () -> Unit,
+) {
+    val viewModel = koinViewModel<OnboardingViewModel>()
+    val state by viewModel.state.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        val viewModel = koinScreenModel<OnboardingViewModel>()
-        val state by viewModel.state.collectAsState()
-        val onboardingNavigator = koinInject<OnboardingNavigator>()
-        val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(Unit) {
+        viewModel.effect.collectLatest { effect ->
+            when (effect) {
+                is OnboardingEffect.NavigateToMainScreen -> {
+                    onFinished()
+                }
 
-        LaunchedEffect(Unit) {
-            viewModel.effect.collectLatest { effect ->
-                when (effect) {
-                    is OnboardingEffect.NavigateToMainScreen -> {
-                        navigator.replaceAll(onboardingNavigator.toMain())
-                    }
-
-                    is OnboardingEffect.ShowError -> {
-                        snackbarHostState.showSnackbar(effect.message.resolve())
-                    }
+                is OnboardingEffect.ShowError -> {
+                    snackbarHostState.showSnackbar(effect.message.resolve())
                 }
             }
         }
-
-        OnboardingUi(
-            state = state,
-            snackbarHostState = snackbarHostState,
-            onIntent = viewModel::processIntent
-        )
     }
+
+    OnboardingUi(
+        state = state,
+        snackbarHostState = snackbarHostState,
+        onIntent = viewModel::processIntent
+    )
 }
 
 @Composable

@@ -34,9 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.koin.koinScreenModel
+import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
-import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.ai.components.AiMixInfo
@@ -50,32 +49,29 @@ import justrelax.feature.ai.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-object AiScreen : AppScreen {
+@Composable
+fun AiRoute() {
+    val snackbarController = koinInject<GlobalSnackbarController>()
+    val viewModel = koinViewModel<AiViewModel>()
 
-    @Composable
-    override fun Content() {
-        val snackbarController = koinInject<GlobalSnackbarController>()
-        val viewModel = koinScreenModel<AiViewModel>()
+    val state by viewModel.state.collectAsState()
+    val soundControllerState by viewModel.soundController.state.collectAsState()
 
-        val state by viewModel.state.collectAsState()
-        val soundControllerState by viewModel.soundController.state.collectAsState()
-
-        LaunchedEffect(Unit) {
-            viewModel.effect.collect { effect ->
-                when (effect) {
-                    is AiContract.Effect.ShowSnackbar -> {
-                        snackbarController.showSnackbar(effect.message.resolve())
-                    }
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is AiContract.Effect.ShowSnackbar -> {
+                    snackbarController.showSnackbar(effect.message.resolve())
                 }
             }
         }
-
-        AiScreenContent(
-            state = state,
-            soundControllerState = soundControllerState,
-            onEvent = viewModel::onEvent,
-        )
     }
+
+    AiScreenContent(
+        state = state,
+        soundControllerState = soundControllerState,
+        onEvent = viewModel::onEvent,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -17,11 +17,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
+import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
-import com.mustafakoceerr.justrelax.core.navigation.AppScreen
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
@@ -35,46 +32,44 @@ import justrelax.feature.settings.generated.resources.settings_title
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
 
-data object SettingsScreen : AppScreen {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SettingsRoute(
+    onBack: () -> Unit,
+) {
+    val screenModel = koinViewModel<SettingsViewModel>()
+    val state by screenModel.state.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        val screenModel = koinScreenModel<SettingsViewModel>()
-        val state by screenModel.state.collectAsState()
-        val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(Unit) {
+        screenModel.effect.collectLatest { effect ->
+            when (effect) {
+                is SettingsEffect.ShowMessage -> snackbarHostState.showSnackbar(effect.message.resolve())
 
-        LaunchedEffect(Unit) {
-            screenModel.effect.collectLatest { effect ->
-                when (effect) {
-                    is SettingsEffect.ShowMessage -> snackbarHostState.showSnackbar(effect.message.resolve())
-
-                }
             }
         }
+    }
 
-        JustRelaxBackground {
-            Scaffold(
-                containerColor = Color.Transparent,
-                topBar = {
-                    JustRelaxTopBar(
-                        title = stringResource(Res.string.settings_title),
-                        navigationIcon = {
-                            IconButton(onClick = { navigator.pop() }) {
-                                Icon(Icons.AutoMirrored.Rounded.ArrowBack, "Back")
-                            }
+    JustRelaxBackground {
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = {
+                JustRelaxTopBar(
+                    title = stringResource(Res.string.settings_title),
+                    navigationIcon = {
+                        IconButton(onClick = { onBack() }) {
+                            Icon(Icons.AutoMirrored.Rounded.ArrowBack, "Back")
                         }
-                    )
-                },
-                snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) }
-            ) { innerPadding ->
-                SettingsScreenLayout(
-                    state = state,
-                    onIntent = screenModel::processIntent,
-                    modifier = Modifier.padding(innerPadding)
+                    }
                 )
-            }
+            },
+            snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) }
+        ) { innerPadding ->
+            SettingsScreenLayout(
+                state = state,
+                onIntent = screenModel::processIntent,
+                modifier = Modifier.padding(innerPadding)
+            )
         }
     }
 }

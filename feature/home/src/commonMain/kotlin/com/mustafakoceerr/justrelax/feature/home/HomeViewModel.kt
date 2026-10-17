@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.home
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.AdjustVolumeUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetGlobalMixerStateUseCase
@@ -31,7 +31,7 @@ class HomeViewModel(
     private val stopSoundUseCase: StopSoundUseCase,
     private val downloadSingleSoundUseCase: DownloadSingleSoundUseCase,
     private val adjustVolumeUseCase: AdjustVolumeUseCase
-) : ScreenModel, HomeContract {
+) : ViewModel(), HomeContract {
     private val _state = MutableStateFlow(HomeContract.State())
     val state = _state.asStateFlow()
 
@@ -56,7 +56,7 @@ class HomeViewModel(
                     playerState = playerState
                 )
             }
-        }.launchIn(screenModelScope)
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: HomeContract.Event) {
@@ -72,7 +72,7 @@ class HomeViewModel(
     }
 
     private fun handleSoundClick(sound: SoundUi) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             val isPlaying = state.value.playerState.activeSounds.any { it.id == sound.id }
 
             if (isPlaying) {
@@ -97,12 +97,12 @@ class HomeViewModel(
     }
 
     private fun sendEffect(effectToSend: HomeContract.Effect) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             _effect.send(effectToSend)
         }
     }
 
-    private fun downloadSound(sound: SoundUi) = screenModelScope.launch {
+    private fun downloadSound(sound: SoundUi) = viewModelScope.launch {
         _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds + sound.id) }
 
         val isSuccess = downloadSingleSoundUseCase(

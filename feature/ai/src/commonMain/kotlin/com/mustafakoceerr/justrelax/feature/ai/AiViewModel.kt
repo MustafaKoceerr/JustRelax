@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.ai
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.controller.SoundController
@@ -24,9 +24,9 @@ class AiViewModel(
     private val generateAiMixUseCase: GenerateAiMixUseCase,
     private val setMixUseCase: SetMixUseCase,
     soundControllerFactory: SoundController.Factory
-) : ScreenModel {
+) : ViewModel() {
 
-    val soundController: SoundController = soundControllerFactory.create(screenModelScope)
+    val soundController: SoundController = soundControllerFactory.create(viewModelScope)
 
     private val _state = MutableStateFlow(AiContract.State())
     val state = _state.asStateFlow()
@@ -63,7 +63,7 @@ class AiViewModel(
             }
 
             is AiContract.Event.ToggleSound -> {
-                screenModelScope.launch {
+                viewModelScope.launch {
                     soundController.toggleSound(event.soundId)
                 }
             }
@@ -78,7 +78,7 @@ class AiViewModel(
         val prompt = _state.value.prompt
         if (prompt.isBlank()) return
 
-        screenModelScope.launch {
+        viewModelScope.launch {
             generateAiMixUseCase(prompt).collect { result ->
                 when (result) {
                     is Resource.Loading -> {
@@ -124,6 +124,6 @@ class AiViewModel(
     }
 
     private fun sendEffect(effect: AiContract.Effect) {
-        screenModelScope.launch { _effect.send(effect) }
+        viewModelScope.launch { _effect.send(effect) }
     }
 }

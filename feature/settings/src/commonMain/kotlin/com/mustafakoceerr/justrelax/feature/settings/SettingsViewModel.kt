@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.settings
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.domain.system.LanguageController
 import com.mustafakoceerr.justrelax.core.domain.system.LanguageStrategy
 import com.mustafakoceerr.justrelax.core.domain.system.SystemLauncher
@@ -41,7 +41,7 @@ class SettingsViewModel(
     private val systemLauncher: SystemLauncher,
     private val languageController: LanguageController,
     private val getLegalUrlUseCase: GetLegalUrlUseCase
-) : ScreenModel {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingsState())
     val state: StateFlow<SettingsState> = _state.asStateFlow()
@@ -70,21 +70,21 @@ class SettingsViewModel(
     }
 
     private fun openPrivacyPolicy() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             val url = getLegalUrlUseCase.getPrivacyPolicy()
             systemLauncher.openUrl(url)
         }
     }
 
     private fun openTermsAndConditions() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             val url = getLegalUrlUseCase.getTermsAndConditions()
             systemLauncher.openUrl(url)
         }
     }
 
     private fun observeTheme() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             getAppThemeUseCase().collectLatest { theme ->
                 _state.update { it.copy(currentTheme = theme) }
             }
@@ -92,7 +92,7 @@ class SettingsViewModel(
     }
 
     private fun observeLanguage() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             getAppLanguageUseCase().collectLatest { language ->
                 _state.update { it.copy(currentLanguage = language) }
             }
@@ -114,7 +114,7 @@ class SettingsViewModel(
     }
 
     private fun changeTheme(theme: AppTheme) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             setAppThemeUseCase(theme)
         }
     }
@@ -124,7 +124,7 @@ class SettingsViewModel(
     }
 
     private fun changeLanguage(language: AppLanguage) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             setAppLanguageUseCase(language)
             closeLanguageSheet()
         }
@@ -170,11 +170,11 @@ class SettingsViewModel(
 
                 else -> {}
             }
-        }.launchIn(screenModelScope)
+        }.launchIn(viewModelScope)
     }
 
-    override fun onDispose() {
+    override fun onCleared() {
         downloadJob?.cancel()
-        super.onDispose()
+        super.onCleared()
     }
 }
