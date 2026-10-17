@@ -33,34 +33,38 @@ val appModule = module {
 
 expect val platformAudioModule: Module
 
+/** Uygulamanın tüm Koin modülleri; DI grafiği testi de bu listeyi doğrular. */
+val appModules: List<Module>
+    get() = listOf(
+        commonModule,
+        domainModule,
+        databaseModule,
+        networkModule,
+        repositoryModule,
+        uiModule,
+        systemModule,
+
+        audioCoreModule,
+        platformAudioModule,
+
+        appModule,
+        navigationTargetsModule,
+
+        homeModule,
+        settingsModule,
+        playerModule,
+        onboardingModule,
+        splashModule,
+        timerModule,
+        mixerModule,
+        savedModule,
+        aiModule
+    )
+
 fun initKoin(config: KoinAppDeclaration? = null) {
     startKoin {
         config?.invoke(this)
 
-        modules(
-            commonModule,
-            domainModule,
-            databaseModule,
-            networkModule,
-            repositoryModule,
-            uiModule,
-            systemModule,
-
-            audioCoreModule,
-            platformAudioModule,
-
-            appModule,
-            navigationTargetsModule,
-
-            homeModule,
-            settingsModule,
-            playerModule,
-            onboardingModule,
-            splashModule,
-            timerModule,
-            mixerModule,
-            savedModule,
-            aiModule
-        )
+        modules(appModules)
     }
 }

@@ -15,7 +15,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(project(":core:domain"))
-            api(project(":core:domain"))
             implementation(project(":core:database"))
             implementation(project(":core:network"))
             implementation(project(":core:common"))
@@ -39,6 +38,16 @@ kotlin {
 
             // 2. Kotlin Coroutines (Flow, withContext için ŞART)
             implementation(libs.findLibrary("kotlinx-coroutines-core").get())
+        }
+
+        commonTest.dependencies {
+            implementation(project(":core:testing"))
+            implementation(libs.findLibrary("ktor-client-mock").get())
+            implementation(libs.findLibrary("okio-fakefilesystem").get())
+        }
+
+        androidUnitTest.dependencies {
+            implementation(libs.findLibrary("sqldelight-sqlite-driver").get())
         }
     }
 }

@@ -12,7 +12,7 @@ class DownloadSingleSoundUseCase(
 ) {
     suspend operator fun invoke(soundId: String, remoteUrl: String): Boolean {
         val soundsDir = localStorageRepository.getSoundsDirectoryPath()
-        val extension = remoteUrl.substringAfterLast('.', "m4a").takeIf { it.isNotEmpty() } ?: "m4a"
+        val extension = fileExtensionOf(remoteUrl)
         val finalPath = "$soundsDir/$soundId.$extension"
         val tempPath = "$finalPath.tmp"
 
@@ -46,4 +46,14 @@ class DownloadSingleSoundUseCase(
             return false
         }
     }
+}
+
+private const val DEFAULT_EXTENSION = "m4a"
+
+/** URL'nin son path segmentinden uzantıyı çıkarır; query/fragment yok sayılır. */
+private fun fileExtensionOf(url: String): String {
+    val lastSegment = url.substringBefore('?').substringBefore('#').substringAfterLast('/')
+    return lastSegment.substringAfterLast('.', missingDelimiterValue = "")
+        .takeIf { it.isNotEmpty() && it.all(Char::isLetterOrDigit) }
+        ?: DEFAULT_EXTENSION
 }

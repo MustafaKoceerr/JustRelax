@@ -8,17 +8,17 @@ import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class SyncSoundsIfNecessaryUseCase(
     private val dataSourceStateRepository: DataSourceStateRepository,
-    private val soundSyncRepository: SoundSyncRepository
+    private val soundSyncRepository: SoundSyncRepository,
+    private val clock: Clock
 ) {
-    @OptIn(ExperimentalTime::class)
     suspend operator fun invoke(): Resource<Unit> {
         val lastSyncTimestamp = dataSourceStateRepository.getLastSoundSyncTimestamp().first()
-        val now = Clock.System.now().toEpochMilliseconds()
-        val twentyFourHoursInMillis = 24.hours.inWholeMilliseconds
+        val now = clock.now().toEpochMilliseconds()
 
-        if ((now - lastSyncTimestamp) > twentyFourHoursInMillis) {
+        if ((now - lastSyncTimestamp) > SYNC_INTERVAL.inWholeMilliseconds) {
             val syncResult = soundSyncRepository.syncWithServer()
             if (syncResult is Resource.Success) {
                 dataSourceStateRepository.setLastSoundSyncTimestamp(now)
@@ -26,5 +26,9 @@ class SyncSoundsIfNecessaryUseCase(
             return syncResult
         }
         return Resource.Success(Unit)
+    }
+
+    private companion object {
+        val SYNC_INTERVAL = 24.hours
     }
 }

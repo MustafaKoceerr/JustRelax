@@ -17,11 +17,14 @@ import com.mustafakoceerr.justrelax.data.repository.UserPreferencesRepositoryImp
 import com.mustafakoceerr.justrelax.data.repository.mapper.DatabaseSoundMapper
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import okio.FileSystem
+import okio.SYSTEM
 import org.koin.dsl.module
 
 val repositoryModule = module {
     includes(platformRepositoryModule)
 
+    single<FileSystem> { FileSystem.SYSTEM }
     singleOf(::DatabaseSoundMapper)
 
     singleOf(::UserPreferencesRepositoryImpl) { bind<UserPreferencesRepository>() }

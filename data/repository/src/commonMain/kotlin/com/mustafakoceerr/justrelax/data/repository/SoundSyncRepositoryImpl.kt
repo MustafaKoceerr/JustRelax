@@ -7,6 +7,7 @@ import com.mustafakoceerr.justrelax.core.database.db.JustRelaxDatabase
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundSyncRepository
 import com.mustafakoceerr.justrelax.core.domain.source.SoundRemoteDataSource
 import com.mustafakoceerr.justrelax.data.repository.mapper.DatabaseSoundMapper
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
 
 internal class SoundSyncRepositoryImpl(
@@ -34,7 +35,7 @@ internal class SoundSyncRepositoryImpl(
                     val localDbSound = localSoundsMap[remoteSound.id]
 
                     if (localDbSound == null) {
-                        database.soundQueries.insertOrReplace(
+                        database.soundQueries.insertSound(
                             id = remoteSound.id,
                             names = remoteSound.names,
                             categoryId = remoteSound.categoryId,
@@ -45,15 +46,15 @@ internal class SoundSyncRepositoryImpl(
                             sizeBytes = remoteSound.sizeBytes
                         )
                     } else {
-                        val localModelSound = soundMapper.toModel(localDbSound)
-                        if (localModelSound != remoteSound) {
-                            database.soundQueries.insertOrReplace(
+                        // Remote sounds never carry a localPath, so compare without it.
+                        val localModelSound = soundMapper.toModel(localDbSound).copy(localPath = null)
+                        if (localModelSound != remoteSound.copy(localPath = null)) {
+                            database.soundQueries.updateSoundMetadata(
                                 id = remoteSound.id,
                                 names = remoteSound.names,
                                 categoryId = remoteSound.categoryId,
                                 iconUrl = remoteSound.iconUrl,
                                 remoteUrl = remoteSound.remoteUrl,
-                                localPath = localDbSound.localPath,
                                 isInitial = remoteSound.isInitial,
                                 sizeBytes = remoteSound.sizeBytes
                             )
@@ -62,6 +63,8 @@ internal class SoundSyncRepositoryImpl(
                 }
             }
             Resource.Success(Unit)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Resource.Error(AppError.Unknown(e))
         }

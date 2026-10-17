@@ -27,8 +27,13 @@ import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadI
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSingleSoundUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 val domainModule = module {
+    single<Clock> { Clock.System }
+
     // Data & Sync
     factoryOf(::SyncSoundsIfNecessaryUseCase)
     factoryOf(::SyncSoundsUseCase)

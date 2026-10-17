@@ -16,6 +16,10 @@ kotlin {
 
             // DI
             implementation(libs.findLibrary("koin-core").get())
+        }
+
+        commonTest.dependencies {
+            implementation(project(":core:testing"))
+        }
     }
-}
 }
