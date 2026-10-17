@@ -16,6 +16,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.LibraryMusic
+import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,6 +58,7 @@ import justrelax.feature.mysounds.generated.resources.mysounds_empty_title
 import justrelax.feature.mysounds.generated.resources.mysounds_import
 import justrelax.feature.mysounds.generated.resources.mysounds_kind_bed
 import justrelax.feature.mysounds.generated.resources.mysounds_kind_event
+import justrelax.feature.mysounds.generated.resources.mysounds_record
 import justrelax.feature.mysounds.generated.resources.mysounds_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -65,6 +67,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun MySoundsRoute(
     onBack: () -> Unit,
     onOpenEditor: (ImportedAudio) -> Unit,
+    onOpenRecorder: () -> Unit,
     viewModel: MySoundsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -97,6 +100,7 @@ fun MySoundsRoute(
         uiState = uiState,
         snackbarHostState = snackbarHostState,
         onBack = onBack,
+        onRecord = onOpenRecorder,
         onImport = openPicker,
         onDelete = viewModel::requestDelete,
     )
@@ -108,6 +112,7 @@ fun MySoundsScreen(
     uiState: MySoundsUiState,
     snackbarHostState: SnackbarHostState,
     onBack: () -> Unit,
+    onRecord: () -> Unit,
     onImport: () -> Unit,
     onDelete: (soundId: String) -> Unit,
 ) {
@@ -122,6 +127,11 @@ fun MySoundsScreen(
                     navigationIcon = {
                         IconButton(onClick = onBack) {
                             Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(Res.string.mysounds_back))
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = onRecord) {
+                            Icon(Icons.Rounded.Mic, stringResource(Res.string.mysounds_record))
                         }
                     },
                 )

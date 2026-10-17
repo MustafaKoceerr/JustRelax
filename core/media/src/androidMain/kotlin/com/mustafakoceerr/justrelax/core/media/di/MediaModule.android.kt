@@ -1,6 +1,8 @@
 package com.mustafakoceerr.justrelax.core.media.di
 
 import com.mustafakoceerr.justrelax.core.media.AndroidAudioImporter
+import com.mustafakoceerr.justrelax.core.media.AndroidAudioRecorder
+import com.mustafakoceerr.justrelax.core.media.AudioRecorder
 import com.mustafakoceerr.justrelax.core.media.AndroidWaveformReader
 import com.mustafakoceerr.justrelax.core.media.AudioImporter
 import com.mustafakoceerr.justrelax.core.media.AudioTrimmer
@@ -16,4 +18,5 @@ internal actual val platformMediaModule = module {
     single<AudioTrimmer> { TransformerAudioTrimmer(androidContext()) }
     single<AudioImporter> { AndroidAudioImporter(androidContext(), get()) }
     factory<ClipPreviewer> { ExoClipPreviewer(androidContext()) }
+    factory<AudioRecorder> { AndroidAudioRecorder(androidContext()) }
 }

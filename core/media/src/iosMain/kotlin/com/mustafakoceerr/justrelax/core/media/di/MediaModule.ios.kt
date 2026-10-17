@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.core.media.di
 
 import com.mustafakoceerr.justrelax.core.media.AudioImporter
+import com.mustafakoceerr.justrelax.core.media.AudioRecorder
 import com.mustafakoceerr.justrelax.core.media.AudioTrimmer
 import com.mustafakoceerr.justrelax.core.media.ClipPreviewer
 import com.mustafakoceerr.justrelax.core.media.ImportedAudio
@@ -19,6 +20,7 @@ internal actual val platformMediaModule = module {
     single<AudioTrimmer> { UnsupportedMedia }
     single<AudioImporter> { UnsupportedMedia }
     factory<ClipPreviewer> { SilentPreviewer() }
+    factory<AudioRecorder> { UnsupportedRecorder }
 }
 
 private object UnsupportedMedia : WaveformReader, AudioTrimmer, AudioImporter {
@@ -26,6 +28,13 @@ private object UnsupportedMedia : WaveformReader, AudioTrimmer, AudioImporter {
     override suspend fun trim(sourcePath: String, range: TrimRange, outputPath: String): TrimmedAudio = unsupported()
     override suspend fun import(uri: String): ImportedAudio = unsupported()
     private fun unsupported(): Nothing = throw MediaException("Not supported on iOS yet")
+}
+
+private object UnsupportedRecorder : AudioRecorder {
+    override fun start(): String = throw MediaException("Not supported on iOS yet")
+    override fun level() = 0f
+    override fun stop() = Unit
+    override fun cancel() = Unit
 }
 
 private class SilentPreviewer : ClipPreviewer {
