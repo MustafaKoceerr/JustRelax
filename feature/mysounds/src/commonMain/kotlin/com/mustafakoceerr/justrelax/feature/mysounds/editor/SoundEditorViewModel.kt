@@ -11,6 +11,7 @@ import com.mustafakoceerr.justrelax.core.media.TrimRules
 import com.mustafakoceerr.justrelax.core.media.WaveformReader
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
+import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.mysounds.editor.SoundEditorUiState.Companion.MAX_NAME_LENGTH
@@ -31,6 +32,8 @@ import kotlinx.coroutines.launch
 class SoundEditorViewModel(
     private val sourcePath: String,
     suggestedName: String?,
+    /** Where the file came from if it was found online; it decides the sound's license and credit. */
+    private val origin: SoundOrigin?,
     private val waveformReader: WaveformReader,
     private val previewer: ClipPreviewer,
     private val userSoundRepository: UserSoundRepository,
@@ -92,6 +95,7 @@ class SoundEditorViewModel(
                 kind = state.kind,
                 sourcePath = sourcePath,
                 range = state.range,
+                origin = origin,
             )
             try {
                 userSoundRepository.create(draft)

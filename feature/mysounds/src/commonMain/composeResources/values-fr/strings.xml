@@ -37,4 +37,5 @@
     <string name="mysounds_record_stop">Arrêter et modifier</string>
     <string name="mysounds_record_failed">L’enregistrement a échoué. Réessayez.</string>
     <string name="mysounds_record_permission_denied">JustRelax a besoin du micro pour enregistrer un son. Vous pouvez l’autoriser dans les réglages du système.</string>
+    <string name="mysounds_search_online">Rechercher sur Freesound</string>
 </resources>

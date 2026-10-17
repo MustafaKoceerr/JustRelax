@@ -17,6 +17,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.Mic
+import androidx.compose.material.icons.rounded.TravelExplore
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -59,6 +60,7 @@ import justrelax.feature.mysounds.generated.resources.mysounds_import
 import justrelax.feature.mysounds.generated.resources.mysounds_kind_bed
 import justrelax.feature.mysounds.generated.resources.mysounds_kind_event
 import justrelax.feature.mysounds.generated.resources.mysounds_record
+import justrelax.feature.mysounds.generated.resources.mysounds_search_online
 import justrelax.feature.mysounds.generated.resources.mysounds_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -68,6 +70,7 @@ fun MySoundsRoute(
     onBack: () -> Unit,
     onOpenEditor: (ImportedAudio) -> Unit,
     onOpenRecorder: () -> Unit,
+    onOpenFreesound: () -> Unit,
     viewModel: MySoundsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -101,6 +104,7 @@ fun MySoundsRoute(
         snackbarHostState = snackbarHostState,
         onBack = onBack,
         onRecord = onOpenRecorder,
+        onSearchOnline = onOpenFreesound,
         onImport = openPicker,
         onDelete = viewModel::requestDelete,
     )
@@ -113,6 +117,7 @@ fun MySoundsScreen(
     snackbarHostState: SnackbarHostState,
     onBack: () -> Unit,
     onRecord: () -> Unit,
+    onSearchOnline: () -> Unit,
     onImport: () -> Unit,
     onDelete: (soundId: String) -> Unit,
 ) {
@@ -130,6 +135,9 @@ fun MySoundsScreen(
                         }
                     },
                     actions = {
+                        IconButton(onClick = onSearchOnline) {
+                            Icon(Icons.Rounded.TravelExplore, stringResource(Res.string.mysounds_search_online))
+                        }
                         IconButton(onClick = onRecord) {
                             Icon(Icons.Rounded.Mic, stringResource(Res.string.mysounds_record))
                         }

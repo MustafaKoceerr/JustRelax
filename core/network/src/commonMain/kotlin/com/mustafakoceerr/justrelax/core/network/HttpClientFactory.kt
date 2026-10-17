@@ -8,6 +8,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.HttpHeaders
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -37,6 +38,8 @@ internal fun createHttpClient(engine: HttpClientEngine, enableLogging: Boolean) 
     if (enableLogging) {
         install(Logging) {
             level = LogLevel.HEADERS
+            // API keys travel in this header; they must never reach the log.
+            sanitizeHeader { it == HttpHeaders.Authorization }
         }
     }
 

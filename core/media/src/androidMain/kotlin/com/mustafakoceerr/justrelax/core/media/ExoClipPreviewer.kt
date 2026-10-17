@@ -26,7 +26,7 @@ internal class ExoClipPreviewer(private val context: Context) : ClipPreviewer {
         val player = player ?: createPlayer().also { player = it }
         player.setMediaItem(
             MediaItem.Builder()
-                .setUri(File(path).toURI().toString())
+                .setUri(if ("://" in path) path else File(path).toURI().toString())
                 .setClippingConfiguration(
                     MediaItem.ClippingConfiguration.Builder()
                         .setStartPositionMs(range.startMs)

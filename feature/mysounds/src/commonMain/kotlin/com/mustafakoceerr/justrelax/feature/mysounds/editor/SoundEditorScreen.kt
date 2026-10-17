@@ -54,6 +54,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.media.TrimProblem
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
+import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
@@ -92,8 +93,9 @@ import org.koin.core.parameter.parametersOf
 fun SoundEditorRoute(
     sourcePath: String,
     suggestedName: String?,
+    origin: SoundOrigin?,
     onBack: () -> Unit,
-    viewModel: SoundEditorViewModel = koinViewModel(key = sourcePath) { parametersOf(sourcePath, suggestedName) },
+    viewModel: SoundEditorViewModel = koinViewModel(key = sourcePath) { parametersOf(sourcePath, suggestedName, origin) },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }

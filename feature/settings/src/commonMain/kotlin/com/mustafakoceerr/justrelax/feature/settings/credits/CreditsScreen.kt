@@ -26,9 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mustafakoceerr.justrelax.core.model.License
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
+import com.mustafakoceerr.justrelax.core.ui.util.label
 import justrelax.feature.settings.generated.resources.Res
 import justrelax.feature.settings.generated.resources.credits_author
 import justrelax.feature.settings.generated.resources.credits_empty
@@ -101,11 +101,3 @@ fun CreditsScreen(
     }
 }
 
-/** License names are the same in every language. */
-private val License.label: String
-    get() = when (this) {
-        License.CC0 -> "CC0"
-        License.CC_BY_3_0 -> "CC BY 3.0"
-        License.CC_BY_4_0 -> "CC BY 4.0"
-        License.OWN -> "©"
-    }

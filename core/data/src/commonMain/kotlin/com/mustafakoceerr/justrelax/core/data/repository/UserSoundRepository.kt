@@ -4,6 +4,7 @@ import com.mustafakoceerr.justrelax.core.media.TrimRange
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
+import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import kotlinx.coroutines.flow.Flow
 
@@ -15,9 +16,14 @@ data class UserSoundDraft(
     val kind: SoundKind,
     val sourcePath: String,
     val range: TrimRange,
+    /** Set for a sound found online, e.g. on Freesound; null for the user's own recording or file. */
+    val origin: SoundOrigin? = null,
 )
 
-/** The user's own sounds: imported or recorded on this device, kept in the library with the rest. */
+/**
+ * Sounds added on this device: the user's own files and recordings, and sounds found on Freesound.
+ * They are kept in the library with the rest and never touched by a catalog sync.
+ */
 interface UserSoundRepository {
     /** Newest first. */
     fun getUserSounds(): Flow<List<Sound>>

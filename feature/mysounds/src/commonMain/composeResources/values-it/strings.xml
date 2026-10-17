@@ -37,4 +37,5 @@
     <string name="mysounds_record_stop">Ferma e modifica</string>
     <string name="mysounds_record_failed">Registrazione non riuscita. Riprova.</string>
     <string name="mysounds_record_permission_denied">JustRelax ha bisogno del microfono per registrare un suono. Puoi consentirlo nelle impostazioni di sistema.</string>
+    <string name="mysounds_search_online">Cerca su Freesound</string>
 </resources>

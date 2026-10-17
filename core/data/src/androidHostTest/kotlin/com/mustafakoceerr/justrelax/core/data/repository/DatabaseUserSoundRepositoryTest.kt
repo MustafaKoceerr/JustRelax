@@ -7,7 +7,9 @@ import com.mustafakoceerr.justrelax.core.database.createDatabase
 import com.mustafakoceerr.justrelax.core.database.db.JustRelaxDatabase
 import com.mustafakoceerr.justrelax.core.media.MediaException
 import com.mustafakoceerr.justrelax.core.media.TrimRange
+import com.mustafakoceerr.justrelax.core.model.Attribution
 import com.mustafakoceerr.justrelax.core.model.License
+import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.SoundClip
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
@@ -75,6 +77,26 @@ class DatabaseUserSoundRepositoryTest {
         assertEquals(SoundIcon.CAFE, sound.icon)
         assertEquals(listOf(SoundClip(remoteUrl = null, localPath = "/user/user-1.m4a", durationMs = 3_000, sizeBytes = 30_000)), sound.clips)
         assertEquals(listOf(sound), repository.getUserSounds().first())
+    }
+
+    @Test
+    fun create_withAnOrigin_keepsItsSourceLicenseCreditAndTags() = runTest {
+        val origin = SoundOrigin(
+            remoteId = "123",
+            license = License.CC_BY_4_0,
+            attribution = Attribution("Kettle boiling", "someone", "https://freesound.org/s/123/"),
+            tags = listOf("kettle", "kitchen"),
+        )
+        val repository = repository()
+
+        repository.create(draft.copy(origin = origin))
+
+        val sound = repository.getUserSounds().first().single()
+        assertEquals(SoundSource.FREESOUND, sound.source)
+        assertEquals(License.CC_BY_4_0, sound.license)
+        assertEquals(origin.attribution, sound.attribution)
+        assertEquals(listOf("kettle", "kitchen"), sound.tags)
+        assertEquals("123", sound.remoteId)
     }
 
     @Test

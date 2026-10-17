@@ -4,6 +4,7 @@ import android.content.Context
 import app.cash.sqldelight.db.SqlDriver
 import com.mustafakoceerr.justrelax.core.database.db.Saved_scene_layer
 import com.mustafakoceerr.justrelax.core.database.db.Sound
+import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
 import kotlinx.coroutines.CoroutineScope
@@ -33,8 +34,9 @@ class KoinGraphTest {
                 HttpClientConfig::class,
                 // StarterPackInstaller's app-wide scope is created in its definition
                 CoroutineScope::class,
-                // SoundEditorViewModel gets its file from the route with parametersOf
+                // SoundEditorViewModel gets its file and origin from the route with parametersOf
                 String::class,
+                SoundOrigin::class,
             )
         )
     }

@@ -36,6 +36,7 @@ kotlin {
             implementation(project(":feature:scene"))
             implementation(project(":feature:splash"))
             implementation(project(":feature:mysounds"))
+            implementation(project(":feature:freesound"))
 
             implementation(libs.bundles.koin.compose)
             implementation(libs.bundles.lifecycle.compose)

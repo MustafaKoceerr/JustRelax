@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="freesound_title">Freesound</string>
+    <string name="freesound_search_hint">Sounds suchen, z. B. Regen auf dem Zelt</string>
+    <string name="freesound_search">Suchen</string>
+    <string name="freesound_intro">Finde kostenlose Sounds von Freesound.org. Es werden nur Sounds gezeigt, die du nutzen darfst; ihre Urheber werden in der App genannt.</string>
+    <string name="freesound_no_results">Nichts gefunden. Versuche andere Wörter.</string>
+    <string name="freesound_load_more">Mehr laden</string>
+    <string name="freesound_add">Hinzufügen</string>
+    <string name="freesound_listen">Anhören</string>
+    <string name="freesound_stop">Stopp</string>
+    <string name="freesound_by">von %1$s</string>
+    <string name="freesound_offline">Keine Internetverbindung.</string>
+    <string name="freesound_rate_limited">Zu viele Suchanfragen. Warte eine Minute und versuche es erneut.</string>
+    <string name="freesound_failed">Die Suche hat nicht funktioniert. Versuche es erneut.</string>
+    <string name="freesound_download_failed">Der Sound konnte nicht heruntergeladen werden. Versuche es erneut.</string>
+    <string name="freesound_back">Zurück</string>
+</resources>

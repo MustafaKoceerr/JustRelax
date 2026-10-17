@@ -37,4 +37,5 @@
     <string name="mysounds_record_stop">정지하고 편집</string>
     <string name="mysounds_record_failed">녹음하지 못했어요. 다시 시도하세요.</string>
     <string name="mysounds_record_permission_denied">사운드를 녹음하려면 JustRelax에 마이크 권한이 필요해요. 시스템 설정에서 허용할 수 있어요.</string>
+    <string name="mysounds_search_online">Freesound에서 검색</string>
 </resources>

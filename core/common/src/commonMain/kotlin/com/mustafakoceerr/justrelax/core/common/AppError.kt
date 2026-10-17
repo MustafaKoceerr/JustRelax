@@ -13,6 +13,7 @@ sealed class AppError(
         class NoInternet : Network("No internet connection")
         class TimeOut : Network("Connection timed out")
         data class ServerError(val code: Int) : Network("Server error: $code")
+        class RateLimited : Network("Too many requests")
         class SerializationError : Network("Data parsing error")
         data class Unknown(override val cause: Throwable?) : Network("Unknown network error", cause)
     }

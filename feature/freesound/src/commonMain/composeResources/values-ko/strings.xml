@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="freesound_title">Freesound</string>
+    <string name="freesound_search_hint">사운드 검색 (예: 텐트 위 빗소리)</string>
+    <string name="freesound_search">검색</string>
+    <string name="freesound_intro">Freesound.org에 공유된 무료 사운드를 찾아보세요. 사용할 수 있는 사운드만 표시되며, 제작자는 앱에 표기돼요.</string>
+    <string name="freesound_no_results">결과가 없어요. 다른 단어로 검색해 보세요.</string>
+    <string name="freesound_load_more">더 불러오기</string>
+    <string name="freesound_add">추가</string>
+    <string name="freesound_listen">듣기</string>
+    <string name="freesound_stop">정지</string>
+    <string name="freesound_by">제작: %1$s</string>
+    <string name="freesound_offline">인터넷에 연결되어 있지 않아요.</string>
+    <string name="freesound_rate_limited">검색이 너무 많아요. 1분 후 다시 시도하세요.</string>
+    <string name="freesound_failed">검색하지 못했어요. 다시 시도하세요.</string>
+    <string name="freesound_download_failed">사운드를 다운로드하지 못했어요. 다시 시도하세요.</string>
+    <string name="freesound_back">뒤로</string>
+</resources>

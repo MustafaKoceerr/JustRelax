@@ -1,6 +1,8 @@
 package com.mustafakoceerr.justrelax.core.data.di
 
 import com.mustafakoceerr.justrelax.core.data.download.SoundDownloader
+import com.mustafakoceerr.justrelax.core.data.freesound.FreesoundRepository
+import com.mustafakoceerr.justrelax.core.data.freesound.NetworkFreesoundRepository
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepositoryImpl
 import com.mustafakoceerr.justrelax.core.data.repository.AppSetupRepository
@@ -53,6 +55,7 @@ val dataModule = module {
     singleOf(::LegalRepositoryImpl) { bind<LegalRepository>() }
     singleOf(::AiMixRepositoryImpl) { bind<AiMixRepository>() }
     singleOf(::InMemorySceneRepository) { bind<SceneRepository>() }
+    single<FreesoundRepository> { NetworkFreesoundRepository(get(), get(), get()) }
     single<UserSoundRepository> {
         DatabaseUserSoundRepository(get(), get(), get(), get(), get(), newId = { "user-${Uuid.random()}" })
     }

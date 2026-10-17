@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.buildConfig)
 }
 
-// The OpenAI key comes from local.properties and is built into the app for now; it moves to a
+// The OpenAI and Freesound keys come from local.properties and is built into the app for now; it moves to a
 // server before the next release.
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")
@@ -17,6 +17,7 @@ buildConfig {
     packageName("com.mustafakoceerr.justrelax.core.network")
     buildConfigField("String", "CDN_BASE_URL", "\"https://cdn.mustafakoceerr.com/\"")
     buildConfigField("String", "OPENAI_API_KEY", "\"${localProperties.getProperty("OPENAI_API_KEY")}\"")
+    buildConfigField("String", "FREESOUND_API_KEY", "\"${localProperties.getProperty("FREESOUND_API_KEY").orEmpty()}\"")
 }
 
 kotlin {

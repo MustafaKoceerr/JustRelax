@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="freesound_title">Freesound</string>
+    <string name="freesound_search_hint">Pesquise sons, ex.: chuva na barraca</string>
+    <string name="freesound_search">Pesquisar</string>
+    <string name="freesound_intro">Encontre sons gratuitos compartilhados no Freesound.org. Só aparecem sons que você pode usar; os autores são creditados no app.</string>
+    <string name="freesound_no_results">Nada encontrado. Tente outras palavras.</string>
+    <string name="freesound_load_more">Carregar mais</string>
+    <string name="freesound_add">Adicionar</string>
+    <string name="freesound_listen">Ouvir</string>
+    <string name="freesound_stop">Parar</string>
+    <string name="freesound_by">por %1$s</string>
+    <string name="freesound_offline">Sem conexão com a internet.</string>
+    <string name="freesound_rate_limited">Muitas pesquisas. Aguarde um minuto e tente novamente.</string>
+    <string name="freesound_failed">A pesquisa não funcionou. Tente novamente.</string>
+    <string name="freesound_download_failed">Não foi possível baixar o som. Tente novamente.</string>
+    <string name="freesound_back">Voltar</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="freesound_title">Freesound</string>
+    <string name="freesound_search_hint">Sök ljud, t.ex. regn på ett tält</string>
+    <string name="freesound_search">Sök</string>
+    <string name="freesound_intro">Hitta gratis ljud som delats på Freesound.org. Bara ljud du får använda visas; upphovspersonerna anges i appen.</string>
+    <string name="freesound_no_results">Inget hittades. Prova andra ord.</string>
+    <string name="freesound_load_more">Läs in fler</string>
+    <string name="freesound_add">Lägg till</string>
+    <string name="freesound_listen">Lyssna</string>
+    <string name="freesound_stop">Stoppa</string>
+    <string name="freesound_by">av %1$s</string>
+    <string name="freesound_offline">Ingen internetanslutning.</string>
+    <string name="freesound_rate_limited">För många sökningar. Vänta en minut och försök igen.</string>
+    <string name="freesound_failed">Sökningen misslyckades. Försök igen.</string>
+    <string name="freesound_download_failed">Ljudet kunde inte laddas ned. Försök igen.</string>
+    <string name="freesound_back">Tillbaka</string>
+</resources>
