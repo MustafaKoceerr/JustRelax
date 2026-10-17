@@ -9,22 +9,30 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.WideNavigationRailDefaults
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -53,8 +61,9 @@ import com.mustafakoceerr.justrelax.tabs.icon
 import com.mustafakoceerr.justrelax.tabs.title
 
 /**
- * Bottom-bar shell. Tab ViewModels are scoped to this destination, so they survive tab switches
- * (as with Voyager) and are cleared when the user leaves Main.
+ * The main shell: a navigation bar on phones and a rail on wider windows (Material's navigation
+ * suite), with the mini player at the bottom of the content. Tab ViewModels are scoped to this
+ * destination, so they survive tab switches and rotation, and are cleared when the user leaves Main.
  */
 @Composable
 fun MainRoute(onOpenSettings: () -> Unit) {
@@ -99,6 +108,9 @@ private fun MainScreenLayout(
     val isKeyboardOpen = WindowInsets.ime.getBottom(density) > 0
     // Keeps each tab's UI state (scroll position etc.) while another tab is shown.
     val tabStateHolder = rememberSaveableStateHolder()
+    val navigationSuiteType =
+        if (isKeyboardOpen) NavigationSuiteType.None
+        else NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
 
     // Back on a tab other than Home goes to Home; on Home the system handles it (leaves the app).
     NavigationBackHandler(
@@ -108,43 +120,57 @@ private fun MainScreenLayout(
     )
 
     JustRelaxBackground {
-        Scaffold(
-            contentWindowInsets = WindowInsets(0.dp),
-            containerColor = Color.Transparent,
-            snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) },
-            bottomBar = {
-                if (!isKeyboardOpen) {
-                    MainBottomBarContent(
-                        selectedTab = tabState.selected,
-                        onSelectTab = tabState::select,
-                        playerState = playerState,
-                        onPlayPause = onPlayPause,
-                        onStopAll = onStopAll,
-                        onSaveMix = onSaveMix,
+        NavigationSuiteScaffold(
+            navigationItems = {
+                MainTab.entries.forEach { tab ->
+                    TabNavigationItem(
+                        tab = tab,
+                        isSelected = tab == tabState.selected,
+                        navigationSuiteType = navigationSuiteType,
+                        onClick = { tabState.select(tab) },
                     )
                 }
-            }
-        ) { innerPadding ->
-
-            Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-
-            ) {
-                AnimatedContent(
-                    targetState = tabState.selected,
-                    transitionSpec = {
-                        fadeIn(animationSpec = tween(300)) togetherWith
-                                fadeOut(animationSpec = tween(300))
-                    },
-                    label = "TabTransition"
-                ) { tab ->
-                    tabStateHolder.SaveableStateProvider(tab.name) {
-                        MainTabContent(
-                            tab = tab,
-                            onOpenSettings = onOpenSettings,
-                            onSelectTab = tabState::select,
+            },
+            navigationSuiteType = navigationSuiteType,
+            navigationSuiteColors = NavigationSuiteDefaults.colors(
+                shortNavigationBarContainerColor = MaterialTheme.colorScheme.surface,
+                wideNavigationRailColors = WideNavigationRailDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
+            ),
+            containerColor = Color.Transparent,
+        ) {
+            Scaffold(
+                contentWindowInsets = WindowInsets(0.dp),
+                containerColor = Color.Transparent,
+                snackbarHost = { JustRelaxSnackbarHost(hostState = snackbarHostState) },
+                bottomBar = {
+                    if (!isKeyboardOpen) {
+                        MiniPlayer(
+                            playerState = playerState,
+                            onPlayPause = onPlayPause,
+                            onStopAll = onStopAll,
+                            onSaveMix = onSaveMix,
                         )
+                    }
+                }
+            ) { innerPadding ->
+                Box(modifier = Modifier.padding(innerPadding)) {
+                    AnimatedContent(
+                        targetState = tabState.selected,
+                        transitionSpec = {
+                            fadeIn(animationSpec = tween(300)) togetherWith
+                                    fadeOut(animationSpec = tween(300))
+                        },
+                        label = "TabTransition"
+                    ) { tab ->
+                        tabStateHolder.SaveableStateProvider(tab.name) {
+                            MainTabContent(
+                                tab = tab,
+                                onOpenSettings = onOpenSettings,
+                                onSelectTab = tabState::select,
+                            )
+                        }
                     }
                 }
             }
@@ -152,18 +178,26 @@ private fun MainScreenLayout(
     }
 }
 
+/**
+ * Full width on phones; on wider windows it keeps a comfortable width at the bottom centre. Next to
+ * a rail nothing below it takes the system navigation bar's inset, so it keeps clear of it itself.
+ */
 @Composable
-private fun MainBottomBarContent(
-    selectedTab: MainTab,
-    onSelectTab: (MainTab) -> Unit,
+private fun MiniPlayer(
     playerState: PlayerUiState,
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
     onSaveMix: () -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom)),
+        contentAlignment = Alignment.BottomCenter,
+    ) {
         AnimatedVisibility(
             visible = playerState.isVisible,
+            modifier = Modifier.widthIn(max = MINI_PLAYER_MAX_WIDTH),
             enter = slideInVertically(
                 animationSpec = tween(220),
                 initialOffsetY = { fullHeight -> fullHeight }
@@ -183,23 +217,19 @@ private fun MainBottomBarContent(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-
-        NavigationBar(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.primary,
-        ) {
-            MainTab.entries.forEach { tab ->
-                TabNavigationItem(tab = tab, isSelected = tab == selectedTab, onClick = { onSelectTab(tab) })
-            }
-        }
     }
 }
 
 @Composable
-private fun RowScope.TabNavigationItem(tab: MainTab, isSelected: Boolean, onClick: () -> Unit) {
+private fun TabNavigationItem(
+    tab: MainTab,
+    isSelected: Boolean,
+    navigationSuiteType: NavigationSuiteType,
+    onClick: () -> Unit,
+) {
     val title = tab.title()
 
-    NavigationBarItem(
+    NavigationSuiteItem(
         selected = isSelected,
         onClick = onClick,
         icon = { Icon(imageVector = tab.icon, contentDescription = title) },
@@ -210,12 +240,8 @@ private fun RowScope.TabNavigationItem(tab: MainTab, isSelected: Boolean, onClic
                 textAlign = TextAlign.Center
             )
         },
-        colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
-            selectedTextColor = MaterialTheme.colorScheme.primary,
-            indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
-            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        navigationSuiteType = navigationSuiteType,
     )
 }
+
+private val MINI_PLAYER_MAX_WIDTH = 640.dp

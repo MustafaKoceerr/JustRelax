@@ -9,13 +9,13 @@ kotlin {
             api(project(":core:model"))
 
             implementation(libs.koin.core)
+            api(libs.compose.material3.adaptive)
         }
 
         androidMain.dependencies {
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
-            implementation(libs.material3.window.size)
         }
     }
 }

@@ -40,6 +40,7 @@ kotlin {
             implementation(libs.bundles.lifecycle.compose)
             implementation(libs.androidx.lifecycle.viewmodel.navigation3)
             implementation(libs.navigation3.ui)
+            implementation(libs.compose.material3.adaptive.navigation.suite)
             implementation(libs.kotlinx.serialization.json)
         }
     }
