@@ -2,8 +2,8 @@ package com.mustafakoceerr.justrelax.feature.mixer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.audio.controller.SoundController
-import com.mustafakoceerr.justrelax.core.audio.usecase.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
+import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.mixer.usecase.GenerateRandomMixUseCase
@@ -19,8 +19,8 @@ import kotlinx.coroutines.launch
 
 class MixerViewModel(
     private val generateRandomMixUseCase: GenerateRandomMixUseCase,
-    private val setMixUseCase: SetMixUseCase,
-    private val soundController: SoundController,
+    private val sceneRepository: SceneRepository,
+    private val playbackController: PlaybackController,
 ) : ViewModel() {
 
     private data class ScreenState(
@@ -32,14 +32,14 @@ class MixerViewModel(
 
     private val screenState = MutableStateFlow(ScreenState())
 
-    val uiState: StateFlow<MixerUiState> = combine(screenState, soundController.state) { screen, mixer ->
+    val uiState: StateFlow<MixerUiState> = combine(screenState, sceneRepository.scene, playbackController.isPlaying) { screen, scene, isPlaying ->
         MixerUiState(
             selectedSoundCount = screen.selectedSoundCount,
             isGenerating = screen.isGenerating,
             mixedSounds = screen.mixedSounds,
             // A paused mix shows its sounds as not playing.
-            playingSoundIds = if (mixer.isPlaying) mixer.layers.mapTo(mutableSetOf()) { it.soundId } else emptySet(),
-            soundVolumes = mixer.layers.associate { it.soundId to it.volume },
+            playingSoundIds = if (isPlaying) scene.layers.mapTo(mutableSetOf()) { it.soundId } else emptySet(),
+            soundVolumes = scene.layers.associate { it.soundId to it.volume },
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MixerUiState())
@@ -64,17 +64,20 @@ class MixerViewModel(
                 return@launch
             }
 
-            soundController.setVolumes(mix.mapKeys { (sound, _) -> sound.id })
-            setMixUseCase(mix)
+            sceneRepository.replaceWith(mix.mapKeys { (sound, _) -> sound.id })
+            playbackController.play()
             screenState.update { it.copy(isGenerating = false, mixedSounds = mix.keys.toList()) }
         }
     }
 
     fun toggleSound(soundId: String) {
-        viewModelScope.launch { soundController.toggleSound(soundId) }
+        viewModelScope.launch {
+            sceneRepository.toggle(soundId)
+            if (sceneRepository.scene.value.layer(soundId) != null) playbackController.play()
+        }
     }
 
-    fun changeVolume(soundId: String, volume: Float) = soundController.changeVolume(soundId, volume)
+    fun changeVolume(soundId: String, volume: Float) = sceneRepository.setVolume(soundId, volume)
 
     fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
 

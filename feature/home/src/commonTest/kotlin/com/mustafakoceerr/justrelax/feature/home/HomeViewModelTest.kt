@@ -1,9 +1,9 @@
 package com.mustafakoceerr.justrelax.feature.home
 
-import com.mustafakoceerr.justrelax.core.audio.usecase.PlaySoundUseCase
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
+import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
+import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
@@ -28,12 +28,13 @@ class HomeViewModelTest {
             testSound("forest", localPath = "/sounds/forest.mp3", categoryId = "NATURE"),
         )
     )
-    private val mixer = FakeSoundscapeEngine()
+    private val scene = InMemorySceneRepository(repository)
+    private val playback = FakePlaybackController()
 
     private fun TestScope.viewModel() = HomeViewModel(
         getLocalizedCategorizedSoundsUseCase = GetLocalizedCategorizedSoundsUseCase(repository, FakeLanguageController()),
-        soundscapeEngine = mixer,
-        playSoundUseCase = PlaySoundUseCase(repository, mixer),
+        sceneRepository = scene,
+        playbackController = playback,
         soundRepository = repository,
     ).also { observe(it.uiState) }
 
@@ -70,6 +71,7 @@ class HomeViewModelTest {
         viewModel.toggleSound(viewModel.sound("rain"))
         advanceUntilIdle()
         assertTrue("rain" in viewModel.uiState.value.playingSoundIds)
+        assertEquals(1, playback.playCount)
 
         viewModel.toggleSound(viewModel.sound("rain"))
         advanceUntilIdle()
@@ -115,6 +117,6 @@ class HomeViewModelTest {
         advanceUntilIdle()
 
         assertEquals(0.9f, viewModel.uiState.value.soundVolumes["rain"])
-        assertEquals(0.9f, mixer.state.value.layers.single().volume)
+        assertEquals(0.9f, scene.scene.value.layers.single().volume)
     }
 }

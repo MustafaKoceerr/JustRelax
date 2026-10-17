@@ -1,7 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.player
 
 import com.mustafakoceerr.justrelax.feature.player.usecase.SaveCurrentMixUseCase
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
+import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
+import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
@@ -21,16 +22,23 @@ import kotlin.test.assertTrue
 
 class PlayerViewModelTest {
 
-    private val mixer = FakeSoundscapeEngine().apply {
-        playBeds("rain")
-    }
+    private val sounds = FakeSoundRepository(
+        listOf(testSound("rain", localPath = "/sounds/rain.mp3"), testSound("fire", localPath = "/sounds/fire.mp3"))
+    )
+    private val scene = InMemorySceneRepository(sounds)
+    private val playback = FakePlaybackController()
     private val savedMixes = FakeSavedMixRepository()
 
-    private fun TestScope.viewModel() = PlayerViewModel(
-        soundRepository = FakeSoundRepository(listOf(testSound("rain"), testSound("fire"))),
-        soundscapeEngine = mixer,
-        saveCurrentMixUseCase = SaveCurrentMixUseCase(savedMixes, mixer),
-    ).also { observe(it.uiState) }
+    private suspend fun TestScope.viewModel(): PlayerViewModel {
+        scene.toggle("rain")
+        playback.play()
+        return PlayerViewModel(
+            soundRepository = sounds,
+            sceneRepository = scene,
+            playbackController = playback,
+            saveCurrentMixUseCase = SaveCurrentMixUseCase(savedMixes, scene),
+        ).also { observe(it.uiState) }
+    }
 
     private fun PlayerViewModel.messageRes() = (uiState.value.userMessage as UiText.Resource).resId
 
@@ -99,13 +107,13 @@ class PlayerViewModelTest {
     }
 
     @Test
-    fun stopAll_stopsTheMixer_andHidesThePlayer() = runMainTest {
+    fun stopAll_clearsTheScene_andHidesThePlayer() = runMainTest {
         val viewModel = viewModel()
 
         viewModel.stopAll()
         advanceUntilIdle()
 
-        assertTrue(mixer.state.value.layers.isEmpty())
+        assertTrue(scene.scene.value.layers.isEmpty())
         assertFalse(viewModel.uiState.value.isVisible)
     }
 }

@@ -1,7 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.timer
 
 import app.cash.turbine.test
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeTimerManager
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSleepTimer
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 
 class TimerViewModelTest {
 
-    private val timer = FakeTimerManager()
+    private val timer = FakeSleepTimer()
     private fun viewModel() = TimerViewModel(timer)
 
     @Test

@@ -2,11 +2,10 @@ package com.mustafakoceerr.justrelax.feature.player.usecase
 
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.audio.soundscape.SoundscapeState
-import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
-import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
+import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
+import com.mustafakoceerr.justrelax.core.testing.testSound
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -15,16 +14,13 @@ import kotlinx.coroutines.test.runTest
 
 class SaveCurrentMixUseCaseTest {
 
-    private val mixer = FakeSoundscapeEngine()
-    private val repository = FakeSavedMixRepository()
-    private val useCase = SaveCurrentMixUseCase(repository, mixer)
-
-    private fun playing(vararg volumes: Pair<String, Float>) = mixer.setState(
-        SoundscapeState(
-            isPlaying = true,
-            scene = Scene(volumes.map { (id, volume) -> Layer.Bed(id, clip = "/sounds/$id.ogg", volume = volume) }),
-        )
+    private val scene = InMemorySceneRepository(
+        FakeSoundRepository(listOf("rain", "fire").map { testSound(it, localPath = "/sounds/$it.mp3") })
     )
+    private val repository = FakeSavedMixRepository()
+    private val useCase = SaveCurrentMixUseCase(repository, scene)
+
+    private suspend fun playing(vararg volumes: Pair<String, Float>) = scene.replaceWith(volumes.toMap())
 
     private fun errorOf(result: Resource<Unit>) = assertIs<Resource.Error>(result).error
 

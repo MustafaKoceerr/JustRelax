@@ -1,9 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
-import com.mustafakoceerr.justrelax.core.audio.controller.SoundControllerImpl
-import com.mustafakoceerr.justrelax.core.audio.usecase.PlaySoundUseCase
-import com.mustafakoceerr.justrelax.core.audio.usecase.SetMixUseCase
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundscapeEngine
+import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
+import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
@@ -22,12 +20,13 @@ class MixerViewModelTest {
 
     private val downloaded = (1..8).map { testSound("s$it", localPath = "/sounds/s$it.mp3") }
     private val repository = FakeSoundRepository(downloaded + testSound("not_downloaded"))
-    private val mixer = FakeSoundscapeEngine()
+    private val scene = InMemorySceneRepository(repository)
+    private val playback = FakePlaybackController()
 
     private fun TestScope.viewModel() = MixerViewModel(
         generateRandomMixUseCase = GenerateRandomMixUseCase(repository, FakeLanguageController()),
-        setMixUseCase = SetMixUseCase(mixer),
-        soundController = SoundControllerImpl(mixer, PlaySoundUseCase(repository, mixer)),
+        sceneRepository = scene,
+        playbackController = playback,
     ).also { observe(it.uiState) }
 
     @Test

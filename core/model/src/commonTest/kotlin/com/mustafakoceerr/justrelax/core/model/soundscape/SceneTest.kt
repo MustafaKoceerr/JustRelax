@@ -8,9 +8,9 @@ import kotlin.test.assertTrue
 
 class SceneTest {
 
-    private fun bed(id: String, volume: Float = 0.5f) = Layer.Bed(id, clip = "/sounds/$id.ogg", volume = volume)
+    private fun bed(id: String, volume: Float = 0.5f) = Layer.Bed(id, volume = volume)
     private fun event(id: String, frequency: EventFrequency = EventFrequency.NORMAL) =
-        Layer.Event(id, clips = listOf("/sounds/${id}_1.ogg", "/sounds/${id}_2.ogg"), volume = 0.5f, frequency = frequency)
+        Layer.Event(id, volume = 0.5f, frequency = frequency)
 
     @Test
     fun layersAreSplitIntoBedsAndEvents() {
@@ -73,12 +73,5 @@ class SceneTest {
 
         assertEquals(1f, scene.layer("wind")?.volume)
         assertFailsWith<IllegalArgumentException> { bed("rain", volume = -0.1f) }
-    }
-
-    @Test
-    fun anEventNeedsAtLeastOneClip() {
-        assertFailsWith<IllegalArgumentException> {
-            Layer.Event("owl", clips = emptyList(), volume = 0.5f, frequency = EventFrequency.NORMAL)
-        }
     }
 }

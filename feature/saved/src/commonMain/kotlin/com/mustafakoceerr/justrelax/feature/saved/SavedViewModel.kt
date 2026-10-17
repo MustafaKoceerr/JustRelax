@@ -2,7 +2,8 @@ package com.mustafakoceerr.justrelax.feature.saved
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.audio.usecase.SetMixUseCase
+import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
+import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.model.SavedMix
 import com.mustafakoceerr.justrelax.core.data.repository.SavedMixRepository
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
@@ -22,7 +23,8 @@ import kotlinx.coroutines.launch
 
 class SavedViewModel(
     private val savedMixRepository: SavedMixRepository,
-    private val setMixUseCase: SetMixUseCase,
+    private val sceneRepository: SceneRepository,
+    private val playbackController: PlaybackController,
 ) : ViewModel() {
 
     private val message = MutableStateFlow<SavedMessage?>(null)
@@ -41,7 +43,8 @@ class SavedViewModel(
         playbackJob = viewModelScope.launch {
             val mix = findMix(mixId) ?: return@launch
             try {
-                setMixUseCase(mix.sounds)
+                sceneRepository.replaceWith(mix.sounds.mapKeys { (sound, _) -> sound.id })
+                playbackController.play()
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
