@@ -4,10 +4,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
-import coil3.compose.setSingletonImageLoaderFactory
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
-import com.mustafakoceerr.justrelax.core.ui.util.getAsyncImageLoader
 import com.mustafakoceerr.justrelax.feature.splash.SplashRoute
 import com.mustafakoceerr.justrelax.feature.onboarding.OnboardingRoute
 import com.mustafakoceerr.justrelax.feature.settings.SettingsRoute
@@ -28,10 +26,6 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun JustRelaxApp() {
-    setSingletonImageLoaderFactory { context ->
-        getAsyncImageLoader(context)
-    }
-
     val mainViewModel = koinViewModel<MainViewModel>()
     val currentTheme by mainViewModel.theme.collectAsStateWithLifecycle()
 

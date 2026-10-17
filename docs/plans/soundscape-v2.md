@@ -2,7 +2,7 @@
 
 > **Durum (2026-10-16):** Aşama 1–3 tamamlandı. Kalan aşamalar daha geniş bir yeniden inşa planına dağıtıldı:
 > - Aşama 4 → Faz 5 (SoundPool olay player'ı)
-> - Aşama 5 → Faz 4 (veri v2)
+> - Aşama 5 → Faz 4 (veri v2), tamamlandı; debug paketi de bu fazda geldi
 > - Aşama 6 → Faz 7a/7b (ekranlar), adaptive kabuktan (Faz 6) sonra
 > - Aşama 7 → Faz 8 (~15 seslik yerleşik paket)
 >

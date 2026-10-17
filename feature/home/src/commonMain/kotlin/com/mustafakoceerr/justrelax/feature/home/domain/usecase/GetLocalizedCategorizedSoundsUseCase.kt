@@ -20,7 +20,7 @@ class GetLocalizedCategorizedSoundsUseCase(
             soundRepository.getSounds(),
             languageController.currentLanguage
         ) { sounds, language ->
-            sounds.groupBy { SoundCategory.fromId(it.categoryId) }
+            sounds.groupBy { it.category }
                 .mapValues { (_, categorySounds) ->
                     categorySounds.map { sound ->
                         sound.localized(language.code)

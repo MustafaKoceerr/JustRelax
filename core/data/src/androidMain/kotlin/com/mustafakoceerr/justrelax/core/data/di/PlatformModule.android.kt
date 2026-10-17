@@ -4,11 +4,15 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.mustafakoceerr.justrelax.core.data.DataConstants
-import com.mustafakoceerr.justrelax.core.data.download.AndroidSoundFileStorage
+import com.mustafakoceerr.justrelax.core.data.download.AndroidFileDownloader
+import com.mustafakoceerr.justrelax.core.data.download.FileDownloader
+import com.mustafakoceerr.justrelax.core.data.download.FileSystemSoundFileStorage
+import com.mustafakoceerr.justrelax.core.data.download.KtorFileDownloader
 import com.mustafakoceerr.justrelax.core.data.download.SoundFileStorage
 import com.mustafakoceerr.justrelax.core.data.factory.createDataStore
 import com.mustafakoceerr.justrelax.core.data.language.AndroidLanguageController
 import com.mustafakoceerr.justrelax.core.data.language.LanguageController
+import okio.Path.Companion.toPath
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -21,6 +25,11 @@ internal actual val platformDataModule: Module = module {
         )
     }
 
-    singleOf(::AndroidSoundFileStorage) { bind<SoundFileStorage>() }
+    single<SoundFileStorage> {
+        FileSystemSoundFileStorage(get(), get<Context>().filesDir.path.toPath(), get())
+    }
+    single<FileDownloader> {
+        AndroidFileDownloader(get<Context>().assets, get(), get(), network = KtorFileDownloader(get(), get(), get()))
+    }
     singleOf(::AndroidLanguageController) { bind<LanguageController>() }
 }

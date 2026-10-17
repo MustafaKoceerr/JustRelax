@@ -41,10 +41,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel.navigation3)
             implementation(libs.navigation3.ui)
             implementation(libs.kotlinx.serialization.json)
-
-            implementation(libs.coil.compose)
-            implementation(libs.coil.network)
-            implementation(libs.coil.svg)
         }
     }
 }

@@ -9,12 +9,6 @@ kotlin {
             api(project(":core:model"))
 
             implementation(libs.koin.core)
-
-            // Coil loads sound icons over the network (SVG) through Ktor.
-            implementation(libs.coil.compose)
-            implementation(libs.coil.network)
-            implementation(libs.coil.svg)
-            implementation(libs.ktor.client.core)
         }
 
         androidMain.dependencies {

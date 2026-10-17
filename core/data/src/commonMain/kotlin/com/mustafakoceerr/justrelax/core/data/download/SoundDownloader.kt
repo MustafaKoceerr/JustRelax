@@ -12,34 +12,27 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.sync.withPermit
 
-/** Downloads sound files into the sounds directory, through a temp file so a partial file is never used. */
+/**
+ * Downloads a sound's clips into the catalog directory, each through a temp file so a partial
+ * file is never used.
+ */
 internal class SoundDownloader(
     private val storage: SoundFileStorage,
     private val fileDownloader: FileDownloader,
 ) {
     private val semaphore = Semaphore(MAX_PARALLEL_DOWNLOADS)
 
-    /** Returns the local path of the downloaded file, or null if the download failed. */
-    suspend fun download(soundId: String, remoteUrl: String): String? {
-        val finalPath = "${storage.getSoundsDirectoryPath()}/$soundId.${fileExtensionOf(remoteUrl)}"
-        val tempPath = "$finalPath.tmp"
-
-        if (storage.fileExists(finalPath)) return finalPath
-
-        deleteQuietly(tempPath)
-
-        if (!fileDownloader.downloadFile(remoteUrl, tempPath)) {
-            deleteQuietly(tempPath)
-            return null
-        }
-
-        return try {
-            storage.moveFile(tempPath, finalPath)
-            finalPath
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            null
+    /**
+     * Returns the local path of every clip, in order, or null if any clip could not be
+     * downloaded. Clips that did download are kept, so the next try only fetches the rest.
+     */
+    suspend fun download(sound: Sound): List<String>? {
+        if (!isSafeSoundId(sound.id)) return null
+        val directory = storage.getCatalogDirectoryPath()
+        return sound.clips.mapIndexed { index, clip ->
+            clip.localPath
+                ?: downloadFile(clip.remoteUrl ?: return null, "$directory/${sound.id}_$index")
+                ?: return null
         }
     }
 
@@ -50,7 +43,7 @@ internal class SoundDownloader(
      */
     fun downloadAll(
         sounds: List<Sound>,
-        onDownloaded: suspend (sound: Sound, localPath: String) -> Unit,
+        onDownloaded: suspend (sound: Sound, clipPaths: List<String>) -> Unit,
     ): Flow<DownloadStatus> {
         val totalCount = sounds.size
         if (totalCount == 0) return flowOf(DownloadStatus.Completed)
@@ -82,13 +75,37 @@ internal class SoundDownloader(
         }
     }
 
+    /** Downloads [url] to `<pathWithoutExtension>.<extension of url>`; null if it failed. */
+    private suspend fun downloadFile(url: String, pathWithoutExtension: String): String? {
+        val finalPath = "$pathWithoutExtension.${fileExtensionOf(url)}"
+        val tempPath = "$finalPath.tmp"
+
+        if (storage.fileExists(finalPath)) return finalPath
+
+        deleteQuietly(tempPath)
+
+        if (!fileDownloader.downloadFile(url, tempPath)) {
+            deleteQuietly(tempPath)
+            return null
+        }
+
+        return try {
+            storage.moveFile(tempPath, finalPath)
+            finalPath
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     private suspend fun downloadSafely(
         sound: Sound,
-        onDownloaded: suspend (Sound, String) -> Unit,
+        onDownloaded: suspend (Sound, List<String>) -> Unit,
     ): Boolean = try {
-        val path = download(sound.id, sound.remoteUrl)
-        if (path != null) onDownloaded(sound, path)
-        path != null
+        val paths = download(sound)
+        if (paths != null) onDownloaded(sound, paths)
+        paths != null
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {

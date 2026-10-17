@@ -42,28 +42,28 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.TileMode
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import com.mustafakoceerr.justrelax.feature.saved.util.formatIsoDate
+import com.mustafakoceerr.justrelax.core.model.SoundIcon
+import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
+import com.mustafakoceerr.justrelax.feature.saved.util.formatDate
 import justrelax.feature.saved.generated.resources.Res
 import justrelax.feature.saved.generated.resources.action_play
 import justrelax.feature.saved.generated.resources.date_format_short
 import justrelax.feature.saved.generated.resources.saved_mix_metadata
 import kotlinx.coroutines.delay
+import kotlin.time.Instant
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SavedMixCard(
     title: String,
-    date: String,
+    date: Instant,
     soundCount: Int,
-    icons: List<String>,
+    icons: List<SoundIcon>,
     onPlayClick: () -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(16.dp)
@@ -76,7 +76,7 @@ fun SavedMixCard(
 
     val dateFormatPattern = stringResource(Res.string.date_format_short)
     val formattedDate = remember(date, dateFormatPattern) {
-        formatIsoDate(date, dateFormatPattern)
+        formatDate(date, dateFormatPattern)
     }
 
     Card(
@@ -143,14 +143,14 @@ fun SavedMixCard(
 
 @Composable
 private fun MixIconsRow(
-    icons: List<String>,
+    icons: List<SoundIcon>,
     backgroundColor: Color
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy((-12).dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        icons.forEachIndexed { index, iconUrl ->
+        icons.forEachIndexed { index, icon ->
             var isVisible by remember { mutableStateOf(false) }
 
             LaunchedEffect(Unit) {
@@ -175,14 +175,13 @@ private fun MixIconsRow(
                     color = MaterialTheme.colorScheme.surfaceContainerHigh
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        AsyncImage(
-                            model = iconUrl,
+                        Icon(
+                            imageVector = icon.imageVector,
                             contentDescription = null,
                             modifier = Modifier
                                 .size(20.dp)
                                 .padding(1.dp),
-                            contentScale = ContentScale.Fit,
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }

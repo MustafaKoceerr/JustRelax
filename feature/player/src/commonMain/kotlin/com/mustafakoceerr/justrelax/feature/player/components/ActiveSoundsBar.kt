@@ -34,15 +34,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
+import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 
 @Composable
 fun PlayerBottomBar(
     isVisible: Boolean,
-    activeIcons: List<String>,
+    activeIcons: List<SoundIcon>,
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
     onStopAllClick: () -> Unit,
@@ -73,7 +73,7 @@ fun PlayerBottomBar(
 
 @Composable
 private fun ActiveSoundsBarContent(
-    activeIcons: List<String>,
+    activeIcons: List<SoundIcon>,
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
     onStopAllClick: () -> Unit,
@@ -117,8 +117,8 @@ private fun ActiveSoundsBarContent(
                 contentPadding = PaddingValues(end = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                items(activeIcons) { iconUrl ->
-                    SoundIconItem(iconUrl)
+                items(activeIcons) { icon ->
+                    SoundIconItem(icon)
                 }
             }
 
@@ -173,7 +173,7 @@ private fun ActiveSoundsBarContent(
 }
 
 @Composable
-private fun SoundIconItem(url: String) {
+private fun SoundIconItem(icon: SoundIcon) {
     Surface(
         modifier = Modifier
             .size(36.dp)
@@ -183,11 +183,11 @@ private fun SoundIconItem(url: String) {
         border = BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer)
     ) {
         Box(contentAlignment = Alignment.Center) {
-            AsyncImage(
-                model = url,
+            Icon(
+                imageVector = icon.imageVector,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

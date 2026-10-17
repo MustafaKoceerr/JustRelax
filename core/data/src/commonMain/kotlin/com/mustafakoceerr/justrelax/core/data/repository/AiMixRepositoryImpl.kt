@@ -19,7 +19,7 @@ internal class AiMixRepositoryImpl(
 ) : AiMixRepository {
 
     override fun generateMix(prompt: String): Flow<Resource<AiGeneratedMix>> = flow {
-        val downloadedSounds = soundRepository.getSounds().first().filter { it.localPath != null }
+        val downloadedSounds = soundRepository.getSounds().first().filter { it.isDownloaded }
 
         if (downloadedSounds.isEmpty()) {
             throw AppError.Ai.NoDownloadedSounds()

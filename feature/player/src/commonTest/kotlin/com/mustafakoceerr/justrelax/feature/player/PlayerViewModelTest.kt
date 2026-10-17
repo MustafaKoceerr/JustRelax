@@ -1,9 +1,10 @@
 package com.mustafakoceerr.justrelax.feature.player
 
-import com.mustafakoceerr.justrelax.feature.player.usecase.SaveCurrentMixUseCase
+import com.mustafakoceerr.justrelax.core.common.AppError
+import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
-import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedSceneRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
@@ -27,7 +28,7 @@ class PlayerViewModelTest {
     )
     private val scene = InMemorySceneRepository(sounds)
     private val playback = FakePlaybackController()
-    private val savedMixes = FakeSavedMixRepository()
+    private val savedScenes = FakeSavedSceneRepository()
 
     private suspend fun TestScope.viewModel(): PlayerViewModel {
         scene.toggle("rain")
@@ -36,7 +37,7 @@ class PlayerViewModelTest {
             soundRepository = sounds,
             sceneRepository = scene,
             playbackController = playback,
-            saveCurrentMixUseCase = SaveCurrentMixUseCase(savedMixes, scene),
+            savedSceneRepository = savedScenes,
         ).also { observe(it.uiState) }
     }
 
@@ -66,7 +67,7 @@ class PlayerViewModelTest {
     }
 
     @Test
-    fun savingMix_closesDialog_andConfirms() = runMainTest {
+    fun saving_storesTheCurrentScene_closesTheDialog_andConfirms() = runMainTest {
         val viewModel = viewModel()
         viewModel.openSaveDialog()
 
@@ -75,23 +76,22 @@ class PlayerViewModelTest {
 
         assertFalse(viewModel.uiState.value.isSaveDialogVisible)
         assertEquals(Res.string.msg_mix_saved_success, viewModel.messageRes())
-        assertEquals(1, savedMixes.mixes.value.size)
+        val saved = savedScenes.scenes.value.single()
+        assertEquals("Night", saved.name)
+        assertEquals(scene.scene.value, saved.scene)
     }
 
     @Test
-    fun duplicateName_keepsDialogOpen_andExplains() = runMainTest {
+    fun aRejectedName_keepsTheDialogOpen_andExplains() = runMainTest {
         val viewModel = viewModel()
-        viewModel.saveMix("Night")
-        advanceUntilIdle()
-        viewModel.onMessageShown()
-
+        savedScenes.saveResult = Resource.Error(AppError.SaveMix.NameAlreadyExists())
         viewModel.openSaveDialog()
+
         viewModel.saveMix("night")
         advanceUntilIdle()
 
         assertTrue(viewModel.uiState.value.isSaveDialogVisible)
         assertEquals(Res.string.err_mix_save_name_exists, viewModel.messageRes())
-        assertEquals(1, savedMixes.mixes.value.size)
     }
 
     @Test

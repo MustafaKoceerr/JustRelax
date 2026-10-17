@@ -43,7 +43,12 @@ class FakeSoundRepository(initialSounds: List<Sound> = emptyList()) : SoundRepos
         val success = onDownload(sound)
         if (success) {
             sounds.update { list ->
-                list.map { if (it.id == sound.id) it.copy(localPath = "/sounds/${it.id}.mp3") else it }
+                list.map { candidate ->
+                    if (candidate.id != sound.id) return@map candidate
+                    candidate.copy(clips = candidate.clips.mapIndexed { index, clip ->
+                        clip.copy(localPath = "/sounds/${candidate.id}_$index.mp3")
+                    })
+                }
             }
         }
         return success

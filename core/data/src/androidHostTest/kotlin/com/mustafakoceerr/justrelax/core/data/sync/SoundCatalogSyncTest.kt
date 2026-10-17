@@ -3,12 +3,18 @@ package com.mustafakoceerr.justrelax.core.data.sync
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
+import com.mustafakoceerr.justrelax.core.data.download.FakeSoundFileStorage
+import com.mustafakoceerr.justrelax.core.data.mapper.asSounds
+import com.mustafakoceerr.justrelax.core.data.mapper.insert
+import com.mustafakoceerr.justrelax.core.data.repository.DatabaseSavedSceneRepository
 import com.mustafakoceerr.justrelax.core.database.createDatabase
 import com.mustafakoceerr.justrelax.core.database.db.JustRelaxDatabase
+import com.mustafakoceerr.justrelax.core.model.Sound
+import com.mustafakoceerr.justrelax.core.model.SoundSource
+import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
+import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import com.mustafakoceerr.justrelax.core.testing.TestDispatcherProvider
 import com.mustafakoceerr.justrelax.core.testing.testSound
-import com.mustafakoceerr.justrelax.core.data.mapper.DatabaseSoundMapper
-import com.mustafakoceerr.justrelax.core.data.repository.SavedMixRepositoryImpl
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -17,6 +23,9 @@ import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.time.Clock
 
 class SoundCatalogSyncTest {
 
@@ -24,74 +33,142 @@ class SoundCatalogSyncTest {
         JustRelaxDatabase.Schema.create(it)
     }
     private val database = createDatabase(driver)
-    private val mapper = DatabaseSoundMapper()
-    private val remote = FakeSoundRemoteDataSource(listOf(testSound("rain"), testSound("fire")))
+    private val storage = FakeSoundFileStorage()
+    private val remote = FakeSoundRemoteDataSource(
+        listOf(networkSound("rain"), networkSound("birds", "https://cdn.test/birds_0.ogg", "https://cdn.test/birds_1.ogg"))
+    )
 
     @AfterTest
     fun tearDown() = driver.close()
 
     private fun TestScope.dispatchers() = TestDispatcherProvider(StandardTestDispatcher(testScheduler))
 
-    private fun TestScope.syncRepository() = DatabaseSoundCatalogSync(remote, database, mapper, dispatchers())
+    private suspend fun TestScope.sync() = DatabaseSoundCatalogSync(remote, database, storage, dispatchers()).syncWithServer()
 
-    private fun TestScope.savedMixRepository() =
-        SavedMixRepositoryImpl(database.savedMixQueries, database.soundQueries, mapper, dispatchers())
+    private fun TestScope.savedScenes() = DatabaseSavedSceneRepository(database.savedSceneQueries, Clock.System, dispatchers())
 
-    private fun localSounds() = database.soundQueries.selectAllSounds().executeAsList().associateBy { it.id }
+    private fun localSounds(): Map<String, Sound> =
+        database.soundQueries.selectSoundsWithClips().executeAsList().asSounds().associateBy { it.id }
+
+    /** Marks every clip of [soundId] as downloaded, with its file in storage. */
+    private fun download(soundId: String) {
+        database.soundQueries.selectClipsForSound(soundId).executeAsList().forEach { clip ->
+            val path = "/sounds/${soundId}_${clip.idx}.ogg"
+            database.soundQueries.updateClipLocalPath(path, soundId, clip.idx)
+            storage.files += path
+        }
+    }
 
     @Test
-    fun firstSync_insertsAllRemoteSounds() = runTest {
-        val result = syncRepository().syncWithServer()
+    fun firstSync_insertsEveryCatalogSound_withItsClips_notDownloaded() = runTest {
+        val result = sync()
 
         assertIs<Resource.Success<Unit>>(result)
-        assertEquals(setOf("rain", "fire"), localSounds().keys)
+        val sounds = localSounds()
+        assertEquals(setOf("rain", "birds"), sounds.keys)
+        assertEquals(2, sounds.getValue("birds").clips.size)
+        assertTrue(sounds.values.none { it.isDownloaded })
     }
 
     @Test
-    fun resyncWithChangedMetadata_updatesSound_butKeepsLocalPathAndSavedMixes() = runTest {
-        syncRepository().syncWithServer()
-        database.soundQueries.updateLocalPath(localPath = "/sounds/rain.mp3", id = "rain")
-        savedMixRepository().saveMix("Night", mapOf("rain" to 0.4f, "fire" to 0.7f))
+    fun soundsTheAppCannotUse_areSkipped() = runTest {
+        remote.sounds += networkSound("nc").copy(license = "CC_BY_NC_4_0")
 
-        remote.sounds = listOf(testSound("rain").copy(sizeBytes = 42), testSound("fire"))
-        syncRepository().syncWithServer()
+        sync()
+
+        assertEquals(setOf("rain", "birds"), localSounds().keys)
+    }
+
+    @Test
+    fun changedMetadata_isUpdated_keepingDownloadsAndSavedScenes() = runTest {
+        sync()
+        download("rain")
+        savedScenes().save("Night", Scene(listOf(Layer.Bed("rain", 0.4f))))
+
+        remote.sounds = listOf(networkSound("rain").copy(names = mapOf("en" to "Rain")), remote.sounds.last())
+        sync()
 
         val rain = localSounds().getValue("rain")
-        assertEquals(42L, rain.sizeBytes)
-        assertEquals("/sounds/rain.mp3", rain.localPath)
-        val mix = savedMixRepository().getSavedMixes().first().single()
-        assertEquals(setOf("rain", "fire"), mix.sounds.keys.map { it.id }.toSet())
+        assertEquals("Rain", rain.getDisplayName("en"))
+        assertTrue(rain.isDownloaded)
+        assertEquals(listOf("rain"), savedScenes().getSavedScenes().first().single().scene.layers.map { it.soundId })
     }
 
     @Test
-    fun soundRemovedOnServer_isDeleted_andDroppedFromSavedMixes() = runTest {
-        syncRepository().syncWithServer()
-        savedMixRepository().saveMix("Night", mapOf("rain" to 0.4f, "fire" to 0.7f))
+    fun aClipWhoseFileChanged_mustBeDownloadedAgain() = runTest {
+        sync()
+        download("birds")
 
-        remote.sounds = listOf(testSound("fire"))
-        syncRepository().syncWithServer()
+        remote.sounds = listOf(networkSound("birds", "https://cdn.test/birds_0.ogg", "https://cdn.test/birds_1_v2.ogg"))
+        sync()
 
-        assertEquals(setOf("fire"), localSounds().keys)
-        val relations = database.savedMixQueries.selectAllRelations().executeAsList().map { it.sound_id }
-        assertEquals(listOf("fire"), relations)
+        val clips = localSounds().getValue("birds").clips
+        assertEquals("/sounds/birds_0.ogg", clips[0].localPath)
+        assertNull(clips[1].localPath)
+        assertEquals("https://cdn.test/birds_1_v2.ogg", clips[1].remoteUrl)
+        assertEquals(setOf("/sounds/birds_0.ogg"), storage.files)
+    }
+
+    @Test
+    fun clipsAddedOrRemovedOnTheServer_areAddedOrRemoved() = runTest {
+        sync()
+        download("birds")
+
+        remote.sounds = listOf(networkSound("birds", "https://cdn.test/birds_0.ogg"))
+        sync()
+        assertEquals(1, localSounds().getValue("birds").clips.size)
+        assertEquals(setOf("/sounds/birds_0.ogg"), storage.files)
+
+        remote.sounds = listOf(networkSound("birds", "https://cdn.test/birds_0.ogg", "https://cdn.test/birds_2.ogg"))
+        sync()
+        assertEquals(listOf(true, false), localSounds().getValue("birds").clips.map { it.isDownloaded })
+    }
+
+    @Test
+    fun aSoundRemovedOnTheServer_isDeleted_withItsFiles_andDropsOutOfSavedScenes() = runTest {
+        sync()
+        download("rain")
+        savedScenes().save("Night", Scene(listOf(Layer.Bed("rain", 0.4f), Layer.Bed("birds", 0.5f))))
+
+        remote.sounds = remote.sounds.filterNot { it.id == "rain" }
+        sync()
+
+        assertEquals(setOf("birds"), localSounds().keys)
+        assertTrue(storage.files.isEmpty())
+        assertEquals(listOf("birds"), savedScenes().getSavedScenes().first().single().scene.layers.map { it.soundId })
+    }
+
+    @Test
+    fun theUsersOwnAndFreesoundSounds_areNeverTouched() = runTest {
+        database.soundQueries.insert(testSound("user_mine", source = SoundSource.USER, localPath = "/mine.m4a"))
+        database.soundQueries.insert(testSound("freesound_1", source = SoundSource.FREESOUND, localPath = "/fs.ogg"))
+
+        remote.sounds += networkSound("user_mine").copy(names = mapOf("en" to "Catalog"))
+        sync()
+
+        val sounds = localSounds()
+        assertEquals(setOf("rain", "birds", "user_mine", "freesound_1"), sounds.keys)
+        assertEquals(SoundSource.USER, sounds.getValue("user_mine").source)
+        assertEquals("user_mine", sounds.getValue("user_mine").getDisplayName("en"))
+        assertTrue(sounds.getValue("freesound_1").isDownloaded)
     }
 
     @Test
     fun remoteFailure_returnsError_andKeepsLocalData() = runTest {
-        syncRepository().syncWithServer()
+        sync()
         remote.error = IllegalStateException("offline")
 
-        val result = syncRepository().syncWithServer()
+        val result = sync()
 
         assertIs<Resource.Error>(result)
-        assertEquals(setOf("rain", "fire"), localSounds().keys)
+        assertEquals(setOf("rain", "birds"), localSounds().keys)
     }
 
     @Test
     fun knownNetworkError_isPassedThroughInsteadOfWrappedAsUnknown() = runTest {
         remote.error = AppError.Network.NoInternet()
 
-        val result = syncRepository().syncWithServer()
+        val result = sync()
 
         assertIs<AppError.Network.NoInternet>(assertIs<Resource.Error>(result).error)
     }

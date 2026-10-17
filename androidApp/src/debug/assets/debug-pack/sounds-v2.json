@@ -1,0 +1,56 @@
+{
+  "version": 2,
+  "sounds": [
+    {
+      "id": "air_breeze",
+      "names": {"en": "Soft Breeze", "tr": "Hafif Esinti"},
+      "category": "AIR",
+      "kind": "BED",
+      "tags": ["wind", "breeze", "calm", "outdoors"],
+      "license": "OWN",
+      "is_initial": true,
+      "clips": [{"url": "air_breeze.ogg", "duration_ms": 30006, "size_bytes": 201291}]
+    },
+    {
+      "id": "water_creek",
+      "names": {"en": "Mountain Creek", "tr": "Dağ Deresi"},
+      "category": "WATER",
+      "icon": "STREAM",
+      "kind": "BED",
+      "tags": ["water", "stream", "forest", "flowing"],
+      "license": "OWN",
+      "is_initial": true,
+      "clips": [{"url": "water_creek.ogg", "duration_ms": 30006, "size_bytes": 270992}]
+    },
+    {
+      "id": "nature_birds",
+      "names": {"en": "Forest Birds", "tr": "Orman Kuşları"},
+      "category": "NATURE",
+      "icon": "BIRD",
+      "kind": "EVENT",
+      "tags": ["birds", "forest", "morning", "birdsong"],
+      "default_frequency": "NORMAL",
+      "license": "OWN",
+      "is_initial": true,
+      "clips": [
+        {"url": "nature_birds_0.ogg", "duration_ms": 3006, "size_bytes": 19865},
+        {"url": "nature_birds_1.ogg", "duration_ms": 2906, "size_bytes": 16847},
+        {"url": "nature_birds_2.ogg", "duration_ms": 2206, "size_bytes": 13593}
+      ]
+    },
+    {
+      "id": "nature_campfire",
+      "names": {"en": "Crackling Fire", "tr": "Çıtırdayan Ateş"},
+      "category": "NATURE",
+      "icon": "FIRE",
+      "kind": "EVENT",
+      "tags": ["fire", "campfire", "crackle", "camping", "night"],
+      "default_frequency": "OFTEN",
+      "license": "OWN",
+      "clips": [
+        {"url": "nature_campfire_0.ogg", "duration_ms": 1606, "size_bytes": 11069},
+        {"url": "nature_campfire_1.ogg", "duration_ms": 1606, "size_bytes": 11108}
+      ]
+    }
+  ]
+}

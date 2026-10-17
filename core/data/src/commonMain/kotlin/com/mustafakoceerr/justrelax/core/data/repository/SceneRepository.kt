@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 /**
  * The scene the user is listening to: the single source of truth for what plays. Screens edit it
  * here; the player follows it. Whether it is playing or paused is the player's state, not the scene's.
+ *
+ * A sound plays as a bed or an event according to its kind in the library.
  */
 interface SceneRepository {
     val scene: StateFlow<Scene>
@@ -21,6 +23,9 @@ interface SceneRepository {
 
     /** Replaces the scene with a mix (sound id to volume); sounds that are not downloaded are skipped. */
     suspend fun replaceWith(volumes: Map<String, Float>)
+
+    /** Replaces the scene, e.g. with a saved one; sounds that are not downloaded are skipped. */
+    suspend fun replaceWith(scene: Scene)
 
     fun clear()
 }

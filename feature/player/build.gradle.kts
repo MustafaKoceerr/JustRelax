@@ -6,7 +6,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:playback"))
-            implementation(libs.coil.compose)
         }
     }
 }

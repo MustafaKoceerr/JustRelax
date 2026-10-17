@@ -1,11 +1,9 @@
 package com.mustafakoceerr.justrelax.core.network.source
 
 import com.mustafakoceerr.justrelax.core.common.AppError
-import com.mustafakoceerr.justrelax.core.network.source.SoundRemoteDataSource
-import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkSound
-import com.mustafakoceerr.justrelax.core.network.mapper.NetworkSoundToDomainMapper
-import com.mustafakoceerr.justrelax.core.network.util.RemoteEndpoints
+import com.mustafakoceerr.justrelax.core.network.dto.NetworkSoundCatalog
+import com.mustafakoceerr.justrelax.core.network.dto.withClipUrlsResolvedAgainst
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.ConnectTimeoutException
@@ -19,30 +17,28 @@ import kotlinx.io.IOException
 
 internal class SoundRemoteDataSourceImpl(
     private val httpClient: HttpClient,
-    private val soundMapper: NetworkSoundToDomainMapper
+    private val catalogUrl: String,
 ) : SoundRemoteDataSource {
 
-    private val soundsUrl = RemoteEndpoints.soundsConfig
-
     /** @throws AppError.Network for every failure, so callers can show a meaningful message. */
-    override suspend fun getSounds(): List<Sound> {
+    override suspend fun getSounds(): List<NetworkSound> {
         val response = fetch()
         if (!response.status.isSuccess()) {
             throw AppError.Network.ServerError(response.status.value)
         }
 
-        val networkDtos = try {
-            response.body<List<NetworkSound>>()
+        val catalog = try {
+            response.body<NetworkSoundCatalog>()
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             throw AppError.Network.SerializationError()
         }
-        return soundMapper.toModelList(networkDtos)
+        return catalog.sounds.withClipUrlsResolvedAgainst(catalogUrl)
     }
 
     private suspend fun fetch(): HttpResponse = try {
-        httpClient.get(soundsUrl)
+        httpClient.get(catalogUrl)
     } catch (e: HttpRequestTimeoutException) {
         throw AppError.Network.TimeOut()
     } catch (e: ConnectTimeoutException) {

@@ -5,7 +5,7 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.common.dispatcher.DispatcherProvider
 import com.mustafakoceerr.justrelax.core.data.download.SoundDownloader
-import com.mustafakoceerr.justrelax.core.data.mapper.DatabaseSoundMapper
+import com.mustafakoceerr.justrelax.core.data.mapper.asSounds
 import com.mustafakoceerr.justrelax.core.data.sync.SoundCatalogSync
 import com.mustafakoceerr.justrelax.core.data.sync.SyncTimestampStore
 import com.mustafakoceerr.justrelax.core.database.db.SoundQueries
@@ -22,7 +22,6 @@ import kotlin.time.Duration.Companion.hours
 
 internal class OfflineFirstSoundRepository(
     private val soundQueries: SoundQueries,
-    private val soundMapper: DatabaseSoundMapper,
     private val catalogSync: SoundCatalogSync,
     private val syncTimestamps: SyncTimestampStore,
     private val downloader: SoundDownloader,
@@ -31,16 +30,13 @@ internal class OfflineFirstSoundRepository(
 ) : SoundRepository {
 
     override fun getSounds(): Flow<List<Sound>> =
-        soundQueries.selectAllSounds()
+        soundQueries.selectSoundsWithClips()
             .asFlow()
             .mapToList(dispatchers.io)
-            .map(soundMapper::toModelList)
+            .map { it.asSounds() }
 
     override fun getSound(id: String): Flow<Sound?> =
-        soundQueries.selectSoundById(id)
-            .asFlow()
-            .mapToList(dispatchers.io)
-            .map { entities -> entities.firstOrNull()?.let(soundMapper::toModel) }
+        getSounds().map { sounds -> sounds.find { it.id == id } }
 
     override suspend fun sync(): Resource<Unit> {
         val result = catalogSync.syncWithServer()
@@ -58,8 +54,8 @@ internal class OfflineFirstSoundRepository(
 
     override suspend fun download(soundId: String): Boolean {
         val sound = getSound(soundId).first() ?: return false
-        val path = downloader.download(sound.id, sound.remoteUrl) ?: return false
-        updateLocalPath(sound.id, path)
+        val paths = downloader.download(sound) ?: return false
+        saveClipPaths(sound.id, paths)
         return true
     }
 
@@ -77,12 +73,18 @@ internal class OfflineFirstSoundRepository(
         }
 
         val sounds = getSounds().first().filter(filter)
-        emitAll(downloader.downloadAll(sounds) { sound, path -> updateLocalPath(sound.id, path) })
+        emitAll(downloader.downloadAll(sounds, ::saveClipPathsOf))
     }
 
-    private suspend fun updateLocalPath(soundId: String, localPath: String) {
+    private suspend fun saveClipPathsOf(sound: Sound, paths: List<String>) = saveClipPaths(sound.id, paths)
+
+    private suspend fun saveClipPaths(soundId: String, paths: List<String>) {
         withContext(dispatchers.io) {
-            soundQueries.updateLocalPath(localPath = localPath, id = soundId)
+            soundQueries.transaction {
+                paths.forEachIndexed { index, path ->
+                    soundQueries.updateClipLocalPath(local_path = path, sound_id = soundId, idx = index.toLong())
+                }
+            }
         }
     }
 

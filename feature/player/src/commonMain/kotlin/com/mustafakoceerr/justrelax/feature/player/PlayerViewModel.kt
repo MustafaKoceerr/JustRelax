@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
+import com.mustafakoceerr.justrelax.core.data.repository.SavedSceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
-import com.mustafakoceerr.justrelax.feature.player.usecase.SaveCurrentMixUseCase
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import justrelax.feature.player.generated.resources.Res
 import justrelax.feature.player.generated.resources.err_mix_save_empty_name
@@ -28,7 +28,7 @@ class PlayerViewModel(
     soundRepository: SoundRepository,
     private val sceneRepository: SceneRepository,
     private val playbackController: PlaybackController,
-    private val saveCurrentMixUseCase: SaveCurrentMixUseCase,
+    private val savedSceneRepository: SavedSceneRepository,
 ) : ViewModel() {
 
     private data class ScreenState(
@@ -70,7 +70,7 @@ class PlayerViewModel(
     fun saveMix(name: String) {
         viewModelScope.launch {
             screenState.update { it.copy(isSaving = true) }
-            val result = saveCurrentMixUseCase(name)
+            val result = savedSceneRepository.save(name, sceneRepository.scene.value)
             screenState.update {
                 it.copy(
                     isSaving = false,

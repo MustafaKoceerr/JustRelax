@@ -7,6 +7,9 @@ import com.mustafakoceerr.justrelax.core.playback.soundscape.PlayableScene
 import com.mustafakoceerr.justrelax.core.playback.soundscape.SoundscapeEngine
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSleepTimer
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
+import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
+import com.mustafakoceerr.justrelax.core.testing.testClip
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -49,7 +52,17 @@ class SoundscapeSessionTest {
     }
 
     private val sounds = FakeSoundRepository(
-        listOf(testSound("rain", localPath = "/sounds/rain.mp3"), testSound("fire", localPath = "/sounds/fire.mp3"), testSound("cloud"))
+        listOf(
+            testSound("rain", localPath = "/sounds/rain.mp3"),
+            testSound("fire", localPath = "/sounds/fire.mp3"),
+            testSound("cloud"),
+            testSound(
+                "birds",
+                kind = SoundKind.EVENT,
+                defaultFrequency = EventFrequency.OFTEN,
+                clips = (0..2).map { testClip("https://cdn.test/birds_$it.ogg", "/sounds/birds_$it.ogg") },
+            ),
+        )
     )
     private val scene = InMemorySceneRepository(sounds)
     private val engine = FakeEngine()
@@ -74,6 +87,36 @@ class SoundscapeSessionTest {
             PlayableScene(listOf(PlayableLayer.Bed("rain", "/sounds/rain.mp3", 0.4f))),
             engine.applied.last(),
         )
+    }
+
+    @Test
+    fun anEventSound_playsEveryOneOfItsClips() = runTest {
+        session()
+
+        play("birds")
+
+        assertEquals(
+            PlayableLayer.Event(
+                soundId = "birds",
+                clips = (0..2).map { "/sounds/birds_$it.ogg" },
+                volume = 0.5f,
+                frequency = EventFrequency.OFTEN,
+            ),
+            engine.applied.last().layers.single(),
+        )
+    }
+
+    @Test
+    fun aSoundMissingAClip_isLeftOut() = runTest {
+        session()
+        play("birds")
+
+        sounds.sounds.value = sounds.sounds.value.map { sound ->
+            if (sound.id == "birds") sound.copy(clips = sound.clips.dropLast(1) + testClip("https://cdn.test/birds_2.ogg")) else sound
+        }
+        runCurrent()
+
+        assertTrue(engine.applied.last().layers.isEmpty())
     }
 
     @Test

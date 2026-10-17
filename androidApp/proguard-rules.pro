@@ -57,12 +57,6 @@
 # -keep class androidx.media3.exoplayer.DefaultRenderersFactory { *; }
 
 # ----------------------------------------------------------------------------------
-# 6. COIL 3 (Optimize Edildi)
-# ----------------------------------------------------------------------------------
-# Coil R8 dostudur. Sadece uyarıları kapatalım.
--dontwarn coil3.**
-
-# ----------------------------------------------------------------------------------
 # 7. VOYAGER (Navigation)
 # ----------------------------------------------------------------------------------
 # Voyager ekranları (Screen) reflection ile state saklıyorsa class isimleri lazım olabilir.
