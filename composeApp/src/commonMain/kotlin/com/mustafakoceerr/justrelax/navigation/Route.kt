@@ -28,9 +28,16 @@ sealed interface Route : NavKey {
     @Serializable
     data object Recorder : Route
 
-    /** Cuts a new sound out of a file that was copied into the cache. */
+    /** Cuts a new sound out of a file on the device; [origin] is set for a sound found online. */
     @Serializable
-    data class SoundEditor(val sourcePath: String, val suggestedName: String?) : Route
+    data class SoundEditor(
+        val sourcePath: String,
+        val suggestedName: String?,
+        val origin: EditorOrigin? = null,
+    ) : Route
+
+    @Serializable
+    data object Freesound : Route
 
     companion object {
         /** Needed to save/restore the back stack on non-JVM targets (iOS), where reflection is unavailable. */
@@ -43,6 +50,7 @@ sealed interface Route : NavKey {
                 subclass(MySounds::class)
                 subclass(Recorder::class)
                 subclass(SoundEditor::class)
+                subclass(Freesound::class)
             }
         }
     }

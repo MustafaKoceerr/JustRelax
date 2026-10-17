@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="freesound_title">Freesound</string>
+    <string name="freesound_search_hint">Ses ara, örn. çadırda yağmur</string>
+    <string name="freesound_search">Ara</string>
+    <string name="freesound_intro">Freesound.org’da paylaşılan ücretsiz sesleri bul. Yalnızca kullanabileceğin sesler gösterilir; sahipleri uygulamada anılır.</string>
+    <string name="freesound_no_results">Bir şey bulunamadı. Başka kelimeler dene.</string>
+    <string name="freesound_load_more">Daha fazla yükle</string>
+    <string name="freesound_add">Ekle</string>
+    <string name="freesound_listen">Dinle</string>
+    <string name="freesound_stop">Durdur</string>
+    <string name="freesound_by">%1$s</string>
+    <string name="freesound_offline">İnternet bağlantısı yok.</string>
+    <string name="freesound_rate_limited">Çok fazla arama yapıldı. Bir dakika bekleyip tekrar dene.</string>
+    <string name="freesound_failed">Arama yapılamadı. Tekrar dene.</string>
+    <string name="freesound_download_failed">Ses indirilemedi. Tekrar dene.</string>
+    <string name="freesound_back">Geri</string>
+</resources>

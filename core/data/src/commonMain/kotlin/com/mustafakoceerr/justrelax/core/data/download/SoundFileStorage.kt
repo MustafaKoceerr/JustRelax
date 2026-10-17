@@ -18,6 +18,9 @@ internal interface SoundFileStorage {
 
     /** Where the user's own sounds are kept; created on first use. */
     suspend fun getUserDirectoryPath(): String
+
+    /** Where files wait before they become sounds, e.g. a Freesound preview being edited. */
+    suspend fun getIncomingDirectoryPath(): String
     suspend fun moveFile(sourcePath: String, destinationPath: String)
 }
 
@@ -33,6 +36,7 @@ internal class FileSystemSoundFileStorage(
 
     private val catalogDirectory = appFilesDirectory / AUDIO_DIRECTORY / CATALOG_DIRECTORY
     private val userDirectory = appFilesDirectory / AUDIO_DIRECTORY / USER_DIRECTORY
+    private val incomingDirectory = appFilesDirectory / AUDIO_DIRECTORY / INCOMING_DIRECTORY
     private val setupLock = Mutex()
     private var isSetUp = false
 
@@ -60,6 +64,11 @@ internal class FileSystemSoundFileStorage(
         userDirectory.toString()
     }
 
+    override suspend fun getIncomingDirectoryPath(): String = withContext(dispatchers.io) {
+        fileSystem.createDirectories(incomingDirectory)
+        incomingDirectory.toString()
+    }
+
     override suspend fun moveFile(sourcePath: String, destinationPath: String) = withContext(dispatchers.io) {
         fileSystem.atomicMove(sourcePath.toPath(), destinationPath.toPath())
     }
@@ -68,6 +77,7 @@ internal class FileSystemSoundFileStorage(
         const val AUDIO_DIRECTORY = "audio"
         const val CATALOG_DIRECTORY = "catalog"
         const val USER_DIRECTORY = "user"
+        const val INCOMING_DIRECTORY = "incoming"
         const val LEGACY_SOUNDS_DIRECTORY = "sounds"
     }
 }

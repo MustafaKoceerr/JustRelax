@@ -37,4 +37,5 @@
     <string name="mysounds_record_stop">Stoppa och redigera</string>
     <string name="mysounds_record_failed">Inspelningen misslyckades. Försök igen.</string>
     <string name="mysounds_record_permission_denied">JustRelax behöver mikrofonen för att spela in ett ljud. Du kan tillåta det i systeminställningarna.</string>
+    <string name="mysounds_search_online">Sök på Freesound</string>
 </resources>

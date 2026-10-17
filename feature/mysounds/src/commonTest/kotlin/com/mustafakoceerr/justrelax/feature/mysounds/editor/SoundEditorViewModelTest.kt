@@ -3,7 +3,10 @@ package com.mustafakoceerr.justrelax.feature.mysounds.editor
 import com.mustafakoceerr.justrelax.core.data.repository.UserSoundDraft
 import com.mustafakoceerr.justrelax.core.media.MediaException
 import com.mustafakoceerr.justrelax.core.media.TrimRange
+import com.mustafakoceerr.justrelax.core.model.Attribution
+import com.mustafakoceerr.justrelax.core.model.License
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
+import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeClipPreviewer
@@ -28,8 +31,8 @@ class SoundEditorViewModelTest {
     private val previewer = FakeClipPreviewer()
     private val repository = FakeUserSoundRepository()
 
-    private fun TestScope.viewModel(name: String? = "Kettle boiling.m4a") =
-        SoundEditorViewModel("/cache/import/audio", name, reader, previewer, repository).also {
+    private fun TestScope.viewModel(name: String? = "Kettle boiling.m4a", origin: SoundOrigin? = null) =
+        SoundEditorViewModel("/cache/import/audio", name, origin, reader, previewer, repository).also {
             observe(it.uiState)
             advanceUntilIdle()
         }
@@ -174,6 +177,19 @@ class SoundEditorViewModelTest {
             repository.drafts.single(),
         )
         assertTrue(viewModel.uiState.value.isSaved)
+    }
+
+    @Test
+    fun aSoundFoundOnlineKeepsItsOrigin() = runMainTest {
+        val origin = SoundOrigin("123", License.CC_BY_4_0, Attribution("Kettle", "someone", "https://freesound.org/s/123/"), listOf("kettle"))
+        val viewModel = viewModel(origin = origin)
+        viewModel.selectCategory(SoundCategory.CITY)
+        advanceUntilIdle()
+
+        viewModel.save()
+        advanceUntilIdle()
+
+        assertEquals(origin, repository.drafts.single().origin)
     }
 
     @Test

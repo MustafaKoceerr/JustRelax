@@ -9,6 +9,7 @@ import com.mustafakoceerr.justrelax.core.ui.di.uiModule
 import com.mustafakoceerr.justrelax.core.data.di.dataModule
 import com.mustafakoceerr.justrelax.core.media.di.mediaModule
 import com.mustafakoceerr.justrelax.feature.mysounds.di.mySoundsModule
+import com.mustafakoceerr.justrelax.feature.freesound.di.freesoundModule
 import com.mustafakoceerr.justrelax.feature.ai.di.aiModule
 import com.mustafakoceerr.justrelax.feature.library.di.libraryModule
 import com.mustafakoceerr.justrelax.feature.mixer.di.mixerModule
@@ -53,6 +54,7 @@ val appModules: List<Module>
         savedModule,
         aiModule,
         mySoundsModule,
+        freesoundModule,
     )
 
 fun initKoin(

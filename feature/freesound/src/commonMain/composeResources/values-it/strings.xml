@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="freesound_title">Freesound</string>
+    <string name="freesound_search_hint">Cerca suoni, es. pioggia sulla tenda</string>
+    <string name="freesound_search">Cerca</string>
+    <string name="freesound_intro">Trova suoni gratuiti condivisi su Freesound.org. Vengono mostrati solo i suoni che puoi usare; gli autori sono citati nell’app.</string>
+    <string name="freesound_no_results">Nessun risultato. Prova altre parole.</string>
+    <string name="freesound_load_more">Carica altri</string>
+    <string name="freesound_add">Aggiungi</string>
+    <string name="freesound_listen">Ascolta</string>
+    <string name="freesound_stop">Ferma</string>
+    <string name="freesound_by">di %1$s</string>
+    <string name="freesound_offline">Nessuna connessione a internet.</string>
+    <string name="freesound_rate_limited">Troppe ricerche. Attendi un minuto e riprova.</string>
+    <string name="freesound_failed">La ricerca non è riuscita. Riprova.</string>
+    <string name="freesound_download_failed">Impossibile scaricare il suono. Riprova.</string>
+    <string name="freesound_back">Indietro</string>
+</resources>

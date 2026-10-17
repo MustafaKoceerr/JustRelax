@@ -29,7 +29,7 @@ internal class DatabaseUserSoundRepository(
         soundQueries.selectSoundsWithClips()
             .asFlow()
             .mapToList(dispatchers.io)
-            .map { rows -> rows.asSounds().filter { it.source == SoundSource.USER }.asReversed() }
+            .map { rows -> rows.asSounds().filter { it.source != SoundSource.BUILT_IN }.asReversed() }
 
     override suspend fun create(draft: UserSoundDraft): Sound {
         val id = newId()
@@ -46,10 +46,13 @@ internal class DatabaseUserSoundRepository(
             names = mapOf(NAME_LANGUAGE to draft.name.trim()),
             category = draft.category,
             kind = draft.kind,
-            source = SoundSource.USER,
+            source = if (draft.origin == null) SoundSource.USER else SoundSource.FREESOUND,
             clips = listOf(SoundClip(remoteUrl = null, localPath = path, durationMs = trimmed.durationMs, sizeBytes = trimmed.sizeBytes)),
-            license = License.OWN,
+            license = draft.origin?.license ?: License.OWN,
             icon = draft.icon,
+            tags = draft.origin?.tags.orEmpty(),
+            attribution = draft.origin?.attribution,
+            remoteId = draft.origin?.remoteId,
         )
         withContext(dispatchers.io) {
             soundQueries.transaction { soundQueries.insert(sound) }

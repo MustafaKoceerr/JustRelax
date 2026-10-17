@@ -22,9 +22,11 @@ interface AudioTrimmer {
     suspend fun trim(sourcePath: String, range: TrimRange, outputPath: String): TrimmedAudio
 }
 
-/** Plays a range of a file while it is being edited: looped for a bed, once for an event. */
+/** Plays a range of a file while it is being edited (looped for a bed, once for an event), or a preview online. */
 interface ClipPreviewer {
     val isPlaying: StateFlow<Boolean>
+
+    /** [path] is a file on the device or an `https` URL. */
     fun play(path: String, range: TrimRange, loop: Boolean)
     fun stop()
     fun release()
