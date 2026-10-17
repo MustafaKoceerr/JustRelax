@@ -3,6 +3,8 @@ package com.mustafakoceerr.justrelax.core.audio.player
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -27,6 +29,9 @@ internal class ExoSoundPlayer(
         targetVolume = config.initialVolume
         exoPlayer = ExoPlayer.Builder(context)
             .setLooper(Looper.getMainLooper())
+            // Focus is requested once for the whole mix (PlaybackInterruptionPolicy); if every
+            // player handled it, the mix's own players would take focus from each other.
+            .setAudioAttributes(MEDIA_AUDIO_ATTRIBUTES, /* handleAudioFocus = */ false)
             .build()
             .apply {
                 repeatMode = Player.REPEAT_MODE_ONE
@@ -88,5 +93,10 @@ internal class ExoSoundPlayer(
 
     private companion object {
         const val FADE_STEPS = 20
+
+        val MEDIA_AUDIO_ATTRIBUTES: AudioAttributes = AudioAttributes.Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+            .build()
     }
 }
