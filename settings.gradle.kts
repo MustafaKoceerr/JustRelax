@@ -31,10 +31,8 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "JustRelax"
 
 include(":composeApp")
-include(":core")
 
 include(":core:common")
 include(":core:model")

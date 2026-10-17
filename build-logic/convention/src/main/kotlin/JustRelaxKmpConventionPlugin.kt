@@ -23,9 +23,11 @@ class JustRelaxKmpConventionPlugin : Plugin<Project> {
                     }
                 }
 
-                iosX64()
-                iosArm64()
-                iosSimulatorArm64()
+                if (isIosEnabled) {
+                    iosX64()
+                    iosArm64()
+                    iosSimulatorArm64()
+                }
 
                 sourceSets.commonMain.dependencies {
                     implementation(kotlin("stdlib"))

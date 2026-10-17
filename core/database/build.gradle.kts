@@ -35,7 +35,7 @@ kotlin {
             implementation(libs.findLibrary("sqldelight-android-driver").get())
         }
 
-        iosMain.dependencies {
+        iosMainDependencies {
             // iOS'e özel veritabanı sürücüsü
             implementation(libs.findLibrary("sqldelight-native-driver").get())
         }

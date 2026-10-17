@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.data.repository
 
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.database.createDatabase
 import com.mustafakoceerr.justrelax.core.database.db.JustRelaxDatabase
@@ -84,5 +85,14 @@ class SoundSyncRepositoryImplTest {
 
         assertIs<Resource.Error>(result)
         assertEquals(setOf("rain", "fire"), localSounds().keys)
+    }
+
+    @Test
+    fun knownNetworkError_isPassedThroughInsteadOfWrappedAsUnknown() = runTest {
+        remote.error = AppError.Network.NoInternet()
+
+        val result = syncRepository().syncWithServer()
+
+        assertIs<AppError.Network.NoInternet>(assertIs<Resource.Error>(result).error)
     }
 }

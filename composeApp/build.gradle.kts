@@ -55,6 +55,7 @@ android {
     // ✅ EKLENDİ: Compose'u manuel açıyoruz
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     testOptions {
@@ -71,24 +72,27 @@ kotlin {
         }
     }
 
-    // iOS Hedefleri (Plugin olmadığı için manuel ekliyoruz)
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    // iOS hedefleri gradle.properties'teki justrelax.ios.enabled bayrağıyla açılır (bkz. build-logic).
+    val isIosEnabled = providers.gradleProperty("justrelax.ios.enabled").orNull?.toBoolean() ?: false
+    if (isIosEnabled) {
+        iosX64()
+        iosArm64()
+        iosSimulatorArm64()
 
-    cocoapods {
-        summary = "JustRelax Shared App"
-        homepage = "https://example.com/justrelax"
-        version = "1.0.0"
-        ios.deploymentTarget = "16.0"
-        extraSpecAttributes["libraries"] = "'sqlite3'"
+        cocoapods {
+            summary = "JustRelax Shared App"
+            homepage = "https://example.com/justrelax"
+            version = "1.0.0"
+            ios.deploymentTarget = "16.0"
+            extraSpecAttributes["libraries"] = "'sqlite3'"
 
-        framework {
-            baseName = "ComposeApp"
-            isStatic = true
+            framework {
+                baseName = "ComposeApp"
+                isStatic = true
 
-            // Core UI ve Main Feature'ı dışarı açıyoruz
-            export(project(":core:ui"))
+                // Core UI ve Main Feature'ı dışarı açıyoruz
+                export(project(":core:ui"))
+            }
         }
     }
 
