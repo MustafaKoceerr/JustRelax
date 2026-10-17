@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 data class MixerUiState(
@@ -9,5 +10,6 @@ data class MixerUiState(
     val mixedSounds: List<LocalizedSound> = emptyList(),
     val playingSoundIds: Set<String> = emptySet(),
     val soundVolumes: Map<String, Float> = emptyMap(),
+    val soundFrequencies: Map<String, EventFrequency> = emptyMap(),
     val userMessage: UiText? = null,
 )

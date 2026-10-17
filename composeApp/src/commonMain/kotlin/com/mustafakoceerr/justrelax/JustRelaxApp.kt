@@ -7,8 +7,8 @@ import androidx.compose.runtime.getValue
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.feature.splash.SplashRoute
-import com.mustafakoceerr.justrelax.feature.onboarding.OnboardingRoute
 import com.mustafakoceerr.justrelax.feature.settings.SettingsRoute
+import com.mustafakoceerr.justrelax.feature.settings.credits.CreditsRoute
 import com.mustafakoceerr.justrelax.navigation.Route
 import com.mustafakoceerr.justrelax.navigation.goBack
 import com.mustafakoceerr.justrelax.navigation.navigate
@@ -64,19 +64,19 @@ private fun JustRelaxNavDisplay() {
         },
         entryProvider = entryProvider {
             entry<Route.Splash> {
-                SplashRoute(
-                    onNavigateToMain = { backStack.resetTo(Route.Main) },
-                    onNavigateToOnboarding = { backStack.resetTo(Route.Onboarding) },
-                )
-            }
-            entry<Route.Onboarding> {
-                OnboardingRoute(onFinished = { backStack.resetTo(Route.Main) })
+                SplashRoute(onNavigateToMain = { backStack.resetTo(Route.Main) })
             }
             entry<Route.Main> {
                 MainRoute(onOpenSettings = { backStack.navigate(Route.Settings) })
             }
             entry<Route.Settings> {
-                SettingsRoute(onBack = { backStack.goBack() })
+                SettingsRoute(
+                    onBack = { backStack.goBack() },
+                    onOpenCredits = { backStack.navigate(Route.Credits) },
+                )
+            }
+            entry<Route.Credits> {
+                CreditsRoute(onBack = { backStack.goBack() })
             }
         },
     )

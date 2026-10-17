@@ -21,4 +21,8 @@
     <string name="privacy_policy_title">Privacy Policy</string>
     <string name="terms_conditions_title">Terms &amp; Conditions</string>
     <string name="msg_all_sounds_downloaded">All sounds downloaded!</string>
+    <string name="credits_title">Credits</string>
+    <string name="credits_subtitle">Sounds and their authors</string>
+    <string name="credits_empty">No sounds from other authors yet.</string>
+    <string name="credits_author">by %1$s</string>
 </resources>

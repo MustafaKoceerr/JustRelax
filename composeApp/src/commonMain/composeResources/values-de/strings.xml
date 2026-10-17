@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="theme_dark">Dunkel</string>
-    <string name="theme_light">Hell</string>
-    <string name="theme_system">System</string>
-    <string name="category_air">Wind &amp; Atmosphäre</string>
-    <string name="category_city">Stadt &amp; Innenbereich</string>
-    <string name="category_nature">Natur &amp; Wald</string>
-    <string name="category_noise">Weißes Rauschen &amp; Mechanik</string>
-    <string name="category_water">Wasser &amp; Regen</string>
-    <string name="duration_hour_short">Std</string>
-    <string name="duration_minute_short">Min</string>
-    <string name="duration_second_short">Sek</string>
-    <string name="msg_mix_saved_success">%1$s wurde erfolgreich gespeichert!</string>
-    <string name="action_settings">EINSTELLUNGEN</string>
     <string name="tab_ai">KI</string>
     <string name="tab_home">Start</string>
     <string name="tab_mixer">Mixer</string>

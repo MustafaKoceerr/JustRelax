@@ -21,4 +21,8 @@
     <string name="privacy_policy_title">개인정보 처리방침</string>
     <string name="terms_conditions_title">이용약관</string>
     <string name="msg_all_sounds_downloaded">모든 사운드가 다운로드되었습니다!</string>
+    <string name="credits_title">크레딧</string>
+    <string name="credits_subtitle">소리와 제작자</string>
+    <string name="credits_empty">아직 다른 제작자의 소리가 없어요.</string>
+    <string name="credits_author">제작: %1$s</string>
 </resources>

@@ -21,4 +21,8 @@
     <string name="privacy_policy_title">Integritetspolicy</string>
     <string name="terms_conditions_title">Villkor</string>
     <string name="msg_all_sounds_downloaded">Alla ljud har laddats ned!</string>
+    <string name="credits_title">Tack</string>
+    <string name="credits_subtitle">Ljud och deras upphovspersoner</string>
+    <string name="credits_empty">Inga ljud från andra upphovspersoner än.</string>
+    <string name="credits_author">av %1$s</string>
 </resources>

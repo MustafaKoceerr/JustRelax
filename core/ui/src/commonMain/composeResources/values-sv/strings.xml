@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="theme_light">Ljust</string>
-    <string name="theme_dark">Mörkt</string>
-    <string name="theme_system">System</string>
     <string name="save_mix_dialog_title">Spara mix</string>
     <string name="save_mix_dialog_description">Ge den här mixen ett namn:</string>
     <string name="save_mix_dialog_name_label">Mixnamn</string>
@@ -15,7 +12,6 @@
     <string name="frequency_rare">Sällan</string>
     <string name="frequency_normal">Normal</string>
     <string name="frequency_often">Ofta</string>
-    <string name="frequency_label">Hur ofta</string>
     <string name="sound_kind_event">Hörs då och då</string>
     <string name="action_remove">Ta bort</string>
 </resources>

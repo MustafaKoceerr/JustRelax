@@ -13,4 +13,7 @@
     <string name="category_water">Eau &amp; océan</string>
     <string name="category_zen">Zen &amp; méditation</string>
     <string name="action_settings">PARAMÈTRES</string>
+    <string name="library_empty_title">Pas encore de sons</string>
+    <string name="library_empty_message">Connecte-toi à Internet pour télécharger la bibliothèque de sons.</string>
+    <string name="action_retry">Réessayer</string>
 </resources>

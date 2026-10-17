@@ -11,7 +11,6 @@
     <string name="msg_mix_deleted">Mix excluído</string>
     <string name="date_format_short">dd/MM/yyyy</string>
     <string name="err_play_mix_failed">Falha ao reproduzir o mix</string>
-    <string name="err_unknown">Ocorreu um erro inesperado.</string>
     <string name="saved_detail_placeholder">Escolha uma mixagem salva para ver os sons.</string>
     <string name="action_delete">Excluir</string>
 </resources>

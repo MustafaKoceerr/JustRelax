@@ -13,4 +13,7 @@
     <string name="category_water">Vatten &amp; hav</string>
     <string name="category_zen">Zen &amp; meditation</string>
     <string name="action_settings">INSTÄLLNINGAR</string>
+    <string name="library_empty_title">Inga ljud än</string>
+    <string name="library_empty_message">Anslut till internet för att ladda ner ljudbiblioteket.</string>
+    <string name="action_retry">Försök igen</string>
 </resources>

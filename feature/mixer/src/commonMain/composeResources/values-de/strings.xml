@@ -4,9 +4,5 @@
     <string name="mixer_empty_state_message">Wähle eine Anzahl und starte das Mischen!</string>
     <string name="mixer_screen_title">Mixer</string>
     <string name="action_create_mix">Mix erstellen</string>
-    <string name="msg_mix_saved_success">%1$s wurde erfolgreich gespeichert!</string>
-    <string name="err_mix_save_empty_name">Bitte einen Namen eingeben</string>
-    <string name="err_mix_save_no_sound">Es werden keine Sounds abgespielt</string>
     <string name="err_mixer_generate_failed">Mix konnte nicht erstellt werden. Stelle sicher, dass du Sounds heruntergeladen hast.</string>
-    <string name="err_unknown">Etwas ist schiefgelaufen</string>
 </resources>

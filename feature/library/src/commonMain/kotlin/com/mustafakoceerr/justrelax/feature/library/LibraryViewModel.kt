@@ -6,6 +6,7 @@ import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.data.repository.StarterPackInstaller
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
@@ -26,6 +27,7 @@ class LibraryViewModel(
     private val sceneRepository: SceneRepository,
     private val playbackController: PlaybackController,
     private val soundRepository: SoundRepository,
+    private val starterPackInstaller: StarterPackInstaller,
 ) : ViewModel() {
 
     private data class ScreenState(
@@ -70,6 +72,14 @@ class LibraryViewModel(
     fun changeVolume(soundId: String, volume: Float) = sceneRepository.setVolume(soundId, volume)
 
     fun changeFrequency(soundId: String, frequency: EventFrequency) = sceneRepository.setFrequency(soundId, frequency)
+
+    /** Fetches the catalog again and resumes the starter pack after a failed first launch. */
+    fun retry() {
+        viewModelScope.launch {
+            soundRepository.sync()
+            starterPackInstaller.install()
+        }
+    }
 
     fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
 

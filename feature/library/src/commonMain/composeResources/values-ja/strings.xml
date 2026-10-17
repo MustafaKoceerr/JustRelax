@@ -13,4 +13,7 @@
     <string name="category_water">水 &amp; 海</string>
     <string name="category_zen">禅 &amp; 瞑想</string>
     <string name="action_settings">設定</string>
+    <string name="library_empty_title">まだサウンドがありません</string>
+    <string name="library_empty_message">サウンドライブラリをダウンロードするにはインターネットに接続してください。</string>
+    <string name="action_retry">再試行</string>
 </resources>

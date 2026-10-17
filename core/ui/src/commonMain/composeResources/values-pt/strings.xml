@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="theme_light">Claro</string>
-    <string name="theme_dark">Escuro</string>
-    <string name="theme_system">Sistema</string>
     <string name="save_mix_dialog_title">Salvar mix</string>
     <string name="save_mix_dialog_description">Dê um nome para este mix:</string>
     <string name="save_mix_dialog_name_label">Nome do mix</string>
@@ -15,7 +12,6 @@
     <string name="frequency_rare">Raro</string>
     <string name="frequency_normal">Normal</string>
     <string name="frequency_often">Frequente</string>
-    <string name="frequency_label">Frequência</string>
     <string name="sound_kind_event">Toca de vez em quando</string>
     <string name="action_remove">Remover</string>
 </resources>

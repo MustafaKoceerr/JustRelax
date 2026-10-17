@@ -21,4 +21,8 @@
     <string name="privacy_policy_title">गोपनीयता नीति</string>
     <string name="terms_conditions_title">नियम &amp; शर्तें</string>
     <string name="msg_all_sounds_downloaded">सभी ध्वनियाँ डाउनलोड हो गईं!</string>
+    <string name="credits_title">श्रेय</string>
+    <string name="credits_subtitle">ध्वनियाँ और उनके रचनाकार</string>
+    <string name="credits_empty">अभी तक अन्य रचनाकारों की कोई ध्वनि नहीं है।</string>
+    <string name="credits_author">%1$s द्वारा</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.mixer.components
 
+import com.mustafakoceerr.justrelax.feature.mixer.RandomSceneGenerator
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,7 +31,7 @@ fun MixCountSelector(
     selectedCount: Int,
     onCountSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    availableCounts: List<Int> = (2..7).toList()
+    availableCounts: List<Int> = (RandomSceneGenerator.MIN_LAYERS..RandomSceneGenerator.MAX_LAYERS).toList()
 ) {
     Column(modifier = modifier) {
         Text(

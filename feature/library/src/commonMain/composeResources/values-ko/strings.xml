@@ -13,4 +13,7 @@
     <string name="category_water">물 &amp; 바다</string>
     <string name="category_zen">젠 &amp; 명상</string>
     <string name="action_settings">설정</string>
+    <string name="library_empty_title">아직 소리가 없어요</string>
+    <string name="library_empty_message">소리 라이브러리를 다운로드하려면 인터넷에 연결하세요.</string>
+    <string name="action_retry">다시 시도</string>
 </resources>

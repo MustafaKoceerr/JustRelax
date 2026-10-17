@@ -7,7 +7,9 @@ import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
-import com.mustafakoceerr.justrelax.feature.mixer.usecase.GenerateRandomMixUseCase
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
+import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
+import kotlin.random.Random
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -18,14 +20,17 @@ import kotlin.test.assertTrue
 
 class MixerViewModelTest {
 
-    private val downloaded = (1..8).map { testSound("s$it", localPath = "/sounds/s$it.mp3") }
+    private val downloaded = (1..4).map { testSound("s$it", localPath = "/sounds/s$it.mp3") } +
+        (1..4).map { testSound("e$it", localPath = "/sounds/e$it.ogg", kind = SoundKind.EVENT) }
     private val repository = FakeSoundRepository(downloaded + testSound("not_downloaded"))
     private val scene = InMemorySceneRepository(repository)
     private val playback = FakePlaybackController()
 
     private fun TestScope.viewModel() = MixerViewModel(
-        generateRandomMixUseCase = GenerateRandomMixUseCase(repository, FakeLanguageController()),
+        soundRepository = repository,
         sceneRepository = scene,
+        languageController = FakeLanguageController(),
+        sceneGenerator = RandomSceneGenerator(Random(42)),
         playbackController = playback,
     ).also { observe(it.uiState) }
 
@@ -45,7 +50,7 @@ class MixerViewModelTest {
     }
 
     @Test
-    fun soundCount_isKeptBetweenTwoAndSeven() = runMainTest {
+    fun soundCount_isKeptBetweenTwoAndFive() = runMainTest {
         val viewModel = viewModel()
 
         viewModel.selectSoundCount(1)
@@ -55,7 +60,7 @@ class MixerViewModelTest {
 
         viewModel.selectSoundCount(12)
         advanceUntilIdle()
-        assertEquals(7, viewModel.uiState.value.selectedSoundCount)
+        assertEquals(5, viewModel.uiState.value.selectedSoundCount)
     }
 
     @Test
@@ -98,5 +103,20 @@ class MixerViewModelTest {
         advanceUntilIdle()
 
         assertEquals(0.25f, viewModel.uiState.value.soundVolumes[sound.id])
+    }
+
+    @Test
+    fun aGeneratedScene_mixesBedsAndEvents_andEventFrequenciesCanBeChanged() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.selectSoundCount(4)
+        viewModel.generateMix()
+        advanceUntilIdle()
+        val event = viewModel.uiState.value.mixedSounds.first { it.kind == SoundKind.EVENT }
+
+        viewModel.changeFrequency(event.id, EventFrequency.RARE)
+        advanceUntilIdle()
+
+        assertEquals(2, scene.scene.value.beds.size)
+        assertEquals(EventFrequency.RARE, viewModel.uiState.value.soundFrequencies[event.id])
     }
 }

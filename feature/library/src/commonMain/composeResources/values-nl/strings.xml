@@ -13,4 +13,7 @@
     <string name="category_water">Water &amp; oceaan</string>
     <string name="category_zen">Zen &amp; meditatie</string>
     <string name="action_settings">INSTELLINGEN</string>
+    <string name="library_empty_title">Nog geen geluiden</string>
+    <string name="library_empty_message">Maak verbinding met internet om de geluidsbibliotheek te downloaden.</string>
+    <string name="action_retry">Opnieuw proberen</string>
 </resources>

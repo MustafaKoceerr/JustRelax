@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="save_mix_dialog_description">Şu anki ses kombinasyonuna bir ad ver; daha sonra kolayca çal.</string>
-    <string name="save_mix_dialog_name_error">İsim boş olamaz</string>
-    <string name="save_mix_dialog_name_label">Miks Adı</string>
-    <string name="save_mix_dialog_name_placeholder">ör. Derin Odak</string>
-    <string name="save_mix_dialog_title">Mevcut Miksi Kaydet</string>
-    <string name="action_cancel">İptal</string>
-    <string name="action_save">Kaydet</string>
     <string name="msg_mix_saved_success">Miks "%1$s" başarıyla kaydedildi!</string>
     <string name="err_mix_save_empty_name">Miks adı boş olamaz.</string>
     <string name="err_mix_save_name_exists">Bu isimde bir miks zaten var.</string>
@@ -18,5 +11,4 @@
     <string name="action_pause">Duraklat</string>
     <string name="action_stop_all">Hepsini durdur</string>
     <string name="action_save_scene">Kaydet</string>
-    <string name="action_show_scene">Sahneyi göster</string>
 </resources>

@@ -6,8 +6,6 @@
     <string name="ai_suggestion_cafe">Kafe Ambiyansı</string>
     <string name="ai_suggestion_meditation">Meditasyon</string>
     <string name="ai_prompt_placeholder">İdeal ortamını tarif et...</string>
-    <string name="action_save">Kaydet</string>
-    <string name="msg_mix_saved_success">Miks '%1$s' başarıyla kaydedildi!</string>
     <string name="err_ai_no_sounds">İndirilen ses bulunamadı. AI'nin miks oluşturması için seslere ihtiyacı var.</string>
     <string name="err_ai_empty_response">AI boş veya geçersiz bir yanıt döndürdü. Lütfen tekrar deneyin.</string>
     <string name="err_unknown">Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.</string>

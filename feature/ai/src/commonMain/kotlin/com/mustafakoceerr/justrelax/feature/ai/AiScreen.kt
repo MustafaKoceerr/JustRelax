@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.ai
 
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -61,6 +62,7 @@ fun AiRoute(viewModel: AiViewModel = koinViewModel()) {
         onClearMix = viewModel::clearMix,
         onSoundClick = viewModel::toggleSound,
         onVolumeChange = viewModel::changeVolume,
+        onFrequencyChange = viewModel::changeFrequency,
     )
 }
 
@@ -74,6 +76,7 @@ fun AiScreen(
     onClearMix: () -> Unit,
     onSoundClick: (soundId: String) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
+    onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val hasResults = uiState.hasResult
@@ -144,6 +147,8 @@ fun AiScreen(
                             getSoundVolume = { id -> uiState.soundVolumes[id] ?: AudioDefaults.BASE_VOLUME },
                             onToggleSound = onSoundClick,
                             onVolumeChange = onVolumeChange,
+                            getSoundFrequency = { id -> uiState.soundFrequencies[id] },
+                            onFrequencyChange = onFrequencyChange,
                             contentPadding = PaddingValues(16.dp),
                             headerContent = {
                                 Column {

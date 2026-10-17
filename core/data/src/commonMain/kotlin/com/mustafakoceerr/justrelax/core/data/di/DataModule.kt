@@ -13,6 +13,10 @@ import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SavedSceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.data.repository.StarterPackInstaller
+import com.mustafakoceerr.justrelax.core.common.dispatcher.DispatcherProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import com.mustafakoceerr.justrelax.core.data.repository.UserPreferencesRepository
 import com.mustafakoceerr.justrelax.core.data.repository.UserPreferencesRepositoryImpl
 import com.mustafakoceerr.justrelax.core.data.sync.DataStoreSyncTimestampStore
@@ -44,4 +48,5 @@ val dataModule = module {
     singleOf(::LegalRepositoryImpl) { bind<LegalRepository>() }
     singleOf(::AiMixRepositoryImpl) { bind<AiMixRepository>() }
     singleOf(::InMemorySceneRepository) { bind<SceneRepository>() }
+    single { StarterPackInstaller(get(), get(), CoroutineScope(SupervisorJob() + get<DispatcherProvider>().io)) }
 }

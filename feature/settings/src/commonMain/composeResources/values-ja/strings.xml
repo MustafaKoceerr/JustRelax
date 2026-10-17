@@ -21,4 +21,8 @@
     <string name="privacy_policy_title">プライバシーポリシー</string>
     <string name="terms_conditions_title">利用規約</string>
     <string name="msg_all_sounds_downloaded">すべてのサウンドをダウンロードしました！</string>
+    <string name="credits_title">クレジット</string>
+    <string name="credits_subtitle">サウンドと作者</string>
+    <string name="credits_empty">ほかの作者のサウンドはまだありません。</string>
+    <string name="credits_author">作者: %1$s</string>
 </resources>

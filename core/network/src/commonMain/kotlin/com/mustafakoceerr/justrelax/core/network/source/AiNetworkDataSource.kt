@@ -13,11 +13,12 @@ import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.network.BuildConfig
 import com.mustafakoceerr.justrelax.core.network.createHttpClientEngine
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkAiMix
+import com.mustafakoceerr.justrelax.core.network.dto.NetworkAiSound
 import kotlinx.serialization.json.Json
 
-/** Asks a language model for a mix made only of the given sound ids. */
+/** Asks a language model for a mix made only of the sounds in [inventory]. */
 interface AiNetworkDataSource {
-    suspend fun generateMix(prompt: String, availableSoundIds: List<String>): Resource<NetworkAiMix>
+    suspend fun generateMix(prompt: String, inventory: List<NetworkAiSound>): Resource<NetworkAiMix>
 }
 
 internal class OpenAiNetworkDataSource : AiNetworkDataSource {
@@ -32,30 +33,36 @@ internal class OpenAiNetworkDataSource : AiNetworkDataSource {
 
     override suspend fun generateMix(
         prompt: String,
-        availableSoundIds: List<String>
+        inventory: List<NetworkAiSound>
     ): Resource<NetworkAiMix> {
         return try {
-            if (availableSoundIds.isEmpty()) {
+            if (inventory.isEmpty()) {
                 return Resource.Error(AppError.Ai.NoDownloadedSounds())
             }
 
-            val inventoryString = availableSoundIds.joinToString(", ")
             val systemInstruction = """
-                You are an expert ambient sound DJ.
+                You are an expert ambient sound designer building a soundscape.
 
-                ### INVENTORY (IDs):
-                [$inventoryString]
+                ### INVENTORY (JSON):
+                ${json.encodeToString(inventory)}
+
+                Each sound has a kind:
+                - BED: a continuous loop that carries the scene (rain, wind, a stream, noise).
+                - EVENT: short sounds that occur at random moments (a bird, an owl, a crackle, thunder).
+                  For events choose a frequency: RARE, NORMAL or OFTEN.
 
                 ### RULES:
-                1. Create a mix using ONLY the provided IDs based on the user's request.
-                2. If the user request is unrelated, create a generic "Focus Mix".
-                3. Use 3-7 sounds. Volume range: 0.1 to 1.0.
-                4. Output STRICT JSON format:
+                1. Use ONLY ids from the inventory; pick sounds whose name, category and tags fit the request.
+                2. Use 3-6 sounds: at least one BED when the inventory has one, plus events that bring it to life.
+                3. Volume range: 0.1 to 1.0. Beds that carry the scene are louder; events are usually softer.
+                4. If the request is unrelated to sound, create a generic calm focus scene.
+                5. Output STRICT JSON:
                 {
                   "mix_name": "Name",
-                  "description": "Short desc",
-                  "sounds": [ {"id": "sound_id", "volume": 0.5} ]
+                  "description": "Short description",
+                  "sounds": [ {"id": "sound_id", "volume": 0.5, "frequency": "NORMAL"} ]
                 }
+                "frequency" is only for EVENT sounds.
             """.trimIndent()
 
             val chatRequest = ChatCompletionRequest(

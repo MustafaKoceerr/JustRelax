@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="theme_dark">Mörkt</string>
-    <string name="theme_light">Ljust</string>
-    <string name="theme_system">System</string>
-    <string name="category_air">Vind &amp; atmosfär</string>
-    <string name="category_city">Stad &amp; inomhus</string>
-    <string name="category_nature">Natur &amp; skog</string>
-    <string name="category_noise">Vitt brus &amp; mekaniskt</string>
-    <string name="category_water">Vatten &amp; regn</string>
-    <string name="duration_hour_short">h</string>
-    <string name="duration_minute_short">min</string>
-    <string name="duration_second_short">s</string>
-    <string name="msg_mix_saved_success">%1$s sparades!</string>
-    <string name="action_settings">INSTÄLLNINGAR</string>
     <string name="tab_ai">AI</string>
     <string name="tab_home">Hem</string>
     <string name="tab_mixer">Mixer</string>

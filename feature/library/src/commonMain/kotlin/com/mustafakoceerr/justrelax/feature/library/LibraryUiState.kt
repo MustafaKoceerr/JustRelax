@@ -15,4 +15,7 @@ data class LibraryUiState(
     val soundFrequencies: Map<String, EventFrequency> = emptyMap(),
     val downloadingSoundIds: Set<String> = emptySet(),
     val userMessage: UiText? = null,
-)
+) {
+    /** Nothing in the library yet, e.g. a first launch without internet. */
+    val isEmpty: Boolean get() = !isLoading && categories.isEmpty()
+}

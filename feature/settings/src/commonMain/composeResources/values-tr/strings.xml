@@ -21,4 +21,8 @@
     <string name="privacy_policy_title">Gizlilik Politikası</string>
     <string name="terms_conditions_title">Şartlar &amp; Koşullar</string>
     <string name="msg_all_sounds_downloaded">Tüm sesler indirildi!</string>
+    <string name="credits_title">Krediler</string>
+    <string name="credits_subtitle">Sesler ve sahipleri</string>
+    <string name="credits_empty">Henüz başka yazarlara ait ses yok.</string>
+    <string name="credits_author">%1$s</string>
 </resources>

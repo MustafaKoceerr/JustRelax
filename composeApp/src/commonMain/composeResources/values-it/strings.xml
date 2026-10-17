@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="theme_dark">Scuro</string>
-    <string name="theme_light">Chiaro</string>
-    <string name="theme_system">Sistema</string>
-    <string name="category_air">Vento &amp; atmosfera</string>
-    <string name="category_city">Città &amp; interni</string>
-    <string name="category_nature">Natura &amp; foresta</string>
-    <string name="category_noise">Rumore bianco &amp; meccanico</string>
-    <string name="category_water">Acqua &amp; pioggia</string>
-    <string name="duration_hour_short">h</string>
-    <string name="duration_minute_short">min</string>
-    <string name="duration_second_short">s</string>
-    <string name="msg_mix_saved_success">%1$s è stato salvato correttamente!</string>
-    <string name="action_settings">IMPOSTAZIONI</string>
     <string name="tab_ai">IA</string>
     <string name="tab_home">Home</string>
     <string name="tab_mixer">Mixer</string>

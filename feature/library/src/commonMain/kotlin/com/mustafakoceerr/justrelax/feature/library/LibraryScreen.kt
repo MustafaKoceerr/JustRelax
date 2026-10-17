@@ -45,6 +45,7 @@ fun LibraryRoute(
         onSoundClick = viewModel::toggleSound,
         onVolumeChange = viewModel::changeVolume,
         onFrequencyChange = viewModel::changeFrequency,
+        onRetry = viewModel::retry,
     )
 }
 
@@ -57,6 +58,7 @@ fun LibraryScreen(
     onSoundClick: (LocalizedSound) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
     onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
+    onRetry: () -> Unit,
 ) {
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
@@ -81,6 +83,7 @@ fun LibraryScreen(
             onSoundClick = onSoundClick,
             onVolumeChange = onVolumeChange,
             onFrequencyChange = onFrequencyChange,
+            onRetry = onRetry,
             modifier = Modifier.padding(innerPadding)
         )
     }

@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.ai.components
 
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,8 @@ fun AiResultGrid(
     onToggleSound: (String) -> Unit,
     onVolumeChange: (String, Float) -> Unit,
     modifier: Modifier = Modifier,
+    getSoundFrequency: (String) -> EventFrequency? = { null },
+    onFrequencyChange: (String, EventFrequency) -> Unit = { _, _ -> },
     contentPadding: PaddingValues = PaddingValues(16.dp),
     headerContent: (@Composable () -> Unit)? = null
 ) {
@@ -51,7 +54,9 @@ fun AiResultGrid(
                 isDownloading = false,
                 volume = volume,
                 onCardClick = { onToggleSound(sound.id) },
-                onVolumeChange = { newVol -> onVolumeChange(sound.id, newVol) }
+                onVolumeChange = { newVol -> onVolumeChange(sound.id, newVol) },
+                frequency = getSoundFrequency(sound.id),
+                onFrequencyChange = { frequency -> onFrequencyChange(sound.id, frequency) },
             )
         }
     }

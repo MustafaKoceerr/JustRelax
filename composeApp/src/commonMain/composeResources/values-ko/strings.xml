@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="theme_dark">다크</string>
-    <string name="theme_light">라이트</string>
-    <string name="theme_system">시스템</string>
-    <string name="category_air">바람 &amp; 분위기</string>
-    <string name="category_city">도시 &amp; 실내</string>
-    <string name="category_nature">자연 &amp; 숲</string>
-    <string name="category_noise">화이트 노이즈 &amp; 기계음</string>
-    <string name="category_water">물 &amp; 비</string>
-    <string name="duration_hour_short">시간</string>
-    <string name="duration_minute_short">분</string>
-    <string name="duration_second_short">초</string>
-    <string name="msg_mix_saved_success">%1$s이(가) 성공적으로 저장되었습니다!</string>
-    <string name="action_settings">설정</string>
     <string name="tab_ai">AI</string>
     <string name="tab_home">홈</string>
     <string name="tab_mixer">믹서</string>

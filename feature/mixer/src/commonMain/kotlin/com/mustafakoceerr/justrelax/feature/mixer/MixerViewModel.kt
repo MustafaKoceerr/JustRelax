@@ -2,25 +2,31 @@ package com.mustafakoceerr.justrelax.feature.mixer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mustafakoceerr.justrelax.core.data.language.LanguageController
 import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
-import com.mustafakoceerr.justrelax.core.playback.PlaybackController
+import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
+import com.mustafakoceerr.justrelax.core.model.localized
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
+import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.mixer.usecase.GenerateRandomMixUseCase
 import justrelax.feature.mixer.generated.resources.Res
 import justrelax.feature.mixer.generated.resources.err_mixer_generate_failed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MixerViewModel(
-    private val generateRandomMixUseCase: GenerateRandomMixUseCase,
+    private val soundRepository: SoundRepository,
     private val sceneRepository: SceneRepository,
+    private val languageController: LanguageController,
     private val playbackController: PlaybackController,
+    private val sceneGenerator: RandomSceneGenerator,
 ) : ViewModel() {
 
     private data class ScreenState(
@@ -40,20 +46,23 @@ class MixerViewModel(
             // A paused mix shows its sounds as not playing.
             playingSoundIds = if (isPlaying) scene.layers.mapTo(mutableSetOf()) { it.soundId } else emptySet(),
             soundVolumes = scene.layers.associate { it.soundId to it.volume },
+            soundFrequencies = scene.events.associate { it.soundId to it.frequency },
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MixerUiState())
 
-    fun selectSoundCount(count: Int) =
-        screenState.update { it.copy(selectedSoundCount = count.coerceIn(MIN_SOUND_COUNT, MAX_SOUND_COUNT)) }
+    fun selectSoundCount(count: Int) = screenState.update {
+        it.copy(selectedSoundCount = count.coerceIn(RandomSceneGenerator.MIN_LAYERS, RandomSceneGenerator.MAX_LAYERS))
+    }
 
     fun generateMix() {
         if (screenState.value.isGenerating) return
         screenState.update { it.copy(isGenerating = true) }
 
         viewModelScope.launch {
-            val mix = generateRandomMixUseCase(screenState.value.selectedSoundCount)
-            if (mix.isEmpty()) {
+            val sounds = soundRepository.getSounds().first()
+            val scene = sceneGenerator.generate(sounds, screenState.value.selectedSoundCount)
+            if (scene.layers.isEmpty()) {
                 screenState.update {
                     it.copy(
                         isGenerating = false,
@@ -64,9 +73,16 @@ class MixerViewModel(
                 return@launch
             }
 
-            sceneRepository.replaceWith(mix.mapKeys { (sound, _) -> sound.id })
+            sceneRepository.replaceWith(scene)
             playbackController.play()
-            screenState.update { it.copy(isGenerating = false, mixedSounds = mix.keys.toList()) }
+            val soundsById = sounds.associateBy { it.id }
+            val languageCode = languageController.getCurrentLanguage().code
+            screenState.update {
+                it.copy(
+                    isGenerating = false,
+                    mixedSounds = scene.layers.mapNotNull { layer -> soundsById[layer.soundId]?.localized(languageCode) },
+                )
+            }
         }
     }
 
@@ -79,11 +95,11 @@ class MixerViewModel(
 
     fun changeVolume(soundId: String, volume: Float) = sceneRepository.setVolume(soundId, volume)
 
+    fun changeFrequency(soundId: String, frequency: EventFrequency) = sceneRepository.setFrequency(soundId, frequency)
+
     fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
 
     companion object {
-        const val DEFAULT_SOUND_COUNT = 4
-        private const val MIN_SOUND_COUNT = 2
-        private const val MAX_SOUND_COUNT = 7
+        const val DEFAULT_SOUND_COUNT = 3
     }
 }

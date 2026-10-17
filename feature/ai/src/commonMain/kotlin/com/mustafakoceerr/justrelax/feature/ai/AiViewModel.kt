@@ -9,6 +9,7 @@ import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
 import com.mustafakoceerr.justrelax.core.model.AiGeneratedMix
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import justrelax.feature.ai.generated.resources.Res
 import justrelax.feature.ai.generated.resources.err_ai_empty_response
 import justrelax.feature.ai.generated.resources.err_ai_no_sounds
@@ -42,10 +43,11 @@ class AiViewModel(
             isLoading = screen.isLoading,
             mixName = screen.mix?.name.orEmpty(),
             mixDescription = screen.mix?.description.orEmpty(),
-            mixSounds = screen.mix?.sounds?.keys?.toList().orEmpty(),
+            mixSounds = screen.mix?.sounds.orEmpty(),
             // A paused mix shows its sounds as not playing.
             playingSoundIds = if (isPlaying) scene.layers.mapTo(mutableSetOf()) { it.soundId } else emptySet(),
             soundVolumes = scene.layers.associate { it.soundId to it.volume },
+            soundFrequencies = scene.events.associate { it.soundId to it.frequency },
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AiUiState())
@@ -64,7 +66,7 @@ class AiViewModel(
                     is Resource.Loading -> screenState.update { it.copy(isLoading = true) }
                     is Resource.Success -> {
                         val mix = result.data
-                        sceneRepository.replaceWith(mix.sounds.mapKeys { (sound, _) -> sound.id })
+                        sceneRepository.replaceWith(mix.scene)
                         playbackController.play()
                         screenState.update { it.copy(isLoading = false, mix = mix) }
                     }
@@ -89,6 +91,8 @@ class AiViewModel(
     }
 
     fun changeVolume(soundId: String, volume: Float) = sceneRepository.setVolume(soundId, volume)
+
+    fun changeFrequency(soundId: String, frequency: EventFrequency) = sceneRepository.setFrequency(soundId, frequency)
 
     fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
 
