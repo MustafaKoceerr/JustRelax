@@ -47,6 +47,7 @@ Debug paketini yeniden ürettikten sonra sözleşme testini çalıştır:
 - **`detect` nasıl çalışır:** taban seviyesinin 10 dB üstüne çıkan bir tepe arıyor ve bölgeyi, ses tabanın 4 dB üstünde kaldığı sürece uzatıyor. Hiç klip çıkmazsa pipeline hata verir; o zaman `clips` ile elle yaz.
 - **Geçerli değerler:** `category`, `icon`, `kind`, `default_frequency` ve `license` adları `core:model` enum'larıyla aynı olmalı.
 - **Atıf:** CC-BY lisansı `attribution` istiyor.
+- **`license_note`:** yalnızca hatırlatma içindir, kataloğa yazılmaz. Şu an 15 sesin hepsi v1'deki gibi `OWN` olarak yayında; gerçek lisanslar doğrulanınca güncellenecek.
 
 ## Yayına alma
 
