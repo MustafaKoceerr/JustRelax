@@ -42,4 +42,5 @@ private object SilentEventPlayer : OneShotPlayer {
     override fun pauseAll() = Unit
     override fun resumeAll() = Unit
     override fun stopAll() = Unit
+    override fun release() = Unit
 }

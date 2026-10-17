@@ -7,7 +7,7 @@ import com.mustafakoceerr.justrelax.core.playback.player.ExoSoundPlayer
 import com.mustafakoceerr.justrelax.core.playback.player.SoundPlayerFactory
 import com.mustafakoceerr.justrelax.core.playback.soundscape.DefaultSoundscapeEngine
 import com.mustafakoceerr.justrelax.core.playback.soundscape.OneShotPlayer
-import com.mustafakoceerr.justrelax.core.playback.soundscape.PendingEventPlayer
+import com.mustafakoceerr.justrelax.core.playback.soundscape.AndroidEventPlayer
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -18,7 +18,8 @@ internal actual val platformPlaybackModule = module {
         SoundPlayerFactory { ExoSoundPlayer(context) }
     }
 
-    factory<OneShotPlayer> { PendingEventPlayer() }
+    // Each player owns a SoundPool, released when the engine stops.
+    factory<OneShotPlayer> { AndroidEventPlayer() }
 
     // A new player for each start of the playback service.
     factory { (mixMetadata: MediaMetadata) ->

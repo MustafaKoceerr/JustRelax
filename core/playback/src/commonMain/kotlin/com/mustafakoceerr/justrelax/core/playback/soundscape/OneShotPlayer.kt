@@ -17,4 +17,7 @@ interface OneShotPlayer {
     fun pauseAll()
     fun resumeAll()
     fun stopAll()
+
+    /** Frees the player for good; it is not used afterwards. */
+    fun release()
 }
