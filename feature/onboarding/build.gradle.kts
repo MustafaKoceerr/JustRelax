@@ -2,9 +2,6 @@ plugins {
     id("justrelax.kmp.feature")
 }
 
-android {
-    namespace = "com.mustafakoceerr.justrelax.feature.onboarding"
-}
 
 kotlin {
     sourceSets {

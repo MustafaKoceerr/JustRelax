@@ -1,84 +1,14 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
+    id("justrelax.kmp.library")
+    id("justrelax.android.library.compose")
     alias(libs.plugins.kotlin.serialization)
     kotlin("native.cocoapods")
 }
-android {
-    namespace = "com.mustafakoceerr.justrelax"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
-    defaultConfig {
-        applicationId = "com.mustafakoceerr.justrelax"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 5
-        versionName = "1.2.0"
-    }
-
-    buildTypes {
-        getByName("release") {
-            // 1. KOD KÜÇÜLTME (R8)
-            // Kullanılmayan class'ları, fonksiyonları ve DEĞİŞKENLERİ siler.
-            // Kodunuzu 'a.b.c' gibi isimlendirerek şifreler (Obfuscation).
-            isMinifyEnabled = true
-
-            // 2. KAYNAK KÜÇÜLTME
-            // Kullanılmayan resim, xml ve layout dosyalarını siler.
-            isShrinkResources = true
-
-            // 3. PROGUARD DOSYALARI
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            // Opsiyonel: Debuggable false olmalı (Zaten default false'tur ama garanti olsun)
-            isDebuggable = false
-        }
-
-        // Geliştirme yaparken hızlı derlensin diye debug'da kapalı kalsın
-        getByName("debug") {
-            isMinifyEnabled = false
-            isShrinkResources = false
-        }
-        }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    // ✅ EKLENDİ: Compose'u manuel açıyoruz
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
-
-    testOptions {
-        unitTests.isIncludeAndroidResources = true
-    }
-
-
-}
-
+// Shared app shell (navigation, DI wiring, root composable). The Android entry point lives
+// in :androidApp because AGP 9 no longer allows com.android.application in a KMP module.
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
-    }
-
-    // iOS hedefleri gradle.properties'teki justrelax.ios.enabled bayrağıyla açılır (bkz. build-logic).
-    val isIosEnabled = providers.gradleProperty("justrelax.ios.enabled").orNull?.toBoolean() ?: false
     if (isIosEnabled) {
-        iosX64()
-        iosArm64()
-        iosSimulatorArm64()
-
         cocoapods {
             summary = "JustRelax Shared App"
             homepage = "https://example.com/justrelax"
@@ -89,8 +19,6 @@ kotlin {
             framework {
                 baseName = "ComposeApp"
                 isStatic = true
-
-                // Core UI ve Main Feature'ı dışarı açıyoruz
                 export(project(":core:ui"))
             }
         }
@@ -98,16 +26,15 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            // --- MODÜLLER ---
             implementation(project(":core:common"))
             implementation(project(":core:model"))
-            implementation(project(":core:ui"))
+            api(project(":core:ui"))
             implementation(project(":core:network"))
             implementation(project(":core:database"))
             implementation(project(":core:system"))
-
             implementation(project(":core:audio"))
             implementation(project(":core:navigation"))
+            implementation(project(":data:repository"))
 
             implementation(project(":feature:home"))
             implementation(project(":feature:mixer"))
@@ -118,13 +45,10 @@ kotlin {
             implementation(project(":feature:player"))
             implementation(project(":feature:onboarding"))
             implementation(project(":feature:splash"))
-            implementation(project(":data:repository"))
 
-            // --- Koin ---
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
+            implementation(libs.findLibrary("koin-core").get())
+            implementation(libs.findLibrary("koin-compose").get())
 
-            // --- Compose ---
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -133,42 +57,13 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.uiToolingPreview)
 
-            // Coil (Resim Yükleme)
-            implementation(libs.coil.compose)
-            implementation(libs.coil.network)
-            implementation(libs.coil.svg)
-        }
-
-        androidMain.dependencies {
-            implementation(libs.koin.android)
-            implementation(libs.androidx.core.ktx)
-            implementation(libs.androidx.activity.compose)
-
-            // Android Ses Motoru (ExoPlayer / Media3)
-            implementation(libs.androidx.media3.exoplayer)
-            implementation(libs.androidx.media3.session)
-            implementation(libs.kotlinx.coroutines.guava)
-            implementation(libs.androidx.media3.common)
-        }
-
-        androidUnitTest.dependencies {
-            implementation(kotlin("test"))
-            implementation(project(":core:testing"))
-            implementation(libs.koin.test)
-            implementation(libs.robolectric)
-            implementation(libs.androidx.test.core.ktx)
-            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.findLibrary("coil-compose").get())
+            implementation(libs.findLibrary("coil-network").get())
+            implementation(libs.findLibrary("coil-svg").get())
         }
     }
 }
 
-// --- KRİTİK NOKTA ---
 compose.resources {
-    // Core modülünde: "justrelax.core.generated.resources" demiştik.
-    // Burada FARKLI bir isim olmalı. Genellikle şöyledir:
     packageOfResClass = "com.mustafakoceerr.justrelax.composeapp.generated.resources"
-
-    // Uygulamanın ana modülü olduğu için public yapmana gerek yok (default false kalabilir)
-    // generateResClass = always
 }
-

@@ -3,9 +3,6 @@ plugins {
     id("justrelax.android.library.compose") // Compose'u aktif eden pluginimiz
 }
 
-android {
-    namespace = "com.mustafakoceerr.justrelax.core.ui"
-}
 
 kotlin {
     sourceSets {

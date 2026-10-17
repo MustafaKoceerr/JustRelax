@@ -31,9 +31,10 @@ val appModule = module {
     single<TabProvider> { TabProviderImpl() }
 }
 
-expect val platformAudioModule: Module
-
-/** Uygulamanın tüm Koin modülleri; DI grafiği testi de bu listeyi doğrular. */
+/**
+ * Platformdan bağımsız tüm Koin modülleri. Her platform kendi modüllerini [initKoin]'e verir
+ * (Android: androidApp, iOS: iosMain). DI grafiği testi de bu listeyi doğrular.
+ */
 val appModules: List<Module>
     get() = listOf(
         commonModule,
@@ -45,7 +46,6 @@ val appModules: List<Module>
         systemModule,
 
         audioCoreModule,
-        platformAudioModule,
 
         appModule,
         navigationTargetsModule,
@@ -61,10 +61,13 @@ val appModules: List<Module>
         aiModule
     )
 
-fun initKoin(config: KoinAppDeclaration? = null) {
+fun initKoin(
+    platformModules: List<Module> = emptyList(),
+    config: KoinAppDeclaration? = null,
+) {
     startKoin {
         config?.invoke(this)
 
-        modules(appModules)
+        modules(appModules + platformModules)
     }
 }

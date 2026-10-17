@@ -5,9 +5,6 @@ plugins {
     alias(libs.plugins.buildConfig)
 }
 
-android {
-    namespace = "com.mustafakoceerr.justrelax.core.network"
-}
 
 buildConfig {
     // Üretilecek BuildConfig.kt dosyasının paket adı

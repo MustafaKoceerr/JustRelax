@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.2.21"
-agp = "8.11.0"
+agp = "9.4.1"
 android-compileSdk = "36"
 android-minSdk = "29"
 android-targetSdk = "36"
@@ -123,6 +123,7 @@ compottie-dot = { module = "io.github.alexzhirkevich:compottie-dot", version.ref
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 
 # --- Test ---
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }

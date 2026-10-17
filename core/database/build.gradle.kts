@@ -3,9 +3,6 @@ plugins {
     alias(libs.plugins.sqldelight) // Veritabanı burada
 }
 
-android {
-    namespace = "com.mustafakoceerr.justrelax.core.database"
-}
 
 sqldelight {
     databases {
@@ -43,7 +40,7 @@ kotlin {
 }
 kotlin {
     sourceSets {
-        androidUnitTest.dependencies {
+        androidHostTest.dependencies {
             implementation(libs.findLibrary("sqldelight-sqlite-driver").get())
         }
     }

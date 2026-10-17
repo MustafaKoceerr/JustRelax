@@ -1,4 +1,5 @@
-import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryExtension
+import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
 import org.gradle.api.JavaVersion
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
@@ -11,6 +12,12 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 /** Tüm modüller için tek JVM hedefi. */
 val JAVA_VERSION = JavaVersion.VERSION_17
 val JVM_TARGET = JvmTarget.JVM_17
+
+private const val BASE_NAMESPACE = "com.mustafakoceerr.justrelax"
+
+/** `:core:audio` -> `com.mustafakoceerr.justrelax.core.audio` */
+val Project.defaultNamespace: String
+    get() = BASE_NAMESPACE + path.replace(':', '.')
 
 /**
  * iOS targets are off by default (iOS audio is not implemented yet) so Gradle sync and builds skip
@@ -32,20 +39,18 @@ fun NamedDomainObjectContainer<KotlinSourceSet>.iosMainDependencies(
 val Project.libs
     get() = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
-internal fun Project.configureAndroid(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
-) {
-    commonExtension.apply {
-        compileSdk = libs.findVersion("android-compileSdk").get().toString().toInt()
+/** Shared settings for every KMP library's Android target (AGP 9 `com.android.kotlin.multiplatform.library`). */
+internal fun KotlinMultiplatformAndroidLibraryExtension.configureAndroidLibrary(project: Project) {
+    namespace = project.defaultNamespace
+    compileSdk = project.libs.findVersion("android-compileSdk").get().toString().toInt()
+    minSdk = project.libs.findVersion("android-minSdk").get().toString().toInt()
 
-        defaultConfig {
-            minSdk = libs.findVersion("android-minSdk").get().toString().toInt()
-            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
+    // Unit tests run on the JVM (androidHostTest); Robolectric tests need merged resources.
+    withHostTest {
+        isIncludeAndroidResources = true
+    }
 
-        compileOptions {
-            sourceCompatibility = JAVA_VERSION
-            targetCompatibility = JAVA_VERSION
-        }
+    (this as? KotlinMultiplatformAndroidLibraryTarget)?.compilerOptions {
+        jvmTarget.set(JVM_TARGET)
     }
 }
