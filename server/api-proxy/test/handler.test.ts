@@ -37,6 +37,8 @@ function fakeEnv(): Env {
     INTEGRITY_REQUIRED: "true",
     SESSION_LIMITER: new FakeLimiter(),
     AI_LIMITER: new FakeLimiter(),
+    AI_IP_LIMITER: new FakeLimiter(),
+    AI_GLOBAL_LIMITER: new FakeLimiter(),
     SEARCH_LIMITER: new FakeLimiter(),
   };
 }
@@ -182,6 +184,25 @@ describe("POST /v1/ai/mix", () => {
     expect(upstream[0]?.url).toBe("https://api.openai.com/v1/chat/completions");
     expect(upstream[0]?.headers.get("authorization")).toBe("Bearer sk-test");
     expect((env.AI_LIMITER as FakeLimiter).keys).toEqual([`install:${INSTALL}`]);
+    expect((env.AI_IP_LIMITER as FakeLimiter).keys).toEqual(["ip:203.0.113.7"]);
+    expect((env.AI_GLOBAL_LIMITER as FakeLimiter).keys).toEqual(["global"]);
+  });
+
+  it("is also limited per IP and for everyone together, so new install ids do not raise the limit", async () => {
+    for (const limiter of [env.AI_IP_LIMITER, env.AI_GLOBAL_LIMITER] as FakeLimiter[]) {
+      (env.AI_IP_LIMITER as FakeLimiter).allow = true;
+      (env.AI_GLOBAL_LIMITER as FakeLimiter).allow = true;
+      limiter.allow = false;
+
+      const response: Response = await handle(
+        request("/v1/ai/mix", { method: "POST", body, headers: { authorization: `Bearer ${await session()}` } }),
+        env,
+        deps,
+      );
+
+      expect(response.status).toBe(429);
+    }
+    expect(upstream).toEqual([]);
   });
 
   it("is rate limited per install and reports an OpenAI failure as a bad gateway", async () => {

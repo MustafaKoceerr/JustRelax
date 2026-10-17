@@ -21,7 +21,10 @@ export interface Env {
   /** "false" only for local development, where no Play Integrity token exists. */
   INTEGRITY_REQUIRED: string;
   SESSION_LIMITER: RateLimit;
+  /** Per install; AI_IP_LIMITER and AI_GLOBAL_LIMITER cap what new install ids could add. */
   AI_LIMITER: RateLimit;
+  AI_IP_LIMITER: RateLimit;
+  AI_GLOBAL_LIMITER: RateLimit;
   SEARCH_LIMITER: RateLimit;
 }
 
@@ -72,7 +75,12 @@ async function createSession(request: Request, env: Env, deps: Deps): Promise<Re
 async function aiMix(request: Request, env: Env, deps: Deps): Promise<Response> {
   const installId: string | null = await authenticate(request, env, deps);
   if (installId === null) return error(401, "unauthorized");
-  if (!(await env.AI_LIMITER.limit({ key: `install:${installId}` })).success) return error(429, "rate_limited");
+  const ip: string = request.headers.get("cf-connecting-ip") ?? "unknown";
+  const allowed: boolean =
+    (await env.AI_LIMITER.limit({ key: `install:${installId}` })).success &&
+    (await env.AI_IP_LIMITER.limit({ key: `ip:${ip}` })).success &&
+    (await env.AI_GLOBAL_LIMITER.limit({ key: "global" })).success;
+  if (!allowed) return error(429, "rate_limited");
 
   const mixRequest: MixRequest | null = parseMixRequest(await readJson(request));
   if (mixRequest === null) return error(400, "bad_request");

@@ -14,8 +14,11 @@
   // Secrets (wrangler secret put): OPENAI_API_KEY, FREESOUND_API_KEY, SESSION_SECRET,
   // GOOGLE_SERVICE_ACCOUNT_JSON. Locally they come from .dev.vars.
   "ratelimits": [
-    { "name": "SESSION_LIMITER", "namespace_id": "4101", "simple": { "limit": 10, "period": 60 } },
+    { "name": "SESSION_LIMITER", "namespace_id": "4101", "simple": { "limit": 5, "period": 60 } },
     { "name": "AI_LIMITER", "namespace_id": "4102", "simple": { "limit": 5, "period": 60 } },
+    // New install ids each need a Play Integrity check, but these keep them from adding up.
+    { "name": "AI_IP_LIMITER", "namespace_id": "4104", "simple": { "limit": 15, "period": 60 } },
+    { "name": "AI_GLOBAL_LIMITER", "namespace_id": "4105", "simple": { "limit": 120, "period": 60 } },
     { "name": "SEARCH_LIMITER", "namespace_id": "4103", "simple": { "limit": 30, "period": 60 } }
   ]
 }
