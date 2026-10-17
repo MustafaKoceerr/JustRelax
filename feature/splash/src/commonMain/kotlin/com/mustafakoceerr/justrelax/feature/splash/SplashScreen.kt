@@ -2,39 +2,34 @@ package com.mustafakoceerr.justrelax.feature.splash
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.feature.splash.components.LoadingScreen
-import com.mustafakoceerr.justrelax.feature.splash.mvi.SplashEffect
-import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SplashRoute(
     onNavigateToMain: () -> Unit,
     onNavigateToOnboarding: () -> Unit,
+    viewModel: SplashViewModel = koinViewModel(),
 ) {
-    val viewModel = koinViewModel<SplashViewModel>()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.effect.collectLatest { effect ->
-            when (effect) {
-                SplashEffect.NavigateToMain -> {
-                    onNavigateToMain()
-                }
-                SplashEffect.NavigateToOnboarding -> {
-                    onNavigateToOnboarding()
-                }
-            }
+    LaunchedEffect(uiState) {
+        val ready = uiState as? SplashUiState.Ready ?: return@LaunchedEffect
+        when (ready.destination) {
+            StartDestination.MAIN -> onNavigateToMain()
+            StartDestination.ONBOARDING -> onNavigateToOnboarding()
         }
     }
 
-    SplashScreenContent()
+    SplashScreen()
 }
 
 @Composable
-fun SplashScreenContent() {
+fun SplashScreen() {
     JustRelaxBackground {
         LoadingScreen()
     }
@@ -43,5 +38,5 @@ fun SplashScreenContent() {
 @Preview
 @Composable
 private fun SplashScreenPreview() {
-    SplashScreenContent()
+    SplashScreen()
 }

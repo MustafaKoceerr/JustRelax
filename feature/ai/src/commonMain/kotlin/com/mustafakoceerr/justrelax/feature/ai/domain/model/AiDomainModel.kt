@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.ai.domain.model
 
-import com.mustafakoceerr.justrelax.core.model.SoundUi
+import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -20,5 +20,5 @@ data class AiMixSound(
 data class AiGeneratedMix(
     val name: String,
     val description: String,
-    val sounds: Map<SoundUi, Float>
+    val sounds: Map<LocalizedSound, Float>
 )

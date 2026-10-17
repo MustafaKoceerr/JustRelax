@@ -4,7 +4,6 @@ import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
 import com.mustafakoceerr.justrelax.core.domain.player.SoundConfig
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetGlobalMixerStateUseCase
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioMixer
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedMixRepository
 import kotlinx.coroutines.test.runTest
@@ -17,7 +16,7 @@ class SaveCurrentMixUseCaseTest {
 
     private val mixer = FakeAudioMixer()
     private val repository = FakeSavedMixRepository()
-    private val useCase = SaveCurrentMixUseCase(repository, GetGlobalMixerStateUseCase(mixer))
+    private val useCase = SaveCurrentMixUseCase(repository, mixer)
 
     private fun playing(vararg volumes: Pair<String, Float>) = mixer.setState(
         GlobalMixerState(

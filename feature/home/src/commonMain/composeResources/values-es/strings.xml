@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="download_complete">¡Se han descargado todos los sonidos! 🎉</string>
     <string name="download_failed">Descarga fallida</string>
     <string name="home_screen_title">Just Relax</string>
-    <string name="suggestion_hidden">Sugerencia oculta.</string>
     <string name="category_air">Viento &amp; atmósfera</string>
     <string name="category_asmr">ASMR &amp; desencadenantes</string>
     <string name="category_city">Ciudad &amp; interior</string>
@@ -14,10 +12,5 @@
     <string name="category_travel">Viaje &amp; transporte</string>
     <string name="category_water">Agua &amp; océano</string>
     <string name="category_zen">Zen &amp; meditación</string>
-    <string name="download_banner_downloading_progress">Descargando sonidos... %1$d%%</string>
-    <string name="download_banner_question_description">Para una experiencia sin interrupciones, puedes guardar toda la biblioteca en tu dispositivo.</string>
-    <string name="download_banner_question_title">¿Descargar todos los sonidos ahora?</string>
-    <string name="action_download">Descargar</string>
-    <string name="action_later">Más tarde</string>
     <string name="action_settings">AJUSTES</string>
 </resources>

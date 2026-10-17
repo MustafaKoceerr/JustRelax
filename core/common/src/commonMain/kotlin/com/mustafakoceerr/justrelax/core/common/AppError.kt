@@ -18,22 +18,17 @@ sealed class AppError(
     }
 
     sealed class Storage(message: String? = null, cause: Throwable? = null) : AppError(message, cause) {
-        class DiskFull : Storage("Not enough disk space")
         class FileNotFound : Storage("File not found")
-        class PermissionDenied : Storage("Permission denied")
     }
 
     sealed class Database(message: String? = null, cause: Throwable? = null) : AppError(message, cause) {
         data class SaveFailed(val details: String?) : Database("Save failed: $details")
-        data class ReadFailed(val details: String?) : Database("Read failed: $details")
-        class ItemNotFound : Database("Item not found in DB")
     }
 
     sealed class Ai(message: String? = null, cause: Throwable? = null) : AppError(message, cause) {
         class NoDownloadedSounds : Ai("No downloaded sounds available for AI")
         data class ApiError(val code: Int, val details: String) : Ai("AI API Error ($code): $details")
         class EmptyResponse : Ai("AI returned empty response")
-        data class ParsingError(override val cause: Throwable?) : Ai("AI response parsing failed", cause)
     }
 
     sealed class Player(message: String? = null, cause: Throwable? = null) : AppError(message, cause) {

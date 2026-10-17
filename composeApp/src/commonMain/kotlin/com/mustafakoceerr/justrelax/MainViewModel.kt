@@ -2,16 +2,15 @@ package com.mustafakoceerr.justrelax
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppLanguageUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppThemeUseCase
-import com.mustafakoceerr.justrelax.core.model.AppLanguage
+import com.mustafakoceerr.justrelax.core.domain.repository.settings.UserPreferencesRepository
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
-class MainViewModel(
-     getAppThemeUseCase: GetAppThemeUseCase,
-) : ViewModel() {
-    val currentTheme = getAppThemeUseCase()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AppTheme.SYSTEM)
+/** App-wide state used by the root composable. */
+class MainViewModel(preferences: UserPreferencesRepository) : ViewModel() {
+
+    val theme: StateFlow<AppTheme> = preferences.getTheme()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppTheme.SYSTEM)
 }

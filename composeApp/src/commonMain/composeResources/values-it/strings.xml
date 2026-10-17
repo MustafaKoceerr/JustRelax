@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="current_language">Lingua attuale: %1$s</string>
-    <string name="current_theme">Tema attuale: %1$s</string>
-    <string name="go_to_settings">Vai alle impostazioni</string>
-    <string name="language_english">Inglese</string>
-    <string name="language_turkish">Turco</string>
     <string name="theme_dark">Scuro</string>
     <string name="theme_light">Chiaro</string>
     <string name="theme_system">Sistema</string>
@@ -13,25 +8,10 @@
     <string name="category_nature">Natura &amp; foresta</string>
     <string name="category_noise">Rumore bianco &amp; meccanico</string>
     <string name="category_water">Acqua &amp; pioggia</string>
-    <string name="sound_cafe">Ambiente caffè</string>
-    <string name="sound_campfire">Falò</string>
-    <string name="sound_fan">Rumore del ventilatore</string>
-    <string name="sound_forest_birds">Uccelli della foresta</string>
-    <string name="sound_ocean">Onde dell’oceano</string>
-    <string name="sound_rain_light">Pioggia leggera</string>
-    <string name="sound_rain_thunder">Pioggia &amp; tuono</string>
-    <string name="sound_wind">Ambiente vento</string>
     <string name="duration_hour_short">h</string>
     <string name="duration_minute_short">min</string>
     <string name="duration_second_short">s</string>
     <string name="msg_mix_saved_success">%1$s è stato salvato correttamente!</string>
-    <string name="error_generic">Qualcosa è andato storto. Riprova.</string>
-    <string name="error_mix_name_empty">Il nome non può essere vuoto.</string>
-    <string name="error_mix_name_exists">Esiste già un mix con questo nome.</string>
-    <string name="error_no_sounds">Non ci sono suoni da salvare.</string>
-    <string name="error_no_sounds_found">I suoni consigliati non sono stati trovati nella libreria.</string>
-    <string name="download_complete">Tutti i suoni sono stati scaricati! 🎉</string>
-    <string name="suggestion_hidden">Suggerimento nascosto.</string>
     <string name="action_settings">IMPOSTAZIONI</string>
     <string name="tab_ai">IA</string>
     <string name="tab_home">Home</string>

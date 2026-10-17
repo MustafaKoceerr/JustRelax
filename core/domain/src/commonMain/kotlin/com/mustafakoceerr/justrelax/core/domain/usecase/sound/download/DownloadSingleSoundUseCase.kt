@@ -3,7 +3,6 @@ package com.mustafakoceerr.justrelax.core.domain.usecase.sound.download
 import com.mustafakoceerr.justrelax.core.domain.repository.sound.SoundRepository
 import com.mustafakoceerr.justrelax.core.domain.repository.system.FileDownloadRepository
 import com.mustafakoceerr.justrelax.core.domain.repository.system.LocalStorageRepository
-import com.mustafakoceerr.justrelax.core.model.Sound
 
 class DownloadSingleSoundUseCase(
     private val localStorageRepository: LocalStorageRepository,

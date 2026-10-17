@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="download_complete">Tüm sesler indirildi! 🎉</string>
     <string name="download_failed">İndirme başarısız</string>
     <string name="home_screen_title">Just Relax</string>
-    <string name="suggestion_hidden">Öneri gizlendi.</string>
     <string name="category_air">Rüzgar &amp; Atmosfer</string>
     <string name="category_asmr">ASMR &amp; Tetikleyiciler</string>
     <string name="category_city">Şehir &amp; İç Mekan</string>
@@ -14,10 +12,5 @@
     <string name="category_travel">Seyahat &amp; Ulaşım</string>
     <string name="category_water">Su &amp; Okyanus</string>
     <string name="category_zen">Zen &amp; Meditasyon</string>
-    <string name="download_banner_downloading_progress">Sesler indiriliyor... %1$d%%</string>
-    <string name="download_banner_question_description">Kesintisiz bir deneyim için tüm kütüphaneyi cihazına kaydedebilirsin.</string>
-    <string name="download_banner_question_title">Tüm sesleri şimdi indir?</string>
-    <string name="action_download">İndir</string>
-    <string name="action_later">Sonra</string>
     <string name="action_settings">AYARLAR</string>
 </resources>

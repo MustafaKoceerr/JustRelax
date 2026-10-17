@@ -1,27 +1,25 @@
 package com.mustafakoceerr.justrelax.feature.settings
 
-import app.cash.turbine.test
-import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppLanguageUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetAppThemeUseCase
+import com.mustafakoceerr.justrelax.core.domain.system.LanguageStrategy
 import com.mustafakoceerr.justrelax.core.domain.usecase.settings.GetLegalUrlUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SetAppLanguageUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.settings.SetAppThemeUseCase
+import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.testing.SoundLibraryEnvironment
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLegalRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSystemLauncher
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeUserPreferencesRepository
+import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
-import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsEffect
-import com.mustafakoceerr.justrelax.feature.settings.mvi.SettingsIntent
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class SettingsViewModelTest {
@@ -30,65 +28,101 @@ class SettingsViewModelTest {
     private val launcher = FakeSystemLauncher()
     private val library = SoundLibraryEnvironment(listOf(testSound("rain"), testSound("fire")))
 
-    private fun viewModel() = SettingsViewModel(
-        getAppThemeUseCase = GetAppThemeUseCase(preferences),
-        setAppThemeUseCase = SetAppThemeUseCase(preferences),
-        getAppLanguageUseCase = GetAppLanguageUseCase(preferences),
-        setAppLanguageUseCase = SetAppLanguageUseCase(preferences),
+    private fun viewModel(strategy: LanguageStrategy = LanguageStrategy.IN_APP) = SettingsViewModel(
+        preferences = preferences,
+        soundRepository = library.soundRepository,
         downloadAllSoundsUseCase = library.downloadAll,
-        systemLauncher = launcher,
-        languageController = FakeLanguageController(),
         getLegalUrlUseCase = GetLegalUrlUseCase(preferences, FakeLegalRepository()),
+        systemLauncher = launcher,
+        languageController = FakeLanguageController(strategy),
     )
 
-    @Test
-    fun changingTheme_isPersistedAndReflectedInState() = runMainTest {
-        val viewModel = viewModel()
+    private fun TestScope.observedViewModel(strategy: LanguageStrategy = LanguageStrategy.IN_APP) =
+        viewModel(strategy).also { observe(it.uiState) }
 
-        viewModel.processIntent(SettingsIntent.ChangeTheme(AppTheme.DARK))
+    @Test
+    fun themeChange_isPersistedAndShown() = runMainTest {
+        val viewModel = observedViewModel()
+
+        viewModel.changeTheme(AppTheme.DARK)
         advanceUntilIdle()
 
+        assertEquals(AppTheme.DARK, viewModel.uiState.value.theme)
         assertEquals(AppTheme.DARK, preferences.theme.value)
-        assertEquals(AppTheme.DARK, viewModel.state.value.currentTheme)
     }
 
     @Test
-    fun downloadingWholeLibrary_marksLibraryComplete() = runMainTest {
-        val viewModel = viewModel()
+    fun libraryAlreadyDownloaded_isShownAsComplete() = runMainTest {
+        library.soundRepository.sounds.value = listOf(
+            testSound("rain", localPath = "/sounds/rain.mp3"),
+            testSound("fire", localPath = "/sounds/fire.mp3"),
+        )
+
+        val viewModel = observedViewModel()
         advanceUntilIdle()
 
-        viewModel.effect.test {
-            viewModel.processIntent(SettingsIntent.DownloadAllLibrary)
+        assertTrue(viewModel.uiState.value.isLibraryComplete)
+    }
 
-            assertIs<UiText.Resource>(assertIs<SettingsEffect.ShowMessage>(awaitItem()).message)
-        }
-        assertTrue(viewModel.state.value.isLibraryComplete)
-        assertFalse(viewModel.state.value.isDownloadingLibrary)
+    @Test
+    fun downloadingLibrary_marksItComplete_andConfirms() = runMainTest {
+        val viewModel = observedViewModel()
+
+        viewModel.downloadLibrary()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertTrue(state.isLibraryComplete)
+        assertFalse(state.isDownloadingLibrary)
+        assertIs<UiText.Resource>(state.userMessage)
     }
 
     @Test
     fun failedLibraryDownload_showsErrorAndAllowsRetry() = runMainTest {
         library.downloader.onDownload = { false }
-        val viewModel = viewModel()
+        val viewModel = observedViewModel()
+
+        viewModel.downloadLibrary()
         advanceUntilIdle()
 
-        viewModel.effect.test {
-            viewModel.processIntent(SettingsIntent.DownloadAllLibrary)
+        val state = viewModel.uiState.value
+        assertFalse(state.isLibraryComplete)
+        assertFalse(state.isDownloadingLibrary)
+        assertIs<UiText.DynamicString>(state.userMessage)
 
-            assertIs<UiText.DynamicString>(assertIs<SettingsEffect.ShowMessage>(awaitItem()).message)
-        }
-        assertFalse(viewModel.state.value.isLibraryComplete)
-        assertFalse(viewModel.state.value.isDownloadingLibrary)
+        viewModel.onMessageShown()
+        advanceUntilIdle()
+        assertNull(viewModel.uiState.value.userMessage)
+    }
+
+    @Test
+    fun languageSelection_opensSheetInApp_andAppliesChoice() = runMainTest {
+        val viewModel = observedViewModel()
+
+        viewModel.openLanguageSelection()
+        advanceUntilIdle()
+        assertTrue(viewModel.uiState.value.isLanguageSheetOpen)
+
+        viewModel.changeLanguage(AppLanguage.TURKISH)
+        advanceUntilIdle()
+        assertFalse(viewModel.uiState.value.isLanguageSheetOpen)
+        assertEquals(AppLanguage.TURKISH, viewModel.uiState.value.language)
+    }
+
+    @Test
+    fun languageSelection_onIos_opensSystemSettings() = runMainTest {
+        observedViewModel(LanguageStrategy.SYSTEM_SETTINGS).openLanguageSelection()
+
+        assertTrue(launcher.languageSettingsOpened)
     }
 
     @Test
     fun privacyPolicy_opensLocalizedUrl() = runMainTest {
-        val viewModel = viewModel()
+        val viewModel = observedViewModel()
 
-        viewModel.processIntent(SettingsIntent.OpenPrivacyPolicy)
+        viewModel.openPrivacyPolicy()
         advanceUntilIdle()
 
-        assertEquals(1, launcher.openedUrls.size)
         assertTrue(launcher.openedUrls.single().endsWith("/privacy"))
     }
 }

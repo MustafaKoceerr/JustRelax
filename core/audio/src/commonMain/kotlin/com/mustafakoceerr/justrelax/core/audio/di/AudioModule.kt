@@ -17,14 +17,8 @@ internal expect val platformAudioCoreModule: Module
 val audioCoreModule = module {
     includes(platformAudioCoreModule)
 
-    single<SoundController.Factory> {
-        SoundControllerImpl.Factory(
-            getGlobalMixerStateUseCase = get(),
-            playSoundUseCase = get(),
-            stopSoundUseCase = get(),
-            adjustVolumeUseCase = get()
-        )
-    }
+    // One per screen: each screen keeps its own remembered volumes.
+    factory<SoundController> { SoundControllerImpl(audioMixer = get(), playSoundUseCase = get()) }
 
     single<CoroutineScope>(qualifier = ApplicationScope) {
         CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -33,7 +27,7 @@ val audioCoreModule = module {
     single<TimerManager> {
         TimerManagerImpl(
             externalScope = get(qualifier = ApplicationScope),
-            stopAllSoundsUseCase = get()
+            audioMixer = get()
         )
     }
 }

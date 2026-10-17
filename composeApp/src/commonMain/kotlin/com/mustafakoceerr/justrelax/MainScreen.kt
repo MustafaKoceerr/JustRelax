@@ -12,12 +12,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -27,8 +24,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,7 +37,9 @@ import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.player.PlayerViewModel
 import com.mustafakoceerr.justrelax.feature.player.components.PlayerBottomBar
-import com.mustafakoceerr.justrelax.feature.player.mvi.PlayerContract
+import com.mustafakoceerr.justrelax.feature.player.PlayerUiState
+import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
@@ -62,31 +59,27 @@ import com.mustafakoceerr.justrelax.tabs.title
 @Composable
 fun MainRoute(onOpenSettings: () -> Unit) {
     val playerViewModel = koinViewModel<PlayerViewModel>()
-    val playerState by playerViewModel.state.collectAsState()
+    val playerState by playerViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarController = koinInject<GlobalSnackbarController>()
 
-    LaunchedEffect(Unit) {
-        playerViewModel.effect.collect { effect ->
-            when (effect) {
-                is PlayerContract.Effect.ShowSnackbar -> {
-                    snackbarController.showSnackbar(effect.message.resolve())
-                }
-            }
-        }
+    UserMessageEffect(playerState.userMessage, playerViewModel::onMessageShown) {
+        snackbarController.showSnackbar(it)
     }
 
     if (playerState.isSaveDialogVisible) {
         SaveMixDialog(
             isOpen = true,
-            onDismiss = { playerViewModel.onEvent(PlayerContract.Event.DismissSaveDialog) },
-            onConfirm = { name -> playerViewModel.onEvent(PlayerContract.Event.SaveMix(name)) }
+            onDismiss = playerViewModel::dismissSaveDialog,
+            onConfirm = playerViewModel::saveMix,
         )
     }
 
     MainScreenLayout(
         tabState = rememberSaveable(saver = MainTabState.Saver) { MainTabState() },
         playerState = playerState,
-        onPlayerEvent = playerViewModel::onEvent,
+        onPlayPause = playerViewModel::togglePlayPause,
+        onStopAll = playerViewModel::stopAll,
+        onSaveMix = playerViewModel::openSaveDialog,
         onOpenSettings = onOpenSettings,
         snackbarHostState = snackbarController.hostState
     )
@@ -95,8 +88,10 @@ fun MainRoute(onOpenSettings: () -> Unit) {
 @Composable
 private fun MainScreenLayout(
     tabState: MainTabState,
-    playerState: PlayerContract.State,
-    onPlayerEvent: (PlayerContract.Event) -> Unit,
+    playerState: PlayerUiState,
+    onPlayPause: () -> Unit,
+    onStopAll: () -> Unit,
+    onSaveMix: () -> Unit,
     onOpenSettings: () -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
@@ -122,8 +117,10 @@ private fun MainScreenLayout(
                     MainBottomBarContent(
                         selectedTab = tabState.selected,
                         onSelectTab = tabState::select,
-                        onPlayerEvent = onPlayerEvent,
-                        playerState = playerState
+                        playerState = playerState,
+                        onPlayPause = onPlayPause,
+                        onStopAll = onStopAll,
+                        onSaveMix = onSaveMix,
                     )
                 }
             }
@@ -159,8 +156,10 @@ private fun MainScreenLayout(
 private fun MainBottomBarContent(
     selectedTab: MainTab,
     onSelectTab: (MainTab) -> Unit,
-    playerState: PlayerContract.State,
-    onPlayerEvent: (PlayerContract.Event) -> Unit
+    playerState: PlayerUiState,
+    onPlayPause: () -> Unit,
+    onStopAll: () -> Unit,
+    onSaveMix: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         AnimatedVisibility(
@@ -178,9 +177,9 @@ private fun MainBottomBarContent(
                 isVisible = true,
                 activeIcons = playerState.activeSounds.map { it.iconUrl },
                 isPlaying = playerState.isPlaying,
-                onPlayPauseClick = { onPlayerEvent(PlayerContract.Event.ToggleMasterPlayPause) },
-                onStopAllClick = { onPlayerEvent(PlayerContract.Event.StopAll) },
-                onSaveClick = { onPlayerEvent(PlayerContract.Event.OpenSaveDialog) },
+                onPlayPauseClick = onPlayPause,
+                onStopAllClick = onStopAll,
+                onSaveClick = onSaveMix,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }

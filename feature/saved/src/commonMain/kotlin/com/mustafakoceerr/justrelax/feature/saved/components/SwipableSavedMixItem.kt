@@ -7,12 +7,12 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedContract
+import com.mustafakoceerr.justrelax.feature.saved.SavedMixItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwipableSavedMixItem(
-    mix: SavedContract.SavedMixUiModel,
+    mix: SavedMixItem,
     onPlayClick: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier

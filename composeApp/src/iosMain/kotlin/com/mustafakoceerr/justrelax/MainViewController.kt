@@ -44,7 +44,7 @@ private class AdaptiveComposeController : UIViewController(null, null) {
         val width = view.bounds.useContents { size.width }
         val horizontalSizeClass = traitCollection.horizontalSizeClass
 
-        // NİHAİ DÜZELTME: Kotlin/Native'in çevirdiği doğru enum isimleri.
+        // Enum names as exposed by Kotlin/Native for UIUserInterfaceSizeClass.
         val newSize = when (horizontalSizeClass) {
             UIUserInterfaceSizeClassCompact -> WindowWidthSize.COMPACT
             UIUserInterfaceSizeClassRegular -> {

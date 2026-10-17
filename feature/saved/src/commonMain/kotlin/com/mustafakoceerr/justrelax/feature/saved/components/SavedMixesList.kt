@@ -8,14 +8,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.feature.saved.mvi.SavedContract
+import com.mustafakoceerr.justrelax.feature.saved.SavedMixItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SavedMixesList(
-    mixes: List<SavedContract.SavedMixUiModel>,
-    onMixClick: (SavedContract.SavedMixUiModel) -> Unit,
-    onMixDelete: (SavedContract.SavedMixUiModel) -> Unit,
+    mixes: List<SavedMixItem>,
+    onMixClick: (SavedMixItem) -> Unit,
+    onMixDelete: (SavedMixItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(

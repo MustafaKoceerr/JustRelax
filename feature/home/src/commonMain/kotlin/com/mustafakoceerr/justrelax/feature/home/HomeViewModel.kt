@@ -3,119 +3,86 @@ package com.mustafakoceerr.justrelax.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.AdjustVolumeUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.GetGlobalMixerStateUseCase
+import com.mustafakoceerr.justrelax.core.domain.player.AudioMixer
 import com.mustafakoceerr.justrelax.core.domain.usecase.player.PlaySoundUseCase
-import com.mustafakoceerr.justrelax.core.domain.usecase.player.StopSoundUseCase
 import com.mustafakoceerr.justrelax.core.domain.usecase.sound.download.DownloadSingleSoundUseCase
-import com.mustafakoceerr.justrelax.core.model.Sound
-import com.mustafakoceerr.justrelax.core.model.SoundUi
+import com.mustafakoceerr.justrelax.core.model.SoundCategory
+import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.home.domain.usecase.GetLocalizedCategorizedSoundsUseCase
-import com.mustafakoceerr.justrelax.feature.home.mvi.HomeContract
 import justrelax.feature.home.generated.resources.Res
 import justrelax.feature.home.generated.resources.download_failed
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     getLocalizedCategorizedSoundsUseCase: GetLocalizedCategorizedSoundsUseCase,
-    getGlobalMixerStateUseCase: GetGlobalMixerStateUseCase,
+    private val audioMixer: AudioMixer,
     private val playSoundUseCase: PlaySoundUseCase,
-    private val stopSoundUseCase: StopSoundUseCase,
     private val downloadSingleSoundUseCase: DownloadSingleSoundUseCase,
-    private val adjustVolumeUseCase: AdjustVolumeUseCase
-) : ViewModel(), HomeContract {
-    private val _state = MutableStateFlow(HomeContract.State())
-    val state = _state.asStateFlow()
+) : ViewModel() {
 
-    private val _effect = Channel<HomeContract.Effect>()
-    val effect = _effect.receiveAsFlow()
+    private data class ScreenState(
+        val selectedCategory: SoundCategory? = null,
+        val downloadingSoundIds: Set<String> = emptySet(),
+        val userMessage: UiText? = null,
+    )
 
-    init {
-        combine(
-            getLocalizedCategorizedSoundsUseCase(),
-            getGlobalMixerStateUseCase()
-        ) { soundsResult, playerState ->
-            _state.update { currentState ->
-                val categories =
-                    (soundsResult as? Resource.Success)?.data ?: currentState.categories
-                val selectedCategory =
-                    currentState.selectedCategory ?: categories.keys.firstOrNull()
+    private val screenState = MutableStateFlow(ScreenState())
 
-                currentState.copy(
-                    isLoading = soundsResult is Resource.Loading,
-                    categories = categories,
-                    selectedCategory = selectedCategory,
-                    playerState = playerState
-                )
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    fun onEvent(event: HomeContract.Event) {
-        when (event) {
-            is HomeContract.Event.OnCategorySelected -> {
-                _state.update { it.copy(selectedCategory = event.category) }
-            }
-
-            is HomeContract.Event.OnSoundClick -> handleSoundClick(event.sound)
-            is HomeContract.Event.OnVolumeChange -> adjustVolumeUseCase(event.soundId, event.volume)
-            is HomeContract.Event.OnSettingsClick -> sendEffect(HomeContract.Effect.NavigateToSettings)
-        }
-    }
-
-    private fun handleSoundClick(sound: SoundUi) {
-        viewModelScope.launch {
-            val isPlaying = state.value.playerState.activeSounds.any { it.id == sound.id }
-
-            if (isPlaying) {
-                stopSoundUseCase(sound.id)
-            } else {
-                if (sound.isDownloaded) {
-                    when (val result = playSoundUseCase(sound.id)) {
-                        is Resource.Error -> {
-                            val errorMessage = UiText.DynamicString(
-                                result.error.message ?: "An unknown error occurred."
-                            )
-                            sendEffect(HomeContract.Effect.ShowSnackbar(errorMessage))
-                        }
-
-                        else -> {}
-                    }
-                } else {
-                    downloadSound(sound)
-                }
-            }
-        }
-    }
-
-    private fun sendEffect(effectToSend: HomeContract.Effect) {
-        viewModelScope.launch {
-            _effect.send(effectToSend)
-        }
-    }
-
-    private fun downloadSound(sound: SoundUi) = viewModelScope.launch {
-        _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds + sound.id) }
-
-        val isSuccess = downloadSingleSoundUseCase(
-            soundId = sound.id,
-            remoteUrl = sound.remoteUrl
+    val uiState: StateFlow<HomeUiState> = combine(
+        getLocalizedCategorizedSoundsUseCase(),
+        audioMixer.state,
+        screenState,
+    ) { sounds, mixer, screen ->
+        val categories = (sounds as? Resource.Success)?.data.orEmpty()
+        HomeUiState(
+            isLoading = sounds is Resource.Loading,
+            categories = categories,
+            selectedCategory = screen.selectedCategory ?: categories.keys.firstOrNull(),
+            playingSoundIds = mixer.activeSounds.mapTo(mutableSetOf()) { it.id },
+            soundVolumes = mixer.activeSounds.associate { it.id to it.initialVolume },
+            downloadingSoundIds = screen.downloadingSoundIds,
+            userMessage = screen.userMessage,
         )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeUiState())
 
-        _state.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - sound.id) }
+    fun selectCategory(category: SoundCategory) = screenState.update { it.copy(selectedCategory = category) }
 
-        if (isSuccess) {
-            playSoundUseCase(sound.id)
-        } else {
-            sendEffect(HomeContract.Effect.ShowSnackbar(UiText.Resource(Res.string.download_failed)))
+    /** Stops a playing sound; otherwise plays it, downloading it first if needed. */
+    fun toggleSound(sound: LocalizedSound) {
+        viewModelScope.launch {
+            when {
+                audioMixer.state.value.activeSounds.any { it.id == sound.id } -> audioMixer.stopSound(sound.id)
+                sound.isDownloaded -> play(sound.id)
+                else -> downloadAndPlay(sound)
+            }
         }
     }
+
+    fun changeVolume(soundId: String, volume: Float) = audioMixer.setVolume(soundId, volume)
+
+    fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
+
+    private suspend fun play(soundId: String) {
+        val result = playSoundUseCase(soundId)
+        if (result is Resource.Error) {
+            showMessage(UiText.DynamicString(result.error.message ?: "An unknown error occurred."))
+        }
+    }
+
+    private suspend fun downloadAndPlay(sound: LocalizedSound) {
+        screenState.update { it.copy(downloadingSoundIds = it.downloadingSoundIds + sound.id) }
+        val downloaded = downloadSingleSoundUseCase(soundId = sound.id, remoteUrl = sound.remoteUrl)
+        screenState.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - sound.id) }
+
+        if (downloaded) play(sound.id) else showMessage(UiText.Resource(Res.string.download_failed))
+    }
+
+    private fun showMessage(message: UiText) = screenState.update { it.copy(userMessage = message) }
 }

@@ -4,55 +4,35 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.domain.timer.TimerManager
 import com.mustafakoceerr.justrelax.core.domain.timer.TimerStatus
-import com.mustafakoceerr.justrelax.feature.timer.mvi.TimerContract
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 class TimerViewModel(
-    private val timerManager: TimerManager
+    private val timerManager: TimerManager,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(TimerContract.State())
-    val state = _state.asStateFlow()
-
-    private val _effect = Channel<TimerContract.Effect>()
-    val effect = _effect.receiveAsFlow()
-
-    init {
-        observeTimerState()
-    }
-
-    fun onEvent(event: TimerContract.Event) {
-        when (event) {
-            is TimerContract.Event.StartTimer -> timerManager.startTimer(event.durationSeconds)
-            TimerContract.Event.CancelTimer -> timerManager.cancelTimer()
-            TimerContract.Event.ToggleTimer -> handleToggleTimer()
+    val uiState: StateFlow<TimerUiState> = timerManager.state
+        .map { timer ->
+            TimerUiState(
+                isSetupMode = timer.status == TimerStatus.IDLE,
+                isPaused = timer.status == TimerStatus.PAUSED,
+                totalSeconds = timer.totalSeconds,
+                remainingSeconds = timer.remainingSeconds,
+            )
         }
-    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TimerUiState())
 
-    private fun handleToggleTimer() {
+    fun startTimer(seconds: Long) = timerManager.startTimer(seconds)
+
+    fun toggleTimer() {
         when (timerManager.state.value.status) {
             TimerStatus.RUNNING -> timerManager.pauseTimer()
             TimerStatus.PAUSED -> timerManager.resumeTimer()
-            TimerStatus.IDLE -> { /* No-op */ }
+            TimerStatus.IDLE -> Unit
         }
     }
 
-    private fun observeTimerState() {
-        timerManager.state.onEach { domainState ->
-            _state.update {
-                it.copy(
-                    isSetupMode = domainState.status == TimerStatus.IDLE,
-                    isPaused = domainState.status == TimerStatus.PAUSED,
-                    totalSeconds = domainState.totalSeconds,
-                    remainingSeconds = domainState.remainingSeconds
-                )
-            }
-        }.launchIn(viewModelScope)
-    }
+    fun cancelTimer() = timerManager.cancelTimer()
 }

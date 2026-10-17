@@ -5,7 +5,6 @@ import com.mustafakoceerr.justrelax.core.domain.system.LanguageController
 import com.mustafakoceerr.justrelax.core.domain.system.LanguageStrategy
 import com.mustafakoceerr.justrelax.core.domain.system.SystemLauncher
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /** Records what would have been opened instead of launching other apps. */

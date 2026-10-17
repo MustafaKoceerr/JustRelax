@@ -16,15 +16,16 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.SnackbarHostState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mustafakoceerr.justrelax.core.common.AudioDefaults
+import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import org.koin.compose.viewmodel.koinViewModel
-import com.mustafakoceerr.justrelax.core.domain.player.GlobalMixerState
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
@@ -32,7 +33,6 @@ import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
 import com.mustafakoceerr.justrelax.feature.mixer.components.EmptyMixerState
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixCountSelector
-import com.mustafakoceerr.justrelax.feature.mixer.mvi.MixerContract
 import justrelax.feature.mixer.generated.resources.Res
 import justrelax.feature.mixer.generated.resources.mixer_screen_title
 import org.jetbrains.compose.resources.stringResource
@@ -40,23 +40,32 @@ import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MixerRoute() {
+fun MixerRoute(viewModel: MixerViewModel = koinViewModel()) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarController = koinInject<GlobalSnackbarController>()
-    val viewModel = koinViewModel<MixerViewModel>()
 
-    val mixerState by viewModel.state.collectAsState()
-    val soundControllerState by viewModel.soundController.state.collectAsState()
+    UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarController.showSnackbar(it) }
 
-    LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
-            when (effect) {
-                is MixerContract.Effect.ShowSnackbar -> {
-                    snackbarController.showSnackbar(effect.message.resolve())
-                }
-            }
-        }
-    }
+    MixerScreen(
+        uiState = uiState,
+        snackbarHostState = snackbarController.hostState,
+        onSoundCountSelected = viewModel::selectSoundCount,
+        onGenerateMix = viewModel::generateMix,
+        onSoundClick = viewModel::toggleSound,
+        onVolumeChange = viewModel::changeVolume,
+    )
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MixerScreen(
+    uiState: MixerUiState,
+    snackbarHostState: SnackbarHostState,
+    onSoundCountSelected: (Int) -> Unit,
+    onGenerateMix: () -> Unit,
+    onSoundClick: (soundId: String) -> Unit,
+    onVolumeChange: (soundId: String, volume: Float) -> Unit,
+) {
     Scaffold(
         containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0.dp),
@@ -64,13 +73,15 @@ fun MixerRoute() {
             JustRelaxTopBar(title = stringResource(Res.string.mixer_screen_title))
         },
         snackbarHost = {
-            JustRelaxSnackbarHost(hostState = snackbarController.hostState)
+            JustRelaxSnackbarHost(hostState = snackbarHostState)
         }
     ) { innerPadding ->
         MixerScreenContent(
-            mixerState = mixerState,
-            soundControllerState = soundControllerState,
-            onEvent = viewModel::onEvent,
+            uiState = uiState,
+            onSoundCountSelected = onSoundCountSelected,
+            onGenerateMix = onGenerateMix,
+            onSoundClick = onSoundClick,
+            onVolumeChange = onVolumeChange,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -78,9 +89,11 @@ fun MixerRoute() {
 
 @Composable
 private fun MixerScreenContent(
-    mixerState: MixerContract.State,
-    soundControllerState: GlobalMixerState,
-    onEvent: (MixerContract.Event) -> Unit,
+    uiState: MixerUiState,
+    onSoundCountSelected: (Int) -> Unit,
+    onGenerateMix: () -> Unit,
+    onSoundClick: (soundId: String) -> Unit,
+    onVolumeChange: (soundId: String, volume: Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -98,39 +111,34 @@ private fun MixerScreenContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 MixCountSelector(
-                    selectedCount = mixerState.selectedSoundCount,
-                    onCountSelected = { count ->
-                        onEvent(MixerContract.Event.SelectSoundCount(count))
-                    }
+                    selectedCount = uiState.selectedSoundCount,
+                    onCountSelected = onSoundCountSelected
                 )
 
                 CreateMixButton(
-                    onClick = { onEvent(MixerContract.Event.GenerateMix) },
-                    isLoading = mixerState.isGenerating
+                    onClick = onGenerateMix,
+                    isLoading = uiState.isGenerating
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
 
-        if (mixerState.mixedSounds.isNotEmpty()) {
+        if (uiState.mixedSounds.isNotEmpty()) {
             items(
-                items = mixerState.mixedSounds,
+                items = uiState.mixedSounds,
                 key = { it.id }
             ) { sound ->
-                val activeConfig = soundControllerState.activeSounds.find { it.id == sound.id }
-                val isPlaying = activeConfig != null && soundControllerState.isPlaying
-                val volume = activeConfig?.initialVolume ?: 0.5f
+                val isPlaying = sound.id in uiState.playingSoundIds
+                val volume = uiState.soundVolumes[sound.id] ?: AudioDefaults.BASE_VOLUME
 
                 SoundCard(
                     sound = sound,
                     isPlaying = isPlaying,
                     isDownloading = false,
                     volume = volume,
-                    onCardClick = { onEvent(MixerContract.Event.ToggleSound(sound.id)) },
-                    onVolumeChange = { newVol ->
-                        onEvent(MixerContract.Event.ChangeVolume(sound.id, newVol))
-                    }
+                    onCardClick = { onSoundClick(sound.id) },
+                    onVolumeChange = { newVolume -> onVolumeChange(sound.id, newVolume) }
                 )
             }
         } else {

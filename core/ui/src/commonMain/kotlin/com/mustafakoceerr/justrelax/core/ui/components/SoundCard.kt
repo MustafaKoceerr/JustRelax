@@ -46,7 +46,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.mustafakoceerr.justrelax.core.model.SoundUi
+import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
@@ -59,7 +59,7 @@ private const val ANIM_CONTENT_DELAY = 90
 
 @Composable
 fun SoundCard(
-    sound: SoundUi,
+    sound: LocalizedSound,
     isPlaying: Boolean,
     isDownloading: Boolean,
     volume: Float,
