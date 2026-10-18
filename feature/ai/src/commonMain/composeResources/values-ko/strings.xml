@@ -9,7 +9,6 @@
     <string name="err_ai_no_sounds">다운로드한 사운드를 찾을 수 없습니다. 믹스를 만들려면 사운드가 필요합니다.</string>
     <string name="err_ai_empty_response">AI가 비어 있거나 잘못된 응답을 반환했습니다. 다시 시도해주세요.</string>
     <string name="err_unknown">예기치 않은 오류가 발생했습니다. 나중에 다시 시도해주세요.</string>
-    <string name="action_back">뒤로</string>
     <string name="action_clear">지우기</string>
     <string name="ai_action_try_another_variation">다른 변형 시도</string>
 </resources>

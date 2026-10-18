@@ -23,7 +23,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.WideNavigationRailDefaults
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
@@ -149,7 +149,7 @@ private fun MainScreenLayout(
     val tabStateHolder = rememberSaveableStateHolder()
     val navigationSuiteType =
         if (isKeyboardOpen) NavigationSuiteType.None
-        else NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
+        else NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfoV2())
 
     // Back on a tab other than Home goes to Home; on Home the system handles it (leaves the app).
     NavigationBackHandler(

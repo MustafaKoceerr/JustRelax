@@ -6,11 +6,9 @@
     <string name="saved_mix_metadata">%1$d サウンド • %2$s</string>
     <string name="saved_screen_title">保存したミックス</string>
     <string name="action_create_new_mix">新しいミックスを作成</string>
-    <string name="action_play">再生</string>
     <string name="action_undo">元に戻す</string>
     <string name="msg_mix_deleted">ミックスを削除しました</string>
     <string name="date_format_short">yyyy/MM/dd</string>
     <string name="err_play_mix_failed">ミックスの再生に失敗しました</string>
     <string name="saved_detail_placeholder">保存したミックスを選ぶとサウンドが表示されます。</string>
-    <string name="action_delete">削除</string>
 </resources>

@@ -1,8 +1,10 @@
 package com.mustafakoceerr.justrelax.feature.mysounds
 
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_delete
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_cancel
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -12,7 +14,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.LibraryMusic
@@ -26,14 +27,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,23 +40,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.media.ImportedAudio
-import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.ui.components.GenericEmptyState
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxDetailScaffold
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_back
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_cancel
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_delete
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_delete_text
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_delete_title
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_empty_description
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_empty_title
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_import
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_kind_bed
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_kind_event
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_search_online
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_title
 import org.jetbrains.compose.resources.stringResource
@@ -88,10 +80,10 @@ fun MySoundsRoute(
             title = { Text(stringResource(Res.string.mysounds_delete_title)) },
             text = { Text(stringResource(Res.string.mysounds_delete_text, sound.name)) },
             confirmButton = {
-                TextButton(onClick = viewModel::confirmDelete) { Text(stringResource(Res.string.mysounds_delete)) }
+                TextButton(onClick = viewModel::confirmDelete) { Text(stringResource(CoreRes.string.action_delete)) }
             },
             dismissButton = {
-                TextButton(onClick = viewModel::dismissDelete) { Text(stringResource(Res.string.mysounds_cancel)) }
+                TextButton(onClick = viewModel::dismissDelete) { Text(stringResource(CoreRes.string.action_cancel)) }
             },
         )
     }
@@ -116,61 +108,49 @@ fun MySoundsScreen(
     onImport: () -> Unit,
     onDelete: (soundId: String) -> Unit,
 ) {
-    JustRelaxBackground {
-        Scaffold(
-            containerColor = Color.Transparent,
-            contentWindowInsets = WindowInsets(0.dp),
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = {
-                JustRelaxTopBar(
-                    title = stringResource(Res.string.mysounds_title),
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(Res.string.mysounds_back))
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = onSearchOnline) {
-                            Icon(Icons.Rounded.TravelExplore, stringResource(Res.string.mysounds_search_online))
-                        }
-                    },
+    JustRelaxDetailScaffold(
+        title = stringResource(Res.string.mysounds_title),
+        onBack = onBack,
+        snackbarHostState = snackbarHostState,
+        actions = {
+            IconButton(onClick = onSearchOnline) {
+                Icon(Icons.Rounded.TravelExplore, stringResource(Res.string.mysounds_search_online))
+            }
+        },
+        floatingActionButton = {
+            if (uiState.sounds.isNotEmpty()) {
+                ExtendedFloatingActionButton(
+                    onClick = { if (!uiState.isImporting) onImport() },
+                    modifier = Modifier.navigationBarsPadding(),
+                    icon = { ImportIcon(uiState.isImporting) },
+                    text = { Text(stringResource(Res.string.mysounds_import)) },
                 )
-            },
-            floatingActionButton = {
-                if (uiState.sounds.isNotEmpty()) {
-                    ExtendedFloatingActionButton(
-                        onClick = { if (!uiState.isImporting) onImport() },
-                        modifier = Modifier.navigationBarsPadding(),
-                        icon = { ImportIcon(uiState.isImporting) },
-                        text = { Text(stringResource(Res.string.mysounds_import)) },
-                    )
-                }
-            },
-        ) { innerPadding ->
-            Box(Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-                when {
-                    uiState.isLoading -> Unit
-                    uiState.sounds.isEmpty() -> GenericEmptyState(
-                        visualContent = {
-                            Icon(
-                                Icons.Rounded.LibraryMusic,
-                                contentDescription = null,
-                                modifier = Modifier.size(72.dp),
-                                tint = MaterialTheme.colorScheme.primary,
-                            )
-                        },
-                        title = stringResource(Res.string.mysounds_empty_title),
-                        description = stringResource(Res.string.mysounds_empty_description),
-                        actionButtonText = stringResource(Res.string.mysounds_import),
-                        onActionClick = { if (!uiState.isImporting) onImport() },
-                    )
-                    else -> LazyColumn(
-                        modifier = Modifier.widthIn(max = 720.dp).fillMaxWidth(),
-                        contentPadding = PaddingValues(top = 8.dp, bottom = 96.dp),
-                    ) {
-                        items(uiState.sounds, key = { it.id }) { sound ->
-                            MySoundRow(sound, onDelete = { onDelete(sound.id) })
-                        }
+            }
+        },
+    ) { innerPadding ->
+        Box(Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+            when {
+                uiState.isLoading -> Unit
+                uiState.sounds.isEmpty() -> GenericEmptyState(
+                    visualContent = {
+                        Icon(
+                            Icons.Rounded.LibraryMusic,
+                            contentDescription = null,
+                            modifier = Modifier.size(72.dp),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    },
+                    title = stringResource(Res.string.mysounds_empty_title),
+                    description = stringResource(Res.string.mysounds_empty_description),
+                    actionButtonText = stringResource(Res.string.mysounds_import),
+                    onActionClick = { if (!uiState.isImporting) onImport() },
+                )
+                else -> LazyColumn(
+                    modifier = Modifier.widthIn(max = 720.dp).fillMaxWidth(),
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 96.dp),
+                ) {
+                    items(uiState.sounds, key = { it.id }) { sound ->
+                        MySoundRow(sound, onDelete = { onDelete(sound.id) })
                     }
                 }
             }
@@ -180,9 +160,7 @@ fun MySoundsScreen(
 
 @Composable
 private fun MySoundRow(sound: MySoundItem, onDelete: () -> Unit) {
-    val kind = stringResource(
-        if (sound.kind == SoundKind.BED) Res.string.mysounds_kind_bed else Res.string.mysounds_kind_event,
-    )
+    val kind = stringResource(sound.kind.labelRes)
     ListItem(
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         leadingContent = { Icon(sound.icon.imageVector, contentDescription = null) },
@@ -190,7 +168,7 @@ private fun MySoundRow(sound: MySoundItem, onDelete: () -> Unit) {
         supportingContent = { Text("$kind · ${formatClipTime(sound.durationMs)}") },
         trailingContent = {
             IconButton(onClick = onDelete) {
-                Icon(Icons.Rounded.Delete, stringResource(Res.string.mysounds_delete))
+                Icon(Icons.Rounded.Delete, stringResource(CoreRes.string.action_delete))
             }
         },
     )

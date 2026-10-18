@@ -1,19 +1,21 @@
 package com.mustafakoceerr.justrelax.feature.ai
 
-import com.mustafakoceerr.justrelax.core.analytics.Params
-import com.mustafakoceerr.justrelax.core.analytics.EventTypes
-import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
-import com.mustafakoceerr.justrelax.core.analytics.AnalyticsHelper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsHelper
+import com.mustafakoceerr.justrelax.core.analytics.EventTypes
+import com.mustafakoceerr.justrelax.core.analytics.Params
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
-import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
-import com.mustafakoceerr.justrelax.core.playback.PlaybackController
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
+import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.model.AiGeneratedMix
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
+import com.mustafakoceerr.justrelax.core.playback.PlaybackController
+import com.mustafakoceerr.justrelax.core.playback.toggleAndPlay
+import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
+import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.ai.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_empty_response
 import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_no_sounds
@@ -50,9 +52,7 @@ class AiViewModel(
             mixDescription = screen.mix?.description.orEmpty(),
             mixSounds = screen.mix?.sounds.orEmpty(),
             // A paused mix shows its sounds as not playing.
-            playingSoundIds = if (isPlaying) scene.layers.mapTo(mutableSetOf()) { it.soundId } else emptySet(),
-            soundVolumes = scene.layers.associate { it.soundId to it.volume },
-            soundFrequencies = scene.events.associate { it.soundId to it.frequency },
+            sceneCards = SceneCards.of(scene, showPlaying = isPlaying),
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AiUiState())
@@ -94,10 +94,7 @@ class AiViewModel(
     fun clearMix() = screenState.update { ScreenState() }
 
     fun toggleSound(soundId: String) {
-        viewModelScope.launch {
-            sceneRepository.toggle(soundId)
-            if (sceneRepository.scene.value.layer(soundId) != null) playbackController.play()
-        }
+        viewModelScope.launch { sceneRepository.toggleAndPlay(soundId, playbackController) }
     }
 
     fun changeVolume(soundId: String, volume: Float) = sceneRepository.setVolume(soundId, volume)

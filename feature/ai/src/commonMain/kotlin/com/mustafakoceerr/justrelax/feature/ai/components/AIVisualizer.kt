@@ -71,7 +71,7 @@ fun AiVisualizer(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = GeminiIcon,
+                imageVector = AiSparkleIcon,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(0.6f),
                 tint = primaryColor

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -18,7 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material3.Button
@@ -27,16 +25,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,7 +41,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
@@ -56,25 +50,23 @@ import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxDetailScaffold
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_listen
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_stop
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import com.mustafakoceerr.justrelax.core.ui.util.titleRes
 import com.mustafakoceerr.justrelax.feature.mysounds.components.WaveformTrimmer
 import com.mustafakoceerr.justrelax.feature.mysounds.formatClipTime
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_back
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_category
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_drag_hint
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_editor_title
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_icon
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_kind_bed
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_kind_bed_hint
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_kind_bed_unavailable
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_kind_event
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_kind_event_hint
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_listen
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_load_failed
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_name
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_problem_outside_file
@@ -83,7 +75,7 @@ import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysound
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_problem_too_short_for_bed
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_save
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_selection
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_stop
+import com.mustafakoceerr.justrelax.feature.mysounds.labelRes
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -133,38 +125,26 @@ fun SoundEditorScreen(
     onSelectIcon: (SoundIcon) -> Unit,
     onSave: () -> Unit,
 ) {
-    JustRelaxBackground {
-        Scaffold(
-            containerColor = Color.Transparent,
-            contentWindowInsets = WindowInsets(0.dp),
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = {
-                JustRelaxTopBar(
-                    title = stringResource(Res.string.mysounds_editor_title),
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(Res.string.mysounds_back))
-                        }
-                    },
+    JustRelaxDetailScaffold(
+        title = stringResource(Res.string.mysounds_editor_title),
+        onBack = onBack,
+        snackbarHostState = snackbarHostState,
+    ) { innerPadding ->
+        Box(Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+            when {
+                uiState.isLoading -> CircularProgressIndicator(Modifier.padding(48.dp))
+                uiState.loadFailed -> Text(
+                    text = stringResource(Res.string.mysounds_load_failed),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(24.dp),
                 )
-            },
-        ) { innerPadding ->
-            Box(Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-                when {
-                    uiState.isLoading -> CircularProgressIndicator(Modifier.padding(48.dp))
-                    uiState.loadFailed -> Text(
-                        text = stringResource(Res.string.mysounds_load_failed),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(24.dp),
+                // The scaffold is transparent over the app background, so text and icons need the surface colour.
+                else -> CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+                    EditorContent(
+                        uiState, onMoveStart, onMoveEnd, onTogglePreview, onSelectKind,
+                        onNameChange, onSelectCategory, onSelectIcon, onSave,
                     )
-                    // The scaffold is transparent over the app background, so text and icons need the surface colour.
-                    else -> CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-                        EditorContent(
-                            uiState, onMoveStart, onMoveEnd, onTogglePreview, onSelectKind,
-                            onNameChange, onSelectCategory, onSelectIcon, onSave,
-                        )
-                    }
                 }
             }
         }
@@ -214,7 +194,7 @@ private fun EditorContent(
             FilledTonalButton(onClick = onTogglePreview) {
                 Icon(if (uiState.isPreviewing) Icons.Rounded.Stop else Icons.Rounded.PlayArrow, contentDescription = null)
                 Text(
-                    stringResource(if (uiState.isPreviewing) Res.string.mysounds_stop else Res.string.mysounds_listen),
+                    stringResource(if (uiState.isPreviewing) CoreRes.string.action_stop else CoreRes.string.action_listen),
                     modifier = Modifier.padding(start = 8.dp),
                 )
             }
@@ -277,7 +257,7 @@ private fun KindSelector(kind: SoundKind, allowed: Set<SoundKind>, onSelect: (So
                     enabled = option in allowed,
                     shape = SegmentedButtonDefaults.itemShape(index, kinds.size),
                     label = {
-                        Text(stringResource(if (option == SoundKind.BED) Res.string.mysounds_kind_bed else Res.string.mysounds_kind_event))
+                        Text(stringResource(option.labelRes))
                     },
                 )
             }

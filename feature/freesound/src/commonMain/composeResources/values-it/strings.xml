@@ -7,12 +7,9 @@
     <string name="freesound_no_results">Nessun risultato. Prova altre parole.</string>
     <string name="freesound_load_more">Carica altri</string>
     <string name="freesound_add">Aggiungi</string>
-    <string name="freesound_listen">Ascolta</string>
-    <string name="freesound_stop">Ferma</string>
     <string name="freesound_by">di %1$s</string>
     <string name="freesound_offline">Nessuna connessione a internet.</string>
     <string name="freesound_rate_limited">Troppe ricerche. Attendi un minuto e riprova.</string>
     <string name="freesound_failed">La ricerca non è riuscita. Riprova.</string>
     <string name="freesound_download_failed">Impossibile scaricare il suono. Riprova.</string>
-    <string name="freesound_back">Indietro</string>
 </resources>

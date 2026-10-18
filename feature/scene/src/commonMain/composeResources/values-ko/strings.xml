@@ -7,7 +7,6 @@
     <string name="err_unknown">예기치 않은 오류가 발생했습니다.</string>
     <string name="scene_panel_title">나의 장면</string>
     <string name="scene_empty">라이브러리에서 소리를 눌러 장면을 만들어 보세요.</string>
-    <string name="action_play">재생</string>
     <string name="action_pause">일시정지</string>
     <string name="action_stop_all">모두 정지</string>
     <string name="action_save_scene">저장</string>

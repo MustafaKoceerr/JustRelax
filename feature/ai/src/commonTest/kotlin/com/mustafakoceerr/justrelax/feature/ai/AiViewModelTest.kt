@@ -88,8 +88,8 @@ class AiViewModelTest {
         assertFalse(state.isLoading)
         assertEquals("Rainy Night", state.mixName)
         assertEquals(setOf("rain", "fire"), state.mixSounds.map { it.id }.toSet())
-        assertEquals(setOf("rain", "fire"), state.playingSoundIds)
-        assertEquals(0.6f, state.soundVolumes["rain"])
+        assertEquals(setOf("rain", "fire"), state.sceneCards.playingIds)
+        assertEquals(0.6f, state.sceneCards.volumes["rain"])
         assertEquals("rainy evening by the fire", ai.lastPrompt)
     }
 
@@ -154,12 +154,12 @@ class AiViewModelTest {
         viewModel.updatePrompt("campfire")
         viewModel.generateMix()
         advanceUntilIdle()
-        assertEquals(mapOf("fire" to EventFrequency.OFTEN), viewModel.uiState.value.soundFrequencies)
+        assertEquals(mapOf("fire" to EventFrequency.OFTEN), viewModel.uiState.value.sceneCards.frequencies)
 
         viewModel.changeFrequency("fire", EventFrequency.RARE)
         advanceUntilIdle()
 
-        assertEquals(mapOf("fire" to EventFrequency.RARE), viewModel.uiState.value.soundFrequencies)
+        assertEquals(mapOf("fire" to EventFrequency.RARE), viewModel.uiState.value.sceneCards.frequencies)
     }
 
     @Test

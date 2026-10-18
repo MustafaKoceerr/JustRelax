@@ -7,7 +7,6 @@
     <string name="err_unknown">Ett oväntat fel inträffade.</string>
     <string name="scene_panel_title">Din scen</string>
     <string name="scene_empty">Tryck på ljud i biblioteket för att bygga din scen.</string>
-    <string name="action_play">Spela</string>
     <string name="action_pause">Pausa</string>
     <string name="action_stop_all">Stoppa alla</string>
     <string name="action_save_scene">Spara</string>

@@ -9,7 +9,6 @@
     <string name="err_ai_no_sounds">Aucun son téléchargé trouvé. L’IA a besoin de sons pour créer un mix.</string>
     <string name="err_ai_empty_response">L’IA a renvoyé une réponse vide ou invalide. Veuillez réessayer.</string>
     <string name="err_unknown">Une erreur inattendue s’est produite. Veuillez réessayer plus tard.</string>
-    <string name="action_back">Retour</string>
     <string name="action_clear">Effacer</string>
     <string name="ai_action_try_another_variation">Essayer une autre variante</string>
 </resources>

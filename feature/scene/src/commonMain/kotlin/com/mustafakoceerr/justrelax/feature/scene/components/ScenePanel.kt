@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.scene.components
 
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,7 +34,6 @@ import com.mustafakoceerr.justrelax.feature.scene.SceneLayerItem
 import com.mustafakoceerr.justrelax.feature.scene.SceneUiState
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_pause
-import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_play
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_save_scene
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_stop_all
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.scene_empty
@@ -71,7 +71,7 @@ fun ScenePanel(
                 if (state.isPlaying) {
                     Icon(Icons.Rounded.Pause, contentDescription = stringResource(Res.string.action_pause))
                 } else {
-                    Icon(Icons.Rounded.PlayArrow, contentDescription = stringResource(Res.string.action_play))
+                    Icon(Icons.Rounded.PlayArrow, contentDescription = stringResource(CoreRes.string.action_play))
                 }
             }
             IconButton(onClick = onStopAll, enabled = state.isVisible) {

@@ -3,9 +3,9 @@ package com.mustafakoceerr.justrelax.core.network.source
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.network.api.ApiSession
-import com.mustafakoceerr.justrelax.core.network.api.networkCall
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkAiMix
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkAiSound
+import com.mustafakoceerr.justrelax.core.network.util.networkCall
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.header

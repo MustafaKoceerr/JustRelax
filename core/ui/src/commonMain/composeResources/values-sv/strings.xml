@@ -24,4 +24,9 @@
     <string name="category_travel">Resor &amp; transport</string>
     <string name="category_water">Vatten &amp; hav</string>
     <string name="category_zen">Zen &amp; meditation</string>
+    <string name="action_back">Tillbaka</string>
+    <string name="action_delete">Ta bort</string>
+    <string name="action_play">Spela</string>
+    <string name="action_stop">Stoppa</string>
+    <string name="action_listen">Lyssna</string>
 </resources>

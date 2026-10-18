@@ -9,7 +9,6 @@
     <string name="err_ai_no_sounds">कोई डाउनलोड की गई ध्वनि नहीं मिली। मिक्स बनाने के लिए AI को ध्वनियों की आवश्यकता है।</string>
     <string name="err_ai_empty_response">AI ने खाली या अमान्य उत्तर लौटाया। कृपया फिर से प्रयास करें।</string>
     <string name="err_unknown">एक अप्रत्याशित त्रुटि हुई। कृपया बाद में फिर से प्रयास करें।</string>
-    <string name="action_back">वापस</string>
     <string name="action_clear">साफ़ करें</string>
     <string name="ai_action_try_another_variation">एक और वैरिएशन आज़माएँ</string>
 </resources>

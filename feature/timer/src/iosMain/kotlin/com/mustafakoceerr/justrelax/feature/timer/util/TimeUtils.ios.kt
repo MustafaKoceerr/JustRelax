@@ -7,17 +7,14 @@ import platform.Foundation.NSDateFormatterShortStyle
 import platform.Foundation.dateByAddingTimeInterval
 
 actual fun calculateEndTime(timeLeftSeconds: Long): String {
-    // 1. Şu anki zamanı al (NSDate)
     val now = NSDate()
 
-    // 2. Saniyeyi ekle (iOS'te time interval Double cinsindendir)
+    // NSTimeInterval is in seconds, as a Double.
     val endTime = now.dateByAddingTimeInterval(timeLeftSeconds.toDouble())
 
-    // 3. Formatter oluştur
     val formatter = NSDateFormatter()
 
-    // Sadece Saati göster (ShortStyle), Tarihi gösterme (NoStyle)
-    // Bu ayar, kullanıcının iPhone ayarlarındaki 12h/24h tercihine OTOMATİK uyar.
+    // Time only; the short style follows the iPhone's 12h/24h setting.
     formatter.timeStyle = NSDateFormatterShortStyle
     formatter.dateStyle = NSDateFormatterNoStyle
 

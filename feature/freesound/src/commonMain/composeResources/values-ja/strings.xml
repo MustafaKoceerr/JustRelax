@@ -7,12 +7,9 @@
     <string name="freesound_no_results">見つかりませんでした。別の言葉でお試しください。</string>
     <string name="freesound_load_more">さらに読み込む</string>
     <string name="freesound_add">追加</string>
-    <string name="freesound_listen">試聴</string>
-    <string name="freesound_stop">停止</string>
     <string name="freesound_by">作成者：%1$s</string>
     <string name="freesound_offline">インターネットに接続されていません。</string>
     <string name="freesound_rate_limited">検索回数が多すぎます。1分待ってからもう一度お試しください。</string>
     <string name="freesound_failed">検索できませんでした。もう一度お試しください。</string>
     <string name="freesound_download_failed">サウンドをダウンロードできませんでした。もう一度お試しください。</string>
-    <string name="freesound_back">戻る</string>
 </resources>

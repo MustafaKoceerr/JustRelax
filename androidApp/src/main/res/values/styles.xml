@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- YENİ: Animasyon Stili Tanımı -->
+    <!-- Window enter/exit animation -->
     <style name="WindowFadeAnimation" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/fade_in</item>
         <item name="android:activityOpenExitAnimation">@anim/fade_out</item>

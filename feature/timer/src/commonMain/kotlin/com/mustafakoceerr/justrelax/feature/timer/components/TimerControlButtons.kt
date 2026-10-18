@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.timer.components
 
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_delete
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -26,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_delete
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_pause
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_resume
 import org.jetbrains.compose.resources.stringResource
@@ -63,7 +64,7 @@ fun TimerControlButtons(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = stringResource(Res.string.timer_action_delete),
+                text = stringResource(CoreRes.string.action_delete),
                 style = MaterialTheme.typography.labelLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

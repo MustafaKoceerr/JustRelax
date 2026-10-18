@@ -6,11 +6,9 @@
     <string name="saved_mix_metadata">%1$d ध्वनियाँ • %2$s</string>
     <string name="saved_screen_title">सेव किए गए मिक्स</string>
     <string name="action_create_new_mix">नया मिक्स बनाएँ</string>
-    <string name="action_play">चलाएँ</string>
     <string name="action_undo">पूर्ववत</string>
     <string name="msg_mix_deleted">मिक्स हटाया गया</string>
     <string name="date_format_short">dd/MM/yyyy</string>
     <string name="err_play_mix_failed">मिक्स चलाने में असफल</string>
     <string name="saved_detail_placeholder">इसकी ध्वनियाँ देखने के लिए कोई सहेजा गया मिक्स चुनें।</string>
-    <string name="action_delete">हटाएँ</string>
 </resources>

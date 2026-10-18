@@ -7,12 +7,9 @@
     <string name="freesound_no_results">Niets gevonden. Probeer andere woorden.</string>
     <string name="freesound_load_more">Meer laden</string>
     <string name="freesound_add">Toevoegen</string>
-    <string name="freesound_listen">Luisteren</string>
-    <string name="freesound_stop">Stoppen</string>
     <string name="freesound_by">door %1$s</string>
     <string name="freesound_offline">Geen internetverbinding.</string>
     <string name="freesound_rate_limited">Te veel zoekopdrachten. Wacht een minuut en probeer het opnieuw.</string>
     <string name="freesound_failed">Zoeken is mislukt. Probeer het opnieuw.</string>
     <string name="freesound_download_failed">Het geluid kon niet worden gedownload. Probeer het opnieuw.</string>
-    <string name="freesound_back">Terug</string>
 </resources>

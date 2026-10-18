@@ -7,7 +7,6 @@
     <string name="err_unknown">Si è verificato un errore imprevisto.</string>
     <string name="scene_panel_title">La tua scena</string>
     <string name="scene_empty">Tocca i suoni nella libreria per creare la tua scena.</string>
-    <string name="action_play">Riproduci</string>
     <string name="action_pause">Pausa</string>
     <string name="action_stop_all">Ferma tutto</string>
     <string name="action_save_scene">Salva</string>

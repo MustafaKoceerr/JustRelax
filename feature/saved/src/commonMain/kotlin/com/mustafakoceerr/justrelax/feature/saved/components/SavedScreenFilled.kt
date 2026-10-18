@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.saved.components
 
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -51,7 +53,6 @@ import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.feature.saved.util.formatDate
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.saved.generated.resources.action_play
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.date_format_short
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_mix_metadata
 import kotlinx.coroutines.delay
@@ -207,7 +208,7 @@ private fun PlayButton(
         Box(contentAlignment = Alignment.Center) {
             Icon(
                 imageVector = Icons.Rounded.PlayArrow,
-                contentDescription = stringResource(Res.string.action_play),
+                contentDescription = stringResource(CoreRes.string.action_play),
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(28.dp)
             )

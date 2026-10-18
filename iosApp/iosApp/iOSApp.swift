@@ -1,11 +1,11 @@
 import SwiftUI
-import ComposeApp // İŞTE SİHİRLİ SATIR BU!
+import ComposeApp
 
 @main
 struct iOSApp: App {
-    // Koin'i başlatmak için init() metodunu kullanıyoruz.
+    // Koin starts before the first scene.
     init() {
-        KoinHelperKt.doInitKoin() // Kotlin'deki fonksiyonu çağırır
+        KoinHelperKt.doInitKoin()
     }
 
     var body: some Scene {

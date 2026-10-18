@@ -5,11 +5,8 @@
     <string name="mysounds_empty_description">कोई ऑडियो फ़ाइल इम्पोर्ट करें, पसंद का हिस्सा रखें और वह आपकी लाइब्रेरी में जुड़ जाएगा।</string>
     <string name="mysounds_import">फ़ाइल इम्पोर्ट करें</string>
     <string name="mysounds_import_failed">यह फ़ाइल खोली नहीं जा सकी।</string>
-    <string name="mysounds_delete">हटाएँ</string>
     <string name="mysounds_delete_title">यह ध्वनि हटाएँ?</string>
     <string name="mysounds_delete_text">%1$s आपकी लाइब्रेरी और सहेजे गए मिक्स से हटा दी जाएगी।</string>
-    <string name="mysounds_cancel">रद्द करें</string>
-    <string name="mysounds_back">वापस</string>
     <string name="mysounds_kind_bed">लूप</string>
     <string name="mysounds_kind_event">एक बार</string>
     <string name="mysounds_kind_bed_hint">पृष्ठभूमि में लगातार बजती है, बारिश की तरह।</string>
@@ -18,8 +15,6 @@
     <string name="mysounds_editor_title">नई ध्वनि</string>
     <string name="mysounds_drag_hint">रखने वाला हिस्सा चुनने के लिए हैंडल खींचें।</string>
     <string name="mysounds_selection">%1$s – %2$s · %3$s</string>
-    <string name="mysounds_listen">सुनें</string>
-    <string name="mysounds_stop">रोकें</string>
     <string name="mysounds_name">नाम</string>
     <string name="mysounds_category">श्रेणी</string>
     <string name="mysounds_icon">आइकन</string>

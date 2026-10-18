@@ -1,5 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.saved.components
 
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_delete
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,8 +35,6 @@ import com.mustafakoceerr.justrelax.feature.saved.SavedMixDetail
 import com.mustafakoceerr.justrelax.feature.saved.SavedSoundItem
 import com.mustafakoceerr.justrelax.feature.saved.util.formatDate
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.saved.generated.resources.action_delete
-import com.mustafakoceerr.justrelax.feature.saved.generated.resources.action_play
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.date_format_short
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_detail_placeholder
 import org.jetbrains.compose.resources.stringResource
@@ -68,11 +69,11 @@ fun SavedMixDetailPane(
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(onClick = { onPlay(detail.id) }) {
                 Icon(Icons.Rounded.PlayArrow, contentDescription = null)
-                Text(stringResource(Res.string.action_play), modifier = Modifier.padding(start = 8.dp))
+                Text(stringResource(CoreRes.string.action_play), modifier = Modifier.padding(start = 8.dp))
             }
             OutlinedButton(onClick = { onDelete(detail.id) }) {
                 Icon(Icons.Rounded.Delete, contentDescription = null)
-                Text(stringResource(Res.string.action_delete), modifier = Modifier.padding(start = 8.dp))
+                Text(stringResource(CoreRes.string.action_delete), modifier = Modifier.padding(start = 8.dp))
             }
         }
 
