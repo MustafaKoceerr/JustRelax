@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.library
 
+import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
 import com.mustafakoceerr.justrelax.core.analytics.Params
 import com.mustafakoceerr.justrelax.core.analytics.EventTypes
 import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
@@ -53,9 +54,7 @@ class LibraryViewModel(
             isLoading = sounds is Resource.Loading,
             categories = categories,
             selectedCategory = screen.selectedCategory ?: categories.keys.firstOrNull(),
-            playingSoundIds = scene.layers.mapTo(mutableSetOf()) { it.soundId },
-            soundVolumes = scene.layers.associate { it.soundId to it.volume },
-            soundFrequencies = scene.events.associate { it.soundId to it.frequency },
+            sceneCards = SceneCards.of(scene),
             downloadingSoundIds = screen.downloadingSoundIds,
             userMessage = screen.userMessage,
         )

@@ -3,7 +3,6 @@ package com.mustafakoceerr.justrelax.core.media
 import android.content.Context
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,17 +23,8 @@ internal class ExoClipPreviewer(private val context: Context) : ClipPreviewer {
 
     override fun play(path: String, range: TrimRange, loop: Boolean) {
         val player = player ?: createPlayer().also { player = it }
-        player.setMediaItem(
-            MediaItem.Builder()
-                .setUri(if ("://" in path) path else File(path).toURI().toString())
-                .setClippingConfiguration(
-                    MediaItem.ClippingConfiguration.Builder()
-                        .setStartPositionMs(range.startMs)
-                        .setEndPositionMs(range.endMs)
-                        .build(),
-                )
-                .build(),
-        )
+        // A URL (a Freesound preview) is played as it is; anything else is a file on the device.
+        player.setMediaItem(clippedMediaItem(if ("://" in path) path else File(path).toURI().toString(), range))
         player.repeatMode = if (loop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
         player.prepare()
         player.play()

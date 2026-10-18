@@ -24,4 +24,9 @@
     <string name="category_travel">旅行 &amp; 交通</string>
     <string name="category_water">水 &amp; 海</string>
     <string name="category_zen">禅 &amp; 瞑想</string>
+    <string name="action_back">戻る</string>
+    <string name="action_delete">削除</string>
+    <string name="action_play">再生</string>
+    <string name="action_stop">停止</string>
+    <string name="action_listen">試聴</string>
 </resources>

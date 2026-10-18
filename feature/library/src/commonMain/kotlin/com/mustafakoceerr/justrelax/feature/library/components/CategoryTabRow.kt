@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
-import com.mustafakoceerr.justrelax.feature.library.util.icon
+import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.core.ui.util.titleRes
 import org.jetbrains.compose.resources.stringResource
 
@@ -57,7 +57,7 @@ fun CategoryTabRow(
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Icon(
-                    imageVector = category.icon,
+                    imageVector = category.defaultIcon.imageVector,
                     contentDescription = null,
                     tint = contentColor,
                     modifier = Modifier.size(24.dp)

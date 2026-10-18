@@ -5,11 +5,8 @@
     <string name="mysounds_empty_description">Import an audio file, keep the part you like and it joins your library.</string>
     <string name="mysounds_import">Import file</string>
     <string name="mysounds_import_failed">This file could not be opened.</string>
-    <string name="mysounds_delete">Delete</string>
     <string name="mysounds_delete_title">Delete this sound?</string>
     <string name="mysounds_delete_text">%1$s will be removed from your library and from your saved mixes.</string>
-    <string name="mysounds_cancel">Cancel</string>
-    <string name="mysounds_back">Back</string>
     <string name="mysounds_kind_bed">Loop</string>
     <string name="mysounds_kind_event">One-shot</string>
     <string name="mysounds_kind_bed_hint">Plays continuously in the background, like rain.</string>
@@ -18,8 +15,6 @@
     <string name="mysounds_editor_title">New sound</string>
     <string name="mysounds_drag_hint">Drag the handles to choose the part to keep.</string>
     <string name="mysounds_selection">%1$s – %2$s · %3$s</string>
-    <string name="mysounds_listen">Listen</string>
-    <string name="mysounds_stop">Stop</string>
     <string name="mysounds_name">Name</string>
     <string name="mysounds_category">Category</string>
     <string name="mysounds_icon">Icon</string>

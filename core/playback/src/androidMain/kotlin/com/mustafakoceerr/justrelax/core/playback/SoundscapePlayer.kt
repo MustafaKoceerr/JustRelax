@@ -3,7 +3,6 @@ package com.mustafakoceerr.justrelax.core.playback
 import android.content.Context
 import android.os.Looper
 import androidx.annotation.OptIn
-import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -146,11 +145,6 @@ class SoundscapePlayer internal constructor(
 
     private companion object {
         const val MIX_ID = "current_scene"
-
-        val MEDIA_AUDIO_ATTRIBUTES: AudioAttributes = AudioAttributes.Builder()
-            .setUsage(C.USAGE_MEDIA)
-            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
-            .build()
 
         val AVAILABLE_COMMANDS: Player.Commands = Player.Commands.Builder()
             .addAll(

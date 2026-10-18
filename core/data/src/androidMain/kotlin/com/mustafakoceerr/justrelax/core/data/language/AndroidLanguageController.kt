@@ -21,7 +21,7 @@ internal class AndroidLanguageController : LanguageController {
         val localeList = if (language == AppLanguage.SYSTEM) {
             LocaleListCompat.getEmptyLocaleList()
         } else {
-            LocaleListCompat.create(Locale(language.code))
+            LocaleListCompat.forLanguageTags(language.code)
         }
 
         AppCompatDelegate.setApplicationLocales(localeList)

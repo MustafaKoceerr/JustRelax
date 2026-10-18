@@ -24,4 +24,9 @@
     <string name="category_travel">여행 &amp; 교통</string>
     <string name="category_water">물 &amp; 바다</string>
     <string name="category_zen">젠 &amp; 명상</string>
+    <string name="action_back">뒤로</string>
+    <string name="action_delete">삭제</string>
+    <string name="action_play">재생</string>
+    <string name="action_stop">정지</string>
+    <string name="action_listen">듣기</string>
 </resources>

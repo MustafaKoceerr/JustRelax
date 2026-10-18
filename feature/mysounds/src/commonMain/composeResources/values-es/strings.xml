@@ -5,11 +5,8 @@
     <string name="mysounds_empty_description">Importa un archivo de audio, quédate con la parte que te guste y se añadirá a tu biblioteca.</string>
     <string name="mysounds_import">Importar archivo</string>
     <string name="mysounds_import_failed">No se pudo abrir este archivo.</string>
-    <string name="mysounds_delete">Eliminar</string>
     <string name="mysounds_delete_title">¿Eliminar este sonido?</string>
     <string name="mysounds_delete_text">%1$s se eliminará de tu biblioteca y de tus mezclas guardadas.</string>
-    <string name="mysounds_cancel">Cancelar</string>
-    <string name="mysounds_back">Atrás</string>
     <string name="mysounds_kind_bed">Bucle</string>
     <string name="mysounds_kind_event">Puntual</string>
     <string name="mysounds_kind_bed_hint">Suena de forma continua de fondo, como la lluvia.</string>
@@ -18,8 +15,6 @@
     <string name="mysounds_editor_title">Nuevo sonido</string>
     <string name="mysounds_drag_hint">Arrastra los controles para elegir la parte que quieres conservar.</string>
     <string name="mysounds_selection">%1$s – %2$s · %3$s</string>
-    <string name="mysounds_listen">Escuchar</string>
-    <string name="mysounds_stop">Detener</string>
     <string name="mysounds_name">Nombre</string>
     <string name="mysounds_category">Categoría</string>
     <string name="mysounds_icon">Icono</string>

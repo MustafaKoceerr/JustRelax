@@ -24,4 +24,9 @@
     <string name="category_travel">Viaje &amp; transporte</string>
     <string name="category_water">Agua &amp; océano</string>
     <string name="category_zen">Zen &amp; meditación</string>
+    <string name="action_back">Atrás</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="action_play">Reproducir</string>
+    <string name="action_stop">Detener</string>
+    <string name="action_listen">Escuchar</string>
 </resources>

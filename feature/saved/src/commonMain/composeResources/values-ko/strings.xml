@@ -6,11 +6,9 @@
     <string name="saved_mix_metadata">사운드 %1$d개 • %2$s</string>
     <string name="saved_screen_title">저장된 믹스</string>
     <string name="action_create_new_mix">새 믹스 만들기</string>
-    <string name="action_play">재생</string>
     <string name="action_undo">실행 취소</string>
     <string name="msg_mix_deleted">믹스가 삭제되었습니다</string>
     <string name="date_format_short">yyyy.MM.dd</string>
     <string name="err_play_mix_failed">믹스 재생에 실패했습니다</string>
     <string name="saved_detail_placeholder">저장한 믹스를 선택하면 소리를 볼 수 있어요.</string>
-    <string name="action_delete">삭제</string>
 </resources>

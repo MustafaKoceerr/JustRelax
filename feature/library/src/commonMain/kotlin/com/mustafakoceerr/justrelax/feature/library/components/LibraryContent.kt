@@ -73,9 +73,7 @@ fun LibraryContent(
 
                 SoundCardGrid(
                     sounds = soundsToShow,
-                    playingSoundIds = uiState.playingSoundIds,
-                    soundVolumes = uiState.soundVolumes,
-                    soundFrequencies = uiState.soundFrequencies,
+                    cards = uiState.sceneCards,
                     downloadingSoundIds = uiState.downloadingSoundIds,
                     onSoundClick = onSoundClick,
                     onVolumeChange = onVolumeChange,

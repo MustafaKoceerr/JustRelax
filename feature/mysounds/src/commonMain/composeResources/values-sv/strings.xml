@@ -5,11 +5,8 @@
     <string name="mysounds_empty_description">Importera en ljudfil, behåll den del du gillar så hamnar den i ditt bibliotek.</string>
     <string name="mysounds_import">Importera fil</string>
     <string name="mysounds_import_failed">Filen kunde inte öppnas.</string>
-    <string name="mysounds_delete">Ta bort</string>
     <string name="mysounds_delete_title">Ta bort det här ljudet?</string>
     <string name="mysounds_delete_text">%1$s tas bort från ditt bibliotek och dina sparade mixar.</string>
-    <string name="mysounds_cancel">Avbryt</string>
-    <string name="mysounds_back">Tillbaka</string>
     <string name="mysounds_kind_bed">Slinga</string>
     <string name="mysounds_kind_event">Enstaka</string>
     <string name="mysounds_kind_bed_hint">Spelas hela tiden i bakgrunden, som regn.</string>
@@ -18,8 +15,6 @@
     <string name="mysounds_editor_title">Nytt ljud</string>
     <string name="mysounds_drag_hint">Dra i handtagen för att välja den del du vill behålla.</string>
     <string name="mysounds_selection">%1$s – %2$s · %3$s</string>
-    <string name="mysounds_listen">Lyssna</string>
-    <string name="mysounds_stop">Stoppa</string>
     <string name="mysounds_name">Namn</string>
     <string name="mysounds_category">Kategori</string>
     <string name="mysounds_icon">Ikon</string>

@@ -6,11 +6,9 @@
     <string name="saved_mix_metadata">%1$d geluiden • %2$s</string>
     <string name="saved_screen_title">Opgeslagen mixes</string>
     <string name="action_create_new_mix">Nieuwe mix maken</string>
-    <string name="action_play">Afspelen</string>
     <string name="action_undo">Ongedaan maken</string>
     <string name="msg_mix_deleted">Mix verwijderd</string>
     <string name="date_format_short">dd-MM-yyyy</string>
     <string name="err_play_mix_failed">Mix afspelen mislukt</string>
     <string name="saved_detail_placeholder">Kies een opgeslagen mix om de geluiden te zien.</string>
-    <string name="action_delete">Verwijderen</string>
 </resources>

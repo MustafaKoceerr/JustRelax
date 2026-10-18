@@ -9,7 +9,6 @@
     <string name="err_ai_no_sounds">Inga nedladdade ljud hittades. AI:n behöver ljud för att skapa en mix.</string>
     <string name="err_ai_empty_response">AI:n gav ett tomt eller ogiltigt svar. Försök igen.</string>
     <string name="err_unknown">Ett oväntat fel inträffade. Försök igen senare.</string>
-    <string name="action_back">Tillbaka</string>
     <string name="action_clear">Rensa</string>
     <string name="ai_action_try_another_variation">Prova en annan variation</string>
 </resources>

@@ -30,8 +30,8 @@ val appModule = module {
 }
 
 /**
- * Platformdan bağımsız tüm Koin modülleri. Her platform kendi modüllerini [initKoin]'e verir
- * (Android: androidApp, iOS: iosMain). DI grafiği testi de bu listeyi doğrular.
+ * Every platform-independent Koin module. Each platform passes its own modules to [initKoin]
+ * (Android: androidApp, iOS: iosMain). The DI graph test checks this list.
  */
 val appModules: List<Module>
     get() = listOf(

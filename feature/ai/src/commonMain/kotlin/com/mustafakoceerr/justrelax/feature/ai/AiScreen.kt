@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.ai
 
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_back
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
@@ -32,7 +34,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
@@ -100,7 +101,7 @@ fun AiScreen(
                         IconButton(onClick = onEditPrompt) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(Res.string.action_back)
+                                contentDescription = stringResource(CoreRes.string.action_back)
                             )
                         }
                     }
@@ -143,11 +144,9 @@ fun AiScreen(
                     if (targetHasResults) {
                         AiResultGrid(
                             sounds = uiState.mixSounds,
-                            isSoundPlaying = { id -> id in uiState.playingSoundIds },
-                            getSoundVolume = { id -> uiState.soundVolumes[id] ?: AudioDefaults.BASE_VOLUME },
+                            cards = uiState.sceneCards,
                             onToggleSound = onSoundClick,
                             onVolumeChange = onVolumeChange,
-                            getSoundFrequency = { id -> uiState.soundFrequencies[id] },
                             onFrequencyChange = onFrequencyChange,
                             contentPadding = PaddingValues(16.dp),
                             headerContent = {

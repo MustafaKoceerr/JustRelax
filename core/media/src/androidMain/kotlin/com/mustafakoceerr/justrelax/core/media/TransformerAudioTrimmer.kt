@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.core.media
 
 import android.content.Context
-import androidx.media3.common.MediaItem
 import androidx.media3.common.MimeTypes
 import androidx.media3.common.audio.GainProcessor
 import androidx.media3.common.util.UnstableApi
@@ -36,15 +35,7 @@ internal class TransformerAudioTrimmer(private val context: Context) : AudioTrim
                 override fun isUnityUntil(samplePosition: Long, sampleRate: Int) =
                     fade.unityUntil(samplePosition, sampleRate)
             })
-            val item = MediaItem.Builder()
-                .setUri(File(sourcePath).toURI().toString())
-                .setClippingConfiguration(
-                    MediaItem.ClippingConfiguration.Builder()
-                        .setStartPositionMs(range.startMs)
-                        .setEndPositionMs(range.endMs)
-                        .build(),
-                )
-                .build()
+            val item = clippedMediaItem(File(sourcePath).toURI().toString(), range)
             val edited = EditedMediaItem.Builder(item)
                 .setRemoveVideo(true)
                 .setEffects(Effects(listOf(gain), emptyList()))

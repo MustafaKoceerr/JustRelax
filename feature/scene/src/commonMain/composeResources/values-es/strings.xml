@@ -7,7 +7,6 @@
     <string name="err_unknown">Ocurrió un error inesperado.</string>
     <string name="scene_panel_title">Tu escena</string>
     <string name="scene_empty">Toca sonidos en la biblioteca para crear tu escena.</string>
-    <string name="action_play">Reproducir</string>
     <string name="action_pause">Pausar</string>
     <string name="action_stop_all">Detener todo</string>
     <string name="action_save_scene">Guardar</string>

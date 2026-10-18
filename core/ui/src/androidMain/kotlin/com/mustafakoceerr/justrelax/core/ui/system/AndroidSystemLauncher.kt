@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import androidx.core.net.toUri
-import com.mustafakoceerr.justrelax.core.ui.system.SystemLauncher // Varsayılan import
+import com.mustafakoceerr.justrelax.core.ui.system.SystemLauncher
 
 internal class AndroidSystemLauncher(private val context: Context) : SystemLauncher {
 

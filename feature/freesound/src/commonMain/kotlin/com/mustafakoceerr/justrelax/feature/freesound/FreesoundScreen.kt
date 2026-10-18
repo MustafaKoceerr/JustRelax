@@ -1,10 +1,11 @@
 package com.mustafakoceerr.justrelax.feature.freesound
 
-import androidx.compose.foundation.layout.Arrangement
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_stop
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_listen
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -17,7 +18,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Stop
@@ -30,14 +30,12 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,21 +46,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.model.FreesoundSound
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxDetailScaffold
 import com.mustafakoceerr.justrelax.core.ui.util.label
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_add
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_back
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_by
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_intro
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_listen
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_load_more
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_no_results
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_search
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_search_hint
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_stop
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -109,46 +103,34 @@ fun FreesoundScreen(
     onAdd: (FreesoundSound) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
-    JustRelaxBackground {
-        Scaffold(
-            containerColor = Color.Transparent,
-            contentWindowInsets = WindowInsets(0.dp),
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = {
-                JustRelaxTopBar(
-                    title = stringResource(Res.string.freesound_title),
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(Res.string.freesound_back))
+    JustRelaxDetailScaffold(
+        title = stringResource(Res.string.freesound_title),
+        onBack = onBack,
+        snackbarHostState = snackbarHostState,
+    ) { innerPadding ->
+        Box(Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+            Column(Modifier.widthIn(max = 720.dp).fillMaxWidth().imePadding()) {
+                OutlinedTextField(
+                    value = uiState.query,
+                    onValueChange = onQueryChange,
+                    placeholder = { Text(stringResource(Res.string.freesound_search_hint)) },
+                    singleLine = true,
+                    trailingIcon = {
+                        IconButton(onClick = { focusManager.clearFocus(); onSearch() }) {
+                            Icon(Icons.Rounded.Search, stringResource(Res.string.freesound_search))
                         }
                     },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus(); onSearch() }),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
                 )
-            },
-        ) { innerPadding ->
-            Box(Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-                Column(Modifier.widthIn(max = 720.dp).fillMaxWidth().imePadding()) {
-                    OutlinedTextField(
-                        value = uiState.query,
-                        onValueChange = onQueryChange,
-                        placeholder = { Text(stringResource(Res.string.freesound_search_hint)) },
-                        singleLine = true,
-                        trailingIcon = {
-                            IconButton(onClick = { focusManager.clearFocus(); onSearch() }) {
-                                Icon(Icons.Rounded.Search, stringResource(Res.string.freesound_search))
-                            }
-                        },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                        keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus(); onSearch() }),
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-                    )
-                    when {
-                        uiState.isSearching -> Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator()
-                        }
-                        !uiState.hasSearched -> Hint(stringResource(Res.string.freesound_intro))
-                        uiState.results.isEmpty() -> Hint(stringResource(Res.string.freesound_no_results))
-                        else -> Results(uiState, onLoadMore, onTogglePreview, onAdd)
+                when {
+                    uiState.isSearching -> Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
                     }
+                    !uiState.hasSearched -> Hint(stringResource(Res.string.freesound_intro))
+                    uiState.results.isEmpty() -> Hint(stringResource(Res.string.freesound_no_results))
+                    else -> Results(uiState, onLoadMore, onTogglePreview, onAdd)
                 }
             }
         }
@@ -181,7 +163,7 @@ private fun Results(
                     IconButton(onClick = { onTogglePreview(sound) }) {
                         Icon(
                             if (isPreviewing) Icons.Rounded.Stop else Icons.Rounded.PlayArrow,
-                            stringResource(if (isPreviewing) Res.string.freesound_stop else Res.string.freesound_listen),
+                            stringResource(if (isPreviewing) CoreRes.string.action_stop else CoreRes.string.action_listen),
                         )
                     }
                 },

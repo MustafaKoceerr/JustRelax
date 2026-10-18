@@ -7,12 +7,9 @@
     <string name="freesound_no_results">कुछ नहीं मिला। दूसरे शब्द आज़माएँ।</string>
     <string name="freesound_load_more">और लोड करें</string>
     <string name="freesound_add">जोड़ें</string>
-    <string name="freesound_listen">सुनें</string>
-    <string name="freesound_stop">रोकें</string>
     <string name="freesound_by">%1$s द्वारा</string>
     <string name="freesound_offline">इंटरनेट कनेक्शन नहीं है।</string>
     <string name="freesound_rate_limited">बहुत ज़्यादा खोजें। एक मिनट रुककर फिर कोशिश करें।</string>
     <string name="freesound_failed">खोज नहीं हो सकी। फिर से कोशिश करें।</string>
     <string name="freesound_download_failed">ध्वनि डाउनलोड नहीं हो सकी। फिर से कोशिश करें।</string>
-    <string name="freesound_back">वापस</string>
 </resources>

@@ -7,7 +7,6 @@
     <string name="err_unknown">Ein unerwarteter Fehler ist aufgetreten.</string>
     <string name="scene_panel_title">Deine Szene</string>
     <string name="scene_empty">Tippe auf Klänge in der Bibliothek, um deine Szene zu bauen.</string>
-    <string name="action_play">Abspielen</string>
     <string name="action_pause">Pausieren</string>
     <string name="action_stop_all">Alle stoppen</string>
     <string name="action_save_scene">Speichern</string>

@@ -45,7 +45,7 @@ class MixerViewModelTest {
         val state = viewModel.uiState.value
         assertFalse(state.isGenerating)
         assertEquals(3, state.mixedSounds.size)
-        assertEquals(state.mixedSounds.map { it.id }.toSet(), state.playingSoundIds)
+        assertEquals(state.mixedSounds.map { it.id }.toSet(), state.sceneCards.playingIds)
         assertTrue(state.mixedSounds.none { it.id == "not_downloaded" })
     }
 
@@ -81,15 +81,15 @@ class MixerViewModelTest {
         viewModel.generateMix()
         advanceUntilIdle()
         val sound = viewModel.uiState.value.mixedSounds.first()
-        val mixVolume = viewModel.uiState.value.soundVolumes.getValue(sound.id)
+        val mixVolume = viewModel.uiState.value.sceneCards.volumes.getValue(sound.id)
 
         viewModel.toggleSound(sound.id)
         advanceUntilIdle()
-        assertFalse(sound.id in viewModel.uiState.value.playingSoundIds)
+        assertFalse(sound.id in viewModel.uiState.value.sceneCards.playingIds)
 
         viewModel.toggleSound(sound.id)
         advanceUntilIdle()
-        assertEquals(mixVolume, viewModel.uiState.value.soundVolumes[sound.id])
+        assertEquals(mixVolume, viewModel.uiState.value.sceneCards.volumes[sound.id])
     }
 
     @Test
@@ -102,7 +102,7 @@ class MixerViewModelTest {
         viewModel.changeVolume(sound.id, 0.25f)
         advanceUntilIdle()
 
-        assertEquals(0.25f, viewModel.uiState.value.soundVolumes[sound.id])
+        assertEquals(0.25f, viewModel.uiState.value.sceneCards.volumes[sound.id])
     }
 
     @Test
@@ -117,6 +117,6 @@ class MixerViewModelTest {
         advanceUntilIdle()
 
         assertEquals(2, scene.scene.value.beds.size)
-        assertEquals(EventFrequency.RARE, viewModel.uiState.value.soundFrequencies[event.id])
+        assertEquals(EventFrequency.RARE, viewModel.uiState.value.sceneCards.frequencies[event.id])
     }
 }

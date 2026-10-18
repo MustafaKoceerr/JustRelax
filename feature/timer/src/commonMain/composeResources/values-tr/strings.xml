@@ -6,7 +6,6 @@
     <string name="timer_unit_hour">Saat</string>
     <string name="timer_unit_minute">Dakika</string>
     <string name="timer_unit_second">Saniye</string>
-    <string name="timer_action_delete">Sil</string>
     <string name="timer_action_pause">Duraklat</string>
     <string name="timer_action_resume">Devam et</string>
     <string name="timer_action_start">Başlat</string>

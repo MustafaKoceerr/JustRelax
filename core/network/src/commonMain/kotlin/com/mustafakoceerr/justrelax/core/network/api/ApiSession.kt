@@ -1,11 +1,9 @@
 package com.mustafakoceerr.justrelax.core.network.api
 
 import com.mustafakoceerr.justrelax.core.common.AppError
+import com.mustafakoceerr.justrelax.core.network.util.bodyOrSerializationError
+import com.mustafakoceerr.justrelax.core.network.util.networkCall
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.network.sockets.ConnectTimeoutException
-import io.ktor.client.network.sockets.SocketTimeoutException
-import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -13,13 +11,11 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
-import kotlinx.coroutines.CancellationException
+import kotlin.time.Clock
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.io.IOException
 import kotlinx.serialization.Serializable
 import okio.ByteString.Companion.encodeUtf8
-import kotlin.time.Clock
 
 /** A random id for this installation, kept on the device. */
 fun interface InstallIdProvider {
@@ -79,13 +75,7 @@ internal class ApiSession(
             response.status == HttpStatusCode.TooManyRequests -> throw AppError.Network.RateLimited()
             !response.status.isSuccess() -> throw AppError.Network.ServerError(response.status.value)
         }
-        return try {
-            response.body<SessionResponse>()
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            throw AppError.Network.SerializationError()
-        }
+        return response.bodyOrSerializationError()
     }
 
     @Serializable
@@ -97,17 +87,4 @@ internal class ApiSession(
     private companion object {
         const val RENEW_BEFORE_MS = 60_000L
     }
-}
-
-/** Maps transport failures to [AppError.Network], as the other data sources do. */
-internal suspend fun networkCall(call: suspend () -> HttpResponse): HttpResponse = try {
-    call()
-} catch (e: HttpRequestTimeoutException) {
-    throw AppError.Network.TimeOut()
-} catch (e: ConnectTimeoutException) {
-    throw AppError.Network.TimeOut()
-} catch (e: SocketTimeoutException) {
-    throw AppError.Network.TimeOut()
-} catch (e: IOException) {
-    throw AppError.Network.NoInternet()
 }

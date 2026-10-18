@@ -1,9 +1,7 @@
 package com.mustafakoceerr.justrelax.core.ui.util
 
-import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * A wrapper class to decouple string resources from the Android Context or Composable scope.
@@ -16,13 +14,6 @@ sealed interface UiText {
         val formatArgs: List<Any> = emptyList()
     ) : UiText
 
-    @Composable
-    fun asString(): String {
-        return when (this) {
-            is DynamicString -> value
-            is Resource -> stringResource(resId, *formatArgs.toTypedArray())
-        }
-    }
 
     suspend fun resolve(): String {
         return when (this) {

@@ -6,11 +6,9 @@
     <string name="saved_mix_metadata">%1$d Sounds • %2$s</string>
     <string name="saved_screen_title">Gespeicherte Mixe</string>
     <string name="action_create_new_mix">Neuen Mix erstellen</string>
-    <string name="action_play">Abspielen</string>
     <string name="action_undo">Rückgängig</string>
     <string name="msg_mix_deleted">Mix gelöscht</string>
     <string name="date_format_short">dd.MM.yyyy</string>
     <string name="err_play_mix_failed">Mix konnte nicht abgespielt werden</string>
     <string name="saved_detail_placeholder">Wähle einen gespeicherten Mix, um seine Klänge zu sehen.</string>
-    <string name="action_delete">Löschen</string>
 </resources>

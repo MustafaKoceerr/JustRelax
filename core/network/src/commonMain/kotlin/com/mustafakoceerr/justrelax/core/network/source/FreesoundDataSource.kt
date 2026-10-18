@@ -2,18 +2,17 @@ package com.mustafakoceerr.justrelax.core.network.source
 
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.network.api.ApiSession
-import com.mustafakoceerr.justrelax.core.network.api.networkCall
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkFreesoundPage
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkFreesoundSound
+import com.mustafakoceerr.justrelax.core.network.util.bodyOrSerializationError
+import com.mustafakoceerr.justrelax.core.network.util.networkCall
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.isSuccess
-import kotlinx.coroutines.CancellationException
 
 data class FreesoundSearchPage(val sounds: List<NetworkFreesoundSound>, val hasMore: Boolean)
 
@@ -47,13 +46,7 @@ internal class ProxyFreesoundDataSource(
             response.status == HttpStatusCode.TooManyRequests -> throw AppError.Network.RateLimited()
             !response.status.isSuccess() -> throw AppError.Network.ServerError(response.status.value)
         }
-        val body = try {
-            response.body<NetworkFreesoundPage>()
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            throw AppError.Network.SerializationError()
-        }
+        val body = response.bodyOrSerializationError<NetworkFreesoundPage>()
         return FreesoundSearchPage(body.results, hasMore = body.next != null)
     }
 }

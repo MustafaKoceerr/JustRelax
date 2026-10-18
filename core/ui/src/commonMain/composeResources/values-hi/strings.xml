@@ -24,4 +24,9 @@
     <string name="category_travel">यात्रा &amp; परिवहन</string>
     <string name="category_water">पानी &amp; समुद्र</string>
     <string name="category_zen">ज़ेन &amp; ध्यान</string>
+    <string name="action_back">वापस</string>
+    <string name="action_delete">हटाएँ</string>
+    <string name="action_play">चलाएँ</string>
+    <string name="action_stop">रोकें</string>
+    <string name="action_listen">सुनें</string>
 </resources>

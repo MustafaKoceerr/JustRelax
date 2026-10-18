@@ -7,7 +7,6 @@
     <string name="err_unknown">Ocorreu um erro inesperado.</string>
     <string name="scene_panel_title">Sua cena</string>
     <string name="scene_empty">Toque nos sons da biblioteca para montar sua cena.</string>
-    <string name="action_play">Reproduzir</string>
     <string name="action_pause">Pausar</string>
     <string name="action_stop_all">Parar tudo</string>
     <string name="action_save_scene">Salvar</string>

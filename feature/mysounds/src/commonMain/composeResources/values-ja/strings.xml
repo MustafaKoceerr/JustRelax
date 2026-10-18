@@ -5,11 +5,8 @@
     <string name="mysounds_empty_description">音声ファイルを読み込み、気に入った部分を残すとライブラリに追加されます。</string>
     <string name="mysounds_import">ファイルを読み込む</string>
     <string name="mysounds_import_failed">このファイルを開けませんでした。</string>
-    <string name="mysounds_delete">削除</string>
     <string name="mysounds_delete_title">このサウンドを削除しますか？</string>
     <string name="mysounds_delete_text">%1$s はライブラリと保存したミックスから削除されます。</string>
-    <string name="mysounds_cancel">キャンセル</string>
-    <string name="mysounds_back">戻る</string>
     <string name="mysounds_kind_bed">ループ</string>
     <string name="mysounds_kind_event">ワンショット</string>
     <string name="mysounds_kind_bed_hint">雨のように、背景でずっと流れます。</string>
@@ -18,8 +15,6 @@
     <string name="mysounds_editor_title">新しいサウンド</string>
     <string name="mysounds_drag_hint">ハンドルをドラッグして残す部分を選びます。</string>
     <string name="mysounds_selection">%1$s – %2$s · %3$s</string>
-    <string name="mysounds_listen">試聴</string>
-    <string name="mysounds_stop">停止</string>
     <string name="mysounds_name">名前</string>
     <string name="mysounds_category">カテゴリ</string>
     <string name="mysounds_icon">アイコン</string>

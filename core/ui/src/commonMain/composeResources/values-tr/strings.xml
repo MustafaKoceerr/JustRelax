@@ -24,4 +24,9 @@
     <string name="category_travel">Seyahat &amp; Ulaşım</string>
     <string name="category_water">Su &amp; Okyanus</string>
     <string name="category_zen">Zen &amp; Meditasyon</string>
+    <string name="action_back">Geri</string>
+    <string name="action_delete">Sil</string>
+    <string name="action_play">Oynat</string>
+    <string name="action_stop">Durdur</string>
+    <string name="action_listen">Dinle</string>
 </resources>

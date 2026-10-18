@@ -9,11 +9,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-val GeminiIcon: ImageVector
+val AiSparkleIcon: ImageVector
     get() {
-        if (_geminiIcon != null) return _geminiIcon!!
-        _geminiIcon = ImageVector.Builder(
-            name = "GeminiIcon",
+        if (aiSparkleIcon != null) return aiSparkleIcon!!
+        aiSparkleIcon = ImageVector.Builder(
+            name = "AiSparkleIcon",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -38,7 +38,7 @@ val GeminiIcon: ImageVector
                 close()
             }
         }.build()
-        return _geminiIcon!!
+        return aiSparkleIcon!!
     }
 
-private var _geminiIcon: ImageVector? = null
+private var aiSparkleIcon: ImageVector? = null

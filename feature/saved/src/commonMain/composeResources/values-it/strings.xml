@@ -6,11 +6,9 @@
     <string name="saved_mix_metadata">%1$d suoni • %2$s</string>
     <string name="saved_screen_title">Mix salvati</string>
     <string name="action_create_new_mix">Crea nuovo mix</string>
-    <string name="action_play">Riproduci</string>
     <string name="action_undo">Annulla</string>
     <string name="msg_mix_deleted">Mix eliminato</string>
     <string name="date_format_short">dd/MM/yyyy</string>
     <string name="err_play_mix_failed">Impossibile riprodurre il mix</string>
     <string name="saved_detail_placeholder">Scegli un mix salvato per vederne i suoni.</string>
-    <string name="action_delete">Elimina</string>
 </resources>

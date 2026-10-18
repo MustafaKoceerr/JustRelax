@@ -88,12 +88,12 @@ class LibraryViewModelTest {
 
         viewModel.toggleSound(viewModel.sound("rain"))
         advanceUntilIdle()
-        assertTrue("rain" in viewModel.uiState.value.playingSoundIds)
+        assertTrue("rain" in viewModel.uiState.value.sceneCards.playingIds)
         assertEquals(1, playback.playCount)
 
         viewModel.toggleSound(viewModel.sound("rain"))
         advanceUntilIdle()
-        assertFalse("rain" in viewModel.uiState.value.playingSoundIds)
+        assertFalse("rain" in viewModel.uiState.value.sceneCards.playingIds)
     }
 
     @Test
@@ -105,7 +105,7 @@ class LibraryViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertTrue("storm" in state.playingSoundIds)
+        assertTrue("storm" in state.sceneCards.playingIds)
         assertTrue(state.downloadingSoundIds.isEmpty())
         assertTrue(viewModel.sound("storm").isDownloaded)
     }
@@ -120,7 +120,7 @@ class LibraryViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertFalse("storm" in state.playingSoundIds)
+        assertFalse("storm" in state.sceneCards.playingIds)
         assertEquals(Res.string.download_failed, (state.userMessage as UiText.Resource).resId)
     }
 
@@ -134,7 +134,7 @@ class LibraryViewModelTest {
         viewModel.changeVolume("rain", 0.9f)
         advanceUntilIdle()
 
-        assertEquals(0.9f, viewModel.uiState.value.soundVolumes["rain"])
+        assertEquals(0.9f, viewModel.uiState.value.sceneCards.volumes["rain"])
         assertEquals(0.9f, scene.scene.value.layers.single().volume)
     }
 
@@ -144,12 +144,12 @@ class LibraryViewModelTest {
         advanceUntilIdle()
         viewModel.toggleSound(viewModel.sound("owl"))
         advanceUntilIdle()
-        assertEquals(mapOf("owl" to EventFrequency.RARE), viewModel.uiState.value.soundFrequencies)
+        assertEquals(mapOf("owl" to EventFrequency.RARE), viewModel.uiState.value.sceneCards.frequencies)
 
         viewModel.changeFrequency("owl", EventFrequency.OFTEN)
         advanceUntilIdle()
 
-        assertEquals(mapOf("owl" to EventFrequency.OFTEN), viewModel.uiState.value.soundFrequencies)
+        assertEquals(mapOf("owl" to EventFrequency.OFTEN), viewModel.uiState.value.sceneCards.frequencies)
     }
 
     @Test

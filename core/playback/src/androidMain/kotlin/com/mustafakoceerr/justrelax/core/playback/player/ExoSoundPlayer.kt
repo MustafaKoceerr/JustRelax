@@ -3,19 +3,19 @@ package com.mustafakoceerr.justrelax.core.playback.player
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
+import com.mustafakoceerr.justrelax.core.playback.MEDIA_AUDIO_ATTRIBUTES
+import kotlin.coroutines.resume
+import kotlin.math.min
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
-import kotlin.coroutines.resume
-import kotlin.math.min
 
 /** One looping ExoPlayer instance. All player access is confined to the main thread. */
 internal class ExoSoundPlayer(
@@ -120,10 +120,5 @@ internal class ExoSoundPlayer(
     private companion object {
         const val FADE_STEPS = 20
         const val READY_TIMEOUT_MS = 3_000L
-
-        val MEDIA_AUDIO_ATTRIBUTES: AudioAttributes = AudioAttributes.Builder()
-            .setUsage(C.USAGE_MEDIA)
-            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
-            .build()
     }
 }

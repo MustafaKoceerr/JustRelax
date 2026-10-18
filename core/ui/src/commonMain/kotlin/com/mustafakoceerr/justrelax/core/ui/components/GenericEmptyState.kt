@@ -36,29 +36,28 @@ fun GenericEmptyState(
     onActionClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // 1. Ekran boyutunu ölçmek için BoxWithConstraints kullanıyoruz
+    // BoxWithConstraints gives the available height.
     BoxWithConstraints(
         modifier = modifier.fillMaxSize()
     ) {
-        // Ekranın o anki yüksekliğini alıyoruz
         val minHeight = maxHeight
 
-        // 2. Scroll edilebilir ana kapsayıcı
+        // Scrolls when the content is taller than the screen.
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // 3. İçerik kapsayıcısı
+            // At least as tall as the screen, so the content can be centered.
             // Buradaki kritik nokta: heightIn(min = minHeight)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = minHeight) // En az ekran boyu kadar ol
-                    .padding(32.dp), // Padding'i buraya taşıdık ki scroll içinde kalsın
+                    .padding(32.dp), // Inside the scroll, so the padding scrolls too
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center // Artık çalışır çünkü minHeight var
+                verticalArrangement = Arrangement.Center // Works because of the minHeight
             ) {
                 visualContent()
 

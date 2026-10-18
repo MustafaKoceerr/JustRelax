@@ -17,7 +17,6 @@ sealed class AppError(
         /** Play Integrity could not vouch for this app or device, so the API proxy refused it. */
         class IntegrityFailed(details: String? = null) : Network("Integrity check failed${details?.let { ": $it" }.orEmpty()}")
         class SerializationError : Network("Data parsing error")
-        data class Unknown(override val cause: Throwable?) : Network("Unknown network error", cause)
     }
 
     sealed class Storage(message: String? = null, cause: Throwable? = null) : AppError(message, cause) {
@@ -36,7 +35,6 @@ sealed class AppError(
 
     sealed class Player(message: String? = null, cause: Throwable? = null) : AppError(message, cause) {
         data class LimitExceeded(val limit: Int) : Player("Max sound limit ($limit) exceeded")
-        data class InitializationError(val details: String) : Player("Player init failed: $details")
     }
 
     sealed class SaveMix(message: String? = null) : AppError(message) {

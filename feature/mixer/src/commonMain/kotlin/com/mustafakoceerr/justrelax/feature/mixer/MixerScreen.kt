@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
+import com.mustafakoceerr.justrelax.core.ui.components.soundCardItems
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -23,11 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
-import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
 import com.mustafakoceerr.justrelax.feature.mixer.components.EmptyMixerState
@@ -123,24 +121,13 @@ private fun MixerScreenContent(
         }
 
         if (uiState.mixedSounds.isNotEmpty()) {
-            items(
-                items = uiState.mixedSounds,
-                key = { it.id }
-            ) { sound ->
-                val isPlaying = sound.id in uiState.playingSoundIds
-                val volume = uiState.soundVolumes[sound.id] ?: AudioDefaults.BASE_VOLUME
-
-                SoundCard(
-                    sound = sound,
-                    isPlaying = isPlaying,
-                    isDownloading = false,
-                    volume = volume,
-                    onCardClick = { onSoundClick(sound.id) },
-                    onVolumeChange = { newVolume -> onVolumeChange(sound.id, newVolume) },
-                    frequency = uiState.soundFrequencies[sound.id],
-                    onFrequencyChange = { frequency -> onFrequencyChange(sound.id, frequency) },
-                )
-            }
+            soundCardItems(
+                sounds = uiState.mixedSounds,
+                cards = uiState.sceneCards,
+                onSoundClick = { sound -> onSoundClick(sound.id) },
+                onVolumeChange = onVolumeChange,
+                onFrequencyChange = onFrequencyChange,
+            )
         } else {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 EmptyMixerState(

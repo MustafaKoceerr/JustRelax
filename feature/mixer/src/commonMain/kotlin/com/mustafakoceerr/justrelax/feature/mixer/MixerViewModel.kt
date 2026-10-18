@@ -9,6 +9,8 @@ import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.model.localized
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
+import com.mustafakoceerr.justrelax.core.playback.toggleAndPlay
+import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.err_mixer_generate_failed
@@ -44,9 +46,7 @@ class MixerViewModel(
             isGenerating = screen.isGenerating,
             mixedSounds = screen.mixedSounds,
             // A paused mix shows its sounds as not playing.
-            playingSoundIds = if (isPlaying) scene.layers.mapTo(mutableSetOf()) { it.soundId } else emptySet(),
-            soundVolumes = scene.layers.associate { it.soundId to it.volume },
-            soundFrequencies = scene.events.associate { it.soundId to it.frequency },
+            sceneCards = SceneCards.of(scene, showPlaying = isPlaying),
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MixerUiState())
@@ -87,10 +87,7 @@ class MixerViewModel(
     }
 
     fun toggleSound(soundId: String) {
-        viewModelScope.launch {
-            sceneRepository.toggle(soundId)
-            if (sceneRepository.scene.value.layer(soundId) != null) playbackController.play()
-        }
+        viewModelScope.launch { sceneRepository.toggleAndPlay(soundId, playbackController) }
     }
 
     fun changeVolume(soundId: String, volume: Float) = sceneRepository.setVolume(soundId, volume)
