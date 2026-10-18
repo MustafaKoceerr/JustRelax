@@ -26,7 +26,7 @@
 <ul>
   <li>Inget konto och ingen registrering. Ingen reklam och inget annons-ID.</li>
   <li>Användningsstatistik och kraschrapporter (Google Firebase) skickas <strong>bara om du tillåter det</strong>, och du kan stänga av det när som helst i Inställningar.</li>
-  <li>Om du använder AI-mixen skickas din text till OpenAI. Om du söker efter ljud på nätet skickas din sökning till Freesound.</li>
+  <li>Om du använder AI-mixen skickas din text till OpenAI, som kan använda den för att förbättra sina modeller; Appen frågar före din första mix. Om du söker efter ljud på nätet skickas din sökning till Freesound.</li>
   <li>Ljud som du importerar från dina egna filer lämnar aldrig din enhet.</li>
   <li>Tjänsteleverantören säljer inte dina uppgifter och lagrar inga personuppgifter på sina egna servrar.</li>
 </ul>
@@ -76,9 +76,9 @@
 <p><strong>AI-mix.</strong>
   För att skapa en mix skickar Appen meningen du skriver, tillsammans med namn, kategorier och taggar för dina nedladdade ljud,
   till OpenAI:s API. Din mening kan innehålla personuppgifter om du väljer att skriva in sådana, så skriv inte känslig information.
-  Tjänsteleverantörens server skickar vidare förfrågan och sparar den inte. OpenAI behandlar den enligt sina egna API-villkor;
-  när detta skrivs kan OpenAI spara API-förfrågningar i upp till 30 dagar för att upptäcka missbruk och använder dem som standard
-  inte för att träna sina modeller.
+  Tjänsteleverantörens server skickar vidare förfrågan och sparar den inte. Tjänsteleverantören deltar i OpenAI:s program för
+  datadelning, så OpenAI kan spara förfrågningar och svar och använda dem för att utveckla och förbättra sina modeller enligt
+  sina egna villkor. Appen berättar detta och ber om ditt godkännande före din första AI-mix.
 </p>
 
 <p><strong>Ljud på nätet (Freesound).</strong>
@@ -143,13 +143,15 @@
 </ul>
 <p>
   Dessa leverantörer behandlar uppgifter för Tjänsteleverantörens räkning eller för att leverera funktionen du bad om, och kan göra
-  det utanför ditt land. Tjänsteleverantören säljer inte dina uppgifter och delar dem inte för reklam.
+  det utanför ditt land. OpenAI kan dessutom använda förfrågningar från AI-mixen för att förbättra sina egna modeller, som beskrivs
+  ovan. Tjänsteleverantören säljer inte dina uppgifter och delar dem inte för reklam.
 </p>
 
 <h2>Rättslig grund (EES, Storbritannien och liknande lagar)</h2>
 <ul>
   <li>Användningsstatistik och kraschrapporter: ditt samtycke, som du kan återkalla i Inställningar.</li>
-  <li>AI-mix och nätsökning: att leverera funktionen du bad om.</li>
+  <li>AI-mix: ditt samtycke, som du ger i meddelandet före din första mix; du återkallar det genom att sluta använda AI-mixen.</li>
+  <li>Nätsökning: att leverera funktionen du bad om.</li>
   <li>Installations-ID och Play Integrity: det berättigade intresset att förhindra missbruk av tjänsten.</li>
 </ul>
 

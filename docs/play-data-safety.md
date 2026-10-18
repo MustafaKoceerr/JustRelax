@@ -8,7 +8,7 @@ Google'ın tanımı: cihazdan **dışarı gönderilen** veri "toplanmış" sayı
 
 | Ne | Nereye | Ne zaman |
 |---|---|---|
-| AI karışımı için yazılan cümle ve indirilmiş seslerin adları/etiketleri | Kendi proxy'miz (`api.mustafakoceerr.com`) üzerinden OpenAI | Kullanıcı AI karışımı istediğinde |
+| AI karışımı için yazılan cümle ve indirilmiş seslerin adları/etiketleri | Kendi proxy'miz (`api.mustafakoceerr.com`) üzerinden OpenAI; OpenAI bunları kendi modellerini geliştirmek için de kullanabilir | Kullanıcı AI karışımı istediğinde, ilk seferde uygulama içi onaydan sonra |
 | Freesound arama metni | Proxy üzerinden Freesound | Kullanıcı arama yaptığında |
 | Kurulum kimliği (rastgele, uygulamaya özel, kişiyle bağlı değil) | Proxy | AI/arama kullanılırken, istek sınırı için |
 | Play Integrity belirteci | Proxy üzerinden Google | Oturum açılırken, saatte en fazla bir kez |
@@ -34,15 +34,15 @@ Proxy hiçbir şeyi saklamaz. İstek sınırları yalnızca 60 saniyelik sayaçl
 
 | Kategori → Tür | Toplanıyor | Paylaşılıyor | Geçici işleniyor | Zorunlu mu | Amaç |
 |---|---|---|---|---|---|
-| Uygulama etkinliği → Diğer kullanıcı tarafından oluşturulan içerik (AI cümlesi) | Evet | Hayır¹ | Hayır² | İsteğe bağlı | Uygulama işlevi |
+| Uygulama etkinliği → Diğer kullanıcı tarafından oluşturulan içerik (AI cümlesi) | Evet | **Evet**¹ | Hayır² | İsteğe bağlı | Uygulama işlevi |
 | Uygulama etkinliği → Uygulama içi arama geçmişi (Freesound araması) | Evet | Hayır³ | Hayır² | İsteğe bağlı | Uygulama işlevi |
 | Cihaz veya diğer kimlikler → Cihaz veya diğer kimlikler (kurulum kimliği, Play Integrity, Firebase uygulama örneği kimliği) | Evet | Hayır | Hayır | İsteğe bağlı⁴ | Dolandırıcılığı önleme, güvenlik ve uyumluluk; Analiz |
 | Uygulama etkinliği → Uygulama etkileşimleri (Analytics olayları) | Evet | Hayır⁵ | Hayır | İsteğe bağlı (onay) | Analiz |
 | Uygulama bilgileri ve performans → Kilitlenme günlükleri | Evet | Hayır⁵ | Hayır | İsteğe bağlı (onay) | Analiz, Uygulama işlevi |
 | Uygulama bilgileri ve performans → Diğer uygulama performans verileri / Teşhis | Evet | Hayır⁵ | Hayır | İsteğe bağlı (onay) | Analiz |
 
-1. OpenAI, isteği bizim adımıza işleyen bir hizmet sağlayıcıdır. Google'ın tanımında bu "paylaşım" sayılmaz.
-2. Proxy saklamıyor, ama OpenAI kötüye kullanım denetimi için API isteklerini bir süre tutabiliyor ve Workers günlükleri 3 gün kalıyor. Bu yüzden ihtiyatlı cevap "Hayır".
+1. OpenAI hesabında "Share inputs and outputs" açık (2026-10-18, ücretsiz günlük kota için). OpenAI cümleyi ve yanıtı kendi modellerini geliştirmek için kullanabildiğinden, yalnızca bizim adımıza işleyen bir hizmet sağlayıcı sayılmaz. Bu yüzden Google'ın tanımında "paylaşım" olur. Paylaşım amacı formda yine *Uygulama işlevi*dir. Uygulama ilk karışımdan önce bunu söyleyip onay alıyor (`AiDataNoticeDialog`). Ayar kapatılırsa bu satır "Hayır"a döner.
+2. Proxy saklamıyor, ama OpenAI istekleri saklayabiliyor ve Workers günlükleri 3 gün kalıyor. Bu yüzden ihtiyatlı cevap "Hayır".
 3. Arama, kullanıcının başlattığı ve verinin Freesound'a gideceğini beklediği bir işlem. Google bunu "paylaşım" saymaz.
 4. Kurulum kimliği yalnızca AI ve Freesound kullanılınca; Firebase kimliği yalnızca Analytics onayı varsa.
 5. Google Firebase bizim adımıza işleyen bir hizmet sağlayıcıdır. Google'ın tanımında bu "paylaşım" sayılmaz.
@@ -52,7 +52,7 @@ Proxy hiçbir şeyi saklamaz. İstek sınırları yalnızca 60 saniyelik sayaçl
 ## Bunlar da gerekiyor
 
 - **Gizlilik politikası** (`cdn.mustafakoceerr.com/legal/<dil>/privacy-policy.html`) şu üç noktayı söylemeli:
-  - AI cümlesinin OpenAI'a, aramaların Freesound'a gittiği.
+  - AI cümlesinin OpenAI'a gittiği ve OpenAI'ın onu modellerini geliştirmek için kullanabildiği; aramaların Freesound'a gittiği. (2026-10-18'den beri politikada var.)
   - Rastgele kurulum kimliğinin yalnızca kötüye kullanımı önlemek için kullanıldığı.
   - Firebase Analytics ve Crashlytics'in yalnızca izinle çalıştığı, neyi topladığı ve iznin Ayarlar'dan geri alınabileceği.
   - Kullanıcının içe aktardığı seslerin cihazdan çıkmadığı.
