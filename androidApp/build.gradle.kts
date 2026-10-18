@@ -79,6 +79,14 @@ android {
 
 }
 
+// The benchmark builds get their own application id, so they install beside the Play app, which has a
+// different signature. Set on the variant: the plugin copies release into these build types late,
+// over a DSL applicationIdSuffix.
+androidComponents {
+    onVariants(selector().withBuildType("benchmarkRelease")) { it.applicationId.set("com.mustafakoceerr.justrelax.benchmark") }
+    onVariants(selector().withBuildType("nonMinifiedRelease")) { it.applicationId.set("com.mustafakoceerr.justrelax.benchmark") }
+}
+
 dependencies {
     implementation(projects.composeApp)
     implementation(projects.core.playback)
