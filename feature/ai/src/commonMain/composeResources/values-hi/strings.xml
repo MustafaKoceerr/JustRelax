@@ -12,4 +12,10 @@
     <string name="action_clear">साफ़ करें</string>
     <string name="ai_action_try_another_variation">एक और वैरिएशन आज़माएँ</string>
     <string name="ai_action_send">भेजें</string>
+    <string name="ai_data_notice_title">आपका पाठ OpenAI को जाता है</string>
+    <string name="ai_data_notice_body">मिक्स बनाने के लिए आपका लिखा पाठ और डाउनलोड की गई ध्वनियों के नाम OpenAI को भेजे जाते हैं। OpenAI इन्हें रख सकता है और अपने मॉडल बेहतर बनाने के लिए उपयोग कर सकता है। कृपया व्यक्तिगत जानकारी न लिखें।</string>
+    <string name="ai_data_notice_accept">जारी रखें</string>
+    <string name="ai_data_notice_dismiss">अभी नहीं</string>
+    <string name="ai_data_notice_privacy">गोपनीयता नीति</string>
+    <string name="ai_data_notice_short">आपका पाठ OpenAI को भेजा जाता है और उसके मॉडल बेहतर बनाने में उपयोग हो सकता है। व्यक्तिगत जानकारी न लिखें।</string>
 </resources>

@@ -41,4 +41,13 @@ internal class UserPreferencesRepositoryImpl(
     override suspend fun setLanguage(language: AppLanguage) {
         languageController.setLanguage(language)
     }
+
+    override fun aiDataNoticeAccepted(): Flow<Boolean> =
+        dataStore.data.map { preferences -> preferences[DataConstants.KEY_AI_DATA_NOTICE_ACCEPTED] ?: false }
+
+    override suspend fun acceptAiDataNotice() {
+        withContext(dispatchers.io) {
+            dataStore.edit { preferences -> preferences[DataConstants.KEY_AI_DATA_NOTICE_ACCEPTED] = true }
+        }
+    }
 }

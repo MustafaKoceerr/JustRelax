@@ -12,4 +12,10 @@
     <string name="action_clear">지우기</string>
     <string name="ai_action_try_another_variation">다른 변형 시도</string>
     <string name="ai_action_send">보내기</string>
+    <string name="ai_data_notice_title">입력한 글은 OpenAI로 전송됩니다</string>
+    <string name="ai_data_notice_body">믹스를 만들기 위해 입력한 글과 다운로드한 사운드의 이름이 OpenAI로 전송됩니다. OpenAI는 이를 보관하고 모델 개선에 사용할 수 있습니다. 개인정보는 입력하지 마세요.</string>
+    <string name="ai_data_notice_accept">계속</string>
+    <string name="ai_data_notice_dismiss">나중에</string>
+    <string name="ai_data_notice_privacy">개인정보 처리방침</string>
+    <string name="ai_data_notice_short">입력한 글은 OpenAI로 전송되며 모델 개선에 사용될 수 있습니다. 개인정보는 입력하지 마세요.</string>
 </resources>

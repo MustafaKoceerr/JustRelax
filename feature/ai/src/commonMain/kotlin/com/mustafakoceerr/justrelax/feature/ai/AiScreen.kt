@@ -39,6 +39,8 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTabScaffold
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCardGrid
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.ai.components.AiMixInfo
+import com.mustafakoceerr.justrelax.feature.ai.components.AiDataNoticeDialog
+import com.mustafakoceerr.justrelax.feature.ai.components.AiDataNoticeLine
 import com.mustafakoceerr.justrelax.feature.ai.components.AiPromptInput
 import com.mustafakoceerr.justrelax.feature.ai.components.AiResultActions
 import com.mustafakoceerr.justrelax.feature.ai.components.AiVisualizer
@@ -53,6 +55,14 @@ fun AiRoute(viewModel: AiViewModel = koinViewModel()) {
     val snackbarController = koinInject<GlobalSnackbarController>()
 
     UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarController.showSnackbar(it) }
+
+    if (uiState.showAiDataNotice) {
+        AiDataNoticeDialog(
+            onAccept = viewModel::acceptAiDataNotice,
+            onDismiss = viewModel::dismissAiDataNotice,
+            onOpenPrivacyPolicy = viewModel::openPrivacyPolicy,
+        )
+    }
 
     AiScreen(
         uiState = uiState,
@@ -183,8 +193,9 @@ fun AiScreen(
                 onSuggestionClick = onPromptChange,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp, top = 8.dp)
+                    .padding(bottom = 4.dp, top = 8.dp)
             )
+            AiDataNoticeLine(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 12.dp))
         }
     }
 }

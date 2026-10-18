@@ -10,26 +10,24 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 - [ ] Telefonundaki JustRelax'ı Play Store'dan yeniden kur (ilk denemede ana kullanıcıdan kaldırıldı).
 - [ ] İstersen benchmark uygulamalarını kaldır: `adb uninstall com.mustafakoceerr.justrelax.benchmark` ve `adb uninstall com.mustafakoceerr.justrelax.macrobenchmark`.
 
-## 2. Play Integrity (AI ve Freesound bunsuz yayında çalışmaz)
-- [ ] Play Console → JustRelax → *Test and release → App integrity → Play Integrity API → Link a Cloud project* ile yeni bir proje oluştur. Ücretsiz, faturalandırma gerekmez.
-- [ ] Google Cloud Console'da o projede *IAM & Admin → Service accounts → Create*; rol verme. *Keys → Add key → JSON* ile anahtarı indir.
-- [ ] Anahtarı Worker'a gir:
-  ```
-  ! cd server/api-proxy && npx wrangler secret put GOOGLE_SERVICE_ACCOUNT_JSON < ~/Downloads/<dosya>.json
-  ```
-- [ ] Projenin numarasını `local.properties`'e ekle: `PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER=...`
+## 2. Play Integrity
+- [x] Cloud projesi bağlı: JustRelax (`gen-lang-client-0305505013`, numara `266953836390`). Servis hesabı `justrelax-integrity` aynı projede, anahtarı Worker'da (2026-10-18).
+- [x] `PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER=266953836390` `local.properties`'te.
+- [ ] Cloud Console'da bu projede *APIs & Services → Enabled APIs* altında **Google Play Integrity API**'nin açık olduğunu bir kez kontrol et.
 
-## 3. OpenAI (şu an hiç anahtar yok, AI özelliği çalışmıyor)
-- [ ] Anahtarı Worker'a gir:
-  ```
-  ! cd server/api-proxy && npx wrangler secret put OPENAI_API_KEY
-  ```
-- [ ] OpenAI panelinde *Settings → Limits* ile aylık bütçe sınırı koy (örneğin 5 $).
-- [ ] Yayınlanmış v1 sürümünde bir OpenAI anahtarı varsa onu iptal et.
+## 3. OpenAI
+- [x] Yeni hesap/anahtar: yalnızca *Chat completions → Request*, `gpt-4o-mini`, 7 $ kredi, aylık 5 $ sert sınır. Anahtar Worker'da (2026-10-18).
+- [x] "Share inputs and outputs" açık (ücretsiz günlük kota). Politika, kullanım koşulları, veri güvenliği notları ve uygulamadaki ilk kullanım onayı buna göre.
+- [ ] Eski v1 anahtarının hesabı bulunamadı. Bulursan (Gmail'de `from:openai.com`, myaccount.google.com/connections) o anahtarı **Revoke** et.
 
-## 4. Dahili test
-- [ ] Internal testing kanalına bir sürüm yükle.
-- [ ] Play'den kurulan sürümde AI karışımı ve Freesound aramasını dene. Integrity yalnızca Play'den kurulan uygulamada geçer.
+## 4. Yayın (sen yapacaksın)
+- [ ] **Yükleme anahtarı:** eski jks'nin şifresi unutuldu. Play Console → *Test et ve yayınla → Uygulama bütünlüğü → Play Uygulama İmzalama → Ayarlar*. "Uygulama imzalama anahtarı sertifikası" ile "Yükleme anahtarı sertifikası" ayrı görünüyorsa:
+  1. Android Studio'da yeni anahtar oluştur: *Build → Generate Signed App Bundle → Create new…*, alias `upload`.
+  2. `keytool -export -rfc -keystore <jks> -alias upload -file upload_certificate.pem` komutuyla sertifikayı çıkar.
+  3. *Yükleme anahtarı sıfırlama isteğinde bulun* ile `.pem`'i gönder.
+  Şifreyi şifre yöneticine, jks'yi Drive'a koy. Sayfa farklı görünüyorsa Claude'a göster.
+- [ ] `androidApp/build.gradle.kts`'teki `versionCode` (şu an 5), Play'deki son sürümün kodundan büyük olmalı.
+- [ ] Internal testing kanalına imzalı AAB yükle; Play'den kurulan sürümde AI karışımını ve Freesound aramasını dene. Integrity yalnızca Play'den kurulan uygulamada geçer.
 
 ## 5. Firebase (Crashlytics ve Analytics)
 - [x] Proje `justrelax-app` açıldı (2026-10-18). İki Android uygulaması var: `com.mustafakoceerr.justrelax` ve benchmark için `com.mustafakoceerr.justrelax.benchmark`. `androidApp/google-services.json` yerinde ve git'e girmiyor. Emülatörde denendi: izin yokken hiçbir şey gitmiyor, izin verilince olaylar ve bir çökme raporu gönderiliyor.
@@ -38,10 +36,9 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 - [ ] Yeni bir bilgisayarda ya da CI'da Firebase'li build gerekirse `google-services.json`'u konsoldan indir (*Project settings → Your apps*).
 
 ## 6. Play Console ve gizlilik
-- [ ] Veri güvenliği formunu `docs/play-data-safety.md`'ye göre doldur.
+- [ ] Veri güvenliği formunu `docs/play-data-safety.md`'ye göre doldur. AI cümlesi satırında artık **Paylaşılıyor: Evet**.
 - [x] Gizlilik politikası güncellendi ve 12 dilde yayında (2026-10-18). Kaynağı `docs/legal/`.
-- [ ] **v2 yayından önce:** OpenAI'da "Share inputs and outputs" açıldı (2026-10-18, ücretsiz günlük kota için). Gizlilik politikası (12 dil) şu an "OpenAI bunları varsayılan olarak modellerini eğitmek için kullanmaz" diyor; bu artık yanlış. Politika ve `docs/play-data-safety.md` (AI cümlesi OpenAI ile **paylaşılıyor**, eğitim için) güncellenmeli. Claude yapar, sen onaylarsın.
-- [ ] İstersen kullanım koşullarını (`terms-conditions.html`) da güncelletebilirsin; hâlâ yalnızca OpenAI'dan söz ediyor.
+- [x] Politika OpenAI'ın veri paylaşımına göre güncellendi; kullanım koşulları yeniden yazıldı. İkisi de 12 dilde yayında, kaynakları `docs/legal/` (2026-10-18).
 
 ## 7. İçerik
 - [ ] 15 yerleşik sesin kaynak lisanslarını doğrula (`tools/sound-pipeline/manifest.json`'daki `license_note`). Şu an `OWN` olarak yayında.

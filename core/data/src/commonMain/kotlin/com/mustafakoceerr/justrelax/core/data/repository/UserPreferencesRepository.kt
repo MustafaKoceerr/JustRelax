@@ -10,4 +10,8 @@ interface UserPreferencesRepository {
 
     fun getLanguage(): Flow<AppLanguage>
     suspend fun setLanguage(language: AppLanguage)
+
+    /** The user agreed that AI mix requests go to OpenAI, which may use them to improve its models. */
+    fun aiDataNoticeAccepted(): Flow<Boolean>
+    suspend fun acceptAiDataNotice()
 }

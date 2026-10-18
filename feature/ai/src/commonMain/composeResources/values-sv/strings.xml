@@ -12,4 +12,10 @@
     <string name="action_clear">Rensa</string>
     <string name="ai_action_try_another_variation">Prova en annan variation</string>
     <string name="ai_action_send">Skicka</string>
+    <string name="ai_data_notice_title">Din text skickas till OpenAI</string>
+    <string name="ai_data_notice_body">För att skapa en mix skickas det du skriver och namnen på dina nedladdade ljud till OpenAI. OpenAI kan spara dem och använda dem för att förbättra sina modeller. Skriv inga personuppgifter.</string>
+    <string name="ai_data_notice_accept">Fortsätt</string>
+    <string name="ai_data_notice_dismiss">Inte nu</string>
+    <string name="ai_data_notice_privacy">Integritetspolicy</string>
+    <string name="ai_data_notice_short">Din text skickas till OpenAI och kan användas för att förbättra dess modeller. Skriv inga personuppgifter.</string>
 </resources>

@@ -12,4 +12,10 @@
     <string name="action_clear">Temizle</string>
     <string name="ai_action_try_another_variation">Başka bir varyasyon dene</string>
     <string name="ai_action_send">Gönder</string>
+    <string name="ai_data_notice_title">Metniniz OpenAI’a gider</string>
+    <string name="ai_data_notice_body">Karışım oluşturmak için yazdıklarınız ve indirdiğiniz seslerin adları OpenAI’a gönderilir. OpenAI bunları saklayabilir ve modellerini geliştirmek için kullanabilir. Lütfen kişisel bilgi yazmayın.</string>
+    <string name="ai_data_notice_accept">Devam</string>
+    <string name="ai_data_notice_dismiss">Şimdi değil</string>
+    <string name="ai_data_notice_privacy">Gizlilik politikası</string>
+    <string name="ai_data_notice_short">Metniniz OpenAI’a gönderilir ve modellerini geliştirmek için kullanılabilir. Kişisel bilgi yazmayın.</string>
 </resources>

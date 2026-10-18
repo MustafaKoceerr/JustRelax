@@ -26,7 +26,7 @@
 <ul>
   <li>Hesap ya da kayıt yok. Reklam yok, reklam kimliği kullanılmaz.</li>
   <li>Kullanım istatistikleri ve çökme raporları (Google Firebase) <strong>yalnızca izin verirseniz</strong> gönderilir; bu izni Ayarlar’dan istediğiniz zaman kapatabilirsiniz.</li>
-  <li>AI karışımını kullanırsanız yazdığınız metin OpenAI’a gider. İnternette ses ararsanız aramanız Freesound’a gider.</li>
+  <li>AI karışımını kullanırsanız yazdığınız metin OpenAI’a gider ve OpenAI bunu modellerini geliştirmek için kullanabilir; Uygulama ilk karışımdan önce bunu sorar. İnternette ses ararsanız aramanız Freesound’a gider.</li>
   <li>Kendi dosyalarınızdan içe aktardığınız sesler cihazınızdan hiç çıkmaz.</li>
   <li>Hizmet Sağlayıcı verilerinizi satmaz ve kendi sunucularında kişisel veri tutmaz.</li>
 </ul>
@@ -76,9 +76,9 @@
 <p><strong>AI karışımı.</strong>
   Uygulama bir karışım oluşturmak için yazdığınız cümleyi, indirdiğiniz seslerin adları, kategorileri ve etiketleriyle birlikte
   OpenAI’ın API’sine gönderir. Cümlenize kendiniz eklerseniz kişisel bilgi içerebilir; lütfen hassas bilgi yazmayın.
-  Hizmet Sağlayıcı’nın sunucusu isteği iletir ve saklamaz. OpenAI isteği kendi API koşullarına göre işler; bu metnin
-  yazıldığı tarihte OpenAI, kötüye kullanımı tespit etmek için API isteklerini 30 güne kadar saklayabilmekte ve varsayılan
-  olarak modellerini bunlarla eğitmemektedir.
+  Hizmet Sağlayıcı’nın sunucusu isteği iletir ve saklamaz. Hizmet Sağlayıcı, OpenAI’ın veri paylaşım programına
+  katılmaktadır; bu nedenle OpenAI istekleri ve yanıtları saklayabilir ve kendi koşulları çerçevesinde modellerini
+  geliştirmek ve iyileştirmek için kullanabilir. Uygulama bunu size söyler ve ilk AI karışımından önce onayınızı ister.
 </p>
 
 <p><strong>İnternetteki sesler (Freesound).</strong>
@@ -145,13 +145,15 @@
 </ul>
 <p>
   Bu sağlayıcılar verileri Hizmet Sağlayıcı adına ya da istediğiniz özelliği sunmak için işler ve bunu ülkeniz dışında
-  yapabilir. Hizmet Sağlayıcı verilerinizi satmaz ve reklam amacıyla paylaşmaz.
+  yapabilir. OpenAI ayrıca, yukarıda açıklandığı gibi, AI karışımı isteklerini kendi modellerini geliştirmek için kullanabilir.
+  Hizmet Sağlayıcı verilerinizi satmaz ve reklam amacıyla paylaşmaz.
 </p>
 
 <h2>Hukuki dayanak (AEA, Birleşik Krallık ve benzeri yasalar)</h2>
 <ul>
   <li>Kullanım istatistikleri ve çökme raporları: Ayarlar’dan geri alabileceğiniz açık rızanız.</li>
-  <li>AI karışımı ve internet araması: istediğiniz özelliğin sunulması.</li>
+  <li>AI karışımı: ilk karışımdan önceki bildirimde verdiğiniz açık rıza; AI karışımını kullanmayı bırakarak geri alabilirsiniz.</li>
+  <li>İnternet araması: istediğiniz özelliğin sunulması.</li>
   <li>Kurulum kimliği ve Play Integrity: hizmetin kötüye kullanılmasını önleme yönündeki meşru menfaat.</li>
 </ul>
 
