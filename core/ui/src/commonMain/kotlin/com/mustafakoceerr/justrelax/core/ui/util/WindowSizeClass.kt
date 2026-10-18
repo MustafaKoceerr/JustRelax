@@ -18,3 +18,8 @@ fun rememberWindowSizeClass(): WindowWidthSize {
         else -> WindowWidthSize.COMPACT
     }
 }
+
+/** True in a short window, such as a phone in landscape (under 480dp high). */
+@Composable
+fun rememberIsCompactHeight(): Boolean =
+    !currentWindowAdaptiveInfoV2().windowSizeClass.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND)

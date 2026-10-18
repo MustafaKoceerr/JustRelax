@@ -9,4 +9,5 @@
     <string name="timer_action_pause">रोकें</string>
     <string name="timer_action_resume">जारी रखें</string>
     <string name="timer_action_start">शुरू</string>
+    <string name="timer_type_value">मान लिखें</string>
 </resources>

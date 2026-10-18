@@ -1,108 +1,49 @@
 package com.mustafakoceerr.justrelax.feature.timer.components
 
-import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_delete
-import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_cancel
 import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_pause
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_resume
 import org.jetbrains.compose.resources.stringResource
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 
 @Composable
-fun TimerControlButtons(
+internal fun TimerControlButtons(
     isPaused: Boolean,
     onToggleClick: () -> Unit,
     onCancelClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 24.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        FilledTonalButton(
+        TimerPillButton(
+            text = stringResource(CoreRes.string.action_cancel),
             onClick = onCancelClick,
-            modifier = Modifier
-                .height(50.dp)
-                .widthIn(min = 100.dp)
-                .testTag(TestTags.TIMER_CANCEL),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            colors = ButtonDefaults.filledTonalButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Close,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(CoreRes.string.action_delete),
-                style = MaterialTheme.typography.labelLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-
-        Spacer(modifier = Modifier.width(24.dp))
-
-        val isRunning = !isPaused
-        val toggleIcon = if (isRunning) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
-        val toggleText = if (isRunning) Res.string.timer_action_pause else Res.string.timer_action_resume
-
-        Button(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.testTag(TestTags.TIMER_CANCEL),
+        )
+        TimerPillButton(
+            text = stringResource(if (isPaused) Res.string.timer_action_resume else Res.string.timer_action_pause),
+            icon = if (isPaused) Icons.Rounded.PlayArrow else Icons.Rounded.Pause,
             onClick = onToggleClick,
-            modifier = Modifier
-                .height(50.dp)
-                .widthIn(min = 130.dp),
-            contentPadding = PaddingValues(horizontal = 24.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary
-            )
-        ) {
-            Icon(
-                imageVector = toggleIcon,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(toggleText),
-                style = MaterialTheme.typography.labelLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        )
     }
 }

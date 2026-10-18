@@ -1,19 +1,11 @@
 package com.mustafakoceerr.justrelax.feature.timer.util
 
-expect fun calculateEndTime(timeLeftSeconds: Long): String
-
 internal fun Long.toFormattedTime(): String {
     if (this < 0) return "00 : 00"
-
-    val hours = this / 3600
-    val minutes = (this % 3600) / 60
-    val seconds = this % 60
-
-    fun Long.pad(): String = this.toString().padStart(2, '0')
-
+    val (hours, minutes, seconds) = HmsTime.fromSeconds(this)
     return if (hours > 0) {
-        "${hours.pad()} : ${minutes.pad()} : ${seconds.pad()}"
+        "${hours.twoDigits()} : ${minutes.twoDigits()} : ${seconds.twoDigits()}"
     } else {
-        "${minutes.pad()} : ${seconds.pad()}"
+        "${minutes.twoDigits()} : ${seconds.twoDigits()}"
     }
 }

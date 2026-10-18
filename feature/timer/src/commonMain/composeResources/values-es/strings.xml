@@ -9,4 +9,5 @@
     <string name="timer_action_pause">Pausar</string>
     <string name="timer_action_resume">Reanudar</string>
     <string name="timer_action_start">Iniciar</string>
+    <string name="timer_type_value">Escribir un valor</string>
 </resources>

@@ -16,12 +16,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
-import com.mustafakoceerr.justrelax.feature.timer.components.TimerPortraitLayout
+import com.mustafakoceerr.justrelax.core.ui.util.rememberIsCompactHeight
+import com.mustafakoceerr.justrelax.core.ui.util.rememberWindowSizeClass
+import com.mustafakoceerr.justrelax.feature.timer.components.TimerDimensions
+import com.mustafakoceerr.justrelax.feature.timer.components.TimerRunningLayout
 import com.mustafakoceerr.justrelax.feature.timer.components.TimerSetupScreen
 
 @Composable
@@ -43,6 +47,10 @@ fun TimerScreen(
     onToggle: () -> Unit,
     onCancel: () -> Unit,
 ) {
+    val windowWidth = rememberWindowSizeClass()
+    val dimensions = remember(windowWidth) { TimerDimensions.forWidth(windowWidth) }
+    val isCompactHeight = rememberIsCompactHeight()
+
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         containerColor = Color.Transparent,
@@ -57,15 +65,17 @@ fun TimerScreen(
         ) { isSetup ->
             if (isSetup) {
                 TimerSetupScreen(
-                    onStartClick = onStart
+                    dimensions = dimensions,
+                    isCompactHeight = isCompactHeight,
+                    onStartClick = onStart,
                 )
             } else {
-                TimerPortraitLayout(
-                    totalTimeSeconds = uiState.totalSeconds,
-                    timeLeftSeconds = uiState.remainingSeconds,
-                    isPaused = uiState.isPaused,
+                TimerRunningLayout(
+                    uiState = uiState,
+                    dimensions = dimensions,
+                    isCompactHeight = isCompactHeight,
                     onToggleClick = onToggle,
-                    onCancelClick = onCancel
+                    onCancelClick = onCancel,
                 )
             }
         }
