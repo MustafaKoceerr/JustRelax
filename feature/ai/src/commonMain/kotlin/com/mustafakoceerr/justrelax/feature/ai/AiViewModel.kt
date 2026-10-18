@@ -1,5 +1,9 @@
 package com.mustafakoceerr.justrelax.feature.ai
 
+import com.mustafakoceerr.justrelax.core.analytics.Params
+import com.mustafakoceerr.justrelax.core.analytics.EventTypes
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsHelper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
@@ -26,6 +30,7 @@ class AiViewModel(
     private val aiMixRepository: AiMixRepository,
     private val sceneRepository: SceneRepository,
     private val playbackController: PlaybackController,
+    private val analytics: AnalyticsHelper,
 ) : ViewModel() {
 
     private data class ScreenState(
@@ -59,6 +64,8 @@ class AiViewModel(
     fun generateMix() {
         val prompt = screenState.value.prompt
         if (prompt.isBlank()) return
+        // Never the prompt itself: only that a mix was asked for, and why it failed.
+        analytics.logEvent(AnalyticsEvent(EventTypes.AI_MIX_REQUESTED))
 
         viewModelScope.launch {
             aiMixRepository.generateMix(prompt).collect { result ->
@@ -70,8 +77,11 @@ class AiViewModel(
                         playbackController.play()
                         screenState.update { it.copy(isLoading = false, mix = mix) }
                     }
-                    is Resource.Error -> screenState.update {
-                        it.copy(isLoading = false, userMessage = result.error.toMessage())
+                    is Resource.Error -> {
+                        analytics.logEvent(
+                            AnalyticsEvent(EventTypes.AI_MIX_FAILED, mapOf(Params.ERROR to (result.error::class.simpleName ?: "Unknown"))),
+                        )
+                        screenState.update { it.copy(isLoading = false, userMessage = result.error.toMessage()) }
                     }
                 }
             }

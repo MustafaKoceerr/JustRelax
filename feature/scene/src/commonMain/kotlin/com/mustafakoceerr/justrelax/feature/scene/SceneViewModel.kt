@@ -1,5 +1,9 @@
 package com.mustafakoceerr.justrelax.feature.scene
 
+import com.mustafakoceerr.justrelax.core.analytics.Params
+import com.mustafakoceerr.justrelax.core.analytics.EventTypes
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsHelper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
@@ -33,6 +37,7 @@ class SceneViewModel(
     private val playbackController: PlaybackController,
     private val savedSceneRepository: SavedSceneRepository,
     languageController: LanguageController,
+    private val analytics: AnalyticsHelper,
 ) : ViewModel() {
 
     private data class ScreenState(
@@ -93,7 +98,11 @@ class SceneViewModel(
     fun saveMix(name: String) {
         viewModelScope.launch {
             screenState.update { it.copy(isSaving = true) }
-            val result = savedSceneRepository.save(name, sceneRepository.scene.value)
+            val scene = sceneRepository.scene.value
+            val result = savedSceneRepository.save(name, scene)
+            if (result is Resource.Success) {
+                analytics.logEvent(AnalyticsEvent(EventTypes.MIX_SAVED, mapOf(Params.LAYER_COUNT to scene.layers.size.toString())))
+            }
             screenState.update {
                 it.copy(
                     isSaving = false,

@@ -2,7 +2,9 @@ package com.mustafakoceerr.justrelax.feature.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mustafakoceerr.justrelax.core.data.repository.ConsentRepository
 import com.mustafakoceerr.justrelax.core.data.repository.UserPreferencesRepository
+import com.mustafakoceerr.justrelax.core.model.ConsentStatus
 import com.mustafakoceerr.justrelax.core.data.repository.LegalRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.data.language.LanguageController
@@ -29,6 +31,7 @@ class SettingsViewModel(
     private val legalRepository: LegalRepository,
     private val systemLauncher: SystemLauncher,
     private val languageController: LanguageController,
+    private val consentRepository: ConsentRepository,
 ) : ViewModel() {
 
     /** State that only exists while this screen is open; everything else comes from the data layer. */
@@ -48,8 +51,9 @@ class SettingsViewModel(
         preferences.getTheme(),
         preferences.getLanguage(),
         isLibraryComplete,
+        consentRepository.consent,
         screenState,
-    ) { theme, language, libraryComplete, screen ->
+    ) { theme, language, libraryComplete, consent, screen ->
         SettingsUiState(
             theme = theme,
             language = language,
@@ -57,6 +61,7 @@ class SettingsViewModel(
             isDownloadingLibrary = screen.isDownloadingLibrary,
             downloadProgress = screen.downloadProgress,
             isLibraryComplete = libraryComplete,
+            isUsageDataEnabled = consent == ConsentStatus.GRANTED,
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SettingsUiState())
@@ -124,5 +129,10 @@ class SettingsViewModel(
     private companion object {
         const val FEEDBACK_EMAIL = "kocerlabs@gmail.com"
         const val FEEDBACK_SUBJECT = "Just Relax Feedback"
+    }
+
+    /** Usage analytics and crash reports; the same answer as on first launch. */
+    fun setUsageDataEnabled(enabled: Boolean) {
+        viewModelScope.launch { consentRepository.setConsent(enabled) }
     }
 }

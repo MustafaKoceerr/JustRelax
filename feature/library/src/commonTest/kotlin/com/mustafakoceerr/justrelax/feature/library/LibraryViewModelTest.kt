@@ -1,5 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.library
 
+import com.mustafakoceerr.justrelax.core.analytics.EventTypes
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.testing.fake.TestAnalyticsHelper
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
@@ -42,6 +45,7 @@ class LibraryViewModelTest {
     private val scene = InMemorySceneRepository(repository)
     private val playback = FakePlaybackController()
     private val setup = FakeAppSetupRepository(installed = true)
+    private val analytics = TestAnalyticsHelper()
 
     private fun TestScope.viewModel() = LibraryViewModel(
         getLocalizedCategorizedSoundsUseCase = GetLocalizedCategorizedSoundsUseCase(repository, FakeLanguageController()),
@@ -49,6 +53,7 @@ class LibraryViewModelTest {
         playbackController = playback,
         soundRepository = repository,
         starterPackInstaller = StarterPackInstaller(repository, setup, scope = this),
+        analytics = analytics,
     ).also { observe(it.uiState) }
 
     private fun LibraryViewModel.sound(id: String) =
@@ -162,5 +167,21 @@ class LibraryViewModelTest {
         assertTrue(repository.syncCount > 0)
         assertEquals(listOf("rain"), repository.downloadRequests)
         assertFalse(viewModel.uiState.value.isEmpty)
+    }
+
+    @Test
+    fun startingASoundIsCounted_stoppingItIsNot() = runMainTest {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        viewModel.toggleSound(viewModel.sound("rain"))
+        advanceUntilIdle()
+        viewModel.toggleSound(viewModel.sound("rain"))
+        advanceUntilIdle()
+
+        assertEquals(
+            listOf(AnalyticsEvent(EventTypes.SOUND_PLAY, mapOf("sound_id" to "rain", "category" to "RAIN", "source" to "BUILT_IN"))),
+            analytics.events,
+        )
     }
 }

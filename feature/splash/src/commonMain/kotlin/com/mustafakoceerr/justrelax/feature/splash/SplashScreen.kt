@@ -12,12 +12,14 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SplashRoute(
     onNavigateToMain: () -> Unit,
+    onNavigateToConsent: () -> Unit,
     viewModel: SplashViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(uiState) {
-        if (uiState == SplashUiState.Ready) onNavigateToMain()
+        val state = uiState
+        if (state is SplashUiState.Ready) if (state.needsConsent) onNavigateToConsent() else onNavigateToMain()
     }
 
     SplashScreen()

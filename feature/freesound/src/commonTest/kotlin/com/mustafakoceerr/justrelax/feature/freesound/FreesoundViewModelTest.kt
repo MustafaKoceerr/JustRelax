@@ -1,5 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.freesound
 
+import com.mustafakoceerr.justrelax.core.analytics.EventTypes
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.testing.fake.TestAnalyticsHelper
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.data.freesound.FreesoundResults
 import com.mustafakoceerr.justrelax.core.media.TrimRange
@@ -39,7 +42,9 @@ class FreesoundViewModelTest {
     }
     private val previewer = FakeClipPreviewer()
 
-    private fun TestScope.viewModel() = FreesoundViewModel(repository, previewer).also { observe(it.uiState) }
+    private val analytics = TestAnalyticsHelper()
+
+    private fun TestScope.viewModel() = FreesoundViewModel(repository, previewer, analytics).also { observe(it.uiState) }
 
     private fun TestScope.searched(): FreesoundViewModel = viewModel().apply {
         changeQuery("rain")
@@ -178,5 +183,12 @@ class FreesoundViewModelTest {
 
         assertNull(viewModel.uiState.value.editorToOpen)
         assertEquals(UiText.Resource(Res.string.freesound_download_failed), viewModel.uiState.value.userMessage)
+    }
+
+    @Test
+    fun aSearchIsCountedWithItsResultCount_butNotItsWords() = runMainTest {
+        searched()
+
+        assertEquals(listOf(AnalyticsEvent(EventTypes.FREESOUND_SEARCH, mapOf("result_count" to "2"))), analytics.events)
     }
 }

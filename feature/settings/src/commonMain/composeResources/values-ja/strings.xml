@@ -25,4 +25,12 @@
     <string name="credits_subtitle">サウンドと作者</string>
     <string name="credits_empty">ほかの作者のサウンドはまだありません。</string>
     <string name="credits_author">作者: %1$s</string>
+    <string name="consent_title">JustRelax の改善にご協力ください</string>
+    <string name="consent_body">許可いただいた場合、アプリは Google Firebase を通じて匿名の利用統計（どの画面が使われたかなど）とクラッシュレポートを送信します。入力・検索・読み込んだ内容は送信されず、サウンドが端末の外に出ることはありません。</string>
+    <string name="consent_privacy_policy">プライバシーポリシーを読む</string>
+    <string name="consent_accept">許可する</string>
+    <string name="consent_decline">許可しない</string>
+    <string name="consent_later_hint">この設定はいつでも「設定」で変更できます。</string>
+    <string name="settings_usage_data_title">利用データとクラッシュレポート</string>
+    <string name="settings_usage_data_subtitle">不具合の修正に役立つ匿名の統計</string>
 </resources>

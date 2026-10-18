@@ -1,5 +1,9 @@
 package com.mustafakoceerr.justrelax.feature.freesound
 
+import com.mustafakoceerr.justrelax.core.analytics.Params
+import com.mustafakoceerr.justrelax.core.analytics.EventTypes
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsHelper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.AppError
@@ -32,6 +36,7 @@ import org.jetbrains.compose.resources.StringResource
 class FreesoundViewModel(
     private val repository: FreesoundRepository,
     private val previewer: ClipPreviewer,
+    private val analytics: AnalyticsHelper,
 ) : ViewModel() {
 
     private val state = MutableStateFlow(FreesoundUiState())
@@ -99,6 +104,10 @@ class FreesoundViewModel(
         try {
             val results = repository.search(searchedQuery, number)
             page = number
+            if (number == 1) {
+                // How many results, never the words searched for.
+                analytics.logEvent(AnalyticsEvent(EventTypes.FREESOUND_SEARCH, mapOf(Params.RESULT_COUNT to results.sounds.size.toString())))
+            }
             state.update {
                 it.copy(
                     results = it.results + results.sounds,

@@ -25,4 +25,12 @@
     <string name="credits_subtitle">Geluiden en hun makers</string>
     <string name="credits_empty">Nog geen geluiden van andere makers.</string>
     <string name="credits_author">door %1$s</string>
+    <string name="consent_title">Help JustRelax beter te maken</string>
+    <string name="consent_body">Met jouw toestemming stuurt de app anonieme gebruiksstatistieken (zoals welke schermen worden gebruikt) en crashrapporten via Google Firebase. Niets wat je typt, zoekt of importeert wordt verstuurd, en je geluiden verlaten je telefoon nooit.</string>
+    <string name="consent_privacy_policy">Privacybeleid lezen</string>
+    <string name="consent_accept">Toestaan</string>
+    <string name="consent_decline">Nee, bedankt</string>
+    <string name="consent_later_hint">Je kunt dit altijd wijzigen in Instellingen.</string>
+    <string name="settings_usage_data_title">Gebruiksgegevens en crashrapporten</string>
+    <string name="settings_usage_data_subtitle">Anonieme statistieken die helpen fouten op te lossen</string>
 </resources>

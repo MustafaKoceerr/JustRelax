@@ -1,5 +1,9 @@
 package com.mustafakoceerr.justrelax.feature.mysounds.editor
 
+import com.mustafakoceerr.justrelax.core.testing.fake.TestCrashReporter
+import com.mustafakoceerr.justrelax.core.analytics.EventTypes
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.testing.fake.TestAnalyticsHelper
 import com.mustafakoceerr.justrelax.core.data.repository.UserSoundDraft
 import com.mustafakoceerr.justrelax.core.media.MediaException
 import com.mustafakoceerr.justrelax.core.media.TrimRange
@@ -30,9 +34,11 @@ class SoundEditorViewModelTest {
     private val reader = FakeWaveformReader(durationMs = 60_000)
     private val previewer = FakeClipPreviewer()
     private val repository = FakeUserSoundRepository()
+    private val analytics = TestAnalyticsHelper()
+    private val crashes = TestCrashReporter()
 
     private fun TestScope.viewModel(name: String? = "Kettle boiling.m4a", origin: SoundOrigin? = null) =
-        SoundEditorViewModel("/cache/import/audio", name, origin, reader, previewer, repository).also {
+        SoundEditorViewModel("/cache/import/audio", name, origin, reader, previewer, repository, analytics, crashes).also {
             observe(it.uiState)
             advanceUntilIdle()
         }
@@ -221,5 +227,27 @@ class SoundEditorViewModelTest {
         assertFalse(state.isSaving)
         assertTrue(state.canSave)
         assertEquals(UiText.Resource(Res.string.mysounds_save_failed), state.userMessage)
+    }
+
+    @Test
+    fun aSavedSoundIsCountedByKindAndSource_andAFailedTrimIsReported() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.selectCategory(SoundCategory.CITY)
+        advanceUntilIdle()
+
+        viewModel.save()
+        advanceUntilIdle()
+
+        assertEquals(listOf(AnalyticsEvent(EventTypes.SOUND_IMPORTED, mapOf("kind" to "BED", "source" to "file"))), analytics.events)
+
+        val failure = MediaException("codec")
+        repository.createError = failure
+        val failing = viewModel()
+        failing.selectCategory(SoundCategory.CITY)
+        advanceUntilIdle()
+        failing.save()
+        advanceUntilIdle()
+
+        assertEquals(listOf<Throwable>(failure), crashes.recorded)
     }
 }

@@ -332,3 +332,6 @@ Pods/
 tools/sound-pipeline/__pycache__/
 tools/sound-pipeline/.cache/
 tools/sound-pipeline/dist/
+
+# Firebase config for the Android app; kept out of git, see docs/owner-todo.md
+androidApp/google-services.json

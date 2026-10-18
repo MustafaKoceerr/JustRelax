@@ -45,6 +45,7 @@ include(":core:testing")
 
 include(":core:data")
 include(":core:media")
+include(":core:analytics")
 
 include(":feature:settings")
 include(":feature:scene")
