@@ -226,4 +226,59 @@ class SoundscapeSessionTest {
         assertTrue(engine.stopped)
         assertEquals(listOf("rain"), scene.scene.value.layers.map { it.soundId })
     }
+
+    @Test
+    fun anInterruption_suppressesPlayback_andItsEndResumesWhenTheSystemSaysSo() = runTest {
+        val session = session()
+        play("rain")
+        session.setPlayWhenReady(true)
+
+        session.onAudioSessionEvent(AudioSessionEvent.InterruptionBegan)
+        runCurrent()
+        assertFalse(engine.running)
+        assertTrue(session.state.value.playWhenReady)
+
+        session.onAudioSessionEvent(AudioSessionEvent.InterruptionEnded(shouldResume = true))
+        runCurrent()
+        assertTrue(engine.running)
+    }
+
+    @Test
+    fun anInterruptionThatEndsWithoutResume_pauses() = runTest {
+        val session = session()
+        play("rain")
+        session.setPlayWhenReady(true)
+
+        session.onAudioSessionEvent(AudioSessionEvent.InterruptionBegan)
+        session.onAudioSessionEvent(AudioSessionEvent.InterruptionEnded(shouldResume = false))
+        runCurrent()
+
+        assertFalse(engine.running)
+        assertEquals(SoundscapeSession.State(hasContent = true, reason = PlayWhenReadyReason.AUDIO_FOCUS_LOSS), session.state.value)
+    }
+
+    @Test
+    fun anInterruptionWhilePaused_changesNothing() = runTest {
+        val session = session()
+        play("rain")
+
+        session.onAudioSessionEvent(AudioSessionEvent.InterruptionBegan)
+        session.onAudioSessionEvent(AudioSessionEvent.InterruptionEnded(shouldResume = true))
+        runCurrent()
+
+        assertEquals(SoundscapeSession.State(hasContent = true), session.state.value)
+    }
+
+    @Test
+    fun losingTheOutput_pausesPlayback() = runTest {
+        val session = session()
+        play("rain")
+        session.setPlayWhenReady(true)
+
+        session.onAudioSessionEvent(AudioSessionEvent.OutputLost)
+        runCurrent()
+
+        assertFalse(engine.running)
+        assertEquals(PlayWhenReadyReason.BECOMING_NOISY, session.state.value.reason)
+    }
 }
