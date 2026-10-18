@@ -7,6 +7,7 @@ import com.mustafakoceerr.justrelax.core.data.repository.UserPreferencesReposito
 import com.mustafakoceerr.justrelax.core.model.ConsentStatus
 import com.mustafakoceerr.justrelax.core.data.repository.LegalRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.data.repository.TipRepository
 import com.mustafakoceerr.justrelax.core.data.language.LanguageController
 import com.mustafakoceerr.justrelax.core.data.language.LanguageStrategy
 import com.mustafakoceerr.justrelax.core.ui.system.SystemLauncher
@@ -32,6 +33,7 @@ class SettingsViewModel(
     private val systemLauncher: SystemLauncher,
     private val languageController: LanguageController,
     private val consentRepository: ConsentRepository,
+    tipRepository: TipRepository,
 ) : ViewModel() {
 
     /** State that only exists while this screen is open; everything else comes from the data layer. */
@@ -47,13 +49,19 @@ class SettingsViewModel(
     private val isLibraryComplete = soundRepository.getSounds()
         .map { sounds -> sounds.isNotEmpty() && sounds.all { it.isDownloaded } }
 
+    private val usageDataAndTips = combine(
+        consentRepository.consent.map { it == ConsentStatus.GRANTED },
+        tipRepository.products.map { it.isNotEmpty() },
+        ::Pair,
+    )
+
     val uiState: StateFlow<SettingsUiState> = combine(
         preferences.getTheme(),
         preferences.getLanguage(),
         isLibraryComplete,
-        consentRepository.consent,
+        usageDataAndTips,
         screenState,
-    ) { theme, language, libraryComplete, consent, screen ->
+    ) { theme, language, libraryComplete, (usageDataEnabled, canTip), screen ->
         SettingsUiState(
             theme = theme,
             language = language,
@@ -61,7 +69,8 @@ class SettingsViewModel(
             isDownloadingLibrary = screen.isDownloadingLibrary,
             downloadProgress = screen.downloadProgress,
             isLibraryComplete = libraryComplete,
-            isUsageDataEnabled = consent == ConsentStatus.GRANTED,
+            isUsageDataEnabled = usageDataEnabled,
+            canTip = canTip,
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SettingsUiState())

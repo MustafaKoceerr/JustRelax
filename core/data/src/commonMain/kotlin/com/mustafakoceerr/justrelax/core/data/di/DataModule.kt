@@ -17,6 +17,8 @@ import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SavedSceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.data.repository.TipRepository
+import com.mustafakoceerr.justrelax.core.data.repository.UnavailableTipRepository
 import com.mustafakoceerr.justrelax.core.data.repository.StarterPackInstaller
 import com.mustafakoceerr.justrelax.core.data.repository.DatabaseUserSoundRepository
 import com.mustafakoceerr.justrelax.core.data.repository.UserSoundRepository
@@ -64,6 +66,8 @@ val dataModule = module {
     singleOf(::InMemorySceneRepository) { bind<SceneRepository>() }
     single<InstallIdProvider> { DataStoreInstallIdProvider(get(named(DataConstants.STATE)), newId = { Uuid.random().toString() }) }
     single<FreesoundRepository> { NetworkFreesoundRepository(get(), get(), get()) }
+    // No store products yet; debug builds swap in PreviewTipRepository.
+    single<TipRepository> { UnavailableTipRepository() }
     single<UserSoundRepository> {
         DatabaseUserSoundRepository(get(), get(), get(), get(), get(), newId = { "user-${Uuid.random()}" })
     }

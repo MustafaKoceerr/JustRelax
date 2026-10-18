@@ -33,4 +33,17 @@
     <string name="consent_later_hint">설정에서 언제든지 바꿀 수 있어요.</string>
     <string name="settings_usage_data_title">사용 데이터 및 오류 보고서</string>
     <string name="settings_usage_data_subtitle">버그 수정에 도움이 되는 익명 통계</string>
+    <string name="settings_support_title">개발자 응원하기</string>
+    <string name="settings_support_subtitle">커피 한 잔 사주기</string>
+    <string name="support_title">커피 한 잔 사주기</string>
+    <string name="support_headline">JustRelax는 한 사람이 만듭니다</string>
+    <string name="support_body">광고도 구독도 없습니다. 휴식에 도움이 된다면 작은 팁이 앱을 계속 이어가게 합니다.</string>
+    <string name="tip_small_name">커피 한 잔</string>
+    <string name="tip_medium_name">커피와 케이크</string>
+    <string name="tip_large_name">점심</string>
+    <string name="support_thanks_title">감사합니다!</string>
+    <string name="support_thanks_body">보내주신 팁은 큰 힘이 됩니다. 평온한 시간 보내세요.</string>
+    <string name="support_failed">구매가 완료되지 않았습니다. 다시 시도해 주세요.</string>
+    <string name="support_unavailable">지금은 팁을 사용할 수 없습니다.</string>
+    <string name="support_note">팁은 스토어를 통한 일회성 결제입니다. 잠금 해제되는 기능은 없으며 앱은 모두에게 똑같습니다.</string>
 </resources>

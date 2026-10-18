@@ -1,6 +1,8 @@
 package com.mustafakoceerr.justrelax.di
 
 import android.content.Context
+import com.mustafakoceerr.justrelax.core.data.repository.PreviewTipRepository
+import com.mustafakoceerr.justrelax.core.data.repository.TipRepository
 import com.mustafakoceerr.justrelax.core.network.api.IntegrityTokenProvider
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkSound
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkSoundCatalog
@@ -19,6 +21,8 @@ val buildTypeModule = module {
     single<SoundRemoteDataSource> { AssetSoundCatalog(androidContext()) }
     // The local API proxy runs with INTEGRITY_REQUIRED=false; a debug build is never Play-recognized anyway.
     single<IntegrityTokenProvider> { IntegrityTokenProvider { "debug" } }
+    // Sample prices until the store products exist, so the support screen can be seen and tried.
+    single<TipRepository> { PreviewTipRepository() }
 }
 
 private class AssetSoundCatalog(private val context: Context) : SoundRemoteDataSource {

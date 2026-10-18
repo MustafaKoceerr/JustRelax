@@ -10,6 +10,7 @@ import com.mustafakoceerr.justrelax.feature.splash.SplashRoute
 import com.mustafakoceerr.justrelax.feature.settings.SettingsRoute
 import com.mustafakoceerr.justrelax.feature.settings.consent.ConsentRoute
 import com.mustafakoceerr.justrelax.feature.settings.credits.CreditsRoute
+import com.mustafakoceerr.justrelax.feature.settings.support.SupportRoute
 import com.mustafakoceerr.justrelax.feature.mysounds.MySoundsRoute
 import com.mustafakoceerr.justrelax.feature.mysounds.editor.SoundEditorRoute
 import com.mustafakoceerr.justrelax.feature.freesound.FreesoundRoute
@@ -99,10 +100,14 @@ private fun JustRelaxNavDisplay() {
                 SettingsRoute(
                     onBack = { backStack.goBack() },
                     onOpenCredits = { backStack.navigate(Route.Credits) },
+                    onOpenSupport = { backStack.navigate(Route.Support) },
                 )
             }
             entry<Route.Credits> {
                 CreditsRoute(onBack = { backStack.goBack() })
+            }
+            entry<Route.Support> {
+                SupportRoute(onBack = { backStack.goBack() })
             }
             entry<Route.MySounds> {
                 MySoundsRoute(

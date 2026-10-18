@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Language
+import androidx.compose.material.icons.rounded.LocalCafe
 import androidx.compose.material.icons.rounded.Mail
 import androidx.compose.material.icons.rounded.Insights
 import androidx.compose.material.icons.rounded.PrivacyTip
@@ -41,6 +42,8 @@ import com.mustafakoceerr.justrelax.feature.settings.generated.resources.rate_ap
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.section_content
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.section_support_legal
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.settings_language_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.settings_support_subtitle
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.settings_support_title
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.terms_conditions_title
 import org.jetbrains.compose.resources.stringResource
 
@@ -55,6 +58,7 @@ fun SettingsContent(
     onOpenPrivacyPolicy: () -> Unit,
     onOpenTermsAndConditions: () -> Unit,
     onOpenCredits: () -> Unit,
+    onOpenSupport: () -> Unit,
     onUsageDataChange: (Boolean) -> Unit,
 ) {
     Column(
@@ -85,6 +89,14 @@ fun SettingsContent(
         }
 
         SectionGroup(title = stringResource(Res.string.section_support_legal)) {
+            if (uiState.canTip) {
+                SettingsTile(
+                    icon = Icons.Rounded.LocalCafe,
+                    title = stringResource(Res.string.settings_support_title),
+                    subtitle = stringResource(Res.string.settings_support_subtitle),
+                    onClick = onOpenSupport,
+                )
+            }
             SettingsTile(
                 icon = Icons.Rounded.StarRate,
                 title = stringResource(Res.string.rate_app_title),

@@ -20,6 +20,7 @@
 - 🔎 **Freesound:** search and import CC0 / CC-BY sounds from [Freesound](https://freesound.org).
 - ⏱️ **Sleep timer:** the sound fades out when it ends.
 - 💾 **Saved mixes**, background playback with media controls, light and dark themes, 12 languages.
+- ☕ **Tip jar** in Settings: consumable in-app purchases behind `TipRepository` (shown only while the store offers tips).
 
 Screenshots below are from version 1.
 

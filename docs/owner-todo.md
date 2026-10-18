@@ -16,6 +16,7 @@ PR'lar birbirinin üstüne yığılı; bu sırayla birleştir. Her biri bir önc
 - [ ] #45 Samsung tarzı uyku zamanlayıcısı
 - [ ] #46 Ses sürüklerken daha az yeniden çizim, `core:ui`'da ortak bileşenler
 - [ ] #47 iOS'ta gerçek ses (AVAudioEngine, kilit ekranı kontrolleri, iOS 18.4+)
+- [ ] #48 "Bana bir kahve ısmarla" bahşiş ekranı (şimdilik yalnızca debug'da görünür)
 
 ## Performans ölçümü
 Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ayrı bir paket adıyla (`com.mustafakoceerr.justrelax.benchmark`) kuruluyor ve Play sürümüyle yan yana durabiliyor.
@@ -63,6 +64,13 @@ Kod ve simülatör testleri hazır; kulakla dinlemek senin işin. Simülatörde 
 - [ ] Kilit ekranında ve Denetim Merkezi'nde JustRelax görünüyor; oynat/duraklat çalışıyor.
 - [ ] Arama gelince ses duruyor, kapanınca devam ediyor; kulaklığı çıkarınca duruyor.
 - [ ] Başka bir uygulama (Müzik) çalmaya başlayınca JustRelax susuyor.
+
+## Bahşiş (#48)
+Ekran ve mimari hazır; debug sürümünde örnek fiyatlarla görünüyor, yayın sürümünde gizli. Gerçek ödeme için:
+- [ ] Play Console → *Monetize → Products → In-app products*: üç tüketilebilir (consumable) ürün aç: `tip_small`, `tip_medium`, `tip_large`. Fiyatları sen seç.
+- [ ] Play Console'da ödeme profili ve banka hesabı (Payments profile).
+- [ ] App Store Connect'te aynı id'lerle üç *Consumable* ürün (iOS yayınına doğru).
+- [ ] Hazır olunca söyle: Play Billing ve StoreKit'i `TipRepository`'nin arkasına bağlarım; satır o zaman yayında da görünür.
 
 ## 8. İsteğe bağlı / sonra
 - [ ] iOS: App Attest (AI ve Freesound için) ve Firebase iOS, iOS yayınına doğru.

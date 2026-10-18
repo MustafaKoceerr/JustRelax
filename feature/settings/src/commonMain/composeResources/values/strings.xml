@@ -33,4 +33,17 @@
     <string name="consent_later_hint">You can change this any time in Settings.</string>
     <string name="settings_usage_data_title">Usage data and crash reports</string>
     <string name="settings_usage_data_subtitle">Anonymous statistics that help fix bugs</string>
+    <string name="settings_support_title">Support the developer</string>
+    <string name="settings_support_subtitle">Buy me a coffee</string>
+    <string name="support_title">Buy me a coffee</string>
+    <string name="support_headline">JustRelax is made by one person</string>
+    <string name="support_body">No ads and no subscription. If it helps you rest, a small tip keeps it going.</string>
+    <string name="tip_small_name">A coffee</string>
+    <string name="tip_medium_name">Coffee and cake</string>
+    <string name="tip_large_name">Lunch</string>
+    <string name="support_thanks_title">Thank you!</string>
+    <string name="support_thanks_body">Your tip means a lot. Enjoy the calm.</string>
+    <string name="support_failed">The purchase did not go through. Please try again.</string>
+    <string name="support_unavailable">Tips are not available right now.</string>
+    <string name="support_note">A tip is a one-time payment through the store. It unlocks nothing; the app stays the same for everyone.</string>
 </resources>

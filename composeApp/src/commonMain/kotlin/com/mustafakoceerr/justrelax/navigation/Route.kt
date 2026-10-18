@@ -26,6 +26,10 @@ sealed interface Route : NavKey {
     @Serializable
     data object Credits : Route
 
+    /** Tips for the developer; reached from Settings only while the store offers them. */
+    @Serializable
+    data object Support : Route
+
     @Serializable
     data object MySounds : Route
 
@@ -49,6 +53,7 @@ sealed interface Route : NavKey {
                 subclass(Consent::class)
                 subclass(Settings::class)
                 subclass(Credits::class)
+                subclass(Support::class)
                 subclass(MySounds::class)
                 subclass(SoundEditor::class)
                 subclass(Freesound::class)
@@ -65,6 +70,7 @@ val Route.screenName: String
         Route.Consent -> "consent"
         Route.Settings -> "settings"
         Route.Credits -> "credits"
+        Route.Support -> "support"
         Route.MySounds -> "my_sounds"
         Route.Freesound -> "freesound"
         is Route.SoundEditor -> "sound_editor"
