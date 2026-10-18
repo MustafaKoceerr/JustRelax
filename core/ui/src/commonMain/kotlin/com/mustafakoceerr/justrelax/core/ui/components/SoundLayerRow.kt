@@ -72,7 +72,7 @@ fun SoundLayerRow(
     bottom: @Composable () -> Unit = {},
 ) {
     val containerColor by animateColorAsState(
-        targetValue = if (isPlaying) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceContainerLow,
+        targetValue = if (isPlaying) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceContainer,
         animationSpec = tween(ANIM_COLOR_DURATION),
         label = "LayerContainerColor",
     )
