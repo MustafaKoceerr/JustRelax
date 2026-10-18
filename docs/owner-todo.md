@@ -33,8 +33,8 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 
 ## 5. Firebase (Crashlytics ve Analytics)
 - [x] Proje `justrelax-app` açıldı (2026-10-18). İki Android uygulaması var: `com.mustafakoceerr.justrelax` ve benchmark için `com.mustafakoceerr.justrelax.benchmark`. `androidApp/google-services.json` yerinde ve git'e girmiyor. Emülatörde denendi: izin yokken hiçbir şey gitmiyor, izin verilince olaylar ve bir çökme raporu gönderiliyor.
-- [ ] Google Analytics'i bağla: Firebase Console → *Project settings → Integrations → Google Analytics → Enable*, bir Analytics hesabı seç. Bağlanmazsa olaylar gönderilir ama raporlarda görünmez.
-- [ ] Analytics veri saklama süresini seç (2 ya da 14 ay; politikadaki "en fazla 14 ay" ikisine de uyar).
+- [x] Google Analytics bağlandı; DebugView'de olaylar görüldü (2026-10-18).
+- [x] Saklama süresi: olay verisi 2 ay, kullanıcı verisi 14 ay (politikadaki "en fazla 14 ay" ile uyumlu).
 - [ ] Yeni bir bilgisayarda ya da CI'da Firebase'li build gerekirse `google-services.json`'u konsoldan indir (*Project settings → Your apps*).
 
 ## 6. Play Console ve gizlilik
