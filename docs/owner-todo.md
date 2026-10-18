@@ -40,6 +40,7 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 ## 6. Play Console ve gizlilik
 - [ ] Veri güvenliği formunu `docs/play-data-safety.md`'ye göre doldur.
 - [x] Gizlilik politikası güncellendi ve 12 dilde yayında (2026-10-18). Kaynağı `docs/legal/`.
+- [ ] **v2 yayından önce:** OpenAI'da "Share inputs and outputs" açıldı (2026-10-18, ücretsiz günlük kota için). Gizlilik politikası (12 dil) şu an "OpenAI bunları varsayılan olarak modellerini eğitmek için kullanmaz" diyor; bu artık yanlış. Politika ve `docs/play-data-safety.md` (AI cümlesi OpenAI ile **paylaşılıyor**, eğitim için) güncellenmeli. Claude yapar, sen onaylarsın.
 - [ ] İstersen kullanım koşullarını (`terms-conditions.html`) da güncelletebilirsin; hâlâ yalnızca OpenAI'dan söz ediyor.
 
 ## 7. İçerik
