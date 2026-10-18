@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.core.playback.di
 
 import androidx.media3.common.MediaMetadata
+import com.mustafakoceerr.justrelax.core.playback.AudioThread
 import com.mustafakoceerr.justrelax.core.playback.SoundscapePlayer
 import com.mustafakoceerr.justrelax.core.playback.SoundscapeSession
 import com.mustafakoceerr.justrelax.core.playback.player.ExoSoundPlayer
@@ -13,9 +14,13 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 internal actual val platformPlaybackModule = module {
+    // One for the app's lifetime; every playback service start reuses it.
+    single { AudioThread.start() }
+
     single<SoundPlayerFactory> {
         val context = androidContext()
-        SoundPlayerFactory { ExoSoundPlayer(context) }
+        val audioThread: AudioThread = get()
+        SoundPlayerFactory { ExoSoundPlayer(context, audioThread) }
     }
 
     // Each player owns a SoundPool, released when the engine stops.
@@ -34,6 +39,7 @@ internal actual val platformPlaybackModule = module {
                 engineFactory = { scope -> DefaultSoundscapeEngine(bedPlayerFactory, eventPlayer, scope) },
                 sleepTimer = get(),
                 context = Dispatchers.Main.immediate,
+                engineContext = get<AudioThread>().dispatcher,
             ),
             mixMetadata = mixMetadata,
         )

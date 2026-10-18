@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.di
 
 import android.content.Context
+import android.os.Looper
 import app.cash.sqldelight.db.SqlDriver
 import com.mustafakoceerr.justrelax.core.database.db.Saved_scene_layer
 import com.mustafakoceerr.justrelax.core.database.db.Sound
@@ -34,6 +35,8 @@ class KoinGraphTest {
                 HttpClientConfig::class,
                 // StarterPackInstaller's app-wide scope is created in its definition
                 CoroutineScope::class,
+                // AudioThread's looper comes from the HandlerThread its definition starts
+                Looper::class,
                 // SoundEditorViewModel gets its file and origin from the route with parametersOf
                 String::class,
                 SoundOrigin::class,
