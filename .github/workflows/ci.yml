@@ -27,9 +27,45 @@ jobs:
         # KMP modules (AGP 9 android-kmp-library) run host tests; the app module runs regular unit tests.
         run: ./gradlew testAndroidHostTest :androidApp:testDebugUnitTest --continue
 
+      - name: Database migrations
+        # Every schema change needs a migration that ends in the same schema as the CREATE statements.
+        run: ./gradlew :core:database:verifySqlDelightMigration
+
       - name: Upload test reports
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: '**/build/reports/tests/'
+
+  api-proxy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: server/api-proxy
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/api-proxy/package-lock.json
+
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+
+  sound-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # The tests cover the pipeline's pure functions; ffmpeg is not needed.
+      - run: python3 -m unittest discover -s tools/sound-pipeline

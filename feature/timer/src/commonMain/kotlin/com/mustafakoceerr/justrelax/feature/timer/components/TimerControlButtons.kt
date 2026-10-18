@@ -25,10 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import justrelax.feature.timer.generated.resources.Res
-import justrelax.feature.timer.generated.resources.timer_action_delete
-import justrelax.feature.timer.generated.resources.timer_action_pause
-import justrelax.feature.timer.generated.resources.timer_action_resume
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_delete
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_pause
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_resume
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

@@ -42,8 +42,8 @@ import com.mustafakoceerr.justrelax.feature.ai.components.AiPromptInput
 import com.mustafakoceerr.justrelax.feature.ai.components.AiResultActions
 import com.mustafakoceerr.justrelax.feature.ai.components.AiResultGrid
 import com.mustafakoceerr.justrelax.feature.ai.components.AiVisualizer
-import justrelax.feature.ai.generated.resources.Res
-import justrelax.feature.ai.generated.resources.*
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 

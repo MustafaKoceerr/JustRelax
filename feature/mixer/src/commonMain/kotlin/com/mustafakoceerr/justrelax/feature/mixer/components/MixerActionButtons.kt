@@ -20,8 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.components.LoadingDots
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
-import justrelax.feature.mixer.generated.resources.Res
-import justrelax.feature.mixer.generated.resources.action_create_mix
+import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.action_create_mix
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

@@ -19,8 +19,8 @@ import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import justrelax.feature.ai.generated.resources.Res
-import justrelax.feature.ai.generated.resources.err_ai_empty_response
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_empty_response
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.TestScope

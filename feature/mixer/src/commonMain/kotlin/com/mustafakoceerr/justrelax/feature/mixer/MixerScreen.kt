@@ -32,8 +32,8 @@ import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
 import com.mustafakoceerr.justrelax.feature.mixer.components.EmptyMixerState
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixCountSelector
-import justrelax.feature.mixer.generated.resources.Res
-import justrelax.feature.mixer.generated.resources.mixer_screen_title
+import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.mixer_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 

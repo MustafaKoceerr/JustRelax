@@ -1,6 +1,7 @@
 plugins {
     id("justrelax.kmp.library")
     alias(libs.plugins.sqldelight)
+    id("justrelax.koin")
 }
 
 sqldelight {
@@ -22,7 +23,6 @@ kotlin {
 
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines.extensions)
-            implementation(libs.koin.core)
             implementation(libs.kotlinx.serialization.json)
         }
 

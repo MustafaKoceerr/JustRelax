@@ -16,8 +16,8 @@ import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.library.domain.usecase.GetLocalizedCategorizedSoundsUseCase
-import justrelax.feature.library.generated.resources.Res
-import justrelax.feature.library.generated.resources.download_failed
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.download_failed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

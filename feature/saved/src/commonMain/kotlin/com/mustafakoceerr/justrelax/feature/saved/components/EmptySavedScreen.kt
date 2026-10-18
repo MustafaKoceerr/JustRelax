@@ -18,12 +18,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.components.GenericEmptyState
-import justrelax.feature.saved.generated.resources.Res
-import justrelax.feature.saved.generated.resources.action_create_new_mix
-import justrelax.feature.saved.generated.resources.saved_empty_description
-import justrelax.feature.saved.generated.resources.saved_empty_image_cd
-import justrelax.feature.saved.generated.resources.saved_empty_title
-import justrelax.feature.saved.generated.resources.saved_empty_vector
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.action_create_new_mix
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_empty_description
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_empty_image_cd
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_empty_title
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_empty_vector
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

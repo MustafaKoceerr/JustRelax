@@ -20,8 +20,8 @@ import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.mysounds.editor.SoundEditorUiState.Companion.MAX_NAME_LENGTH
-import justrelax.feature.mysounds.generated.resources.Res
-import justrelax.feature.mysounds.generated.resources.mysounds_save_failed
+import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_save_failed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

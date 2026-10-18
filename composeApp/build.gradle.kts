@@ -6,13 +6,12 @@ plugins {
 // Shared app shell (navigation, DI wiring, root composable). The Android entry point lives
 // in :androidApp because AGP 9 no longer allows com.android.application in a KMP module.
 kotlin {
-    if (isIosEnabled) {
-        // Linked into the Xcode project by the embedAndSignAppleFrameworkForXcode build phase.
-        listOf(iosArm64(), iosSimulatorArm64()).forEach { target ->
-            target.binaries.framework {
-                baseName = "ComposeApp"
-                isStatic = true
-            }
+    // The iOS targets come from the convention; each is linked into the Xcode project by the
+    // embedAndSignAppleFrameworkForXcode build phase.
+    targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>().configureEach {
+        binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
         }
     }
 
@@ -49,6 +48,3 @@ kotlin {
     }
 }
 
-compose.resources {
-    packageOfResClass = "com.mustafakoceerr.justrelax.composeapp.generated.resources"
-}

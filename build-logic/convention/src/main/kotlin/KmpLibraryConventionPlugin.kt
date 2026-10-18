@@ -1,9 +1,6 @@
-import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 /** `justrelax.kmp.library`: a KMP module with an Android target, iOS targets when enabled, and common test libraries. */
@@ -16,9 +13,7 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
             }
 
             extensions.configure<KotlinMultiplatformExtension> {
-                (this as ExtensionAware).extensions
-                    .getByType<KotlinMultiplatformAndroidLibraryExtension>()
-                    .configureAndroidLibrary(this@with)
+                androidLibrary.configureAndroidLibrary(this@with)
 
                 if (isIosEnabled) {
                     // No iosX64 (Intel simulator): Compose Multiplatform 1.12+ and its libraries no longer publish it.
@@ -30,6 +25,11 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
                     implementation(kotlin("test"))
                     implementation(library("kotlinx-coroutines-test"))
                     implementation(library("turbine"))
+                }
+
+                // Tests drive virtual time with runCurrent/advanceUntilIdle, which kotlinx-coroutines-test marks experimental.
+                sourceSets.matching { it.name.endsWith("Test") }.configureEach {
+                    languageSettings.optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
                 }
             }
         }

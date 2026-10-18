@@ -6,9 +6,11 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
@@ -53,6 +55,10 @@ internal fun Project.bundle(alias: String) = versionCatalog.findBundle(alias).ge
 
 internal fun Project.intVersion(alias: String): Int =
     versionCatalog.findVersion(alias).get().requiredVersion.toInt()
+
+/** The Android target of a KMP library module (AGP 9 `com.android.kotlin.multiplatform.library`). */
+internal val KotlinMultiplatformExtension.androidLibrary: KotlinMultiplatformAndroidLibraryExtension
+    get() = (this as ExtensionAware).extensions.getByType()
 
 /** Shared settings for every KMP library's Android target (AGP 9 `com.android.kotlin.multiplatform.library`). */
 internal fun KotlinMultiplatformAndroidLibraryExtension.configureAndroidLibrary(project: Project) {

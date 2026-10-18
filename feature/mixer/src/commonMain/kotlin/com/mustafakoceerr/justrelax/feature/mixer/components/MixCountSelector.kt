@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import justrelax.feature.mixer.generated.resources.Res
-import justrelax.feature.mixer.generated.resources.mix_count_selector_title
+import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.mix_count_selector_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

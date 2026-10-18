@@ -27,8 +27,8 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesEmptyScreen
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesList
-import justrelax.feature.saved.generated.resources.Res
-import justrelax.feature.saved.generated.resources.saved_screen_title
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 

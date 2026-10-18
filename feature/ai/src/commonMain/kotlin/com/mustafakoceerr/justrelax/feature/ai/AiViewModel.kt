@@ -14,10 +14,10 @@ import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
 import com.mustafakoceerr.justrelax.core.model.AiGeneratedMix
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import justrelax.feature.ai.generated.resources.Res
-import justrelax.feature.ai.generated.resources.err_ai_empty_response
-import justrelax.feature.ai.generated.resources.err_ai_no_sounds
-import justrelax.feature.ai.generated.resources.err_unknown
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_empty_response
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_no_sounds
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_unknown
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

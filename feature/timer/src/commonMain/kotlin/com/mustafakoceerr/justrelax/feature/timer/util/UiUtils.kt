@@ -1,10 +1,10 @@
 package com.mustafakoceerr.justrelax.feature.timer.util
 
 import androidx.compose.runtime.Composable
-import justrelax.feature.timer.generated.resources.Res
-import justrelax.feature.timer.generated.resources.duration_hour_short
-import justrelax.feature.timer.generated.resources.duration_minute_short
-import justrelax.feature.timer.generated.resources.duration_second_short
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.duration_hour_short
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.duration_minute_short
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.duration_second_short
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

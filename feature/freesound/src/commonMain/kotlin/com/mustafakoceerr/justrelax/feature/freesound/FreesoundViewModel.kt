@@ -14,11 +14,11 @@ import com.mustafakoceerr.justrelax.core.model.Attribution
 import com.mustafakoceerr.justrelax.core.model.FreesoundSound
 import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import justrelax.feature.freesound.generated.resources.Res
-import justrelax.feature.freesound.generated.resources.freesound_download_failed
-import justrelax.feature.freesound.generated.resources.freesound_failed
-import justrelax.feature.freesound.generated.resources.freesound_offline
-import justrelax.feature.freesound.generated.resources.freesound_rate_limited
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_download_failed
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_failed
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_offline
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_rate_limited
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

@@ -50,10 +50,10 @@ import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.feature.saved.util.formatDate
-import justrelax.feature.saved.generated.resources.Res
-import justrelax.feature.saved.generated.resources.action_play
-import justrelax.feature.saved.generated.resources.date_format_short
-import justrelax.feature.saved.generated.resources.saved_mix_metadata
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.action_play
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.date_format_short
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_mix_metadata
 import kotlinx.coroutines.delay
 import kotlin.time.Instant
 import org.jetbrains.compose.resources.stringResource

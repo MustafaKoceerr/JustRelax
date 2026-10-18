@@ -1,6 +1,7 @@
 // The data layer: repositories over the local database, the network and DataStore.
 plugins {
     id("justrelax.kmp.library")
+    id("justrelax.koin")
 }
 
 kotlin {
@@ -15,7 +16,6 @@ kotlin {
 
             implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.datastore)
-            implementation(libs.koin.core)
             implementation(libs.ktor.client.core)
             implementation(libs.okio)
             implementation(libs.sqldelight.coroutines.extensions)

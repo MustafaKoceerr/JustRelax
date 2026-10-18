@@ -17,8 +17,8 @@ import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.library.domain.usecase.GetLocalizedCategorizedSoundsUseCase
-import justrelax.feature.library.generated.resources.Res
-import justrelax.feature.library.generated.resources.download_failed
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.download_failed
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
