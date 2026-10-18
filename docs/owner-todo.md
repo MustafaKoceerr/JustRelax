@@ -3,8 +3,15 @@
 Claude'un tek başına yapamadığı işler, öncelik sırasıyla. Biten maddeyi silebilir ya da işaretleyebilirsin.
 
 ## 1. PR'ları birleştir
-- [ ] #36 (anahtar proxy'si, Play Integrity, yalnızca ayarların yedeklenmesi)
-- [ ] Ardından gelen PR'lar: kaydın kaldırılması, Firebase
+PR'lar birbirinin üstüne yığılı; bu sırayla birleştir. Her biri bir öncekinin dalını temel alır, birleştirince GitHub sonrakinin tabanını kendisi günceller.
+- [ ] #36 Anahtar proxy'si, Play Integrity, yalnızca ayarların yedeklenmesi
+- [ ] #37 Mikrofon kaydının kaldırılması, bu liste
+- [ ] #38 Crashlytics ve Analytics (ilk açılışta izin)
+- [ ] #39 Mixer'daki çift snackbar ve karanlık temadaki beyaz pencere
+- [ ] #40 Build temizliği: ortak convention'lar, katalog, CI'a proxy ve pipeline testleri
+- [ ] #41 Üretim kodundaki tekrarlar ve ölü kod
+- [ ] #42 Test tekrarları ve eksik testler
+- [ ] #43 README
 
 ## 2. Play Integrity (AI ve Freesound bunsuz yayında çalışmaz)
 - [ ] Play Console → JustRelax → *Test and release → App integrity → Play Integrity API → Link a Cloud project* ile yeni bir proje oluştur. Ücretsiz, faturalandırma gerekmez.

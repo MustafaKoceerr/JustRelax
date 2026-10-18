@@ -1,12 +1,11 @@
 # 🌿 Just Relax – Sound Mixing & Relaxation App
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.2.21-blue.svg)](https://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.4.20-blue.svg)](https://kotlinlang.org)
 [![Kotlin%20Multiplatform](https://img.shields.io/badge/Kotlin%20Multiplatform-KMP-7f52ff.svg)](https://kotlinlang.org/docs/multiplatform.html)
-[![Jetpack%20Compose](https://img.shields.io/badge/Jetpack%20Compose-Multiplatform-3ddc84.svg)](https://developer.android.com/jetpack/compose)
-[![Architecture](https://img.shields.io/badge/Architecture-MVI%20Inspired-orange.svg)](https://developer.android.com/topic/architecture)
-[![Design](https://img.shields.io/badge/Design-Feature%20Based%20Modules-purple.svg)](https://developer.android.com/guide/app-bundle/play-feature-delivery)
+[![Compose%20Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.12.1-3ddc84.svg)](https://www.jetbrains.com/compose-multiplatform/)
+[![Architecture](https://img.shields.io/badge/Architecture-MVVM%20%C2%B7%20NiA-orange.svg)](https://developer.android.com/topic/architecture)
 
-> A modern **Kotlin Multiplatform** relaxation app where users can mix ambient sounds, create custom soundscapes, and relax with a minimal, soft-UI driven experience.
+> A **Kotlin Multiplatform** relaxation app: layer ambient sounds into a living soundscape, let AI suggest a mix, and fall asleep with a timer.
 
 **▶️ Google Play:** https://play.google.com/store/apps/details?id=com.mustafakoceerr.justrelax
 
@@ -14,14 +13,15 @@
 
 ## ✨ Highlights
 
-- 🎧 Custom ambient sound mixer  
-- 🧠 AI-assisted sound mix suggestions  
-- ⏱️ Sleep & focus timer  
-- 💾 Save & manage favorite mixes  
-- 🌗 Light / Dark theme support  
-- 🌍 Kotlin Multiplatform-ready architecture (Android & iOS)
+- 🎧 **Soundscapes, not loops:** each sound is either a seamless *bed* (rain, wind) or *events* (an owl, thunder) that play at random times, volumes and positions, at a frequency you choose.
+- 🎚️ **Mixer:** a random mix of 2–5 sounds in one tap.
+- 🧠 **AI mixes:** describe a mood and get a mix of the sounds you have.
+- 📂 **My sounds:** import your own audio file, trim it and use it like any other sound.
+- 🔎 **Freesound:** search and import CC0 / CC-BY sounds from [Freesound](https://freesound.org).
+- ⏱️ **Sleep timer:** the sound fades out when it ends.
+- 💾 **Saved mixes**, background playback with media controls, light and dark themes, 12 languages.
 
----
+Screenshots below are from version 1.
 
 📽️ Feature Demos
 <details> <summary><b>🏠 Home & 🧠 AI Suggestions (Click to expand)</b></summary> <p align="center"> <img src="assets/home_demo.gif" width="190" /> <img src="assets/ai_demo.gif" width="190" />
@@ -115,79 +115,77 @@
 
 ---
 
-## 🛠 Tech Stack & Tooling
+## 🛠 Tech Stack
 
-> Main technologies used in this project, with versions and a short purpose note.
+Versions come from [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 
-### Core Language & Platform
-- **Kotlin Multiplatform** `2.2.21` — shared business logic across Android & iOS  
-- **Android Gradle Plugin** `8.11.0` — modern Android build tooling  
-- **Compile SDK / Target SDK** `36` · **Min SDK** `29` — modern API support with sensible backward compatibility  
-
-### UI
-- **Compose Multiplatform** `1.9.3` — declarative UI  
-- **Material Design 3** — consistent design system  
-- **AndroidX Activity Compose** `1.11.0` — Compose-first integration  
-
-### State & Concurrency
-- **Kotlin Coroutines** `1.10.2` — async + structured concurrency  
-- **Flow** — reactive state streams  
-
-### Navigation
-- **Voyager** `1.1.0-beta03` — KMP-friendly navigation (lightweight & clean)  
-
-### Dependency Injection
-- **Koin** `4.1.1` — Kotlin-first DI with Compose support  
-
-### Networking & Serialization
-- **Ktor Client** `3.3.2` — multiplatform HTTP client  
-- **Kotlinx Serialization** `1.9.0` — type-safe JSON parsing  
-
-### Persistence
-- **SQLDelight** `2.2.1` — type-safe multiplatform database  
-- **Multiplatform Settings** `1.3.0` — shared key-value storage  
-
-### Media & Assets
-- **Media3 / ExoPlayer** `1.8.0` — audio playback engine  
-- **Coil 3** `3.3.0` — image loading for Compose  
-- **Okio** `3.16.2` — filesystem & I/O utilities  
+| Area | Library |
+|---|---|
+| Language and build | Kotlin `2.4.20`, Android Gradle Plugin `9.4.1`, Gradle convention plugins in `build-logic` |
+| Platforms | Android (min SDK 29, target 36, compile 37); iOS builds but is off until its audio engine exists |
+| UI | Compose Multiplatform `1.12.1`, Material 3, Material 3 Adaptive (bar, rail or drawer by window size), Compottie (Lottie) |
+| Navigation | Navigation 3 `1.1.2` |
+| State | ViewModel + `StateFlow`, Kotlin Coroutines `1.11.0` |
+| DI | Koin `4.2.2` |
+| Network | Ktor `3.6.0`, kotlinx.serialization `1.11.0` |
+| Storage | SQLDelight `2.4.0`, DataStore `1.2.1`, Okio `3.18.2` |
+| Audio | Media3 `1.11.1`: ExoPlayer, MediaSession, Transformer (trimming) |
+| Analytics | Firebase Analytics and Crashlytics, only after the user agrees |
+| Backend | Cloudflare Workers (API proxy) and R2 (sound CDN), free plan |
+| Tests | kotlin.test, Turbine, Robolectric, Ktor MockEngine, vitest, Python unittest |
 
 ---
 
-## 🧩 Architecture (Short)
+## 🧩 Architecture
 
-- Feature-based modular structure (`feature/*`)
-- Shared core building blocks (`core/*`)
-- MVI-inspired state management
-- Clear separation of UI / Domain / Data
+The app follows Google's [app architecture guide](https://developer.android.com/topic/architecture) and the layout of [Now in Android](https://github.com/android/nowinandroid):
+
+- **UI layer:** a screen observes one `UiState` from its ViewModel and sends it events (MVVM). Screens are stateless composables, so they can be previewed and tested.
+- **Data layer:** repositories are the single source of truth. The sound catalog is offline-first: it is cached in SQLDelight and refreshed from the CDN once a day.
+- **Playback:** one `SoundscapePlayer` (a Media3 `Player`) runs in a `MediaSessionService`. It mixes beds and schedules events, so playback keeps going in the background and shows in the system media controls.
+- **API keys never ship in the app.** AI and Freesound calls go through a Cloudflare Worker. The Worker checks Play Integrity, issues a short session and rate-limits each install.
 
 ```text
 .
-├── build-logic/
-├── composeApp/
-├── iosApp/
+├── androidApp/          Android application: activity, PlaybackService, Firebase
+├── composeApp/          Shared app shell: navigation, DI graph, iOS framework
+├── iosApp/              Xcode project
 ├── core/
-└── feature/
+│   ├── common/          Result types, errors, dispatchers
+│   ├── model/           Domain models
+│   ├── database/        SQLDelight schema and migrations
+│   ├── network/         Ktor clients for the CDN and the API proxy
+│   ├── data/            Repositories, catalog sync, downloads, DataStore
+│   ├── media/           Audio import, trimming and preview
+│   ├── playback/        Soundscape engine, MediaSession player, sleep timer
+│   ├── analytics/       Analytics and crash-reporting interfaces
+│   ├── ui/              Theme, shared components and strings
+│   └── testing/         Fakes and test helpers
+├── feature/             library, scene, mixer, ai, timer, saved, mysounds, freesound, settings, splash
+├── build-logic/         Convention plugins (KMP library, Compose, feature, Koin, Android app)
+├── server/api-proxy/    Cloudflare Worker for AI, Freesound and sessions
+├── tools/sound-pipeline/ Builds the sound pack (sounds-v2.json + Opus clips)
+└── docs/                Play data safety notes and the owner's to-do list
 ```
 
----
-
-### 🛠 build-logic (Convention Plugins)
-
-The `build-logic` module contains **custom Gradle convention plugins** that standardize configuration across modules, so each new module stays consistent with minimal Gradle boilerplate.
-
-What it standardizes (high-level):
-- **Shared Android config:** common `compileSdk / minSdk / targetSdk` defaults  
-- **Kotlin / KMP setup:** consistent compiler options and multiplatform target setup  
-- **Compose defaults:** Compose Multiplatform setup applied consistently  
-- **Common dependency patterns:** repeatable “baseline” dependencies per module type  
-- **Build features:** centralized toggles and shared build settings (so modules don’t drift over time)
+Each feature module depends only on `core` modules, never on another feature.
 
 ---
 
-## 🚧 Roadmap
+## ▶️ Building and testing
 
-- More advanced AI-driven personalization
+```sh
+./gradlew :androidApp:installDebug                            # run on a device or emulator
+./gradlew testAndroidHostTest :androidApp:testDebugUnitTest   # all Kotlin unit tests
+./gradlew :core:database:verifySqlDelightMigration            # database migrations
+```
+
+- **Firebase:** Analytics and Crashlytics are added only when `androidApp/google-services.json` exists. Without it the app builds and runs normally.
+- **iOS:** set `justrelax.ios.enabled=true` in `gradle.properties` (or pass `-Pjustrelax.ios.enabled=true`) and open `iosApp/` in Xcode.
+- **API proxy:** see [`server/api-proxy/README.md`](server/api-proxy/README.md) (`npm test`, `npm run deploy`).
+- **Sound pack:** see [`tools/sound-pipeline/README.md`](tools/sound-pipeline/README.md) (`python3 -m unittest discover -s tools/sound-pipeline`).
+
+CI runs all of the above on every pull request.
 
 ---
 
