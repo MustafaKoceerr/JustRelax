@@ -50,6 +50,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ScenePanel(
     state: SceneUiState,
+    volumeOf: (soundId: String) -> Float,
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
     onSave: () -> Unit,
@@ -90,6 +91,7 @@ fun ScenePanel(
                 items(state.layers, key = { it.soundId }) { layer ->
                     LayerControls(
                         layer = layer,
+                        volume = { volumeOf(layer.soundId) },
                         onVolumeChange = { onVolumeChange(layer.soundId, it) },
                         onFrequencyChange = { onFrequencyChange(layer.soundId, it) },
                         onRemove = { onRemove(layer.soundId) },
@@ -103,6 +105,8 @@ fun ScenePanel(
 @Composable
 private fun LayerControls(
     layer: SceneLayerItem,
+    /** Read only by the slider, so dragging it does not recompose the row. */
+    volume: () -> Float,
     onVolumeChange: (Float) -> Unit,
     onFrequencyChange: (EventFrequency) -> Unit,
     onRemove: () -> Unit,
@@ -126,7 +130,7 @@ private fun LayerControls(
                 Icon(Icons.Rounded.Close, contentDescription = stringResource(CoreRes.string.action_remove))
             }
         }
-        VolumeSlider(value = layer.volume, onValueChange = onVolumeChange, modifier = Modifier.fillMaxWidth())
+        VolumeSlider(value = volume(), onValueChange = onVolumeChange, modifier = Modifier.fillMaxWidth())
         layer.frequency?.let { frequency ->
             FrequencySelector(selected = frequency, onSelect = onFrequencyChange, modifier = Modifier.fillMaxWidth())
         }

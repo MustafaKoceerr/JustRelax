@@ -10,7 +10,7 @@ data class AiUiState(
     val mixName: String = "",
     val mixDescription: String = "",
     val mixSounds: List<LocalizedSound> = emptyList(),
-    /** Which sounds play, at what volume and how often, for the sound cards. */
+    /** Which sounds play and how often, for the sound cards. Volumes come from the ViewModel's `volumes`. */
     val sceneCards: SceneCards = SceneCards(),
     /** Asks once, before the first mix, whether the prompt may go to OpenAI. */
     val showAiDataNotice: Boolean = false,

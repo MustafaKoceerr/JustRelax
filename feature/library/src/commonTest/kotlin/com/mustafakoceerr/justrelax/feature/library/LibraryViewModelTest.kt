@@ -127,6 +127,7 @@ class LibraryViewModelTest {
     @Test
     fun changingVolume_updatesTheMixerAndTheSlider() = runMainTest {
         val viewModel = viewModel()
+        observe(viewModel.volumes)
         advanceUntilIdle()
         viewModel.toggleSound(viewModel.sound("rain"))
         advanceUntilIdle()
@@ -134,8 +135,22 @@ class LibraryViewModelTest {
         viewModel.changeVolume("rain", 0.9f)
         advanceUntilIdle()
 
-        assertEquals(0.9f, viewModel.uiState.value.sceneCards.volumes["rain"])
+        assertEquals(mapOf("rain" to 0.9f), viewModel.volumes.value)
         assertEquals(0.9f, scene.scene.value.layers.single().volume)
+    }
+
+    @Test
+    fun changingVolume_leavesTheScreenStateAlone() = runMainTest {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        viewModel.toggleSound(viewModel.sound("rain"))
+        advanceUntilIdle()
+        val before = viewModel.uiState.value
+
+        viewModel.changeVolume("rain", 0.9f)
+        advanceUntilIdle()
+
+        assertEquals(before, viewModel.uiState.value)
     }
 
     @Test

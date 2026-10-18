@@ -18,6 +18,7 @@ import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 fun SoundCardGrid(
     sounds: List<LocalizedSound>,
     cards: SceneCards,
+    volumeOf: (soundId: String) -> Float,
     onSoundClick: (LocalizedSound) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
     onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
@@ -39,6 +40,7 @@ fun SoundCardGrid(
         soundCardItems(
             sounds = sounds,
             cards = cards,
+            volumeOf = volumeOf,
             onSoundClick = onSoundClick,
             onVolumeChange = onVolumeChange,
             onFrequencyChange = onFrequencyChange,

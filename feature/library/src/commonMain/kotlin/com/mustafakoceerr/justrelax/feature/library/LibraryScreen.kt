@@ -17,6 +17,7 @@ import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTabScaffold
+import com.mustafakoceerr.justrelax.core.ui.components.rememberVolumeOf
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.library.components.LibraryContent
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
@@ -33,12 +34,14 @@ fun LibraryRoute(
     viewModel: LibraryViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val volumeOf = rememberVolumeOf(viewModel.volumes.collectAsStateWithLifecycle())
     val snackbarController = koinInject<GlobalSnackbarController>()
 
     UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarController.showSnackbar(it) }
 
     LibraryScreen(
         uiState = uiState,
+        volumeOf = volumeOf,
         onOpenSettings = onOpenSettings,
         onOpenMySounds = onOpenMySounds,
         onCategorySelected = viewModel::selectCategory,
@@ -53,6 +56,7 @@ fun LibraryRoute(
 @Composable
 fun LibraryScreen(
     uiState: LibraryUiState,
+    volumeOf: (soundId: String) -> Float,
     onOpenSettings: () -> Unit,
     onOpenMySounds: () -> Unit,
     onCategorySelected: (SoundCategory) -> Unit,
@@ -80,6 +84,7 @@ fun LibraryScreen(
     ) { innerPadding ->
         LibraryContent(
             uiState = uiState,
+            volumeOf = volumeOf,
             onCategorySelected = onCategorySelected,
             onSoundClick = onSoundClick,
             onVolumeChange = onVolumeChange,

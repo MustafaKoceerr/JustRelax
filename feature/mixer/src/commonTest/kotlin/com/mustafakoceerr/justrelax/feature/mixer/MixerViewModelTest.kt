@@ -32,7 +32,10 @@ class MixerViewModelTest {
         languageController = FakeLanguageController(),
         sceneGenerator = RandomSceneGenerator(Random(42)),
         playbackController = playback,
-    ).also { observe(it.uiState) }
+    ).also {
+        observe(it.uiState)
+        observe(it.volumes)
+    }
 
     @Test
     fun generatingAMix_playsTheSelectedNumberOfDownloadedSounds() = runMainTest {
@@ -81,7 +84,7 @@ class MixerViewModelTest {
         viewModel.generateMix()
         advanceUntilIdle()
         val sound = viewModel.uiState.value.mixedSounds.first()
-        val mixVolume = viewModel.uiState.value.sceneCards.volumes.getValue(sound.id)
+        val mixVolume = viewModel.volumes.value.getValue(sound.id)
 
         viewModel.toggleSound(sound.id)
         advanceUntilIdle()
@@ -89,7 +92,7 @@ class MixerViewModelTest {
 
         viewModel.toggleSound(sound.id)
         advanceUntilIdle()
-        assertEquals(mixVolume, viewModel.uiState.value.sceneCards.volumes[sound.id])
+        assertEquals(mixVolume, viewModel.volumes.value[sound.id])
     }
 
     @Test
@@ -102,7 +105,20 @@ class MixerViewModelTest {
         viewModel.changeVolume(sound.id, 0.25f)
         advanceUntilIdle()
 
-        assertEquals(0.25f, viewModel.uiState.value.sceneCards.volumes[sound.id])
+        assertEquals(0.25f, viewModel.volumes.value[sound.id])
+    }
+
+    @Test
+    fun changingVolume_leavesTheScreenStateAlone() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.generateMix()
+        advanceUntilIdle()
+        val before = viewModel.uiState.value
+
+        viewModel.changeVolume(before.mixedSounds.first().id, 0.25f)
+        advanceUntilIdle()
+
+        assertEquals(before, viewModel.uiState.value)
     }
 
     @Test

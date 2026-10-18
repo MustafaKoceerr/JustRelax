@@ -2,6 +2,7 @@ package com.mustafakoceerr.justrelax.feature.mixer
 
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCardGrid
+import com.mustafakoceerr.justrelax.core.ui.components.rememberVolumeOf
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,12 +35,14 @@ import org.koin.compose.koinInject
 @Composable
 fun MixerRoute(viewModel: MixerViewModel = koinViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val volumeOf = rememberVolumeOf(viewModel.volumes.collectAsStateWithLifecycle())
     val snackbarController = koinInject<GlobalSnackbarController>()
 
     UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarController.showSnackbar(it) }
 
     MixerScreen(
         uiState = uiState,
+        volumeOf = volumeOf,
         onSoundCountSelected = viewModel::selectSoundCount,
         onGenerateMix = viewModel::generateMix,
         onSoundClick = viewModel::toggleSound,
@@ -52,6 +55,7 @@ fun MixerRoute(viewModel: MixerViewModel = koinViewModel()) {
 @Composable
 fun MixerScreen(
     uiState: MixerUiState,
+    volumeOf: (soundId: String) -> Float,
     onSoundCountSelected: (Int) -> Unit,
     onGenerateMix: () -> Unit,
     onSoundClick: (soundId: String) -> Unit,
@@ -61,6 +65,7 @@ fun MixerScreen(
     JustRelaxTabScaffold(title = stringResource(Res.string.mixer_screen_title)) { innerPadding ->
         MixerScreenContent(
             uiState = uiState,
+            volumeOf = volumeOf,
             onSoundCountSelected = onSoundCountSelected,
             onGenerateMix = onGenerateMix,
             onSoundClick = onSoundClick,
@@ -74,6 +79,7 @@ fun MixerScreen(
 @Composable
 private fun MixerScreenContent(
     uiState: MixerUiState,
+    volumeOf: (soundId: String) -> Float,
     onSoundCountSelected: (Int) -> Unit,
     onGenerateMix: () -> Unit,
     onSoundClick: (soundId: String) -> Unit,
@@ -88,6 +94,7 @@ private fun MixerScreenContent(
     SoundCardGrid(
         sounds = uiState.mixedSounds,
         cards = uiState.sceneCards,
+        volumeOf = volumeOf,
         onSoundClick = onCardClick,
         onVolumeChange = onVolumeChange,
         onFrequencyChange = onFrequencyChange,

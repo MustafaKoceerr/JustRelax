@@ -65,7 +65,6 @@ class SceneViewModel(
                     soundId = layer.soundId,
                     name = sound.getDisplayName(language.code),
                     icon = sound.icon,
-                    volume = layer.volume,
                     frequency = (layer as? Layer.Event)?.frequency,
                 )
             },
@@ -75,6 +74,11 @@ class SceneViewModel(
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SceneUiState())
+
+    /** Kept out of [uiState], so dragging a slider redraws only that slider and not the panel. */
+    val volumes: StateFlow<Map<String, Float>> = sceneRepository.scene
+        .map { it.volumes }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
     val miniPlayer: StateFlow<MiniPlayerUiState> = uiState
         .map { scene -> MiniPlayerUiState(icons = scene.layers.map { it.icon }, isPlaying = scene.isPlaying) }
