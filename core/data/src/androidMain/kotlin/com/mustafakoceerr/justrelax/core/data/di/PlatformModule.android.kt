@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.mustafakoceerr.justrelax.core.data.DataConstants
+import com.mustafakoceerr.justrelax.core.data.SettingsOnlyMigration
 import com.mustafakoceerr.justrelax.core.data.download.AndroidFileDownloader
 import com.mustafakoceerr.justrelax.core.data.download.FileDownloader
 import com.mustafakoceerr.justrelax.core.data.download.FileSystemSoundFileStorage
@@ -16,13 +17,18 @@ import okio.Path.Companion.toPath
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 internal actual val platformDataModule: Module = module {
-    single<DataStore<Preferences>> {
+    single<DataStore<Preferences>>(named(DataConstants.SETTINGS)) {
         createDataStore(
-            producePath = { get<Context>().filesDir.resolve(DataConstants.SETTINGS_DATASTORE_NAME).absolutePath }
+            producePath = { get<Context>().filesDir.resolve(DataConstants.SETTINGS_DATASTORE_NAME).absolutePath },
+            migrations = listOf(SettingsOnlyMigration),
         )
+    }
+    single<DataStore<Preferences>>(named(DataConstants.STATE)) {
+        createDataStore(producePath = { get<Context>().filesDir.resolve(DataConstants.STATE_DATASTORE_NAME).absolutePath })
     }
 
     single<SoundFileStorage> {

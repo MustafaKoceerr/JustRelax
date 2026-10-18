@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 10 and 11: the same rule as data_extraction_rules.xml, only the settings file. -->
+<full-backup-content>
+    <include domain="file" path="justrelax_settings.preferences_pb" />
+</full-backup-content>

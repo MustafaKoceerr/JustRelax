@@ -8,27 +8,31 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class CatalogV2MigrationTest {
+class SettingsOnlyMigrationTest {
 
-    private val v1Settings = preferencesOf(
+    private val oldSettings = preferencesOf(
         DataConstants.KEY_APP_THEME to "DARK",
+        DataConstants.KEY_APP_LANGUAGE to "tr",
         DataConstants.KEY_STARTER_PACK_INSTALLED to true,
         DataConstants.KEY_LAST_SOUND_SYNC to 1_000L,
+        DataConstants.KEY_CATALOG_VERSION to 2,
     )
 
     @Test
-    fun aV1Install_forgetsItsDownloadsAndLastSync_butKeepsItsSettings() = runTest {
-        assertTrue(CatalogV2Migration.shouldMigrate(v1Settings))
+    fun theAppStateLeavesTheBackedUpSettingsFile_andTheSettingsStay() = runTest {
+        assertTrue(SettingsOnlyMigration.shouldMigrate(oldSettings))
 
-        val migrated = CatalogV2Migration.migrate(v1Settings)
+        val migrated = SettingsOnlyMigration.migrate(oldSettings)
 
         assertNull(migrated[DataConstants.KEY_STARTER_PACK_INSTALLED])
         assertNull(migrated[DataConstants.KEY_LAST_SOUND_SYNC])
+        assertNull(migrated[DataConstants.KEY_CATALOG_VERSION])
         assertEquals("DARK", migrated[DataConstants.KEY_APP_THEME])
+        assertEquals("tr", migrated[DataConstants.KEY_APP_LANGUAGE])
     }
 
     @Test
     fun itRunsOnce() = runTest {
-        assertFalse(CatalogV2Migration.shouldMigrate(CatalogV2Migration.migrate(v1Settings)))
+        assertFalse(SettingsOnlyMigration.shouldMigrate(SettingsOnlyMigration.migrate(oldSettings)))
     }
 }

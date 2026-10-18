@@ -31,7 +31,6 @@ kotlinx-coroutines = "1.11.0"
 okio = "3.18.2"
 buildConfig = "6.1.2"
 datastore = "1.2.1"
-openai-kotlin = "4.1.0"
 
 compottie = "2.3.3"
 turbine = "1.2.1"
@@ -97,6 +96,8 @@ androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", versi
 androidx-media3-common = { module = "androidx.media3:media3-common", version.ref = "media3" }
 androidx-media3-transformer = { module = "androidx.media3:media3-transformer", version.ref = "media3" }
 androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3" }
+play-integrity = { module = "com.google.android.play:integrity", version = "1.6.0" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "kotlinx-coroutines" }
 
 # Okio (file system)
@@ -122,8 +123,6 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
 
 # OpenAI client (versions from the BOM)
-openai-bom = { group = "com.aallam.openai", name = "openai-client-bom", version.ref = "openai-kotlin" }
-openai-client = { group = "com.aallam.openai", name = "openai-client" }
 
 # Lottie animations (Compottie)
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }

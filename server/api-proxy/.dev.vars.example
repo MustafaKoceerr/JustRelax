@@ -1,0 +1,7 @@
+# Copy to .dev.vars for `npm run dev` (never commit .dev.vars).
+OPENAI_API_KEY=sk-...
+FREESOUND_API_KEY=...
+SESSION_SECRET=any-long-random-string
+GOOGLE_SERVICE_ACCOUNT_JSON={}
+# The emulator has no Play Integrity token; production keeps the check on.
+INTEGRITY_REQUIRED=false

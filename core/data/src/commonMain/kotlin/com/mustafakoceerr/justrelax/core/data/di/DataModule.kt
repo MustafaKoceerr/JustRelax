@@ -27,7 +27,11 @@ import com.mustafakoceerr.justrelax.core.data.sync.DataStoreSyncTimestampStore
 import com.mustafakoceerr.justrelax.core.data.sync.DatabaseSoundCatalogSync
 import com.mustafakoceerr.justrelax.core.data.sync.SoundCatalogSync
 import com.mustafakoceerr.justrelax.core.data.sync.SyncTimestampStore
+import com.mustafakoceerr.justrelax.core.data.DataConstants
+import com.mustafakoceerr.justrelax.core.data.DataStoreInstallIdProvider
+import com.mustafakoceerr.justrelax.core.network.api.InstallIdProvider
 import okio.FileSystem
+import org.koin.core.qualifier.named
 import okio.SYSTEM
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -45,16 +49,17 @@ val dataModule = module {
 
     // Internal sources behind SoundRepository
     singleOf(::DatabaseSoundCatalogSync) { bind<SoundCatalogSync>() }
-    singleOf(::DataStoreSyncTimestampStore) { bind<SyncTimestampStore>() }
+    single<SyncTimestampStore> { DataStoreSyncTimestampStore(get(named(DataConstants.STATE)), get()) }
     singleOf(::SoundDownloader)
 
     singleOf(::OfflineFirstSoundRepository) { bind<SoundRepository>() }
     singleOf(::DatabaseSavedSceneRepository) { bind<SavedSceneRepository>() }
-    singleOf(::UserPreferencesRepositoryImpl) { bind<UserPreferencesRepository>() }
-    singleOf(::AppSetupRepositoryImpl) { bind<AppSetupRepository>() }
+    single<UserPreferencesRepository> { UserPreferencesRepositoryImpl(get(named(DataConstants.SETTINGS)), get(), get()) }
+    single<AppSetupRepository> { AppSetupRepositoryImpl(get(named(DataConstants.STATE)), get()) }
     singleOf(::LegalRepositoryImpl) { bind<LegalRepository>() }
     singleOf(::AiMixRepositoryImpl) { bind<AiMixRepository>() }
     singleOf(::InMemorySceneRepository) { bind<SceneRepository>() }
+    single<InstallIdProvider> { DataStoreInstallIdProvider(get(named(DataConstants.STATE)), newId = { Uuid.random().toString() }) }
     single<FreesoundRepository> { NetworkFreesoundRepository(get(), get(), get()) }
     single<UserSoundRepository> {
         DatabaseUserSoundRepository(get(), get(), get(), get(), get(), newId = { "user-${Uuid.random()}" })
