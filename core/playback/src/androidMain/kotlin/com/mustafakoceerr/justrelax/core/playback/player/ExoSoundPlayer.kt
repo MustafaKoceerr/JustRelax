@@ -9,13 +9,13 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.playback.MEDIA_AUDIO_ATTRIBUTES
-import kotlin.coroutines.resume
-import kotlin.math.min
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.coroutines.resume
+import kotlin.math.min
 
 /** One looping ExoPlayer instance. All player access is confined to the main thread. */
 internal class ExoSoundPlayer(

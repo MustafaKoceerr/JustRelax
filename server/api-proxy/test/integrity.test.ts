@@ -1,20 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { verdict as genuineVerdict } from "./fixtures";
 import { evaluateVerdict, sessionRequestHash, type IntegrityPolicy } from "../src/integrity";
 
 const POLICY: IntegrityPolicy = { packageName: "com.mustafakoceerr.justrelax", maxAgeMs: 600_000 };
 const NOW: number = 1_800_000_000_000;
 
 function verdict(overrides: Record<string, unknown> = {}): unknown {
-  return {
-    requestDetails: {
-      requestPackageName: "com.mustafakoceerr.justrelax",
-      requestHash: "abc",
-      timestampMillis: String(NOW - 5_000),
-    },
-    appIntegrity: { appRecognitionVerdict: "PLAY_RECOGNIZED", packageName: "com.mustafakoceerr.justrelax" },
-    deviceIntegrity: { deviceRecognitionVerdict: ["MEETS_DEVICE_INTEGRITY"] },
-    ...overrides,
-  };
+  return genuineVerdict("abc", NOW - 5_000, overrides);
 }
 
 describe("evaluateVerdict", () => {

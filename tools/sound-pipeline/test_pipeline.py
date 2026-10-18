@@ -2,7 +2,8 @@
 import unittest
 
 from pipeline import (
-    catalog_entry, find_event_segments, normalization_gain, parse_loudnorm, parse_rms_envelope, validate_manifest,
+    catalog_entry, find_event_segments, normalization_gain, parse_loudnorm, parse_rms_envelope, review_page,
+    validate_manifest,
 )
 
 WINDOW = 0.05  # seconds per envelope value
@@ -194,6 +195,21 @@ class CatalogEntryTest(unittest.TestCase):
         self.assertEqual("RARE", entry["default_frequency"])
         self.assertNotIn("icon", entry)
         self.assertNotIn("attribution", entry)
+
+
+class ReviewPageTest(unittest.TestCase):
+
+    def test_names_are_escaped_and_only_beds_loop(self):
+        bed_entry = catalog_entry(bed(), {"en": "Rain <b>& wind</b>"}, [("rain_light.ogg", 30000, 1)])
+        event_entry = catalog_entry(bed(id="owl", kind="EVENT", bed=None), {}, [("owl_0.ogg", 2000, 1), ("owl_1.ogg", 2000, 1)])
+
+        page = review_page([bed_entry, event_entry])
+
+        self.assertIn("Rain &lt;b&gt;&amp; wind&lt;/b&gt;", page)
+        self.assertNotIn("<b>& wind", page)
+        self.assertIn('<audio controls preload="none" loop src="audio/rain_light.ogg">', page)
+        self.assertIn('<audio controls preload="none" src="audio/owl_1.ogg">', page)
+        self.assertIn("<b>owl</b>", page)
 
 
 if __name__ == "__main__":

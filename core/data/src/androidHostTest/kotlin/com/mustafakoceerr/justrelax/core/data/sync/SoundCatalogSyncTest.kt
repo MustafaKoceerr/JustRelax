@@ -1,22 +1,20 @@
 package com.mustafakoceerr.justrelax.core.data.sync
 
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.data.download.FakeSoundFileStorage
+import com.mustafakoceerr.justrelax.core.data.inMemoryDriver
 import com.mustafakoceerr.justrelax.core.data.mapper.asSounds
 import com.mustafakoceerr.justrelax.core.data.mapper.insert
 import com.mustafakoceerr.justrelax.core.data.repository.DatabaseSavedSceneRepository
 import com.mustafakoceerr.justrelax.core.database.createDatabase
-import com.mustafakoceerr.justrelax.core.database.db.JustRelaxDatabase
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.SoundSource
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
-import com.mustafakoceerr.justrelax.core.testing.TestDispatcherProvider
+import com.mustafakoceerr.justrelax.core.testing.testDispatchers
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlin.test.AfterTest
@@ -29,9 +27,7 @@ import kotlin.time.Clock
 
 class SoundCatalogSyncTest {
 
-    private val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).also {
-        JustRelaxDatabase.Schema.create(it)
-    }
+    private val driver = inMemoryDriver()
     private val database = createDatabase(driver)
     private val storage = FakeSoundFileStorage()
     private val remote = FakeSoundRemoteDataSource(
@@ -41,11 +37,10 @@ class SoundCatalogSyncTest {
     @AfterTest
     fun tearDown() = driver.close()
 
-    private fun TestScope.dispatchers() = TestDispatcherProvider(StandardTestDispatcher(testScheduler))
+    
+    private suspend fun TestScope.sync() = DatabaseSoundCatalogSync(remote, database, storage, testDispatchers()).syncWithServer()
 
-    private suspend fun TestScope.sync() = DatabaseSoundCatalogSync(remote, database, storage, dispatchers()).syncWithServer()
-
-    private fun TestScope.savedScenes() = DatabaseSavedSceneRepository(database.savedSceneQueries, Clock.System, dispatchers())
+    private fun TestScope.savedScenes() = DatabaseSavedSceneRepository(database.savedSceneQueries, Clock.System, testDispatchers())
 
     private fun localSounds(): Map<String, Sound> =
         database.soundQueries.selectSoundsWithClips().executeAsList().asSounds().associateBy { it.id }

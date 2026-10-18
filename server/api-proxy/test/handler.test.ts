@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { handle, type Deps, type Env } from "../src/handler";
 import { issueSession } from "../src/session";
+import { PACKAGE_NAME, verdict } from "./fixtures";
 
 const NOW: number = 1_800_000_000_000;
 const SECRET: string = "session-secret";
@@ -24,7 +25,7 @@ interface Upstream {
 let env: Env;
 let upstream: Upstream[];
 let upstreamResponse: Response;
-let verdict: unknown;
+let decoded: unknown;
 let deps: Deps;
 
 function fakeEnv(): Env {
@@ -33,7 +34,7 @@ function fakeEnv(): Env {
     FREESOUND_API_KEY: "fs-test",
     SESSION_SECRET: SECRET,
     GOOGLE_SERVICE_ACCOUNT_JSON: "{}",
-    PACKAGE_NAME: "com.mustafakoceerr.justrelax",
+    PACKAGE_NAME,
     INTEGRITY_REQUIRED: "true",
     SESSION_LIMITER: new FakeLimiter(),
     AI_LIMITER: new FakeLimiter(),
@@ -47,14 +48,14 @@ beforeEach((): void => {
   env = fakeEnv();
   upstream = [];
   upstreamResponse = Response.json({});
-  verdict = null;
+  decoded = null;
   deps = {
     now: (): number => NOW,
     fetch: async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
       upstream.push({ url: String(input), headers: new Headers(init?.headers), body: typeof init?.body === "string" ? init.body : null });
       return upstreamResponse;
     },
-    decodeIntegrity: async (): Promise<unknown> => verdict,
+    decodeIntegrity: async (): Promise<unknown> => decoded,
   };
 });
 
@@ -69,16 +70,17 @@ function request(path: string, init: RequestInit = {}): Request {
   });
 }
 
+/** A request from an app with a valid session. */
+async function authed(path: string, init: RequestInit = {}): Promise<Request> {
+  return request(path, { ...init, headers: { authorization: `Bearer ${await session()}` } });
+}
+
 async function json(response: Response): Promise<unknown> {
   return response.json();
 }
 
 function genuineVerdict(hash: string): unknown {
-  return {
-    requestDetails: { requestPackageName: "com.mustafakoceerr.justrelax", requestHash: hash, timestampMillis: String(NOW - 1_000) },
-    appIntegrity: { appRecognitionVerdict: "PLAY_RECOGNIZED" },
-    deviceIntegrity: { deviceRecognitionVerdict: ["MEETS_DEVICE_INTEGRITY"] },
-  };
+  return verdict(hash, NOW - 1_000);
 }
 
 const SESSION_HASH: string = "b19f76277ff87a14d93396b5552ae5b71806ab94625a5a44fd0db9a917eebee6";
@@ -87,7 +89,7 @@ describe("POST /v1/session", () => {
   const install1: string = "install-1";
 
   it("issues an hour-long session to the genuine app", async () => {
-    verdict = genuineVerdict(SESSION_HASH);
+    decoded = genuineVerdict(SESSION_HASH);
 
     const response: Response = await handle(
       request("/v1/session", { method: "POST", body: JSON.stringify({ installId: install1, integrityToken: "tok" }) }),
@@ -103,7 +105,7 @@ describe("POST /v1/session", () => {
   });
 
   it("refuses a failing verdict, an unreachable Google and a bad body", async () => {
-    verdict = { ...(genuineVerdict(SESSION_HASH) as Record<string, unknown>), appIntegrity: { appRecognitionVerdict: "UNEVALUATED" } };
+    decoded = verdict(SESSION_HASH, NOW - 1_000, { appIntegrity: { appRecognitionVerdict: "UNEVALUATED" } });
     const refused: Response = await handle(
       request("/v1/session", { method: "POST", body: JSON.stringify({ installId: install1, integrityToken: "tok" }) }),
       env,
@@ -112,7 +114,7 @@ describe("POST /v1/session", () => {
     expect(refused.status).toBe(403);
     expect(await json(refused)).toEqual({ error: "integrity_app" });
 
-    verdict = null;
+    decoded = null;
     const unavailable: Response = await handle(
       request("/v1/session", { method: "POST", body: JSON.stringify({ installId: install1, integrityToken: "tok" }) }),
       env,
@@ -174,7 +176,7 @@ describe("POST /v1/ai/mix", () => {
     });
 
     const response: Response = await handle(
-      request("/v1/ai/mix", { method: "POST", body, headers: { authorization: `Bearer ${await session()}` } }),
+      await authed("/v1/ai/mix", { method: "POST", body }),
       env,
       deps,
     );
@@ -195,7 +197,7 @@ describe("POST /v1/ai/mix", () => {
       limiter.allow = false;
 
       const response: Response = await handle(
-        request("/v1/ai/mix", { method: "POST", body, headers: { authorization: `Bearer ${await session()}` } }),
+        await authed("/v1/ai/mix", { method: "POST", body }),
         env,
         deps,
       );
@@ -208,7 +210,7 @@ describe("POST /v1/ai/mix", () => {
   it("is rate limited per install and reports an OpenAI failure as a bad gateway", async () => {
     (env.AI_LIMITER as FakeLimiter).allow = false;
     const limited: Response = await handle(
-      request("/v1/ai/mix", { method: "POST", body, headers: { authorization: `Bearer ${await session()}` } }),
+      await authed("/v1/ai/mix", { method: "POST", body }),
       env,
       deps,
     );
@@ -218,7 +220,7 @@ describe("POST /v1/ai/mix", () => {
     (env.AI_LIMITER as FakeLimiter).allow = true;
     upstreamResponse = new Response("boom", { status: 500 });
     const failed: Response = await handle(
-      request("/v1/ai/mix", { method: "POST", body, headers: { authorization: `Bearer ${await session()}` } }),
+      await authed("/v1/ai/mix", { method: "POST", body }),
       env,
       deps,
     );
@@ -231,7 +233,7 @@ describe("GET /v1/freesound/search", () => {
     upstreamResponse = Response.json({ count: 0, next: null, results: [] });
 
     const response: Response = await handle(
-      request("/v1/freesound/search?query=rain&page=2", { headers: { authorization: `Bearer ${await session()}` } }),
+      await authed("/v1/freesound/search?query=rain&page=2"),
       env,
       deps,
     );
@@ -246,14 +248,14 @@ describe("GET /v1/freesound/search", () => {
   it("passes Freesound's rate limit on and rejects a bad query", async () => {
     upstreamResponse = new Response("slow down", { status: 429 });
     const throttled: Response = await handle(
-      request("/v1/freesound/search?query=rain", { headers: { authorization: `Bearer ${await session()}` } }),
+      await authed("/v1/freesound/search?query=rain"),
       env,
       deps,
     );
     expect(throttled.status).toBe(429);
 
     const bad: Response = await handle(
-      request("/v1/freesound/search?query=", { headers: { authorization: `Bearer ${await session()}` } }),
+      await authed("/v1/freesound/search?query="),
       env,
       deps,
     );

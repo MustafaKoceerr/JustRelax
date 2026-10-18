@@ -1,14 +1,13 @@
 package com.mustafakoceerr.justrelax.core.network.source
 
 import com.mustafakoceerr.justrelax.core.common.AppError
+import com.mustafakoceerr.justrelax.core.network.api.jsonHeaders
 import com.mustafakoceerr.justrelax.core.network.createHttpClient
 import com.mustafakoceerr.justrelax.core.network.dto.NetworkSoundClip
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandler
 import io.ktor.client.engine.mock.respond
-import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.io.IOException
 import kotlin.test.Test
@@ -18,7 +17,6 @@ import kotlin.test.assertNull
 
 class SoundRemoteDataSourceImplTest {
 
-    private val json = headersOf(HttpHeaders.ContentType, "application/json")
     private val catalogUrl = "https://cdn.test/v2/sounds-v2.json"
     private val requestedUrls = mutableListOf<String>()
 
@@ -68,7 +66,7 @@ class SoundRemoteDataSourceImplTest {
 
     @Test
     fun theV2Catalog_isFetchedAndParsed() = runTest {
-        val sounds = dataSource { respond(catalog, headers = json) }.getSounds()
+        val sounds = dataSource { respond(catalog, headers = jsonHeaders) }.getSounds()
 
         assertEquals(listOf(catalogUrl), requestedUrls)
         assertEquals(listOf("birds", "creek"), sounds.map { it.id })
@@ -81,7 +79,7 @@ class SoundRemoteDataSourceImplTest {
 
     @Test
     fun relativeClipUrls_areResolvedAgainstTheCatalogsDirectory() = runTest {
-        val sounds = dataSource { respond(catalog, headers = json) }.getSounds()
+        val sounds = dataSource { respond(catalog, headers = jsonHeaders) }.getSounds()
 
         assertEquals(
             listOf(
@@ -102,7 +100,7 @@ class SoundRemoteDataSourceImplTest {
 
     @Test
     fun malformedJson_throwsSerializationError() = runTest {
-        val dataSource = dataSource { respond("""[{"id":"v1 catalog"}]""", headers = json) }
+        val dataSource = dataSource { respond("""[{"id":"v1 catalog"}]""", headers = jsonHeaders) }
 
         assertFailsWith<AppError.Network.SerializationError> { dataSource.getSounds() }
     }

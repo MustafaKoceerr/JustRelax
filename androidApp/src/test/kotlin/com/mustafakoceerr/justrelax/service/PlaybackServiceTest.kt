@@ -17,10 +17,10 @@ import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.playback.di.playbackModule
-import com.mustafakoceerr.justrelax.core.playback.player.SoundPlayer
 import com.mustafakoceerr.justrelax.core.playback.player.SoundPlayerFactory
 import com.mustafakoceerr.justrelax.core.playback.timer.SleepTimer
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSleepTimer
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundPlayer
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import kotlinx.coroutines.runBlocking
@@ -50,28 +50,7 @@ import kotlin.test.assertTrue
 @Config(sdk = [35], application = Application::class)
 class PlaybackServiceTest {
 
-    private class FakeBed : SoundPlayer {
-        var isPlaying = false
-        var level = 0f
-        override suspend fun prepare(clip: String, volume: Float) = Unit
-        override suspend fun play(fadeInDurationMs: Long, startAtFraction: Float) {
-            isPlaying = true
-        }
-        override suspend fun pause() {
-            isPlaying = false
-        }
-        override suspend fun resume() {
-            isPlaying = true
-        }
-        override suspend fun release() {
-            isPlaying = false
-        }
-        override fun setVolume(volume: Float) {
-            level = volume
-        }
-    }
-
-    private val beds = mutableListOf<FakeBed>()
+    private val beds = mutableListOf<FakeSoundPlayer>()
     private val sounds = FakeSoundRepository(listOf(testSound("rain", localPath = "/sounds/rain.mp3")))
     private val scene = InMemorySceneRepository(sounds)
     private val timer = FakeSleepTimer()
@@ -90,7 +69,7 @@ class PlaybackServiceTest {
                     single<SoundRepository> { sounds }
                     single<SceneRepository> { scene }
                     single<SleepTimer> { timer }
-                    single<SoundPlayerFactory> { SoundPlayerFactory { FakeBed().also { beds += it } } }
+                    single<SoundPlayerFactory> { SoundPlayerFactory { FakeSoundPlayer().also { beds += it } } }
                 },
             )
         }
@@ -234,12 +213,12 @@ class PlaybackServiceTest {
     @Test
     fun aShortSound_ducksTheScene() {
         startPlaying()
-        val fullVolume = beds.single().level
+        val fullVolume = beds.single().volume!!
 
         focusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK)
 
         assertTrue(isSounding)
-        assertTrue(beds.single().level < fullVolume)
+        assertTrue(beds.single().volume!! < fullVolume)
     }
 
     @Test

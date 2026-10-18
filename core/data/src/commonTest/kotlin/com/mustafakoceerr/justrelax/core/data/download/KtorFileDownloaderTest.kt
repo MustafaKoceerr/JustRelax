@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.core.data.download
 
-import com.mustafakoceerr.justrelax.core.testing.TestDispatcherProvider
+import com.mustafakoceerr.justrelax.core.testing.testDispatchers
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandler
@@ -11,7 +11,6 @@ import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.writeFully
 import io.ktor.utils.io.writer
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import okio.IOException
@@ -35,7 +34,7 @@ class KtorFileDownloaderTest {
     private fun TestScope.repository(handler: MockRequestHandler) = KtorFileDownloader(
         httpClient = HttpClient(MockEngine(handler)),
         fileSystem = fileSystem,
-        dispatchers = TestDispatcherProvider(StandardTestDispatcher(testScheduler)),
+        dispatchers = testDispatchers(),
     )
 
     @Test

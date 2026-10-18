@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.core.data.download
 
-import com.mustafakoceerr.justrelax.core.testing.TestDispatcherProvider
-import kotlinx.coroutines.test.StandardTestDispatcher
+import com.mustafakoceerr.justrelax.core.testing.testDispatchers
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import okio.Path.Companion.toPath
@@ -19,7 +18,7 @@ class FileSystemSoundFileStorageTest {
     private fun TestScope.storage() = FileSystemSoundFileStorage(
         fileSystem = fileSystem,
         appFilesDirectory = appFiles,
-        dispatchers = TestDispatcherProvider(StandardTestDispatcher(testScheduler)),
+        dispatchers = testDispatchers(),
     )
 
     @Test

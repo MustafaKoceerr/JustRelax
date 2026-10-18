@@ -1,6 +1,7 @@
 package com.mustafakoceerr.justrelax.core.playback.soundscape
 
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeOneShotPlayer
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -17,26 +18,10 @@ import kotlin.time.Duration.Companion.seconds
 
 class EventSchedulerTest {
 
-    private data class Play(val atMs: Long, val soundId: String, val clip: String, val volume: Float, val pan: Float)
-
-    private class RecordingPlayer(private val now: () -> Long) : OneShotPlayer {
-        val plays = mutableListOf<Play>()
-        override fun play(soundId: String, clip: String, volume: Float, pan: Float) {
-            plays += Play(now(), soundId, clip, volume, pan)
-        }
-
-        override suspend fun load(soundId: String, clips: List<String>) = Unit
-        override fun unload(soundId: String) = Unit
-        override fun pauseAll() = Unit
-        override fun resumeAll() = Unit
-        override fun stopAll() = Unit
-        override fun release() = Unit
-    }
-
-    private fun TestScope.scheduler(player: RecordingPlayer) =
+    private fun TestScope.scheduler(player: FakeOneShotPlayer) =
         EventScheduler(backgroundScope, player, Random(seed = 7), testTimeSource)
 
-    private fun TestScope.recorder() = RecordingPlayer { testScheduler.currentTime }
+    private fun TestScope.recorder() = FakeOneShotPlayer(requireLoaded = false) { testScheduler.currentTime }
 
     private fun TestScope.run(duration: Duration) {
         advanceTimeBy(duration)
@@ -46,7 +31,7 @@ class EventSchedulerTest {
     private fun owl(frequency: EventFrequency = EventFrequency.OFTEN, volume: Float = 0.5f, clips: Int = 3) =
         PlayableLayer.Event("owl", clips = (1..clips).map { "/owl_$it.ogg" }, volume = volume, frequency = frequency)
 
-    private fun List<Play>.gaps() = zipWithNext { a, b -> b.atMs - a.atMs }
+    private fun List<FakeOneShotPlayer.Play>.gaps() = zipWithNext { a, b -> b.atMs - a.atMs }
 
     @Test
     fun anEventPlaysRepeatedly_atIntervalsWithinItsFrequency() = runTest {

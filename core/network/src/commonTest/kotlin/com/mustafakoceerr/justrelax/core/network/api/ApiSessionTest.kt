@@ -2,6 +2,7 @@ package com.mustafakoceerr.justrelax.core.network.api
 
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.network.createHttpClient
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeClock
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.toByteArray
@@ -11,7 +12,6 @@ import io.ktor.client.request.header
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
@@ -19,18 +19,15 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 class ApiSessionTest {
 
-    private val json = headersOf(HttpHeaders.ContentType, "application/json")
     private val requests = mutableListOf<HttpRequestData>()
     private val bodies = mutableListOf<String>()
-    private var nowMs = 1_800_000_000_000L
-    private val clock = object : Clock {
-        override fun now(): Instant = Instant.fromEpochMilliseconds(nowMs)
-    }
+    private val clock = FakeClock(Instant.fromEpochMilliseconds(1_800_000_000_000L))
     private val hashes = mutableListOf<String>()
     private var integrity = IntegrityTokenProvider { hash -> hashes += hash; "integrity-token" }
     private var sessionStatus = HttpStatusCode.OK
@@ -43,14 +40,14 @@ class ApiSessionTest {
             when (request.url.encodedPath) {
                 "/v1/session" -> if (sessionStatus == HttpStatusCode.OK) {
                     issued++
-                    respond("""{"token":"session-$issued","expiresAt":${nowMs + 3_600_000}}""", HttpStatusCode.OK, json)
+                    respond("""{"token":"session-$issued","expiresAt":${(clock.now() + 1.hours).toEpochMilliseconds()}}""", HttpStatusCode.OK, jsonHeaders)
                 } else {
-                    respond("""{"error":"x"}""", sessionStatus, json)
+                    respond("""{"error":"x"}""", sessionStatus, jsonHeaders)
                 }
                 else -> if (request.headers[HttpHeaders.Authorization] == "Bearer session-1" && issued == 1 && staleFirstSession) {
-                    respond("""{"error":"unauthorized"}""", HttpStatusCode.Unauthorized, json)
+                    respond("""{"error":"unauthorized"}""", HttpStatusCode.Unauthorized, jsonHeaders)
                 } else {
-                    respond("{}", HttpStatusCode.OK, json)
+                    respond("{}", HttpStatusCode.OK, jsonHeaders)
                 }
             }
         },
@@ -82,9 +79,9 @@ class ApiSessionTest {
         val session = session()
         session.bearer()
 
-        nowMs += 3_600_000 - 61_000
+        clock.advanceBy(1.hours - 61.seconds)
         assertEquals("session-1", session.bearer())
-        nowMs += 2_000
+        clock.advanceBy(2.seconds)
         assertEquals("session-2", session.bearer())
         assertEquals(2, hashes.size)
     }

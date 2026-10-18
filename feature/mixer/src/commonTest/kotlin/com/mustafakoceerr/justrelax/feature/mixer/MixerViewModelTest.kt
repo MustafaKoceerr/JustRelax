@@ -1,17 +1,17 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
 import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
-import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
+import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
+import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
+import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
-import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
-import kotlin.random.Random
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
