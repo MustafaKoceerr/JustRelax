@@ -32,14 +32,15 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 - [ ] Play'den kurulan sürümde AI karışımı ve Freesound aramasını dene. Integrity yalnızca Play'den kurulan uygulamada geçer.
 
 ## 5. Firebase (Crashlytics ve Analytics)
-- [ ] Bir kez `! firebase login` çalıştır; Firebase projesini ve Android uygulamasını Firebase MCP ile ben oluştururum. Ya da `google-services.json`'u kendin `androidApp/` klasörüne koy.
-- [ ] Firebase konsolunda Analytics veri saklama süresini seç (*Project settings → Data settings*).
+- [x] Proje `justrelax-app` açıldı (2026-10-18). İki Android uygulaması var: `com.mustafakoceerr.justrelax` ve benchmark için `com.mustafakoceerr.justrelax.benchmark`. `androidApp/google-services.json` yerinde ve git'e girmiyor. Emülatörde denendi: izin yokken hiçbir şey gitmiyor, izin verilince olaylar ve bir çökme raporu gönderiliyor.
+- [ ] Google Analytics'i bağla: Firebase Console → *Project settings → Integrations → Google Analytics → Enable*, bir Analytics hesabı seç. Bağlanmazsa olaylar gönderilir ama raporlarda görünmez.
+- [ ] Analytics veri saklama süresini seç (2 ya da 14 ay; politikadaki "en fazla 14 ay" ikisine de uyar).
+- [ ] Yeni bir bilgisayarda ya da CI'da Firebase'li build gerekirse `google-services.json`'u konsoldan indir (*Project settings → Your apps*).
 
 ## 6. Play Console ve gizlilik
 - [ ] Veri güvenliği formunu `docs/play-data-safety.md`'ye göre doldur.
 - [x] Gizlilik politikası güncellendi ve 12 dilde yayında (2026-10-18). Kaynağı `docs/legal/`.
 - [ ] İstersen kullanım koşullarını (`terms-conditions.html`) da güncelletebilirsin; hâlâ yalnızca OpenAI'dan söz ediyor.
-- [ ] Firebase'de Analytics saklama süresini seçerken politikada "en fazla 14 ay" yazdığını unutma (2 ya da 14 ay, ikisi de uyuyor).
 
 ## 7. İçerik
 - [ ] 15 yerleşik sesin kaynak lisanslarını doğrula (`tools/sound-pipeline/manifest.json`'daki `license_note`). Şu an `OWN` olarak yayında.
