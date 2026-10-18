@@ -35,4 +35,5 @@
     <string name="loading">Loading</string>
     <string name="sound_kind_bed">Plays all the time</string>
     <string name="frequency_title">How often</string>
+    <string name="action_pause">Pause</string>
 </resources>

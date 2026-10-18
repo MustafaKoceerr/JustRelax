@@ -8,6 +8,8 @@ import com.mustafakoceerr.justrelax.core.ui.util.WindowWidthSize
 import com.mustafakoceerr.justrelax.core.ui.util.rememberWindowSizeClass
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixDetailPane
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarDuration
@@ -17,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTabScaffold
@@ -51,7 +54,7 @@ fun SavedRoute(
     SavedScreen(
         uiState = uiState,
         onCreateMix = onOpenMixer,
-        onPlayMix = viewModel::playMix,
+        onTogglePlay = viewModel::togglePlay,
         onDeleteMix = viewModel::deleteMix,
         onSelectMix = viewModel::selectMix,
     )
@@ -62,7 +65,7 @@ fun SavedRoute(
 fun SavedScreen(
     uiState: SavedUiState,
     onCreateMix: () -> Unit,
-    onPlayMix: (mixId: Long) -> Unit,
+    onTogglePlay: (mixId: Long) -> Unit,
     onDeleteMix: (mixId: Long) -> Unit,
     onSelectMix: (mixId: Long) -> Unit,
 ) {
@@ -96,15 +99,18 @@ fun SavedScreen(
                     Row(modifier = Modifier.fillMaxSize()) {
                         SavedMixesList(
                             mixes = state.mixes,
-                            onMixClick = { mix -> onPlayMix(mix.id) },
-                            onMixDelete = { mix -> onDeleteMix(mix.id) },
-                            onMixSelect = { mix -> onSelectMix(mix.id) },
+                            playingMixId = state.playingMixId,
+                            onTogglePlay = onTogglePlay,
+                            onDelete = onDeleteMix,
+                            onSelect = onSelectMix,
                             selectedMixId = state.selected?.id,
-                            modifier = Modifier.weight(1f),
+                            columns = GridCells.Fixed(1),
+                            modifier = Modifier.width(LIST_PANE_WIDTH),
                         )
                         SavedMixDetailPane(
                             detail = state.selected,
-                            onPlay = onPlayMix,
+                            isPlaying = state.selected != null && state.selected.id == state.playingMixId,
+                            onTogglePlay = onTogglePlay,
                             onDelete = onDeleteMix,
                             modifier = Modifier.weight(1f),
                         )
@@ -114,8 +120,9 @@ fun SavedScreen(
                 else -> {
                     SavedMixesList(
                         mixes = state.mixes,
-                        onMixClick = { mix -> onPlayMix(mix.id) },
-                        onMixDelete = { mix -> onDeleteMix(mix.id) }
+                        playingMixId = state.playingMixId,
+                        onTogglePlay = onTogglePlay,
+                        onDelete = onDeleteMix,
                     )
                 }
             }
@@ -124,3 +131,5 @@ fun SavedScreen(
 }
 
 private enum class SavedContent { LOADING, EMPTY, MIXES }
+
+private val LIST_PANE_WIDTH = 400.dp

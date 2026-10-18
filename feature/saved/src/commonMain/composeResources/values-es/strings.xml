@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="saved_empty_description">Mezcla tus sonidos favoritos y guárdalos aquí. Empieza a crear tu colección de calma.</string>
+    <string name="saved_empty_description">¿Te gusta una escena? Guárdala mientras suena y te esperará aquí.</string>
     <string name="saved_empty_image_cd">Aún no hay mezclas guardadas</string>
     <string name="saved_empty_title">Aún no hay registros</string>
     <string name="saved_mix_metadata">%1$d sonidos • %2$s</string>
@@ -11,4 +11,5 @@
     <string name="date_format_short">dd/MM/yyyy</string>
     <string name="err_play_mix_failed">No se pudo reproducir la mezcla</string>
     <string name="saved_detail_placeholder">Elige una mezcla guardada para ver sus sonidos.</string>
+    <string name="saved_more_options">Más opciones</string>
 </resources>

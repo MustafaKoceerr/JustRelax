@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="saved_empty_description">お気に入りのサウンドをミックスしてここに保存しましょう。自分だけの安らぎコレクションを作り始めてください。</string>
+    <string name="saved_empty_description">気に入ったシーンは再生中に保存すると、ここで待っています。</string>
     <string name="saved_empty_image_cd">保存されたミックスはまだありません</string>
     <string name="saved_empty_title">まだ記録がありません</string>
     <string name="saved_mix_metadata">%1$d サウンド • %2$s</string>
@@ -11,4 +11,5 @@
     <string name="date_format_short">yyyy/MM/dd</string>
     <string name="err_play_mix_failed">ミックスの再生に失敗しました</string>
     <string name="saved_detail_placeholder">保存したミックスを選ぶとサウンドが表示されます。</string>
+    <string name="saved_more_options">その他のオプション</string>
 </resources>

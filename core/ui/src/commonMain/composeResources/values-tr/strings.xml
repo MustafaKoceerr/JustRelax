@@ -35,4 +35,5 @@
     <string name="loading">Yükleniyor</string>
     <string name="sound_kind_bed">Sürekli çalar</string>
     <string name="frequency_title">Sıklık</string>
+    <string name="action_pause">Duraklat</string>
 </resources>

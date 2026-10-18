@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="saved_empty_description">Mix your favorite sounds and save them here. Start building your own peace collection.</string>
+    <string name="saved_empty_description">Like a scene? Save it while it plays and it will wait for you here.</string>
     <string name="saved_empty_image_cd">No saved mixes yet</string>
     <string name="saved_empty_title">No Records Yet</string>
     <string name="saved_mix_metadata">%1$d Sounds • %2$s</string>
@@ -11,4 +11,5 @@
     <string name="date_format_short">MM/dd/yyyy</string>
     <string name="err_play_mix_failed">Failed to play mix</string>
     <string name="saved_detail_placeholder">Choose a saved mix to see its sounds.</string>
+    <string name="saved_more_options">More options</string>
 </resources>

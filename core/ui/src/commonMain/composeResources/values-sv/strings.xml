@@ -35,4 +35,5 @@
     <string name="loading">Läser in</string>
     <string name="sound_kind_bed">Spelas hela tiden</string>
     <string name="frequency_title">Hur ofta</string>
+    <string name="action_pause">Pausa</string>
 </resources>
