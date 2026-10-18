@@ -10,6 +10,7 @@ class FakeUserPreferencesRepository : UserPreferencesRepository {
 
     val theme = MutableStateFlow(AppTheme.SYSTEM)
     val language = MutableStateFlow(AppLanguage.SYSTEM)
+    val aiDataNoticeAccepted = MutableStateFlow(false)
 
     override fun getTheme(): Flow<AppTheme> = theme
 
@@ -21,5 +22,11 @@ class FakeUserPreferencesRepository : UserPreferencesRepository {
 
     override suspend fun setLanguage(language: AppLanguage) {
         this.language.value = language
+    }
+
+    override fun aiDataNoticeAccepted(): Flow<Boolean> = aiDataNoticeAccepted
+
+    override suspend fun acceptAiDataNotice() {
+        aiDataNoticeAccepted.value = true
     }
 }

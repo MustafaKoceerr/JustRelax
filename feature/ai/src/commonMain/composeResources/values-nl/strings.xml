@@ -12,4 +12,10 @@
     <string name="action_clear">Wissen</string>
     <string name="ai_action_try_another_variation">Probeer een andere variant</string>
     <string name="ai_action_send">Verzenden</string>
+    <string name="ai_data_notice_title">Je tekst gaat naar OpenAI</string>
+    <string name="ai_data_notice_body">Voor een mix worden wat je schrijft en de namen van je gedownloade geluiden naar OpenAI gestuurd. OpenAI kan ze bewaren en gebruiken om zijn modellen te verbeteren. Zet er geen persoonsgegevens in.</string>
+    <string name="ai_data_notice_accept">Doorgaan</string>
+    <string name="ai_data_notice_dismiss">Niet nu</string>
+    <string name="ai_data_notice_privacy">Privacybeleid</string>
+    <string name="ai_data_notice_short">Je tekst wordt naar OpenAI gestuurd en kan worden gebruikt om zijn modellen te verbeteren. Geen persoonsgegevens invullen.</string>
 </resources>

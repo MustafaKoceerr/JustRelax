@@ -18,6 +18,7 @@ internal object DataConstants {
 
     val KEY_APP_THEME = stringPreferencesKey("app_theme")
     val KEY_APP_LANGUAGE = stringPreferencesKey("app_language")
+    val KEY_AI_DATA_NOTICE_ACCEPTED = booleanPreferencesKey("ai_data_notice_accepted")
     val KEY_STARTER_PACK_INSTALLED = booleanPreferencesKey("starter_pack_installed")
     val KEY_LAST_SOUND_SYNC = longPreferencesKey("last_sound_sync_timestamp")
     val KEY_CATALOG_VERSION = intPreferencesKey("catalog_version")

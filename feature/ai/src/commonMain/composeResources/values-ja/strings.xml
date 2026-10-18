@@ -12,4 +12,10 @@
     <string name="action_clear">クリア</string>
     <string name="ai_action_try_another_variation">別のバリエーションを試す</string>
     <string name="ai_action_send">送信</string>
+    <string name="ai_data_notice_title">入力した文章は OpenAI に送られます</string>
+    <string name="ai_data_notice_body">ミックスを作成するため、入力した文章とダウンロード済みサウンドの名前が OpenAI に送信されます。OpenAI はこれらを保存し、モデルの改善に使用する場合があります。個人情報は入力しないでください。</string>
+    <string name="ai_data_notice_accept">続ける</string>
+    <string name="ai_data_notice_dismiss">今はしない</string>
+    <string name="ai_data_notice_privacy">プライバシーポリシー</string>
+    <string name="ai_data_notice_short">入力した文章は OpenAI に送信され、モデルの改善に使用される場合があります。個人情報は入力しないでください。</string>
 </resources>

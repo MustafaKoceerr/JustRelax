@@ -14,7 +14,10 @@ import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeLegalRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSystemLauncher
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeUserPreferencesRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
@@ -58,13 +61,87 @@ class AiViewModelTest {
     private val scene = InMemorySceneRepository(repository)
     private val playback = FakePlaybackController()
     private val analytics = TestAnalyticsHelper()
+    // Most tests are about the mix itself, so the OpenAI notice was already accepted.
+    private val preferences = FakeUserPreferencesRepository().apply { aiDataNoticeAccepted.value = true }
+    private val launcher = FakeSystemLauncher()
 
     private fun TestScope.viewModel() = AiViewModel(
         aiMixRepository = ai,
         sceneRepository = scene,
         playbackController = playback,
         analytics = analytics,
+        preferences = preferences,
+        legalRepository = FakeLegalRepository(),
+        systemLauncher = launcher,
     ).also { observe(it.uiState) }
+
+    @Test
+    fun theFirstMix_asksAboutOpenAiFirst_andSendsNothing() = runMainTest {
+        preferences.aiDataNoticeAccepted.value = false
+        val viewModel = viewModel()
+        viewModel.updatePrompt("rain")
+
+        viewModel.generateMix()
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.showAiDataNotice)
+        assertEquals(null, ai.lastPrompt)
+    }
+
+    @Test
+    fun acceptingTheNotice_remembersIt_andSendsTheMix() = runMainTest {
+        preferences.aiDataNoticeAccepted.value = false
+        val viewModel = viewModel()
+        viewModel.updatePrompt("rain")
+        viewModel.generateMix()
+        advanceUntilIdle()
+
+        viewModel.acceptAiDataNotice()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.showAiDataNotice)
+        assertTrue(preferences.aiDataNoticeAccepted.value)
+        assertEquals("rain", ai.lastPrompt)
+        assertEquals("Rainy Night", viewModel.uiState.value.mixName)
+    }
+
+    @Test
+    fun onceAccepted_theNoticeIsNotShownAgain() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.updatePrompt("rain")
+
+        viewModel.generateMix()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.showAiDataNotice)
+        assertEquals("rain", ai.lastPrompt)
+    }
+
+    @Test
+    fun dismissingTheNotice_sendsNothing() = runMainTest {
+        preferences.aiDataNoticeAccepted.value = false
+        val viewModel = viewModel()
+        viewModel.updatePrompt("rain")
+        viewModel.generateMix()
+        advanceUntilIdle()
+
+        viewModel.dismissAiDataNotice()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.showAiDataNotice)
+        assertFalse(preferences.aiDataNoticeAccepted.value)
+        assertEquals(null, ai.lastPrompt)
+    }
+
+    @Test
+    fun theNotice_opensThePrivacyPolicy() = runMainTest {
+        val viewModel = viewModel()
+
+        viewModel.openPrivacyPolicy()
+        advanceUntilIdle()
+
+        assertEquals(listOf("https://legal.test/en/privacy"), launcher.openedUrls)
+    }
 
     @Test
     fun blankPrompt_doesNothing() = runMainTest {

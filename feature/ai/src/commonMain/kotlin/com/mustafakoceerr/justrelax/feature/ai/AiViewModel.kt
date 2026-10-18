@@ -9,12 +9,15 @@ import com.mustafakoceerr.justrelax.core.analytics.Params
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
+import com.mustafakoceerr.justrelax.core.data.repository.LegalRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
+import com.mustafakoceerr.justrelax.core.data.repository.UserPreferencesRepository
 import com.mustafakoceerr.justrelax.core.model.AiGeneratedMix
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.playback.toggleAndPlay
 import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
+import com.mustafakoceerr.justrelax.core.ui.system.SystemLauncher
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.ai.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_empty_response
@@ -24,6 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,12 +37,16 @@ class AiViewModel(
     private val sceneRepository: SceneRepository,
     private val playbackController: PlaybackController,
     private val analytics: AnalyticsHelper,
+    private val preferences: UserPreferencesRepository,
+    private val legalRepository: LegalRepository,
+    private val systemLauncher: SystemLauncher,
 ) : ViewModel() {
 
     private data class ScreenState(
         val prompt: String = "",
         val isLoading: Boolean = false,
         val mix: AiGeneratedMix? = null,
+        val showAiDataNotice: Boolean = false,
         val userMessage: UiText? = null,
     )
 
@@ -53,6 +61,7 @@ class AiViewModel(
             mixSounds = screen.mix?.sounds.orEmpty(),
             // A paused mix shows its sounds as not playing.
             sceneCards = SceneCards.of(scene, showPlaying = isPlaying),
+            showAiDataNotice = screen.showAiDataNotice,
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AiUiState())
@@ -60,29 +69,55 @@ class AiViewModel(
     /** Typing in the field and picking a suggestion both set the prompt. */
     fun updatePrompt(text: String) = screenState.update { it.copy(prompt = text) }
 
-    /** Generates a mix for the current prompt; also used to regenerate. */
+    /**
+     * Generates a mix for the current prompt; also used to regenerate. The first time, the user is
+     * told that the prompt goes to OpenAI, which may use it to improve its models, and nothing is
+     * sent until they agree.
+     */
     fun generateMix() {
+        if (screenState.value.prompt.isBlank()) return
+        viewModelScope.launch {
+            if (preferences.aiDataNoticeAccepted().first()) {
+                requestMix()
+            } else {
+                screenState.update { it.copy(showAiDataNotice = true) }
+            }
+        }
+    }
+
+    fun acceptAiDataNotice() {
+        screenState.update { it.copy(showAiDataNotice = false) }
+        viewModelScope.launch {
+            preferences.acceptAiDataNotice()
+            requestMix()
+        }
+    }
+
+    fun dismissAiDataNotice() = screenState.update { it.copy(showAiDataNotice = false) }
+
+    fun openPrivacyPolicy() {
+        viewModelScope.launch { systemLauncher.openUrl(legalRepository.getPrivacyPolicyUrl()) }
+    }
+
+    private suspend fun requestMix() {
         val prompt = screenState.value.prompt
-        if (prompt.isBlank()) return
         // Never the prompt itself: only that a mix was asked for, and why it failed.
         analytics.logEvent(AnalyticsEvent(EventTypes.AI_MIX_REQUESTED))
 
-        viewModelScope.launch {
-            aiMixRepository.generateMix(prompt).collect { result ->
-                when (result) {
-                    is Resource.Loading -> screenState.update { it.copy(isLoading = true) }
-                    is Resource.Success -> {
-                        val mix = result.data
-                        sceneRepository.replaceWith(mix.scene)
-                        playbackController.play()
-                        screenState.update { it.copy(isLoading = false, mix = mix) }
-                    }
-                    is Resource.Error -> {
-                        analytics.logEvent(
-                            AnalyticsEvent(EventTypes.AI_MIX_FAILED, mapOf(Params.ERROR to (result.error::class.simpleName ?: "Unknown"))),
-                        )
-                        screenState.update { it.copy(isLoading = false, userMessage = result.error.toMessage()) }
-                    }
+        aiMixRepository.generateMix(prompt).collect { result ->
+            when (result) {
+                is Resource.Loading -> screenState.update { it.copy(isLoading = true) }
+                is Resource.Success -> {
+                    val mix = result.data
+                    sceneRepository.replaceWith(mix.scene)
+                    playbackController.play()
+                    screenState.update { it.copy(isLoading = false, mix = mix) }
+                }
+                is Resource.Error -> {
+                    analytics.logEvent(
+                        AnalyticsEvent(EventTypes.AI_MIX_FAILED, mapOf(Params.ERROR to (result.error::class.simpleName ?: "Unknown"))),
+                    )
+                    screenState.update { it.copy(isLoading = false, userMessage = result.error.toMessage()) }
                 }
             }
         }

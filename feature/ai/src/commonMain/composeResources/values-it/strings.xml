@@ -12,4 +12,10 @@
     <string name="action_clear">Cancella</string>
     <string name="ai_action_try_another_variation">Prova un'altra variante</string>
     <string name="ai_action_send">Invia</string>
+    <string name="ai_data_notice_title">Il tuo testo va a OpenAI</string>
+    <string name="ai_data_notice_body">Per creare un mix, ciò che scrivi e i nomi dei suoni scaricati vengono inviati a OpenAI. OpenAI può conservarli e usarli per migliorare i propri modelli. Non inserire informazioni personali.</string>
+    <string name="ai_data_notice_accept">Continua</string>
+    <string name="ai_data_notice_dismiss">Non ora</string>
+    <string name="ai_data_notice_privacy">Informativa sulla privacy</string>
+    <string name="ai_data_notice_short">Il tuo testo viene inviato a OpenAI e può essere usato per migliorare i suoi modelli. Non inserire informazioni personali.</string>
 </resources>
