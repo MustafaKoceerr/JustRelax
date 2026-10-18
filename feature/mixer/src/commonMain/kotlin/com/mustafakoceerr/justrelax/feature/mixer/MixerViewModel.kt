@@ -36,6 +36,7 @@ class MixerViewModel(
         val selectedSoundCount: Int = DEFAULT_SOUND_COUNT,
         val isGenerating: Boolean = false,
         val mixedSounds: List<LocalizedSound> = emptyList(),
+        val lockedIds: Set<String> = emptySet(),
         val userMessage: UiText? = null,
     )
 
@@ -48,6 +49,7 @@ class MixerViewModel(
             mixedSounds = screen.mixedSounds,
             // A paused mix shows its sounds as not playing.
             sceneCards = SceneCards.of(scene, showPlaying = isPlaying),
+            lockedIds = screen.lockedIds,
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MixerUiState())
@@ -58,7 +60,14 @@ class MixerViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
     fun selectSoundCount(count: Int) = screenState.update {
-        it.copy(selectedSoundCount = count.coerceIn(RandomSceneGenerator.MIN_LAYERS, RandomSceneGenerator.MAX_LAYERS))
+        val min = maxOf(RandomSceneGenerator.MIN_LAYERS, it.lockedIds.size)
+        it.copy(selectedSoundCount = count.coerceIn(min, RandomSceneGenerator.MAX_LAYERS))
+    }
+
+    /** A locked sound keeps playing as it is when the rest of the mix is shuffled again. */
+    fun toggleLock(soundId: String) = screenState.update {
+        val locked = if (soundId in it.lockedIds) it.lockedIds - soundId else it.lockedIds + soundId
+        it.copy(lockedIds = locked, selectedSoundCount = maxOf(it.selectedSoundCount, locked.size))
     }
 
     fun generateMix() {
@@ -67,7 +76,9 @@ class MixerViewModel(
 
         viewModelScope.launch {
             val sounds = soundRepository.getSounds().first()
-            val scene = sceneGenerator.generate(sounds, screenState.value.selectedSoundCount)
+            // Only locked sounds that still play are kept; one the user stopped is let go.
+            val keep = sceneRepository.scene.value.layers.filter { it.soundId in screenState.value.lockedIds }
+            val scene = sceneGenerator.generate(sounds, screenState.value.selectedSoundCount, keep)
             if (scene.layers.isEmpty()) {
                 screenState.update {
                     it.copy(
@@ -87,6 +98,7 @@ class MixerViewModel(
                 it.copy(
                     isGenerating = false,
                     mixedSounds = scene.layers.mapNotNull { layer -> soundsById[layer.soundId]?.localized(languageCode) },
+                    lockedIds = keep.mapTo(mutableSetOf()) { layer -> layer.soundId },
                 )
             }
         }

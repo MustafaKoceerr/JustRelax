@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mix_count_selector_title">몇 개의 사운드를 믹스하고 싶으신가요?</string>
-    <string name="mixer_empty_state_message">개수를 선택하고 믹스를 시작하세요!</string>
     <string name="mixer_screen_title">믹서</string>
-    <string name="action_create_mix">믹스 만들기</string>
     <string name="err_mixer_generate_failed">믹스 생성에 실패했습니다. 사운드를 다운로드했는지 확인하세요.</string>
+    <string name="mixer_count_title">몇 개의 소리?</string>
+    <string name="action_shuffle">섞기</string>
+    <string name="mixer_empty_title">우연에 맡겨 보세요</string>
+    <string name="mixer_empty_body">소리 개수를 고르고 섞어 보세요. 마음에 드는 소리는 잠그면 다시 섞어도 그대로 남아요.</string>
+    <string name="mixer_current_mix">이 믹스</string>
+    <string name="mixer_lock">섞을 때 유지</string>
+    <string name="mixer_unlock">다시 섞이게 하기</string>
+    <string name="mixer_lock_hint">잠근 소리는 다시 섞어도 남아요.</string>
 </resources>

@@ -135,4 +135,86 @@ class MixerViewModelTest {
         assertEquals(2, scene.scene.value.beds.size)
         assertEquals(EventFrequency.RARE, viewModel.uiState.value.sceneCards.frequencies[event.id])
     }
+
+    @Test
+    fun aLockedSound_staysWithItsVolume_whenTheRestIsShuffled() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.selectSoundCount(3)
+        viewModel.generateMix()
+        advanceUntilIdle()
+        val kept = viewModel.uiState.value.mixedSounds.first()
+        viewModel.changeVolume(kept.id, 0.95f)
+        viewModel.toggleLock(kept.id)
+
+        repeat(5) {
+            viewModel.generateMix()
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertEquals(3, state.mixedSounds.size)
+            assertTrue(state.mixedSounds.any { it.id == kept.id })
+            assertEquals(0.95f, viewModel.volumes.value[kept.id])
+            assertEquals(setOf(kept.id), state.lockedIds)
+        }
+    }
+
+    @Test
+    fun toggleLock_locksAndUnlocks() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.generateMix()
+        advanceUntilIdle()
+        val id = viewModel.uiState.value.mixedSounds.first().id
+
+        viewModel.toggleLock(id)
+        advanceUntilIdle()
+        assertEquals(setOf(id), viewModel.uiState.value.lockedIds)
+
+        viewModel.toggleLock(id)
+        advanceUntilIdle()
+        assertTrue(viewModel.uiState.value.lockedIds.isEmpty())
+    }
+
+    @Test
+    fun theSoundCount_neverGoesBelowTheLockedSounds() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.selectSoundCount(5)
+        viewModel.generateMix()
+        advanceUntilIdle()
+        viewModel.uiState.value.mixedSounds.take(3).forEach { viewModel.toggleLock(it.id) }
+
+        viewModel.selectSoundCount(2)
+        advanceUntilIdle()
+
+        assertEquals(3, viewModel.uiState.value.selectedSoundCount)
+        assertEquals(3, viewModel.uiState.value.minSelectableCount)
+    }
+
+    @Test
+    fun lockingMoreThanTheSelectedCount_raisesIt() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.selectSoundCount(4)
+        viewModel.generateMix()
+        advanceUntilIdle()
+        viewModel.selectSoundCount(2)
+        viewModel.uiState.value.mixedSounds.take(3).forEach { viewModel.toggleLock(it.id) }
+        advanceUntilIdle()
+
+        assertEquals(3, viewModel.uiState.value.selectedSoundCount)
+    }
+
+    @Test
+    fun aLockedSoundThatWasStopped_isNotKept() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.generateMix()
+        advanceUntilIdle()
+        val id = viewModel.uiState.value.mixedSounds.first().id
+        viewModel.toggleLock(id)
+        viewModel.toggleSound(id)
+        advanceUntilIdle()
+
+        viewModel.generateMix()
+        advanceUntilIdle()
+
+        assertFalse(id in viewModel.uiState.value.lockedIds)
+    }
 }

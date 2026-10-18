@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mix_count_selector_title">How many sounds would you like to mix?</string>
-    <string name="mixer_empty_state_message">Choose a number and start mixing!</string>
     <string name="mixer_screen_title">Mixer</string>
-    <string name="action_create_mix">Create Mix</string>
     <string name="err_mixer_generate_failed">Failed to generate mix. Make sure you have downloaded sounds.</string>
+    <string name="mixer_count_title">How many sounds?</string>
+    <string name="action_shuffle">Shuffle</string>
+    <string name="mixer_empty_title">Let chance pick</string>
+    <string name="mixer_empty_body">Pick how many sounds, then shuffle. Lock the ones you like and they stay when you shuffle again.</string>
+    <string name="mixer_current_mix">This mix</string>
+    <string name="mixer_lock">Keep when shuffling</string>
+    <string name="mixer_unlock">Let it shuffle</string>
+    <string name="mixer_lock_hint">Locked sounds stay when you shuffle again.</string>
 </resources>

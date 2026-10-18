@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mix_count_selector_title">いくつのサウンドをミックスしますか？</string>
-    <string name="mixer_empty_state_message">数を選んでミックスを始めましょう！</string>
     <string name="mixer_screen_title">ミキサー</string>
-    <string name="action_create_mix">ミックスを作成</string>
     <string name="err_mixer_generate_failed">ミックスの生成に失敗しました。サウンドをダウンロードしているか確認してください。</string>
+    <string name="mixer_count_title">いくつの音？</string>
+    <string name="action_shuffle">シャッフル</string>
+    <string name="mixer_empty_title">偶然にまかせよう</string>
+    <string name="mixer_empty_body">音の数を選んでシャッフル。気に入った音はロックすると、次のシャッフルでも残ります。</string>
+    <string name="mixer_current_mix">このミックス</string>
+    <string name="mixer_lock">シャッフルしても残す</string>
+    <string name="mixer_unlock">シャッフルに戻す</string>
+    <string name="mixer_lock_hint">ロックした音は次のシャッフルでも残ります。</string>
 </resources>

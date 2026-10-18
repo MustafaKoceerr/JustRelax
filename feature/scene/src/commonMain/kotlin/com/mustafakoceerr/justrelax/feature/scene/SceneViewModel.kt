@@ -44,6 +44,7 @@ class SceneViewModel(
 
     private data class ScreenState(
         val isSaveDialogVisible: Boolean = false,
+        val saveDialogName: String = "",
         val isSaving: Boolean = false,
         val userMessage: UiText? = null,
     )
@@ -70,6 +71,7 @@ class SceneViewModel(
             },
             isPlaying = isPlaying,
             isSaveDialogVisible = screen.isSaveDialogVisible,
+            saveDialogName = screen.saveDialogName,
             isSaving = screen.isSaving,
             userMessage = screen.userMessage,
         )
@@ -102,7 +104,9 @@ class SceneViewModel(
         sceneRepository.clear()
     }
 
-    fun openSaveDialog() = screenState.update { it.copy(isSaveDialogVisible = true) }
+    /** [suggestedName] fills the name field, such as the name the AI gave its mix. */
+    fun openSaveDialog(suggestedName: String? = null) =
+        screenState.update { it.copy(isSaveDialogVisible = true, saveDialogName = suggestedName.orEmpty()) }
 
     fun dismissSaveDialog() = screenState.update { it.copy(isSaveDialogVisible = false) }
 

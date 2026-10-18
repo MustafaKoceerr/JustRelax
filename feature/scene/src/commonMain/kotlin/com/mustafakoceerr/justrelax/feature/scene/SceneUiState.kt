@@ -8,6 +8,8 @@ data class SceneUiState(
     val layers: List<SceneLayerItem> = emptyList(),
     val isPlaying: Boolean = false,
     val isSaveDialogVisible: Boolean = false,
+    /** What the save dialog's name field starts with, such as an AI mix's name. */
+    val saveDialogName: String = "",
     val isSaving: Boolean = false,
     val userMessage: UiText? = null,
 ) {

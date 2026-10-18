@@ -33,4 +33,6 @@
     <string name="sound_state_stopped">रुका हुआ</string>
     <string name="volume_level">आवाज़</string>
     <string name="loading">लोड हो रहा है</string>
+    <string name="sound_kind_bed">लगातार बजता है</string>
+    <string name="frequency_title">कितनी बार</string>
 </resources>

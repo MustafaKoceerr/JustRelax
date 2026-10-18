@@ -33,4 +33,6 @@
     <string name="sound_state_stopped">Stoppad</string>
     <string name="volume_level">Volym</string>
     <string name="loading">Läser in</string>
+    <string name="sound_kind_bed">Spelas hela tiden</string>
+    <string name="frequency_title">Hur ofta</string>
 </resources>
