@@ -36,4 +36,5 @@
     <string name="sound_kind_bed">Joue en continu</string>
     <string name="frequency_title">Fréquence</string>
     <string name="action_pause">Pause</string>
+    <string name="sleep_timer">Minuteur de sommeil</string>
 </resources>

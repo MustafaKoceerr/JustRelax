@@ -36,4 +36,5 @@
     <string name="sound_kind_bed">लगातार बजता है</string>
     <string name="frequency_title">कितनी बार</string>
     <string name="action_pause">रोकें</string>
+    <string name="sleep_timer">स्लीप टाइमर</string>
 </resources>

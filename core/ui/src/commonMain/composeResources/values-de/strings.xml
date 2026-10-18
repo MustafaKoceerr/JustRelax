@@ -36,4 +36,5 @@
     <string name="sound_kind_bed">Spielt durchgehend</string>
     <string name="frequency_title">Wie oft</string>
     <string name="action_pause">Pausieren</string>
+    <string name="sleep_timer">Schlaf-Timer</string>
 </resources>

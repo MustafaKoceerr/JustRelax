@@ -102,6 +102,7 @@ fun JustRelaxTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = typography,
+        shapes = AppShapes,
         content = content
     )
 }

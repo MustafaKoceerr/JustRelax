@@ -16,9 +16,15 @@ class MainTabStateTest {
     fun selectingATab_makesItCurrent() {
         val state = MainTabState()
 
-        state.select(MainTab.TIMER)
+        state.select(MainTab.SAVED)
 
-        assertEquals(MainTab.TIMER, state.selected)
+        assertEquals(MainTab.SAVED, state.selected)
+    }
+
+    @Test
+    fun theBarHasFourTabs_inThisOrder() {
+        // The sleep timer is opened from the player, not from a tab.
+        assertEquals(listOf(MainTab.HOME, MainTab.MIXER, MainTab.AI, MainTab.SAVED), MainTab.entries)
     }
 
     @Test

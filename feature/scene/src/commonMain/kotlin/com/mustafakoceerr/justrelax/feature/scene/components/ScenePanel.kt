@@ -3,6 +3,7 @@ package com.mustafakoceerr.justrelax.feature.scene.components
 import com.mustafakoceerr.justrelax.core.ui.components.EmptyHint
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_pause
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.sleep_timer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Pause
@@ -54,6 +56,7 @@ fun ScenePanel(
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
     onSave: () -> Unit,
+    onOpenTimer: () -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
     onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
     onRemove: (soundId: String) -> Unit,
@@ -66,6 +69,9 @@ fun ScenePanel(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.weight(1f),
             )
+            IconButton(onClick = onOpenTimer, enabled = state.isVisible) {
+                Icon(Icons.Rounded.Bedtime, contentDescription = stringResource(CoreRes.string.sleep_timer))
+            }
             IconButton(onClick = onSave, enabled = state.isVisible) {
                 Icon(Icons.Rounded.FavoriteBorder, contentDescription = stringResource(Res.string.action_save_scene))
             }

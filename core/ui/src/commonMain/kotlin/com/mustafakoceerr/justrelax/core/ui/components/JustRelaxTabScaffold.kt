@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,7 +29,14 @@ fun JustRelaxTabScaffold(
         modifier = modifier,
         containerColor = Color.Transparent,
         contentWindowInsets = contentWindowInsets,
-        topBar = { JustRelaxTopBar(title = title, navigationIcon = navigationIcon, actions = actions) },
+        topBar = {
+            JustRelaxTopBar(
+                title = title,
+                titleStyle = MaterialTheme.typography.headlineSmall,
+                navigationIcon = navigationIcon,
+                actions = actions,
+            )
+        },
         content = content,
     )
 }

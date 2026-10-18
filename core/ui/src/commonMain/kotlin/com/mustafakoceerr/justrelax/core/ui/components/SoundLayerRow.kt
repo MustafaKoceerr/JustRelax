@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.Check
@@ -77,7 +76,7 @@ fun SoundLayerRow(
         label = "LayerContainerColor",
     )
 
-    Surface(modifier = modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), color = containerColor) {
+    Surface(modifier = modifier.fillMaxWidth(), shape = MaterialTheme.shapes.large, color = containerColor) {
         Column(modifier = Modifier.padding(start = 12.dp, end = 4.dp, top = 12.dp, bottom = 4.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 LayerIcon(icon = icon, name = name, isPlaying = isPlaying, onToggle = onToggle)

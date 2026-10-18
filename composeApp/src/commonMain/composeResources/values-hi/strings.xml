@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="tab_ai">AI</string>
-    <string name="tab_home">होम</string>
+    <string name="tab_home">आवाज़ें</string>
     <string name="tab_mixer">मिक्सर</string>
     <string name="tab_saved">सेव्ड</string>
-    <string name="tab_timer">टाइमर</string>
 </resources>

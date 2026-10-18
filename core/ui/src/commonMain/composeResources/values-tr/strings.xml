@@ -36,4 +36,5 @@
     <string name="sound_kind_bed">Sürekli çalar</string>
     <string name="frequency_title">Sıklık</string>
     <string name="action_pause">Duraklat</string>
+    <string name="sleep_timer">Uyku zamanlayıcısı</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.feature.splash.SplashRoute
+import com.mustafakoceerr.justrelax.feature.timer.TimerRoute
 import com.mustafakoceerr.justrelax.feature.settings.SettingsRoute
 import com.mustafakoceerr.justrelax.feature.settings.consent.ConsentRoute
 import com.mustafakoceerr.justrelax.feature.settings.credits.CreditsRoute
@@ -94,7 +95,11 @@ private fun JustRelaxNavDisplay() {
                 MainRoute(
                     onOpenSettings = { backStack.navigate(Route.Settings) },
                     onOpenMySounds = { backStack.navigate(Route.MySounds) },
+                    onOpenTimer = { backStack.navigate(Route.Timer) },
                 )
+            }
+            entry<Route.Timer> {
+                TimerRoute(onBack = { backStack.goBack() })
             }
             entry<Route.Settings> {
                 SettingsRoute(

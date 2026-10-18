@@ -12,6 +12,7 @@ import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSleepTimer
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSavedSceneRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
@@ -45,6 +46,7 @@ class SceneViewModelTest {
     private val playback = FakePlaybackController()
     private val savedScenes = FakeSavedSceneRepository()
     private val analytics = TestAnalyticsHelper()
+    private val sleepTimer = FakeSleepTimer()
 
     private suspend fun TestScope.viewModel(): SceneViewModel {
         scene.toggle("rain")
@@ -56,9 +58,11 @@ class SceneViewModelTest {
             savedSceneRepository = savedScenes,
             languageController = language,
             analytics = analytics,
+            sleepTimer = sleepTimer,
         ).also {
             observe(it.uiState)
             observe(it.volumes)
+            observe(it.timerRemaining)
         }
     }
 
@@ -72,6 +76,18 @@ class SceneViewModelTest {
         assertEquals(listOf("rain"), viewModel.uiState.value.layers.map { it.soundId })
         assertTrue(viewModel.uiState.value.isPlaying)
         assertTrue(viewModel.uiState.value.isVisible)
+    }
+
+    @Test
+    fun theMiniPlayerNamesItsSounds_inTheAppLanguage() = runMainTest {
+        language.currentLanguage.value = AppLanguage.TURKISH
+        val viewModel = viewModel()
+        scene.toggle("fire")
+        viewModel.miniPlayer.test {
+            var state = awaitItem()
+            while (state.names.size < 2) state = awaitItem()
+            assertEquals(listOf("Yağmur", "fire"), state.names)
+        }
     }
 
     /** Volume drags change the scene many times a second; the mini player must not redraw for them. */
@@ -146,6 +162,24 @@ class SceneViewModelTest {
         viewModel.openSaveDialog()
         advanceUntilIdle()
         assertEquals("", viewModel.uiState.value.saveDialogName)
+    }
+
+    @Test
+    fun theTimersRemainingTime_showsWhileItRunsOrIsPaused() = runMainTest {
+        val viewModel = viewModel()
+        assertNull(viewModel.timerRemaining.value)
+
+        sleepTimer.start(90)
+        advanceUntilIdle()
+        assertEquals(90L, viewModel.timerRemaining.value)
+
+        sleepTimer.pause()
+        advanceUntilIdle()
+        assertEquals(90L, viewModel.timerRemaining.value)
+
+        sleepTimer.cancel()
+        advanceUntilIdle()
+        assertNull(viewModel.timerRemaining.value)
     }
 
     @Test

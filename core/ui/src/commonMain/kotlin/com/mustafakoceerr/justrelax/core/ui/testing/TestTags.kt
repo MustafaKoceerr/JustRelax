@@ -20,6 +20,9 @@ object TestTags {
     const val TIMER_START = "timer_start"
     const val TIMER_CANCEL = "timer_cancel"
 
-    /** `tab_home`, `tab_timer`, … */
+    /** The mini player's sleep timer button, which opens the timer. */
+    const val MINI_PLAYER_TIMER = "mini_player_timer"
+
+    /** `tab_home`, `tab_mixer`, … */
     fun tab(name: String): String = "tab_${name.lowercase()}"
 }

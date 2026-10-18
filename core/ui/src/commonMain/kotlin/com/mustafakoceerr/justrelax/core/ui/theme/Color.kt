@@ -61,9 +61,10 @@ val onErrorDark = Color(0xFF561E19)
 val errorContainerDark = Color(0xFF73342D)
 val onErrorContainerDark = Color(0xFFFFDAD5)
 
-val backgroundDark = Color(0xFF1E1B18)
+// Deep, warm near-black for night listening; containers step up from it clearly.
+val backgroundDark = Color(0xFF15120F)
 val onBackgroundDark = Color(0xFFEEE0D5)
-val surfaceDark = Color(0xFF1E1B18)
+val surfaceDark = Color(0xFF15120F)
 val onSurfaceDark = Color(0xFFEEE0D5)
 
 val surfaceVariantDark = Color(0xFF4F4539)
@@ -75,12 +76,12 @@ val inverseSurfaceDark = Color(0xFFEEE0D5)
 val inverseOnSurfaceDark = Color(0xFF372F27)
 val inversePrimaryDark = Color(0xFF88511D)
 
-val surfaceDimDark = Color(0xFF17130E)
+val surfaceDimDark = Color(0xFF15120F)
 val surfaceBrightDark = Color(0xFF3D3832)
-val surfaceContainerLowestDark = Color(0xFF110E09)
-val surfaceContainerLowDark = Color(0xFF1F1B16)
-val surfaceContainerDark = Color(0xFF231F1A)
-val surfaceContainerHighDark = Color(0xFF2E2924)
-val surfaceContainerHighestDark = Color(0xFF39342E)
+val surfaceContainerLowestDark = Color(0xFF100D0B)
+val surfaceContainerLowDark = Color(0xFF1D1915)
+val surfaceContainerDark = Color(0xFF241F1A)
+val surfaceContainerHighDark = Color(0xFF2E2823)
+val surfaceContainerHighestDark = Color(0xFF3A332D)
 
 
