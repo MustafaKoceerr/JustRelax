@@ -30,12 +30,5 @@
     <string name="mysounds_problem_too_short_for_bed">Un bucle necesita al menos 5 segundos.</string>
     <string name="mysounds_problem_too_long_for_event">Un sonido puntual puede durar hasta 10 segundos.</string>
     <string name="mysounds_problem_outside_file">La selección está fuera del archivo.</string>
-    <string name="mysounds_record">Grabar</string>
-    <string name="mysounds_record_title">Grabar un sonido</string>
-    <string name="mysounds_record_hint">Acerca el teléfono al sonido. La grabación se detiene a los 5 minutos o al salir de la app.</string>
-    <string name="mysounds_record_start">Empezar a grabar</string>
-    <string name="mysounds_record_stop">Detener y editar</string>
-    <string name="mysounds_record_failed">No se pudo grabar. Inténtalo de nuevo.</string>
-    <string name="mysounds_record_permission_denied">JustRelax necesita el micrófono para grabar un sonido. Puedes permitirlo en los ajustes del sistema.</string>
     <string name="mysounds_search_online">Buscar en Freesound</string>
 </resources>

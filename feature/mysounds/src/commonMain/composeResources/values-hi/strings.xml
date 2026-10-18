@@ -30,12 +30,5 @@
     <string name="mysounds_problem_too_short_for_bed">लूप कम से कम 5 सेकंड का होना चाहिए।</string>
     <string name="mysounds_problem_too_long_for_event">एक बार वाली ध्वनि अधिकतम 10 सेकंड की हो सकती है।</string>
     <string name="mysounds_problem_outside_file">चयन फ़ाइल से बाहर है।</string>
-    <string name="mysounds_record">रिकॉर्ड करें</string>
-    <string name="mysounds_record_title">ध्वनि रिकॉर्ड करें</string>
-    <string name="mysounds_record_hint">फ़ोन को ध्वनि के पास रखें। रिकॉर्डिंग 5 मिनट बाद या ऐप छोड़ने पर रुक जाती है।</string>
-    <string name="mysounds_record_start">रिकॉर्डिंग शुरू करें</string>
-    <string name="mysounds_record_stop">रोकें और संपादित करें</string>
-    <string name="mysounds_record_failed">रिकॉर्डिंग नहीं हो सकी। फिर से कोशिश करें।</string>
-    <string name="mysounds_record_permission_denied">ध्वनि रिकॉर्ड करने के लिए JustRelax को माइक्रोफ़ोन की ज़रूरत है। आप सिस्टम सेटिंग में इसकी अनुमति दे सकते हैं।</string>
     <string name="mysounds_search_online">Freesound पर खोजें</string>
 </resources>

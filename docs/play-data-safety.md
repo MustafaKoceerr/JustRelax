@@ -18,7 +18,7 @@ Proxy hiçbir şeyi saklamaz. İstek sınırları yalnızca 60 saniyelik sayaçl
 
 ## Cihazdan hiç çıkmayanlar (beyan edilmez)
 
-- **Mikrofon kayıtları ve içe aktarılan ses dosyaları:** `files/audio/user` altında kalır, hiçbir sunucuya gönderilmez. Android yedeğine de girmez; yedekleme yalnızca ayarlar dosyasını alır (`data_extraction_rules.xml`).
+- **İçe aktarılan ses dosyaları:** `files/audio/user` altında kalır, hiçbir sunucuya gönderilmez. Android yedeğine de girmez; yedekleme yalnızca ayarlar dosyasını alır (`data_extraction_rules.xml`).
 - **Kayıtlı karışımlar ve kütüphane:** cihazdaki veritabanında kalır.
 
 ## Formdaki cevaplar
@@ -48,6 +48,6 @@ Proxy hiçbir şeyi saklamaz. İstek sınırları yalnızca 60 saniyelik sayaçl
 - **Gizlilik politikası** (`cdn.mustafakoceerr.com/legal/<dil>/privacy-policy.html`) şu üç noktayı söylemeli:
   - AI cümlesinin OpenAI'a, aramaların Freesound'a gittiği.
   - Rastgele kurulum kimliğinin yalnızca kötüye kullanımı önlemek için kullanıldığı.
-  - Kayıtların cihazdan çıkmadığı.
-- **Mikrofon izni:** `RECORD_AUDIO` kısıtlı bir izin değil; Play Console'da ayrı bir beyan formu yok. İzin, kullanıcı "Kayıt"a dokununca isteniyor.
+  - Kullanıcının içe aktardığı seslerin cihazdan çıkmadığı.
+- **Mikrofon:** Uygulama mikrofon kullanmıyor; `RECORD_AUDIO` izni yok.
 - **Play Integrity:** Formdaki "Cihaz veya diğer kimlikler" satırı bunu kapsıyor. Yayından önce Google'ın güncel rehberini bir kez kontrol et: <https://developer.android.com/google/play/integrity/overview>

@@ -30,12 +30,5 @@
     <string name="mysounds_problem_too_short_for_bed">Een lus heeft minstens 5 seconden nodig.</string>
     <string name="mysounds_problem_too_long_for_event">Een eenmalig geluid mag maximaal 10 seconden duren.</string>
     <string name="mysounds_problem_outside_file">De selectie ligt buiten het bestand.</string>
-    <string name="mysounds_record">Opnemen</string>
-    <string name="mysounds_record_title">Geluid opnemen</string>
-    <string name="mysounds_record_hint">Houd je telefoon dicht bij het geluid. De opname stopt na 5 minuten of als je de app verlaat.</string>
-    <string name="mysounds_record_start">Opname starten</string>
-    <string name="mysounds_record_stop">Stoppen en bewerken</string>
-    <string name="mysounds_record_failed">Opnemen is mislukt. Probeer het opnieuw.</string>
-    <string name="mysounds_record_permission_denied">JustRelax heeft de microfoon nodig om een geluid op te nemen. Je kunt dit toestaan in de systeeminstellingen.</string>
     <string name="mysounds_search_online">Zoeken op Freesound</string>
 </resources>

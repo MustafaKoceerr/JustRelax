@@ -25,9 +25,6 @@ sealed interface Route : NavKey {
     @Serializable
     data object MySounds : Route
 
-    @Serializable
-    data object Recorder : Route
-
     /** Cuts a new sound out of a file on the device; [origin] is set for a sound found online. */
     @Serializable
     data class SoundEditor(
@@ -48,7 +45,6 @@ sealed interface Route : NavKey {
                 subclass(Settings::class)
                 subclass(Credits::class)
                 subclass(MySounds::class)
-                subclass(Recorder::class)
                 subclass(SoundEditor::class)
                 subclass(Freesound::class)
             }

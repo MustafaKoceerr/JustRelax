@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.core.testing.fake
 
 import com.mustafakoceerr.justrelax.core.media.AudioImporter
-import com.mustafakoceerr.justrelax.core.media.AudioRecorder
 import com.mustafakoceerr.justrelax.core.media.AudioTrimmer
 import com.mustafakoceerr.justrelax.core.media.ClipPreviewer
 import com.mustafakoceerr.justrelax.core.media.ImportedAudio
@@ -81,38 +80,5 @@ class FakeAudioImporter : AudioImporter {
         importedUris += uri
         error?.let { throw it }
         return result
-    }
-}
-
-class FakeAudioRecorder : AudioRecorder {
-    var isRecording = false
-        private set
-    var isCancelled = false
-        private set
-    var startError: MediaException? = null
-    var stopError: MediaException? = null
-    var level = 0.5f
-
-    override fun start(): String {
-        startError?.let { throw it }
-        isRecording = true
-        isCancelled = false
-        return PATH
-    }
-
-    override fun level(): Float = level
-
-    override fun stop() {
-        isRecording = false
-        stopError?.let { throw it }
-    }
-
-    override fun cancel() {
-        isRecording = false
-        isCancelled = true
-    }
-
-    companion object {
-        const val PATH = "/cache/record/recording.m4a"
     }
 }

@@ -7,12 +7,10 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:media"))
-            implementation(project(":core:playback"))
         }
 
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.core.ktx)
         }
     }
 }
