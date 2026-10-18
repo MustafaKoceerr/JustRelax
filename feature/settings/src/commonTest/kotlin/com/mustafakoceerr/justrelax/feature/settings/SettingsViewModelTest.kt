@@ -5,7 +5,10 @@ import com.mustafakoceerr.justrelax.core.model.ConsentStatus
 import com.mustafakoceerr.justrelax.core.data.language.LanguageStrategy
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
+import com.mustafakoceerr.justrelax.core.model.TipProduct
+import com.mustafakoceerr.justrelax.core.model.TipTier
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeTipRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeLegalRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSystemLauncher
@@ -30,6 +33,7 @@ class SettingsViewModelTest {
     private val repository = FakeSoundRepository(listOf(testSound("rain"), testSound("fire")))
 
     private val consent = FakeConsentRepository(ConsentStatus.DENIED)
+    private val tips = FakeTipRepository()
 
     private fun viewModel(strategy: LanguageStrategy = LanguageStrategy.IN_APP) = SettingsViewModel(
         preferences = preferences,
@@ -38,10 +42,23 @@ class SettingsViewModelTest {
         systemLauncher = launcher,
         languageController = FakeLanguageController(strategy),
         consentRepository = consent,
+        tipRepository = tips,
     )
 
     private fun TestScope.observedViewModel(strategy: LanguageStrategy = LanguageStrategy.IN_APP) =
         viewModel(strategy).also { observe(it.uiState) }
+
+    @Test
+    fun theSupportRow_showsOnlyWhenTheStoreOffersTips() = runMainTest {
+        val viewModel = observedViewModel()
+        advanceUntilIdle()
+        assertFalse(viewModel.uiState.value.canTip)
+
+        tips.products.value = listOf(TipProduct(TipTier.SMALL, "$1.99"))
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.canTip)
+    }
 
     @Test
     fun themeChange_isPersistedAndShown() = runMainTest {

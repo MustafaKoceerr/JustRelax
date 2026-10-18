@@ -13,5 +13,7 @@ data class SettingsUiState(
     val isLibraryComplete: Boolean = false,
     /** Usage analytics and crash reports are sent. */
     val isUsageDataEnabled: Boolean = false,
+    /** The store offers tips, so the support row shows. */
+    val canTip: Boolean = false,
     val userMessage: UiText? = null,
 )

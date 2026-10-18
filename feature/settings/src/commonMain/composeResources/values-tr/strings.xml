@@ -33,4 +33,17 @@
     <string name="consent_later_hint">Bunu istediğin zaman Ayarlar'dan değiştirebilirsin.</string>
     <string name="settings_usage_data_title">Kullanım verisi ve çökme raporları</string>
     <string name="settings_usage_data_subtitle">Hataları düzeltmemize yardım eden anonim istatistikler</string>
+    <string name="settings_support_title">Geliştiriciye destek ol</string>
+    <string name="settings_support_subtitle">Bana bir kahve ısmarla</string>
+    <string name="support_title">Bana bir kahve ısmarla</string>
+    <string name="support_headline">JustRelax’ı tek bir kişi yapıyor</string>
+    <string name="support_body">Reklam yok, abonelik yok. Dinlenmene yardımcı oluyorsa küçük bir bahşiş uygulamanın sürmesini sağlar.</string>
+    <string name="tip_small_name">Bir kahve</string>
+    <string name="tip_medium_name">Kahve ve kek</string>
+    <string name="tip_large_name">Öğle yemeği</string>
+    <string name="support_thanks_title">Teşekkürler!</string>
+    <string name="support_thanks_body">Bahşişin çok anlamlı. Huzurun tadını çıkar.</string>
+    <string name="support_failed">Satın alma tamamlanmadı. Lütfen tekrar dene.</string>
+    <string name="support_unavailable">Bahşiş şu an kullanılamıyor.</string>
+    <string name="support_note">Bahşiş, mağaza üzerinden tek seferlik bir ödemedir. Hiçbir şeyin kilidini açmaz; uygulama herkes için aynı kalır.</string>
 </resources>
