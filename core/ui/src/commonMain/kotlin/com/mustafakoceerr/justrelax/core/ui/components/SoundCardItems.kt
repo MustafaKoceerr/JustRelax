@@ -3,10 +3,13 @@ package com.mustafakoceerr.justrelax.core.ui.components
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
+import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 
 /** What sound cards show about the scene: which sounds play, at what volume and how often. */
 @Immutable
@@ -51,6 +54,7 @@ fun LazyGridScope.soundCardItems(
             onVolumeChange = { volume -> onVolumeChange(sound.id, volume) },
             frequency = cards.frequency(sound.id),
             onFrequencyChange = { frequency -> onFrequencyChange(sound.id, frequency) },
+            modifier = Modifier.testTag(TestTags.SOUND_CARD),
         )
     }
 }

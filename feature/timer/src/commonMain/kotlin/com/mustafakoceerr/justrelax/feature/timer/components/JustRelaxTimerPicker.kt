@@ -13,12 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.core.ui.util.WindowWidthSize
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_unit_hour
@@ -95,6 +97,7 @@ fun JustRelaxTimerPicker(
             InfiniteWheelPicker(
                 itemHeight = metrics.itemHeight,
                 items = hours,
+                modifier = Modifier.testTag(TestTags.TIMER_WHEEL_HOUR),
                 initialItem = state.hour.toString().padStart(2, '0'),
                 textStyle = textStyle,
                 onItemSelected = { _, index -> state.hour = index }
@@ -114,6 +117,7 @@ fun JustRelaxTimerPicker(
             InfiniteWheelPicker(
                 itemHeight = metrics.itemHeight,
                 items = minutes,
+                modifier = Modifier.testTag(TestTags.TIMER_WHEEL_MINUTE),
                 initialItem = state.minute.toString().padStart(2, '0'),
                 textStyle = textStyle,
                 onItemSelected = { _, index -> state.minute = index }
@@ -133,6 +137,7 @@ fun JustRelaxTimerPicker(
             InfiniteWheelPicker(
                 itemHeight = metrics.itemHeight,
                 items = seconds,
+                modifier = Modifier.testTag(TestTags.TIMER_WHEEL_SECOND),
                 initialItem = state.second.toString().padStart(2, '0'),
                 textStyle = textStyle,
                 onItemSelected = { _, index -> state.second = index }

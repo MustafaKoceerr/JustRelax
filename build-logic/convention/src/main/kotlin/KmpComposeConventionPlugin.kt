@@ -27,6 +27,8 @@ class KmpComposeConventionPlugin : Plugin<Project> {
                 }
             }
 
+            configureComposeCompilerReports()
+
             // Every module's Res class lives next to its code: com.mustafakoceerr.justrelax.<module>.generated.resources
             extensions.getByType<ComposeExtension>().extensions.configure<ResourcesExtension> {
                 packageOfResClass = "${defaultNamespace.lowercase()}.generated.resources"

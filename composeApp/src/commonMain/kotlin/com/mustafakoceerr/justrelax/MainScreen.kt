@@ -45,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
@@ -52,6 +53,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
+import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.scene.SceneViewModel
 import com.mustafakoceerr.justrelax.feature.scene.components.MiniPlayerBar
 import com.mustafakoceerr.justrelax.feature.scene.SceneUiState
@@ -304,6 +306,7 @@ private fun TabNavigationItem(
             )
         },
         navigationSuiteType = navigationSuiteType,
+        modifier = Modifier.testTag(TestTags.tab(tab.name)),
     )
 }
 

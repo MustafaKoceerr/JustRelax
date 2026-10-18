@@ -25,8 +25,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_pause
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_resume
@@ -50,7 +52,8 @@ fun TimerControlButtons(
             onClick = onCancelClick,
             modifier = Modifier
                 .height(50.dp)
-                .widthIn(min = 100.dp),
+                .widthIn(min = 100.dp)
+                .testTag(TestTags.TIMER_CANCEL),
             contentPadding = PaddingValues(horizontal = 16.dp),
             colors = ButtonDefaults.filledTonalButtonColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,

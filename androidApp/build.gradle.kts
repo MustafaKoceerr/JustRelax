@@ -4,6 +4,7 @@ import java.util.Properties
 
 plugins {
     id("justrelax.android.application")
+    alias(libs.plugins.baselineprofile)
 }
 
 // Firebase (Crashlytics, Analytics) needs the project's google-services.json, which is not in git.
@@ -56,6 +57,19 @@ android {
         buildConfig = true
     }
 
+    // The Baseline Profile plugin adds benchmarkRelease and nonMinifiedRelease, copies of release that
+    // the :benchmark module installs. They are signed with the debug key and share release's code.
+    buildTypes.configureEach {
+        if (name == "benchmarkRelease" || name == "nonMinifiedRelease") {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+    sourceSets.configureEach {
+        if (name == "benchmarkRelease" || name == "nonMinifiedRelease") {
+            kotlin.directories += "src/release/kotlin"
+        }
+    }
+
     packaging {
         resources {
             // Compose resources are read from assets first; the Java-resource copy is only a duplicate.
@@ -63,6 +77,14 @@ android {
         }
     }
 
+}
+
+// The benchmark builds get their own application id, so they install beside the Play app, which has a
+// different signature. Set on the variant: the plugin copies release into these build types late,
+// over a DSL applicationIdSuffix.
+androidComponents {
+    onVariants(selector().withBuildType("benchmarkRelease")) { it.applicationId.set("com.mustafakoceerr.justrelax.benchmark") }
+    onVariants(selector().withBuildType("nonMinifiedRelease")) { it.applicationId.set("com.mustafakoceerr.justrelax.benchmark") }
 }
 
 dependencies {
@@ -75,6 +97,12 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
+    // MainActivity turns test tags into resource ids for the benchmarks.
+    implementation(libs.compose.ui)
+    implementation(libs.compose.foundation)
+    // Installs the Baseline Profile on devices without Play's cloud profiles (sideloads, benchmarks).
+    implementation(libs.androidx.profileinstaller)
+    baselineProfile(projects.benchmark)
 
     // Playback service (Media3 session + notification)
     implementation(libs.androidx.media3.session)

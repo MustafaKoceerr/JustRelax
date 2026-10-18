@@ -24,10 +24,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
+import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.consent_accept
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.consent_body
@@ -86,8 +88,8 @@ fun ConsentScreen(
                     textAlign = TextAlign.Center,
                 )
                 TextButton(onClick = onOpenPrivacyPolicy) { Text(stringResource(Res.string.consent_privacy_policy)) }
-                Button(onClick = onAccept, modifier = Modifier.fillMaxWidth()) { Text(stringResource(Res.string.consent_accept)) }
-                OutlinedButton(onClick = onDecline, modifier = Modifier.fillMaxWidth()) { Text(stringResource(Res.string.consent_decline)) }
+                Button(onClick = onAccept, modifier = Modifier.fillMaxWidth().testTag(TestTags.CONSENT_ACCEPT)) { Text(stringResource(Res.string.consent_accept)) }
+                OutlinedButton(onClick = onDecline, modifier = Modifier.fillMaxWidth().testTag(TestTags.CONSENT_DECLINE)) { Text(stringResource(Res.string.consent_decline)) }
                 Text(
                     stringResource(Res.string.consent_later_hint),
                     style = MaterialTheme.typography.bodySmall,

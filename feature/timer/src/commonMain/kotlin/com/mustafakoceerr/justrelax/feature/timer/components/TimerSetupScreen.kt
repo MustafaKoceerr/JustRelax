@@ -16,7 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.core.ui.util.rememberWindowSizeClass
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_start
@@ -64,6 +66,7 @@ fun TimerSetupScreen(
                 enabled = pickerState.totalSeconds > 0,
                 modifier = Modifier
                     .widthIn(min = 120.dp)
+                    .testTag(TestTags.TIMER_START)
                     .height(56.dp),
                 contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
                 colors = ButtonDefaults.buttonColors(
