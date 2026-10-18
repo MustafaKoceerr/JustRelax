@@ -9,7 +9,6 @@
     <string name="err_ai_no_sounds">İndirilen ses bulunamadı. AI'nin miks oluşturması için seslere ihtiyacı var.</string>
     <string name="err_ai_empty_response">AI boş veya geçersiz bir yanıt döndürdü. Lütfen tekrar deneyin.</string>
     <string name="err_unknown">Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.</string>
-    <string name="action_clear">Temizle</string>
     <string name="ai_action_try_another_variation">Başka bir varyasyon dene</string>
     <string name="ai_action_send">Gönder</string>
     <string name="ai_data_notice_title">Metniniz OpenAI’a gider</string>
@@ -18,4 +17,10 @@
     <string name="ai_data_notice_dismiss">Şimdi değil</string>
     <string name="ai_data_notice_privacy">Gizlilik politikası</string>
     <string name="ai_data_notice_short">Metniniz OpenAI’a gönderilir ve modellerini geliştirmek için kullanılabilir. Kişisel bilgi yazmayın.</string>
+    <string name="ai_greeting_title">Ne dinlemek istersin?</string>
+    <string name="ai_greeting_body">Bir yer, bir an ya da bir his anlat; indirdiğin seslerden bir sahne kurulsun.</string>
+    <string name="ai_thinking">Sahnen hazırlanıyor…</string>
+    <string name="ai_result_label">Yapay zekâ miksi</string>
+    <string name="ai_action_new">Yeni</string>
+    <string name="ai_prompt_quote">“%1$s”</string>
 </resources>

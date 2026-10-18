@@ -9,7 +9,6 @@
     <string name="err_ai_no_sounds">Inga nedladdade ljud hittades. AI:n behöver ljud för att skapa en mix.</string>
     <string name="err_ai_empty_response">AI:n gav ett tomt eller ogiltigt svar. Försök igen.</string>
     <string name="err_unknown">Ett oväntat fel inträffade. Försök igen senare.</string>
-    <string name="action_clear">Rensa</string>
     <string name="ai_action_try_another_variation">Prova en annan variation</string>
     <string name="ai_action_send">Skicka</string>
     <string name="ai_data_notice_title">Din text skickas till OpenAI</string>
@@ -18,4 +17,10 @@
     <string name="ai_data_notice_dismiss">Inte nu</string>
     <string name="ai_data_notice_privacy">Integritetspolicy</string>
     <string name="ai_data_notice_short">Din text skickas till OpenAI och kan användas för att förbättra dess modeller. Skriv inga personuppgifter.</string>
+    <string name="ai_greeting_title">Vad vill du lyssna på?</string>
+    <string name="ai_greeting_body">Beskriv en plats, ett ögonblick eller en känsla, så skapas en scen av dina nedladdade ljud.</string>
+    <string name="ai_thinking">Din scen skapas …</string>
+    <string name="ai_result_label">AI-mix</string>
+    <string name="ai_action_new">Ny</string>
+    <string name="ai_prompt_quote">”%1$s”</string>
 </resources>

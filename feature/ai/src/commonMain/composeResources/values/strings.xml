@@ -9,7 +9,6 @@
     <string name="err_ai_no_sounds">No downloaded sounds found. The AI needs sounds to create a mix.</string>
     <string name="err_ai_empty_response">The AI returned an empty or invalid response. Please try again.</string>
     <string name="err_unknown">An unexpected error occurred. Please try again later.</string>
-    <string name="action_clear">Clear</string>
     <string name="ai_action_try_another_variation">Try another variation</string>
     <string name="ai_action_send">Send</string>
     <string name="ai_data_notice_title">Your text goes to OpenAI</string>
@@ -18,4 +17,10 @@
     <string name="ai_data_notice_dismiss">Not now</string>
     <string name="ai_data_notice_privacy">Privacy policy</string>
     <string name="ai_data_notice_short">Your text is sent to OpenAI and may be used to improve its models. Don’t include personal information.</string>
+    <string name="ai_greeting_title">What would you like to hear?</string>
+    <string name="ai_greeting_body">Describe a place, a moment or a feeling, and a scene is built from your downloaded sounds.</string>
+    <string name="ai_thinking">Building your scene…</string>
+    <string name="ai_result_label">AI mix</string>
+    <string name="ai_action_new">New</string>
+    <string name="ai_prompt_quote">“%1$s”</string>
 </resources>

@@ -13,7 +13,7 @@ import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 
-/** The grid of sound cards on Home, Mixer and AI, with an optional full-width [header] above the cards. */
+/** The grid of sound cards in the library, with an optional full-width [header] above the cards. */
 @Composable
 fun SoundCardGrid(
     sounds: List<LocalizedSound>,

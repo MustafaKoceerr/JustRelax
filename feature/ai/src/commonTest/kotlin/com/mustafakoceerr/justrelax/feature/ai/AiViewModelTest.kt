@@ -216,17 +216,56 @@ class AiViewModelTest {
     }
 
     @Test
-    fun editPrompt_keepsThePrompt_butClearsTheResult() = runMainTest {
+    fun aSuggestion_isSentInOneTap() = runMainTest {
+        val viewModel = viewModel()
+
+        viewModel.sendSuggestion("Deep sleep")
+        advanceUntilIdle()
+
+        assertEquals("Deep sleep", ai.lastPrompt)
+        assertEquals("Deep sleep", viewModel.uiState.value.prompt)
+        assertEquals("Rainy Night", viewModel.uiState.value.mixName)
+    }
+
+    @Test
+    fun aSuggestion_stillAsksAboutOpenAiTheFirstTime() = runMainTest {
+        preferences.aiDataNoticeAccepted.value = false
+        val viewModel = viewModel()
+
+        viewModel.sendSuggestion("Deep sleep")
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.showAiDataNotice)
+        assertEquals(null, ai.lastPrompt)
+    }
+
+    @Test
+    fun theResult_remembersThePromptThatMadeIt() = runMainTest {
         val viewModel = viewModel()
         viewModel.updatePrompt("rain")
         viewModel.generateMix()
         advanceUntilIdle()
 
-        viewModel.editPrompt()
+        viewModel.updatePrompt("rain and owls")
         advanceUntilIdle()
 
+        assertEquals("rain", viewModel.uiState.value.lastPrompt)
+        assertEquals("rain and owls", viewModel.uiState.value.prompt)
+    }
+
+    @Test
+    fun anotherVariation_usesThePromptOfTheMixOnScreen() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.updatePrompt("rain")
+        viewModel.generateMix()
+        advanceUntilIdle()
+        viewModel.updatePrompt("half-typed")
+
+        viewModel.regenerate()
+        advanceUntilIdle()
+
+        assertEquals("rain", ai.lastPrompt)
         assertEquals("rain", viewModel.uiState.value.prompt)
-        assertTrue(viewModel.uiState.value.mixSounds.isEmpty())
     }
 
     @Test

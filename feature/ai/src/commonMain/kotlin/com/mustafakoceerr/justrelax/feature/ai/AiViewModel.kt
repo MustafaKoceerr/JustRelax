@@ -47,6 +47,7 @@ class AiViewModel(
         val prompt: String = "",
         val isLoading: Boolean = false,
         val mix: AiGeneratedMix? = null,
+        val lastPrompt: String = "",
         val showAiDataNotice: Boolean = false,
         val userMessage: UiText? = null,
     )
@@ -59,6 +60,7 @@ class AiViewModel(
             isLoading = screen.isLoading,
             mixName = screen.mix?.name.orEmpty(),
             mixDescription = screen.mix?.description.orEmpty(),
+            lastPrompt = screen.lastPrompt,
             mixSounds = screen.mix?.sounds.orEmpty(),
             // A paused mix shows its sounds as not playing.
             sceneCards = SceneCards.of(scene, showPlaying = isPlaying),
@@ -72,13 +74,17 @@ class AiViewModel(
         .map { it.volumes }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
-    /** Typing in the field and picking a suggestion both set the prompt. */
     fun updatePrompt(text: String) = screenState.update { it.copy(prompt = text) }
 
+    /** A suggestion is sent as soon as it is tapped. */
+    fun sendSuggestion(text: String) {
+        updatePrompt(text)
+        generateMix()
+    }
+
     /**
-     * Generates a mix for the current prompt; also used to regenerate. The first time, the user is
-     * told that the prompt goes to OpenAI, which may use it to improve its models, and nothing is
-     * sent until they agree.
+     * Generates a mix for the current prompt. The first time, the user is told that the prompt
+     * goes to OpenAI, which may use it to improve its models, and nothing is sent until they agree.
      */
     fun generateMix() {
         if (screenState.value.prompt.isBlank()) return
@@ -89,6 +95,14 @@ class AiViewModel(
                 screenState.update { it.copy(showAiDataNotice = true) }
             }
         }
+    }
+
+    /** Another mix for the prompt of the one on screen, even if the field was edited since. */
+    fun regenerate() {
+        val lastPrompt = screenState.value.lastPrompt
+        if (lastPrompt.isBlank()) return
+        updatePrompt(lastPrompt)
+        generateMix()
     }
 
     fun acceptAiDataNotice() {
@@ -117,7 +131,7 @@ class AiViewModel(
                     val mix = result.data
                     sceneRepository.replaceWith(mix.scene)
                     playbackController.play()
-                    screenState.update { it.copy(isLoading = false, mix = mix) }
+                    screenState.update { it.copy(isLoading = false, mix = mix, lastPrompt = prompt) }
                 }
                 is Resource.Error -> {
                     analytics.logEvent(
@@ -128,9 +142,6 @@ class AiViewModel(
             }
         }
     }
-
-    /** Back to the prompt, keeping what the user typed. */
-    fun editPrompt() = screenState.update { it.copy(mix = null) }
 
     fun clearMix() = screenState.update { ScreenState() }
 

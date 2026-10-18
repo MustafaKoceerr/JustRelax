@@ -9,7 +9,6 @@
     <string name="err_ai_no_sounds">कोई डाउनलोड की गई ध्वनि नहीं मिली। मिक्स बनाने के लिए AI को ध्वनियों की आवश्यकता है।</string>
     <string name="err_ai_empty_response">AI ने खाली या अमान्य उत्तर लौटाया। कृपया फिर से प्रयास करें।</string>
     <string name="err_unknown">एक अप्रत्याशित त्रुटि हुई। कृपया बाद में फिर से प्रयास करें।</string>
-    <string name="action_clear">साफ़ करें</string>
     <string name="ai_action_try_another_variation">एक और वैरिएशन आज़माएँ</string>
     <string name="ai_action_send">भेजें</string>
     <string name="ai_data_notice_title">आपका पाठ OpenAI को जाता है</string>
@@ -18,4 +17,10 @@
     <string name="ai_data_notice_dismiss">अभी नहीं</string>
     <string name="ai_data_notice_privacy">गोपनीयता नीति</string>
     <string name="ai_data_notice_short">आपका पाठ OpenAI को भेजा जाता है और उसके मॉडल बेहतर बनाने में उपयोग हो सकता है। व्यक्तिगत जानकारी न लिखें।</string>
+    <string name="ai_greeting_title">आप क्या सुनना चाहेंगे?</string>
+    <string name="ai_greeting_body">कोई जगह, पल या एहसास बताइए, और आपकी डाउनलोड की गई आवाज़ों से एक दृश्य बनेगा।</string>
+    <string name="ai_thinking">आपका दृश्य बन रहा है…</string>
+    <string name="ai_result_label">AI मिक्स</string>
+    <string name="ai_action_new">नया</string>
+    <string name="ai_prompt_quote">“%1$s”</string>
 </resources>
