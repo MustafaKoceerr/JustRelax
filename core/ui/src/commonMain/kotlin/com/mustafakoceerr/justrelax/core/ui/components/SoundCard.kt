@@ -46,6 +46,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
@@ -55,6 +56,8 @@ import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_state_playing
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_state_stopped
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_action_download
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_kind_event
 import org.jetbrains.compose.resources.stringResource
@@ -98,17 +101,20 @@ fun SoundCard(
         ).value
     )
 
-    val iconYOffset by animateDpAsState(
+    // Read in the layout phase (offset {}), so the slide does not recompose the card each frame.
+    val iconYOffset = animateDpAsState(
         targetValue = if (isPlaying) (-12).dp else 0.dp,
         animationSpec = tween(ANIM_COLOR_DURATION),
         label = "IconOffset"
     )
 
+    val playingState = stringResource(if (isPlaying) Res.string.sound_state_playing else Res.string.sound_state_stopped)
+
     Column(
         modifier = modifier
             .semantics {
                 role = Role.Button
-                stateDescription = if (isPlaying) "Playing" else "Stopped"
+                stateDescription = playingState
             },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -123,7 +129,7 @@ fun SoundCard(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .offset(y = iconYOffset)
+                    .offset { IntOffset(0, iconYOffset.value.roundToPx()) }
             ) {
                 SoundIconCircle(
                     icon = sound.icon,

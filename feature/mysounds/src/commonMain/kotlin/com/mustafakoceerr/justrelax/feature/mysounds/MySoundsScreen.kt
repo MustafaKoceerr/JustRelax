@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.mysounds
 
+import com.mustafakoceerr.justrelax.core.ui.util.formatClipTime
+import com.mustafakoceerr.justrelax.core.ui.extensions.readableWidth
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_delete
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_cancel
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
@@ -10,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -146,7 +147,7 @@ fun MySoundsScreen(
                     onActionClick = { if (!uiState.isImporting) onImport() },
                 )
                 else -> LazyColumn(
-                    modifier = Modifier.widthIn(max = 720.dp).fillMaxWidth(),
+                    modifier = Modifier.readableWidth().fillMaxWidth(),
                     contentPadding = PaddingValues(top = 8.dp, bottom = 96.dp),
                 ) {
                     items(uiState.sounds, key = { it.id }) { sound ->

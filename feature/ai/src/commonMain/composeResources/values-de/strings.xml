@@ -11,4 +11,5 @@
     <string name="err_unknown">Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später erneut.</string>
     <string name="action_clear">Löschen</string>
     <string name="ai_action_try_another_variation">Eine andere Variante ausprobieren</string>
+    <string name="ai_action_send">Senden</string>
 </resources>

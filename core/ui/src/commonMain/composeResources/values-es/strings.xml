@@ -29,4 +29,8 @@
     <string name="action_play">Reproducir</string>
     <string name="action_stop">Detener</string>
     <string name="action_listen">Escuchar</string>
+    <string name="sound_state_playing">Reproduciendo</string>
+    <string name="sound_state_stopped">Detenido</string>
+    <string name="volume_level">Volumen</string>
+    <string name="loading">Cargando</string>
 </resources>

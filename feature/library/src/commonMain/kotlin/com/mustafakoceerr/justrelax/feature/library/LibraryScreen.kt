@@ -1,7 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.library
 
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LibraryMusic
@@ -9,18 +8,15 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import org.koin.compose.viewmodel.koinViewModel
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTabScaffold
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.library.components.LibraryContent
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
@@ -65,27 +61,21 @@ fun LibraryScreen(
     onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
     onRetry: () -> Unit,
 ) {
-    Scaffold(
-        contentWindowInsets = WindowInsets(0.dp),
-        containerColor = Color.Transparent,
-        topBar = {
-            JustRelaxTopBar(
-                title = stringResource(Res.string.home_screen_title),
-                actions = {
-                    IconButton(onClick = onOpenMySounds) {
-                        Icon(
-                            Icons.Outlined.LibraryMusic,
-                            stringResource(Res.string.action_my_sounds)
-                        )
-                    }
-                    IconButton(onClick = onOpenSettings) {
-                        Icon(
-                            Icons.Outlined.Settings,
-                            stringResource(Res.string.action_settings)
-                        )
-                    }
-                }
-            )
+    JustRelaxTabScaffold(
+        title = stringResource(Res.string.home_screen_title),
+        actions = {
+            IconButton(onClick = onOpenMySounds) {
+                Icon(
+                    Icons.Outlined.LibraryMusic,
+                    stringResource(Res.string.action_my_sounds)
+                )
+            }
+            IconButton(onClick = onOpenSettings) {
+                Icon(
+                    Icons.Outlined.Settings,
+                    stringResource(Res.string.action_settings)
+                )
+            }
         }
     ) { innerPadding ->
         LibraryContent(

@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.mysounds.editor
 
+import com.mustafakoceerr.justrelax.core.ui.util.formatClipTime
+import com.mustafakoceerr.justrelax.core.ui.extensions.readableWidth
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +14,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -58,7 +59,6 @@ import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import com.mustafakoceerr.justrelax.core.ui.util.titleRes
 import com.mustafakoceerr.justrelax.feature.mysounds.components.WaveformTrimmer
-import com.mustafakoceerr.justrelax.feature.mysounds.formatClipTime
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_category
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_drag_hint
@@ -166,7 +166,7 @@ private fun EditorContent(
 ) {
     Column(
         modifier = Modifier
-            .widthIn(max = 720.dp)
+            .readableWidth()
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .imePadding()
@@ -214,31 +214,44 @@ private fun EditorContent(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Text(stringResource(Res.string.mysounds_category), style = MaterialTheme.typography.titleSmall)
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            SoundCategory.entries.forEach { category ->
-                FilterChip(
-                    selected = category == uiState.category,
-                    onClick = { onSelectCategory(category) },
-                    label = { Text(stringResource(category.titleRes)) },
-                )
-            }
-        }
-
-        Text(stringResource(Res.string.mysounds_icon), style = MaterialTheme.typography.titleSmall)
-        FlowRow {
-            SoundIcon.entries.forEach { icon ->
-                IconToggleButton(checked = icon == uiState.shownIcon, onCheckedChange = { onSelectIcon(icon) }) {
-                    Icon(icon.imageVector, contentDescription = icon.name.lowercase())
-                }
-            }
-        }
+        CategoryPicker(selected = uiState.category, onSelect = onSelectCategory)
+        IconPicker(selected = uiState.shownIcon, onSelect = onSelectIcon)
 
         Button(onClick = onSave, enabled = uiState.canSave, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
             if (uiState.isSaving) {
                 CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
             } else {
                 Text(stringResource(Res.string.mysounds_save))
+            }
+        }
+    }
+}
+
+// The pickers below are their own composables so they skip while the trim handles are dragged.
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun CategoryPicker(selected: SoundCategory?, onSelect: (SoundCategory) -> Unit) {
+    Text(stringResource(Res.string.mysounds_category), style = MaterialTheme.typography.titleSmall)
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        SoundCategory.entries.forEach { category ->
+            FilterChip(
+                selected = category == selected,
+                onClick = { onSelect(category) },
+                label = { Text(stringResource(category.titleRes)) },
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun IconPicker(selected: SoundIcon?, onSelect: (SoundIcon) -> Unit) {
+    Text(stringResource(Res.string.mysounds_icon), style = MaterialTheme.typography.titleSmall)
+    FlowRow {
+        SoundIcon.entries.forEach { icon ->
+            IconToggleButton(checked = icon == selected, onCheckedChange = { onSelect(icon) }) {
+                Icon(icon.imageVector, contentDescription = icon.name.lowercase())
             }
         }
     }

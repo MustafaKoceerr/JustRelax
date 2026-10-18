@@ -12,6 +12,14 @@ PR'lar birbirinin üstüne yığılı; bu sırayla birleştir. Her biri bir önc
 - [ ] #41 Üretim kodundaki tekrarlar ve ölü kod
 - [ ] #42 Test tekrarları ve eksik testler
 - [ ] #43 README
+- [ ] #44 Performans ölçümü: Macrobenchmark, Baseline Profile, test tag'leri
+- [ ] #45 Samsung tarzı uyku zamanlayıcısı
+- [ ] #46 Ses sürüklerken daha az yeniden çizim, `core:ui`'da ortak bileşenler
+
+## Performans ölçümü
+Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ayrı bir paket adıyla (`com.mustafakoceerr.justrelax.benchmark`) kuruluyor ve Play sürümüyle yan yana durabiliyor.
+- [ ] Telefonundaki JustRelax'ı Play Store'dan yeniden kur (ilk denemede ana kullanıcıdan kaldırıldı).
+- [ ] İstersen benchmark uygulamalarını kaldır: `adb uninstall com.mustafakoceerr.justrelax.benchmark` ve `adb uninstall com.mustafakoceerr.justrelax.macrobenchmark`.
 
 ## 2. Play Integrity (AI ve Freesound bunsuz yayında çalışmaz)
 - [ ] Play Console → JustRelax → *Test and release → App integrity → Play Integrity API → Link a Cloud project* ile yeni bir proje oluştur. Ücretsiz, faturalandırma gerekmez.

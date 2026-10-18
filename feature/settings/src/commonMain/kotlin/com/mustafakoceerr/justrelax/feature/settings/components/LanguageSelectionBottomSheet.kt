@@ -110,7 +110,7 @@ fun LanguageSelectionBottomSheet(
             LazyColumn(
                 contentPadding = PaddingValues(start = 24.dp, end = 24.dp, bottom = 48.dp)
             ) {
-                items(availableLanguages) { language ->
+                items(availableLanguages, key = { it.code }) { language ->
                     LanguageSelectionItem(
                         language = language,
                         isSelected = language.code == currentLanguageCode,

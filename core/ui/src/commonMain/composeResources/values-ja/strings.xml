@@ -29,4 +29,8 @@
     <string name="action_play">再生</string>
     <string name="action_stop">停止</string>
     <string name="action_listen">試聴</string>
+    <string name="sound_state_playing">再生中</string>
+    <string name="sound_state_stopped">停止中</string>
+    <string name="volume_level">音量</string>
+    <string name="loading">読み込み中</string>
 </resources>

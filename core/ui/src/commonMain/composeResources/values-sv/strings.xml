@@ -29,4 +29,8 @@
     <string name="action_play">Spela</string>
     <string name="action_stop">Stoppa</string>
     <string name="action_listen">Lyssna</string>
+    <string name="sound_state_playing">Spelas</string>
+    <string name="sound_state_stopped">Stoppad</string>
+    <string name="volume_level">Volym</string>
+    <string name="loading">Läser in</string>
 </resources>

@@ -22,3 +22,11 @@ data class SceneLayerItem(
     val volume: Float,
     val frequency: EventFrequency?,
 )
+
+/** What the mini player shows. Volumes are left out, so dragging a slider does not redraw it. */
+data class MiniPlayerUiState(
+    val icons: List<SoundIcon> = emptyList(),
+    val isPlaying: Boolean = false,
+) {
+    val isVisible: Boolean get() = icons.isNotEmpty()
+}

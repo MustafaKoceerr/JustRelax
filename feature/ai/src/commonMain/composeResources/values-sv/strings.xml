@@ -11,4 +11,5 @@
     <string name="err_unknown">Ett oväntat fel inträffade. Försök igen senare.</string>
     <string name="action_clear">Rensa</string>
     <string name="ai_action_try_another_variation">Prova en annan variation</string>
+    <string name="ai_action_send">Skicka</string>
 </resources>

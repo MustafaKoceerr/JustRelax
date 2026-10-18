@@ -36,7 +36,7 @@ data class SceneCards(
 }
 
 /** One [SoundCard] per sound, wired to the scene's state and the screen's callbacks. */
-fun LazyGridScope.soundCardItems(
+internal fun LazyGridScope.soundCardItems(
     sounds: List<LocalizedSound>,
     cards: SceneCards,
     onSoundClick: (LocalizedSound) -> Unit,
@@ -44,7 +44,7 @@ fun LazyGridScope.soundCardItems(
     onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
     downloadingIds: Set<String> = emptySet(),
 ) {
-    items(items = sounds, key = { it.id }) { sound ->
+    items(items = sounds, key = { it.id }, contentType = { "sound" }) { sound ->
         SoundCard(
             sound = sound,
             isPlaying = cards.isPlaying(sound.id),

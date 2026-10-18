@@ -46,8 +46,10 @@ fun LoadingScreen() {
 
         repeat(FLOATING_ICON_COUNT) { index ->
             key(index) {
+                // Picked once per icon; otherwise each recomposition would swap it.
+                val icon = remember { icons.random() }
                 FloatingIcon(
-                    icon = icons.random(),
+                    icon = icon,
                     screenHeight = maxHeight,
                     screenWidth = maxWidth
                 )

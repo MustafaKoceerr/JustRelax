@@ -18,6 +18,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.loading
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
@@ -67,8 +70,9 @@ fun LoadingDots(
         }
     }
 
+    val label = stringResource(Res.string.loading)
     Row(
-        modifier = modifier.semantics { contentDescription = "Loading" },
+        modifier = modifier.semantics { contentDescription = label },
         horizontalArrangement = Arrangement.spacedBy(spaceBetween),
         verticalAlignment = Alignment.CenterVertically
     ) {

@@ -11,4 +11,5 @@
     <string name="err_unknown">Si è verificato un errore imprevisto. Riprova più tardi.</string>
     <string name="action_clear">Cancella</string>
     <string name="ai_action_try_another_variation">Prova un'altra variante</string>
+    <string name="ai_action_send">Invia</string>
 </resources>

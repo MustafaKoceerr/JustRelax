@@ -1,31 +1,26 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
-import com.mustafakoceerr.justrelax.core.ui.components.soundCardItems
+import com.mustafakoceerr.justrelax.core.model.LocalizedSound
+import com.mustafakoceerr.justrelax.core.ui.components.SoundCardGrid
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import org.koin.compose.viewmodel.koinViewModel
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTabScaffold
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.mixer.components.CreateMixButton
 import com.mustafakoceerr.justrelax.feature.mixer.components.EmptyMixerState
@@ -63,13 +58,7 @@ fun MixerScreen(
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
     onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
 ) {
-    Scaffold(
-        containerColor = Color.Transparent,
-        contentWindowInsets = WindowInsets(0.dp),
-        topBar = {
-            JustRelaxTopBar(title = stringResource(Res.string.mixer_screen_title))
-        },
-    ) { innerPadding ->
+    JustRelaxTabScaffold(title = stringResource(Res.string.mixer_screen_title)) { innerPadding ->
         MixerScreenContent(
             uiState = uiState,
             onSoundCountSelected = onSoundCountSelected,
@@ -93,15 +82,17 @@ private fun MixerScreenContent(
     modifier: Modifier = Modifier
 ) {
 
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 96.dp),
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    // Made here, not inside the grid's builder, so it stays the same object and the cards can skip.
+    val onCardClick: (LocalizedSound) -> Unit = remember(onSoundClick) { { sound -> onSoundClick(sound.id) } }
 
-        item(span = { GridItemSpan(maxLineSpan) }) {
+    SoundCardGrid(
+        sounds = uiState.mixedSounds,
+        cards = uiState.sceneCards,
+        onSoundClick = onCardClick,
+        onVolumeChange = onVolumeChange,
+        onFrequencyChange = onFrequencyChange,
+        modifier = modifier.fillMaxSize(),
+        header = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -117,25 +108,15 @@ private fun MixerScreenContent(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
 
-        if (uiState.mixedSounds.isNotEmpty()) {
-            soundCardItems(
-                sounds = uiState.mixedSounds,
-                cards = uiState.sceneCards,
-                onSoundClick = { sound -> onSoundClick(sound.id) },
-                onVolumeChange = onVolumeChange,
-                onFrequencyChange = onFrequencyChange,
-            )
-        } else {
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                EmptyMixerState(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 48.dp, bottom = 24.dp)
-                )
+                if (uiState.mixedSounds.isEmpty()) {
+                    EmptyMixerState(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 32.dp, bottom = 24.dp)
+                    )
+                }
             }
-        }
-    }
+        },
+    )
 }

@@ -1,10 +1,11 @@
 package com.mustafakoceerr.justrelax.feature.settings.credits
 
+import com.mustafakoceerr.justrelax.core.ui.extensions.readableWidth
+import com.mustafakoceerr.justrelax.core.ui.components.EmptyHint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -14,7 +15,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,15 +54,10 @@ fun CreditsScreen(
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             if (!uiState.isLoading && uiState.credits.isEmpty()) {
-                Text(
-                    text = stringResource(Res.string.credits_empty),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(24.dp),
-                )
+                EmptyHint(stringResource(Res.string.credits_empty))
             } else {
                 LazyColumn(
-                    modifier = Modifier.widthIn(max = 720.dp),
+                    modifier = Modifier.readableWidth(),
                     contentPadding = PaddingValues(vertical = 8.dp),
                 ) {
                     items(uiState.credits) { credit ->

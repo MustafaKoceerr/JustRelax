@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.saved.components
 
+import com.mustafakoceerr.justrelax.core.ui.components.EmptyHint
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_delete
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
@@ -26,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.components.label
@@ -48,13 +48,8 @@ fun SavedMixDetailPane(
     modifier: Modifier = Modifier,
 ) {
     if (detail == null) {
-        Box(modifier = modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
-            Text(
-                text = stringResource(Res.string.saved_detail_placeholder),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-            )
+        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            EmptyHint(stringResource(Res.string.saved_detail_placeholder))
         }
         return
     }

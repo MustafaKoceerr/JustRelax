@@ -1,17 +1,15 @@
 package com.mustafakoceerr.justrelax.feature.saved
 
+import com.mustafakoceerr.justrelax.core.ui.components.CenteredLoading
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import com.mustafakoceerr.justrelax.core.ui.util.WindowWidthSize
 import com.mustafakoceerr.justrelax.core.ui.util.rememberWindowSizeClass
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixDetailPane
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
@@ -19,11 +17,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTabScaffold
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesEmptyScreen
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesList
@@ -72,28 +68,25 @@ fun SavedScreen(
 ) {
     // On expanded windows the list keeps a detail pane beside it.
     val showsDetail = rememberWindowSizeClass() == WindowWidthSize.EXPANDED
-    Scaffold(
-        containerColor = Color.Transparent,
-        contentWindowInsets = WindowInsets(0.dp),
-        topBar = {
-            JustRelaxTopBar(
-                title = stringResource(Res.string.saved_screen_title)
-            )
+    JustRelaxTabScaffold(title = stringResource(Res.string.saved_screen_title)) { innerPadding ->
+        // Fades only between loading, empty and the list, not on every change inside the list.
+        val content = when {
+            uiState.isLoading -> SavedContent.LOADING
+            uiState.mixes.isEmpty() -> SavedContent.EMPTY
+            else -> SavedContent.MIXES
         }
-    ) { innerPadding ->
         Crossfade(
-            targetState = uiState,
+            targetState = content,
             modifier = Modifier.padding(innerPadding).fillMaxSize(),
             label = "SavedScreenContentCrossfade"
-        ) { state ->
+        ) { shown ->
+            val state = uiState
             when {
-                state.isLoading -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
+                shown == SavedContent.LOADING -> {
+                    CenteredLoading(modifier = Modifier.fillMaxSize())
                 }
 
-                state.mixes.isEmpty() -> {
+                shown == SavedContent.EMPTY -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         SavedMixesEmptyScreen(onCreateClick = onCreateMix)
                     }
@@ -129,3 +122,5 @@ fun SavedScreen(
         }
     }
 }
+
+private enum class SavedContent { LOADING, EMPTY, MIXES }

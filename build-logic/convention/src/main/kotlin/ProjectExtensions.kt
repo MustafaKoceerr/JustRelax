@@ -79,13 +79,16 @@ internal fun KotlinMultiplatformAndroidLibraryExtension.configureAndroidLibrary(
 }
 
 /**
- * Compose compiler stability reports, only with `-Pjustrelax.composeReports=true`:
- * `build/compose-reports/` in each module (`*-classes.txt`, `*-composables.txt`).
+ * The Compose compiler's shared settings: the stability config in the root `compose-stability.conf`,
+ * and stability reports only with `-Pjustrelax.composeReports=true` (`build/compose-reports/` in each
+ * module: `*-classes.txt`, `*-composables.txt`).
  */
-internal fun Project.configureComposeCompilerReports() {
-    if (providers.gradleProperty("justrelax.composeReports").orNull?.toBoolean() != true) return
+internal fun Project.configureComposeCompiler() {
     extensions.configure<ComposeCompilerGradlePluginExtension> {
-        reportsDestination.set(layout.buildDirectory.dir("compose-reports"))
-        metricsDestination.set(layout.buildDirectory.dir("compose-reports"))
+        stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("compose-stability.conf"))
+        if (providers.gradleProperty("justrelax.composeReports").orNull?.toBoolean() == true) {
+            reportsDestination.set(layout.buildDirectory.dir("compose-reports"))
+            metricsDestination.set(layout.buildDirectory.dir("compose-reports"))
+        }
     }
 }

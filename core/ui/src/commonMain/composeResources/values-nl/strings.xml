@@ -29,4 +29,8 @@
     <string name="action_play">Afspelen</string>
     <string name="action_stop">Stoppen</string>
     <string name="action_listen">Luisteren</string>
+    <string name="sound_state_playing">Speelt af</string>
+    <string name="sound_state_stopped">Gestopt</string>
+    <string name="volume_level">Volume</string>
+    <string name="loading">Laden</string>
 </resources>

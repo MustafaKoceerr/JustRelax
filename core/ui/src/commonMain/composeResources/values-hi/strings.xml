@@ -29,4 +29,8 @@
     <string name="action_play">चलाएँ</string>
     <string name="action_stop">रोकें</string>
     <string name="action_listen">सुनें</string>
+    <string name="sound_state_playing">चल रहा है</string>
+    <string name="sound_state_stopped">रुका हुआ</string>
+    <string name="volume_level">आवाज़</string>
+    <string name="loading">लोड हो रहा है</string>
 </resources>
