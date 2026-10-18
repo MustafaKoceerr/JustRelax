@@ -11,6 +11,9 @@ data class Scene(val layers: List<Layer>) {
     val beds: List<Layer.Bed> get() = layers.filterIsInstance<Layer.Bed>()
     val events: List<Layer.Event> get() = layers.filterIsInstance<Layer.Event>()
 
+    /** Each layer's volume by sound id. */
+    val volumes: Map<String, Float> get() = layers.associate { it.soundId to it.volume }
+
     fun layer(soundId: String): Layer? = layers.find { it.soundId == soundId }
 
     fun canAdd(layer: Layer): Boolean = layers.size < MAX_LAYERS && layer(layer.soundId) == null

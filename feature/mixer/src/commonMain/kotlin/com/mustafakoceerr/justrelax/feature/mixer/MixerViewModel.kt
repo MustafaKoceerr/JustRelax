@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -50,6 +51,11 @@ class MixerViewModel(
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MixerUiState())
+
+    /** Kept out of [uiState], so dragging a slider redraws only that slider and not the whole screen. */
+    val volumes: StateFlow<Map<String, Float>> = sceneRepository.scene
+        .map { it.volumes }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
     fun selectSoundCount(count: Int) = screenState.update {
         it.copy(selectedSoundCount = count.coerceIn(RandomSceneGenerator.MIN_LAYERS, RandomSceneGenerator.MAX_LAYERS))

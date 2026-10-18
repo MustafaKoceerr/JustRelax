@@ -37,6 +37,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTabScaffold
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCardGrid
+import com.mustafakoceerr.justrelax.core.ui.components.rememberVolumeOf
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.ai.components.AiMixInfo
 import com.mustafakoceerr.justrelax.feature.ai.components.AiDataNoticeDialog
@@ -52,6 +53,7 @@ import org.koin.compose.koinInject
 @Composable
 fun AiRoute(viewModel: AiViewModel = koinViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val volumeOf = rememberVolumeOf(viewModel.volumes.collectAsStateWithLifecycle())
     val snackbarController = koinInject<GlobalSnackbarController>()
 
     UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarController.showSnackbar(it) }
@@ -66,6 +68,7 @@ fun AiRoute(viewModel: AiViewModel = koinViewModel()) {
 
     AiScreen(
         uiState = uiState,
+        volumeOf = volumeOf,
         onPromptChange = viewModel::updatePrompt,
         onGenerateMix = viewModel::generateMix,
         onEditPrompt = viewModel::editPrompt,
@@ -80,6 +83,7 @@ fun AiRoute(viewModel: AiViewModel = koinViewModel()) {
 @Composable
 fun AiScreen(
     uiState: AiUiState,
+    volumeOf: (soundId: String) -> Float,
     onPromptChange: (String) -> Unit,
     onGenerateMix: () -> Unit,
     onEditPrompt: () -> Unit,
@@ -150,6 +154,7 @@ fun AiScreen(
                         SoundCardGrid(
                             sounds = uiState.mixSounds,
                             cards = uiState.sceneCards,
+                            volumeOf = volumeOf,
                             onSoundClick = onCardClick,
                             onVolumeChange = onVolumeChange,
                             onFrequencyChange = onFrequencyChange,

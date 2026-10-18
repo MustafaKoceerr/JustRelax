@@ -8,6 +8,8 @@ Claude'un tek başına yapamadığı işler, öncelik sırasıyla. Biten maddeyi
 ## Performans ölçümü
 Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ayrı bir paket adıyla (`com.mustafakoceerr.justrelax.benchmark`) kuruluyor ve Play sürümüyle yan yana durabiliyor.
 - [ ] Telefonundaki JustRelax'ı Play Store'dan yeniden kur (ilk denemede ana kullanıcıdan kaldırıldı).
+- [ ] Ses kaydırıcısı düzeltmesini (PR `perf/volume-drag`) telefonda ölç. Telefonu USB ile bağla, *Stay awake* açık olsun, uygulamayı bir kez açıp bir sesin indiğinden emin ol, sonra bana "ölç" de. Şu komutu çalıştırıp sonucu `docs/perf/results.md`'ye yazarım:
+  `ANDROID_SERIAL=R68R800REKZ ./gradlew :benchmark:connectedBenchmarkReleaseAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.mustafakoceerr.justrelax.benchmark.LibraryBenchmark#dragVolume`
 - [ ] İstersen benchmark uygulamalarını kaldır: `adb uninstall com.mustafakoceerr.justrelax.benchmark` ve `adb uninstall com.mustafakoceerr.justrelax.macrobenchmark`.
 
 ## 2. Play Integrity

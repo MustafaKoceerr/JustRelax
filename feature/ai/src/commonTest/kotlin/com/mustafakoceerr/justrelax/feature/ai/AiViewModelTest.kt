@@ -73,7 +73,10 @@ class AiViewModelTest {
         preferences = preferences,
         legalRepository = FakeLegalRepository(),
         systemLauncher = launcher,
-    ).also { observe(it.uiState) }
+    ).also {
+        observe(it.uiState)
+        observe(it.volumes)
+    }
 
     @Test
     fun theFirstMix_asksAboutOpenAiFirst_andSendsNothing() = runMainTest {
@@ -166,8 +169,23 @@ class AiViewModelTest {
         assertEquals("Rainy Night", state.mixName)
         assertEquals(setOf("rain", "fire"), state.mixSounds.map { it.id }.toSet())
         assertEquals(setOf("rain", "fire"), state.sceneCards.playingIds)
-        assertEquals(0.6f, state.sceneCards.volumes["rain"])
+        assertEquals(0.6f, viewModel.volumes.value["rain"])
         assertEquals("rainy evening by the fire", ai.lastPrompt)
+    }
+
+    @Test
+    fun changingVolume_leavesTheScreenStateAlone() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.updatePrompt("rainy evening by the fire")
+        viewModel.generateMix()
+        advanceUntilIdle()
+        val before = viewModel.uiState.value
+
+        viewModel.changeVolume("rain", 0.2f)
+        advanceUntilIdle()
+
+        assertEquals(0.2f, viewModel.volumes.value["rain"])
+        assertEquals(before, viewModel.uiState.value)
     }
 
     @Test

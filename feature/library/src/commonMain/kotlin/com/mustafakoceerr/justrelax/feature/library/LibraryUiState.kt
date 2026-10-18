@@ -9,7 +9,7 @@ data class LibraryUiState(
     val isLoading: Boolean = true,
     val categories: Map<SoundCategory, List<LocalizedSound>> = emptyMap(),
     val selectedCategory: SoundCategory? = null,
-    /** Which sounds play, at what volume and how often, for the sound cards. */
+    /** Which sounds play and how often, for the sound cards. Volumes are in [LibraryViewModel.volumes]. */
     val sceneCards: SceneCards = SceneCards(),
     val downloadingSoundIds: Set<String> = emptySet(),
     val userMessage: UiText? = null,

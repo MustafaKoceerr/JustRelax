@@ -14,12 +14,14 @@ data class SceneUiState(
     val isVisible: Boolean get() = layers.isNotEmpty()
 }
 
-/** One sound of the scene; [frequency] is null for a bed, which simply loops. */
+/**
+ * One sound of the scene; [frequency] is null for a bed, which simply loops. Its volume is in
+ * [SceneViewModel.volumes].
+ */
 data class SceneLayerItem(
     val soundId: String,
     val name: String,
     val icon: SoundIcon,
-    val volume: Float,
     val frequency: EventFrequency?,
 )
 

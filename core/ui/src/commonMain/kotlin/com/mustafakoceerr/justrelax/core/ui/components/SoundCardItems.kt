@@ -2,7 +2,10 @@ package com.mustafakoceerr.justrelax.core.ui.components
 
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
@@ -11,17 +14,17 @@ import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 
-/** What sound cards show about the scene: which sounds play, at what volume and how often. */
+/**
+ * What sound cards show about the scene: which sounds play and how often.
+ * Volumes are left out on purpose; see [rememberVolumeOf].
+ */
 @Immutable
 data class SceneCards(
     val playingIds: Set<String> = emptySet(),
-    val volumes: Map<String, Float> = emptyMap(),
     /** Only event sounds have one. */
     val frequencies: Map<String, EventFrequency> = emptyMap(),
 ) {
     fun isPlaying(soundId: String): Boolean = soundId in playingIds
-
-    fun volume(soundId: String): Float = volumes[soundId] ?: AudioDefaults.BASE_VOLUME
 
     fun frequency(soundId: String): EventFrequency? = frequencies[soundId]
 
@@ -29,16 +32,24 @@ data class SceneCards(
         /** [showPlaying] false: the scene is paused and the cards should not look like they play. */
         fun of(scene: Scene, showPlaying: Boolean = true) = SceneCards(
             playingIds = if (showPlaying) scene.layers.mapTo(mutableSetOf()) { it.soundId } else emptySet(),
-            volumes = scene.layers.associate { it.soundId to it.volume },
             frequencies = scene.events.associate { it.soundId to it.frequency },
         )
     }
 }
 
+/**
+ * Looks up a sound's volume in [volumes] only when a slider reads it, so a volume change
+ * redraws that slider and not the screen and grid around it.
+ */
+@Composable
+fun rememberVolumeOf(volumes: State<Map<String, Float>>): (soundId: String) -> Float =
+    remember(volumes) { { soundId -> volumes.value[soundId] ?: AudioDefaults.BASE_VOLUME } }
+
 /** One [SoundCard] per sound, wired to the scene's state and the screen's callbacks. */
 internal fun LazyGridScope.soundCardItems(
     sounds: List<LocalizedSound>,
     cards: SceneCards,
+    volumeOf: (soundId: String) -> Float,
     onSoundClick: (LocalizedSound) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
     onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
@@ -49,7 +60,7 @@ internal fun LazyGridScope.soundCardItems(
             sound = sound,
             isPlaying = cards.isPlaying(sound.id),
             isDownloading = sound.id in downloadingIds,
-            volume = cards.volume(sound.id),
+            volume = { volumeOf(sound.id) },
             onCardClick = { onSoundClick(sound) },
             onVolumeChange = { volume -> onVolumeChange(sound.id, volume) },
             frequency = cards.frequency(sound.id),

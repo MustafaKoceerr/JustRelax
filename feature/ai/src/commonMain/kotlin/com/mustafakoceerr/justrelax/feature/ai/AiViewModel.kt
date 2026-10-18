@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -65,6 +66,11 @@ class AiViewModel(
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AiUiState())
+
+    /** Kept out of [uiState], so dragging a slider redraws only that slider and not the whole screen. */
+    val volumes: StateFlow<Map<String, Float>> = sceneRepository.scene
+        .map { it.volumes }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
     /** Typing in the field and picking a suggestion both set the prompt. */
     fun updatePrompt(text: String) = screenState.update { it.copy(prompt = text) }

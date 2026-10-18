@@ -72,7 +72,8 @@ fun SoundCard(
     sound: LocalizedSound,
     isPlaying: Boolean,
     isDownloading: Boolean,
-    volume: Float,
+    /** Read only by the slider, so dragging it does not recompose the card. */
+    volume: () -> Float,
     onCardClick: () -> Unit,
     onVolumeChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
@@ -296,7 +297,7 @@ private fun BottomControls(
     isPlaying: Boolean,
     soundName: String,
     isDownloaded: Boolean,
-    volume: Float,
+    volume: () -> Float,
     onVolumeChange: (Float) -> Unit
 ) {
     AnimatedContent(
@@ -321,7 +322,7 @@ private fun BottomControls(
     ) { playing ->
         if (playing) {
             VolumeSlider(
-                value = volume,
+                value = volume(),
                 onValueChange = onVolumeChange,
                 modifier = Modifier
                     .fillMaxWidth()

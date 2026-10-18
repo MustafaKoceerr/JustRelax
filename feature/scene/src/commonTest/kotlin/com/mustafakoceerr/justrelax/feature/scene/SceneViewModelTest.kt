@@ -56,7 +56,10 @@ class SceneViewModelTest {
             savedSceneRepository = savedScenes,
             languageController = language,
             analytics = analytics,
-        ).also { observe(it.uiState) }
+        ).also {
+            observe(it.uiState)
+            observe(it.volumes)
+        }
     }
 
     private fun SceneViewModel.messageRes() = (uiState.value.userMessage as UiText.Resource).resId
@@ -165,7 +168,7 @@ class SceneViewModelTest {
         val rain = viewModel.uiState.value.layers.single()
         assertEquals("Yağmur", rain.name)
         assertEquals(SoundCategory.RAIN.defaultIcon, rain.icon)
-        assertEquals(0.5f, rain.volume)
+        assertEquals(0.5f, viewModel.volumes.value["rain"])
         assertNull(rain.frequency)
     }
 
@@ -189,7 +192,19 @@ class SceneViewModelTest {
         viewModel.changeVolume("rain", 0.9f)
         advanceUntilIdle()
 
-        assertEquals(0.9f, viewModel.uiState.value.layers.single().volume)
+        assertEquals(0.9f, viewModel.volumes.value["rain"])
+    }
+
+    @Test
+    fun changeVolume_leavesThePanelStateAlone() = runMainTest {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+        val before = viewModel.uiState.value
+
+        viewModel.changeVolume("rain", 0.9f)
+        advanceUntilIdle()
+
+        assertEquals(before, viewModel.uiState.value)
     }
 
     @Test

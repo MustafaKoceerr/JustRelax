@@ -35,6 +35,7 @@ import com.mustafakoceerr.justrelax.feature.library.LibraryUiState
 @Composable
 fun LibraryContent(
     uiState: LibraryUiState,
+    volumeOf: (soundId: String) -> Float,
     onCategorySelected: (SoundCategory) -> Unit,
     onSoundClick: (LocalizedSound) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
@@ -73,6 +74,7 @@ fun LibraryContent(
                 SoundCardGrid(
                     sounds = soundsToShow,
                     cards = uiState.sceneCards,
+                    volumeOf = volumeOf,
                     downloadingSoundIds = uiState.downloadingSoundIds,
                     onSoundClick = onSoundClick,
                     onVolumeChange = onVolumeChange,

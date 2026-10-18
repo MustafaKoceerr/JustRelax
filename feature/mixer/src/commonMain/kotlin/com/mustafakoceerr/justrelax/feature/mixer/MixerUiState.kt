@@ -8,7 +8,7 @@ data class MixerUiState(
     val selectedSoundCount: Int = MixerViewModel.DEFAULT_SOUND_COUNT,
     val isGenerating: Boolean = false,
     val mixedSounds: List<LocalizedSound> = emptyList(),
-    /** Which sounds play, at what volume and how often, for the sound cards. */
+    /** Which sounds play and how often, for the sound cards. Volumes come from the ViewModel's `volumes`. */
     val sceneCards: SceneCards = SceneCards(),
     val userMessage: UiText? = null,
 )

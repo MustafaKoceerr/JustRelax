@@ -52,6 +52,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
+import com.mustafakoceerr.justrelax.core.ui.components.rememberVolumeOf
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.scene.SceneViewModel
@@ -124,12 +125,14 @@ private fun SceneMessagesAndDialog(sceneViewModel: SceneViewModel, snackbarContr
     }
 }
 
-/** Collects the scene itself, so its volume changes redraw only the panel. */
+/** Collects the scene itself, so its changes redraw only the panel; volume changes, only its sliders. */
 @Composable
 private fun ScenePanelRoute(sceneViewModel: SceneViewModel, modifier: Modifier) {
     val sceneState by sceneViewModel.uiState.collectAsStateWithLifecycle()
+    val volumeOf = rememberVolumeOf(sceneViewModel.volumes.collectAsStateWithLifecycle())
     ScenePanel(
         state = sceneState,
+        volumeOf = volumeOf,
         onPlayPause = sceneViewModel::togglePlayPause,
         onStopAll = sceneViewModel::stopAll,
         onSave = sceneViewModel::openSaveDialog,

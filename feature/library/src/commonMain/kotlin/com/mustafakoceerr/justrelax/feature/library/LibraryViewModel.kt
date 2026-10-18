@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -59,6 +60,11 @@ class LibraryViewModel(
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), LibraryUiState())
+
+    /** Kept out of [uiState], so dragging a slider redraws only that slider and not the whole screen. */
+    val volumes: StateFlow<Map<String, Float>> = sceneRepository.scene
+        .map { it.volumes }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
     fun selectCategory(category: SoundCategory) = screenState.update { it.copy(selectedCategory = category) }
 
