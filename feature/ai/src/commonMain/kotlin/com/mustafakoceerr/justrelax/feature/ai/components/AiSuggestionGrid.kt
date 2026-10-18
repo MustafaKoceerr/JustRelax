@@ -59,7 +59,7 @@ private fun SuggestionTile(suggestion: AiSuggestion, enabled: Boolean, onClick: 
         onClick = onClick,
         enabled = enabled,
         shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
         modifier = modifier.heightIn(min = 88.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
