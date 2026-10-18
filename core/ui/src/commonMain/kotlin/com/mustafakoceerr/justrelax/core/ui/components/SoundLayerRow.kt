@@ -160,12 +160,16 @@ fun LayerKindLabel(
     }
 }
 
-/** An event's frequency as a small chip; a tap lists Rare, Normal and Often. */
+/**
+ * An event's frequency as a small chip; a tap lists Rare, Normal and Often. [compact] drops the
+ * arrow and shrinks the text, for a sound tile's corner.
+ */
 @Composable
 fun FrequencyChip(
     selected: EventFrequency,
     onSelect: (EventFrequency) -> Unit,
     modifier: Modifier = Modifier,
+    compact: Boolean = false,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val title = stringResource(Res.string.frequency_title)
@@ -174,13 +178,23 @@ fun FrequencyChip(
     Box(modifier = modifier) {
         AssistChip(
             onClick = { expanded = true },
-            label = { Text(text = label, style = MaterialTheme.typography.labelMedium) },
-            trailingIcon = { Icon(Icons.Rounded.ArrowDropDown, contentDescription = null, modifier = Modifier.size(18.dp)) },
+            label = {
+                Text(
+                    text = label,
+                    style = if (compact) MaterialTheme.typography.labelSmall else MaterialTheme.typography.labelMedium,
+                    maxLines = 1,
+                )
+            },
+            trailingIcon = if (compact) {
+                null
+            } else {
+                { Icon(Icons.Rounded.ArrowDropDown, contentDescription = null, modifier = Modifier.size(18.dp)) }
+            },
             shape = CircleShape,
             border = null,
             colors = AssistChipDefaults.assistChipColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
             modifier = Modifier
-                .height(28.dp)
+                .height(if (compact) 24.dp else 28.dp)
                 .semantics { contentDescription = "$title: $label" },
         )
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {

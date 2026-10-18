@@ -1,22 +1,16 @@
 package com.mustafakoceerr.justrelax.feature.scene.components
 
-import com.mustafakoceerr.justrelax.core.ui.components.EmptyHint
-import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_pause
-import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
-import com.mustafakoceerr.justrelax.core.ui.generated.resources.sleep_timer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Stop
@@ -28,12 +22,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import com.mustafakoceerr.justrelax.core.ui.components.FrequencySelector
-import com.mustafakoceerr.justrelax.core.ui.components.VolumeSlider
-import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
+import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
+import com.mustafakoceerr.justrelax.core.ui.components.EmptyHint
+import com.mustafakoceerr.justrelax.core.ui.components.LayerKindLabel
+import com.mustafakoceerr.justrelax.core.ui.components.LayerVolumeSlider
+import com.mustafakoceerr.justrelax.core.ui.components.SoundLayerRow
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_pause
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_remove
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.sleep_timer
 import com.mustafakoceerr.justrelax.feature.scene.SceneLayerItem
 import com.mustafakoceerr.justrelax.feature.scene.SceneUiState
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
@@ -41,9 +40,8 @@ import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_sav
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_stop_all
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.scene_empty
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.scene_panel_title
-import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
-import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_remove
 import org.jetbrains.compose.resources.stringResource
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 
 /**
  * Every sound of the scene with its own controls: volume for all, how often for events. Shown in
@@ -73,7 +71,7 @@ fun ScenePanel(
                 Icon(Icons.Rounded.Bedtime, contentDescription = stringResource(CoreRes.string.sleep_timer))
             }
             IconButton(onClick = onSave, enabled = state.isVisible) {
-                Icon(Icons.Rounded.FavoriteBorder, contentDescription = stringResource(Res.string.action_save_scene))
+                Icon(Icons.Outlined.BookmarkAdd, contentDescription = stringResource(Res.string.action_save_scene))
             }
             FilledIconButton(onClick = onPlayPause, enabled = state.isVisible) {
                 if (state.isPlaying) {
@@ -91,12 +89,13 @@ fun ScenePanel(
             EmptyHint(stringResource(Res.string.scene_empty))
         } else {
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 24.dp),
             ) {
                 items(state.layers, key = { it.soundId }) { layer ->
                     LayerControls(
                         layer = layer,
+                        isPlaying = state.isPlaying,
                         volume = { volumeOf(layer.soundId) },
                         onVolumeChange = { onVolumeChange(layer.soundId, it) },
                         onFrequencyChange = { onFrequencyChange(layer.soundId, it) },
@@ -108,37 +107,33 @@ fun ScenePanel(
     }
 }
 
+/** A layer of the scene with its volume, frequency for events, and a remove button. */
 @Composable
 private fun LayerControls(
     layer: SceneLayerItem,
+    isPlaying: Boolean,
     /** Read only by the slider, so dragging it does not recompose the row. */
     volume: () -> Float,
     onVolumeChange: (Float) -> Unit,
     onFrequencyChange: (EventFrequency) -> Unit,
     onRemove: () -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Icon(
-                imageVector = layer.icon.imageVector,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp),
+    SoundLayerRow(
+        icon = layer.icon,
+        name = layer.name,
+        isPlaying = isPlaying,
+        supporting = {
+            LayerKindLabel(
+                kind = if (layer.frequency == null) SoundKind.BED else SoundKind.EVENT,
+                frequency = layer.frequency,
+                onFrequencyChange = onFrequencyChange,
             )
-            Text(
-                text = layer.name,
-                style = MaterialTheme.typography.titleSmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f),
-            )
+        },
+        trailing = {
             IconButton(onClick = onRemove) {
                 Icon(Icons.Rounded.Close, contentDescription = stringResource(CoreRes.string.action_remove))
             }
-        }
-        VolumeSlider(value = volume(), onValueChange = onVolumeChange, modifier = Modifier.fillMaxWidth())
-        layer.frequency?.let { frequency ->
-            FrequencySelector(selected = frequency, onSelect = onFrequencyChange, modifier = Modifier.fillMaxWidth())
-        }
-    }
+        },
+        bottom = { LayerVolumeSlider(volume = volume, onVolumeChange = onVolumeChange, enabled = true) },
+    )
 }

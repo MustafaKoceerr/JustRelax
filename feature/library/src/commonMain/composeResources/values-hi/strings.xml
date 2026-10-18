@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="download_failed">डाउनलोड विफल</string>
-    <string name="home_screen_title">Just Relax</string>
     <string name="action_settings">सेटिंग्स</string>
     <string name="library_empty_title">अभी कोई ध्वनि नहीं</string>
     <string name="library_empty_message">ध्वनि लाइब्रेरी डाउनलोड करने के लिए इंटरनेट से जुड़ें।</string>
     <string name="action_retry">फिर से कोशिश करें</string>
     <string name="action_my_sounds">मेरी ध्वनियाँ</string>
+    <string name="greeting_morning">सुप्रभात</string>
+    <string name="greeting_afternoon">नमस्ते</string>
+    <string name="greeting_evening">शुभ संध्या</string>
+    <string name="greeting_night">शांत रात</string>
+    <string name="library_hint">चलाने के लिए किसी आवाज़ पर टैप करें। आवाज़ बदलने के लिए उस पर स्लाइड करें।</string>
 </resources>

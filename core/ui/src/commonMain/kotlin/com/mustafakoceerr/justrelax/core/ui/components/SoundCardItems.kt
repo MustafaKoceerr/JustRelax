@@ -45,7 +45,7 @@ data class SceneCards(
 fun rememberVolumeOf(volumes: State<Map<String, Float>>): (soundId: String) -> Float =
     remember(volumes) { { soundId -> volumes.value[soundId] ?: AudioDefaults.BASE_VOLUME } }
 
-/** One [SoundCard] per sound, wired to the scene's state and the screen's callbacks. */
+/** One [SoundTile] per sound, wired to the scene's state and the screen's callbacks. */
 internal fun LazyGridScope.soundCardItems(
     sounds: List<LocalizedSound>,
     cards: SceneCards,
@@ -56,12 +56,12 @@ internal fun LazyGridScope.soundCardItems(
     downloadingIds: Set<String> = emptySet(),
 ) {
     items(items = sounds, key = { it.id }, contentType = { "sound" }) { sound ->
-        SoundCard(
+        SoundTile(
             sound = sound,
             isPlaying = cards.isPlaying(sound.id),
             isDownloading = sound.id in downloadingIds,
             volume = { volumeOf(sound.id) },
-            onCardClick = { onSoundClick(sound) },
+            onClick = { onSoundClick(sound) },
             onVolumeChange = { volume -> onVolumeChange(sound.id, volume) },
             frequency = cards.frequency(sound.id),
             onFrequencyChange = { frequency -> onFrequencyChange(sound.id, frequency) },

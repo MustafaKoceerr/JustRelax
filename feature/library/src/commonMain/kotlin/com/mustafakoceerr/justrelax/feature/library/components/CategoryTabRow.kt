@@ -3,6 +3,7 @@ package com.mustafakoceerr.justrelax.feature.library.components
 import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import androidx.compose.ui.platform.testTag
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -57,6 +58,7 @@ fun CategoryTabRow(
                     .clip(CircleShape)
                     .clickable { onCategorySelected(category) }
                     .background(backgroundColor)
+                    .border(1.dp, if (isSelected) Color.Transparent else MaterialTheme.colorScheme.outlineVariant, CircleShape)
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Icon(

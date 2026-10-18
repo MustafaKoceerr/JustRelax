@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="download_failed">İndirme başarısız</string>
-    <string name="home_screen_title">Just Relax</string>
     <string name="action_settings">AYARLAR</string>
     <string name="library_empty_title">Henüz ses yok</string>
     <string name="library_empty_message">Ses kütüphanesini indirmek için internete bağlan.</string>
     <string name="action_retry">Tekrar dene</string>
     <string name="action_my_sounds">Seslerim</string>
+    <string name="greeting_morning">Günaydın</string>
+    <string name="greeting_afternoon">Tünaydın</string>
+    <string name="greeting_evening">İyi akşamlar</string>
+    <string name="greeting_night">Sakin bir gece</string>
+    <string name="library_hint">Çalmak için bir sese dokun. Sesini ayarlamak için üzerinde kaydır.</string>
 </resources>
