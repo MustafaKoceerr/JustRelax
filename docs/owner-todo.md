@@ -15,6 +15,7 @@ PR'lar birbirinin üstüne yığılı; bu sırayla birleştir. Her biri bir önc
 - [ ] #44 Performans ölçümü: Macrobenchmark, Baseline Profile, test tag'leri
 - [ ] #45 Samsung tarzı uyku zamanlayıcısı
 - [ ] #46 Ses sürüklerken daha az yeniden çizim, `core:ui`'da ortak bileşenler
+- [ ] #47 iOS'ta gerçek ses (AVAudioEngine, kilit ekranı kontrolleri, iOS 18.4+)
 
 ## Performans ölçümü
 Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ayrı bir paket adıyla (`com.mustafakoceerr.justrelax.benchmark`) kuruluyor ve Play sürümüyle yan yana durabiliyor.
@@ -54,6 +55,14 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 - [ ] 15 yerleşik sesin kaynak lisanslarını doğrula (`tools/sound-pipeline/manifest.json`'daki `license_note`). Şu an `OWN` olarak yayında.
 - [ ] Son ses seçimini yap. Pipeline, yükleme ve önbellek temizleme adımları `tools/sound-pipeline/README.md`'de.
 - [ ] Kendi seslerimden kaydedilmiş bir döngüde başa dönüşü dinle. AAC'de boşluk ya da tık varsa söyle; yedek çözüm hazır.
+
+## iOS sesi (#47)
+Kod ve simülatör testleri hazır; kulakla dinlemek senin işin. Simülatörde ya da iPhone'da (iOS 18.4+):
+- [ ] Bir yağmur ve bir olay sesi (kuşlar, çan) çal: ikisi de duyuluyor, olaylar sağda solda rastgele çıkıyor.
+- [ ] Döngünün başa dönüşünde boşluk ya da tık var mı?
+- [ ] Kilit ekranında ve Denetim Merkezi'nde JustRelax görünüyor; oynat/duraklat çalışıyor.
+- [ ] Arama gelince ses duruyor, kapanınca devam ediyor; kulaklığı çıkarınca duruyor.
+- [ ] Başka bir uygulama (Müzik) çalmaya başlayınca JustRelax susuyor.
 
 ## 8. İsteğe bağlı / sonra
 - [ ] iOS: App Attest (AI ve Freesound için) ve Firebase iOS, iOS yayınına doğru.
