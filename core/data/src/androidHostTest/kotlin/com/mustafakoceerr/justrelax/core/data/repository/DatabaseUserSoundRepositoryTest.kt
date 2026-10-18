@@ -1,26 +1,24 @@
 package com.mustafakoceerr.justrelax.core.data.repository
 
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.mustafakoceerr.justrelax.core.data.download.FakeSoundFileStorage
+import com.mustafakoceerr.justrelax.core.data.inMemoryDriver
 import com.mustafakoceerr.justrelax.core.data.mapper.insert
 import com.mustafakoceerr.justrelax.core.database.createDatabase
-import com.mustafakoceerr.justrelax.core.database.db.JustRelaxDatabase
 import com.mustafakoceerr.justrelax.core.media.MediaException
 import com.mustafakoceerr.justrelax.core.media.TrimRange
 import com.mustafakoceerr.justrelax.core.model.Attribution
 import com.mustafakoceerr.justrelax.core.model.License
-import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.SoundClip
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
+import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import com.mustafakoceerr.justrelax.core.model.SoundSource
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
-import com.mustafakoceerr.justrelax.core.testing.TestDispatcherProvider
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeAudioTrimmer
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
+import com.mustafakoceerr.justrelax.core.testing.testDispatchers
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlin.test.AfterTest
@@ -32,9 +30,7 @@ import kotlin.test.assertTrue
 
 class DatabaseUserSoundRepositoryTest {
 
-    private val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).also {
-        JustRelaxDatabase.Schema.create(it)
-    }
+    private val driver = inMemoryDriver()
     private val database = createDatabase(driver)
     private val storage = FakeSoundFileStorage()
     private val trimmer = FakeAudioTrimmer().apply { onTrim = { storage.files += it } }
@@ -58,7 +54,7 @@ class DatabaseUserSoundRepositoryTest {
         storage = storage,
         trimmer = trimmer,
         sceneRepository = sceneRepository,
-        dispatchers = TestDispatcherProvider(StandardTestDispatcher(testScheduler)),
+        dispatchers = testDispatchers(),
         newId = { "user-1" },
     )
 

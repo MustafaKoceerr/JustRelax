@@ -1,6 +1,8 @@
 package com.mustafakoceerr.justrelax.core.playback.soundscape
 
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeOneShotPlayer
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundPlayerFactory
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy

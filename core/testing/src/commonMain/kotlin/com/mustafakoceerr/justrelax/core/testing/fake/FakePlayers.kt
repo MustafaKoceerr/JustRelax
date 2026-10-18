@@ -1,12 +1,13 @@
-package com.mustafakoceerr.justrelax.core.playback.soundscape
+package com.mustafakoceerr.justrelax.core.testing.fake
 
 import com.mustafakoceerr.justrelax.core.playback.player.SoundPlayer
 import com.mustafakoceerr.justrelax.core.playback.player.SoundPlayerFactory
+import com.mustafakoceerr.justrelax.core.playback.soundscape.OneShotPlayer
 import kotlinx.coroutines.delay
 
 class FakeSoundPlayer(
-    private val failingClips: Set<String>,
-    private val prepareDelayMs: Long,
+    private val failingClips: Set<String> = emptySet(),
+    private val prepareDelayMs: Long = 0L,
 ) : SoundPlayer {
     var clip: String? = null
     var isPlaying = false
@@ -56,8 +57,15 @@ class FakeSoundPlayerFactory : SoundPlayerFactory {
         created.filterNot { it.isReleased }.associateBy { it.clip!! }
 }
 
-class FakeOneShotPlayer(private val now: () -> Long = { 0L }) : OneShotPlayer {
-    data class Play(val atMs: Long, val soundId: String, val clip: String, val volume: Float)
+/**
+ * Records every play with the time [now] gives. With [requireLoaded] off, sounds can be played
+ * without being loaded first, for code that only schedules plays.
+ */
+class FakeOneShotPlayer(
+    private val requireLoaded: Boolean = true,
+    private val now: () -> Long = { 0L },
+) : OneShotPlayer {
+    data class Play(val atMs: Long, val soundId: String, val clip: String, val volume: Float, val pan: Float)
 
     val loaded = mutableMapOf<String, List<String>>()
     val plays = mutableListOf<Play>()
@@ -76,8 +84,8 @@ class FakeOneShotPlayer(private val now: () -> Long = { 0L }) : OneShotPlayer {
     }
 
     override fun play(soundId: String, clip: String, volume: Float, pan: Float) {
-        check(soundId in loaded) { "$soundId played without being loaded" }
-        plays += Play(now(), soundId, clip, volume)
+        if (requireLoaded) check(soundId in loaded) { "$soundId played without being loaded" }
+        plays += Play(now(), soundId, clip, volume, pan)
     }
 
     override fun pauseAll() {

@@ -1,19 +1,18 @@
 package com.mustafakoceerr.justrelax.core.data.repository
 
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
+import com.mustafakoceerr.justrelax.core.data.inMemoryDriver
 import com.mustafakoceerr.justrelax.core.data.mapper.insert
 import com.mustafakoceerr.justrelax.core.database.createDatabase
-import com.mustafakoceerr.justrelax.core.database.db.JustRelaxDatabase
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
-import com.mustafakoceerr.justrelax.core.testing.TestDispatcherProvider
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeClock
+import com.mustafakoceerr.justrelax.core.testing.testDispatchers
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlin.test.AfterTest
@@ -21,23 +20,17 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
-import kotlin.time.Clock
 import kotlin.time.Instant
 
 class DatabaseSavedSceneRepositoryTest {
 
-    private val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).also {
-        JustRelaxDatabase.Schema.create(it)
-    }
+    private val driver = inMemoryDriver()
     private val database = createDatabase(driver).apply {
         soundQueries.insert(testSound("rain"))
         soundQueries.insert(testSound("birds", kind = SoundKind.EVENT))
     }
 
-    private var now = Instant.fromEpochMilliseconds(1_000)
-    private val clock = object : Clock {
-        override fun now(): Instant = now
-    }
+    private val clock = FakeClock(Instant.fromEpochMilliseconds(1_000))
 
     private val night = Scene(listOf(Layer.Bed("rain", 0.3f), Layer.Event("birds", 0.8f, EventFrequency.RARE)))
 
@@ -47,7 +40,7 @@ class DatabaseSavedSceneRepositoryTest {
     private fun TestScope.repository() = DatabaseSavedSceneRepository(
         queries = database.savedSceneQueries,
         clock = clock,
-        dispatchers = TestDispatcherProvider(StandardTestDispatcher(testScheduler)),
+        dispatchers = testDispatchers(),
     )
 
     private fun errorOf(result: Resource<Unit>) = assertIs<Resource.Error>(result).error
@@ -60,7 +53,7 @@ class DatabaseSavedSceneRepositoryTest {
 
         val saved = repository.getSavedScenes().first().single()
         assertEquals("Night", saved.name)
-        assertEquals(now, saved.createdAt)
+        assertEquals(clock.now(), saved.createdAt)
         assertEquals(night, saved.scene)
     }
 
@@ -68,7 +61,7 @@ class DatabaseSavedSceneRepositoryTest {
     fun theNewestSceneComesFirst() = runTest {
         val repository = repository()
         repository.save("Old", night)
-        now = Instant.fromEpochMilliseconds(2_000)
+        clock.current = Instant.fromEpochMilliseconds(2_000)
         repository.save("New", night)
 
         assertEquals(listOf("New", "Old"), repository.getSavedScenes().first().map { it.name })

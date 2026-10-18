@@ -5,9 +5,13 @@ import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
 
-/** Formats [instant] in the device's time zone with a pattern made of dd, MM and yyyy. */
-fun formatDate(instant: Instant, formatPattern: String): String {
-    val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+/** Formats [instant] in [timeZone] (the device's by default) with a pattern made of dd, MM and yyyy. */
+fun formatDate(
+    instant: Instant,
+    formatPattern: String,
+    timeZone: TimeZone = TimeZone.currentSystemDefault(),
+): String {
+    val localDateTime = instant.toLocalDateTime(timeZone)
 
     val day = localDateTime.day.toString().padStart(2, '0')
     val month = localDateTime.month.number.toString().padStart(2, '0')

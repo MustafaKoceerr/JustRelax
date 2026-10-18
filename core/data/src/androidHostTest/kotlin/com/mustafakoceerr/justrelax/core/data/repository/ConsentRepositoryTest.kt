@@ -2,11 +2,10 @@ package com.mustafakoceerr.justrelax.core.data.repository
 
 import com.mustafakoceerr.justrelax.core.data.factory.createDataStore
 import com.mustafakoceerr.justrelax.core.model.ConsentStatus
-import com.mustafakoceerr.justrelax.core.testing.TestDispatcherProvider
 import com.mustafakoceerr.justrelax.core.testing.fake.TestAnalyticsHelper
 import com.mustafakoceerr.justrelax.core.testing.fake.TestCrashReporter
+import com.mustafakoceerr.justrelax.core.testing.testDispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import java.io.File
@@ -28,7 +27,7 @@ class ConsentRepositoryTest {
     }
 
     private fun TestScope.repository() = DataStoreConsentRepository(
-        dataStore, analytics, crashes, TestDispatcherProvider(StandardTestDispatcher(testScheduler)),
+        dataStore, analytics, crashes, testDispatchers(),
     )
 
     @Test

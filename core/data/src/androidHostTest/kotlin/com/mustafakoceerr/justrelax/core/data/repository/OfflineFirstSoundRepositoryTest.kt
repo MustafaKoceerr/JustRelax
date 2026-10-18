@@ -1,24 +1,23 @@
 package com.mustafakoceerr.justrelax.core.data.repository
 
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.data.download.FakeFileDownloader
 import com.mustafakoceerr.justrelax.core.data.download.FakeSoundFileStorage
 import com.mustafakoceerr.justrelax.core.data.download.SoundDownloader
+import com.mustafakoceerr.justrelax.core.data.inMemoryDriver
 import com.mustafakoceerr.justrelax.core.data.mapper.insert
 import com.mustafakoceerr.justrelax.core.data.sync.FakeSoundCatalogSync
 import com.mustafakoceerr.justrelax.core.data.sync.FakeSyncTimestampStore
 import com.mustafakoceerr.justrelax.core.database.createDatabase
-import com.mustafakoceerr.justrelax.core.database.db.JustRelaxDatabase
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
 import com.mustafakoceerr.justrelax.core.model.Sound
-import com.mustafakoceerr.justrelax.core.testing.TestDispatcherProvider
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeClock
 import com.mustafakoceerr.justrelax.core.testing.testClip
+import com.mustafakoceerr.justrelax.core.testing.testDispatchers
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlin.test.AfterTest
@@ -26,21 +25,16 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Instant
 
 class OfflineFirstSoundRepositoryTest {
 
-    private val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).also {
-        JustRelaxDatabase.Schema.create(it)
-    }
+    private val driver = inMemoryDriver()
     private val database = createDatabase(driver)
 
     private val now = Instant.fromEpochMilliseconds(1_000_000_000_000)
-    private val clock = object : Clock {
-        override fun now(): Instant = now
-    }
+    private val clock = FakeClock(now)
     private val catalogSync = FakeSoundCatalogSync()
     private val syncTimestamps = FakeSyncTimestampStore()
     private val storage = FakeSoundFileStorage()
@@ -55,7 +49,7 @@ class OfflineFirstSoundRepositoryTest {
         syncTimestamps = syncTimestamps,
         downloader = SoundDownloader(storage, fileDownloader),
         clock = clock,
-        dispatchers = TestDispatcherProvider(StandardTestDispatcher(testScheduler)),
+        dispatchers = testDispatchers(),
     )
 
     private fun insert(vararg sounds: Sound) = sounds.forEach(database.soundQueries::insert)
