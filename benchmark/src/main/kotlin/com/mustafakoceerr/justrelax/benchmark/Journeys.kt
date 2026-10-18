@@ -8,7 +8,8 @@ import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import java.util.regex.Pattern
 
-const val PACKAGE_NAME = "com.mustafakoceerr.justrelax"
+/** The benchmark builds' application id (androidApp adds `.benchmark`), so they install beside the Play app. */
+const val PACKAGE_NAME = "com.mustafakoceerr.justrelax.benchmark"
 
 /** A copy of core:ui's TestTags; the benchmark module does not depend on app code. */
 object Tags {
