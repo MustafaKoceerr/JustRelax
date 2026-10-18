@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Compose yüklenene kadar görünecek zemin renkleri -->
-    <color name="window_background_light">#FFFFFF</color>
-    <color name="window_background_dark">#121212</color> <!-- Standart Dark Mode Siyahı -->
-
-    <color name="notification_brand_color">#88511D</color>
-
+    <!-- Shown until Compose draws: the theme's background (core:ui Color.kt backgroundLight). -->
+    <color name="window_background">#FFF8F5</color>
 </resources>

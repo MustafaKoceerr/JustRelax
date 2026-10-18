@@ -22,12 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import org.koin.compose.viewmodel.koinViewModel
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCard
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
@@ -49,7 +47,6 @@ fun MixerRoute(viewModel: MixerViewModel = koinViewModel()) {
 
     MixerScreen(
         uiState = uiState,
-        snackbarHostState = snackbarController.hostState,
         onSoundCountSelected = viewModel::selectSoundCount,
         onGenerateMix = viewModel::generateMix,
         onSoundClick = viewModel::toggleSound,
@@ -62,7 +59,6 @@ fun MixerRoute(viewModel: MixerViewModel = koinViewModel()) {
 @Composable
 fun MixerScreen(
     uiState: MixerUiState,
-    snackbarHostState: SnackbarHostState,
     onSoundCountSelected: (Int) -> Unit,
     onGenerateMix: () -> Unit,
     onSoundClick: (soundId: String) -> Unit,
@@ -75,9 +71,6 @@ fun MixerScreen(
         topBar = {
             JustRelaxTopBar(title = stringResource(Res.string.mixer_screen_title))
         },
-        snackbarHost = {
-            JustRelaxSnackbarHost(hostState = snackbarHostState)
-        }
     ) { innerPadding ->
         MixerScreenContent(
             uiState = uiState,
