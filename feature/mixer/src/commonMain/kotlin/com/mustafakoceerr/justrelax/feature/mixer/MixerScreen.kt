@@ -26,6 +26,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.rememberVolumeOf
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import com.mustafakoceerr.justrelax.core.ui.util.WindowWidthSize
+import com.mustafakoceerr.justrelax.core.ui.util.rememberIsCompactHeight
 import com.mustafakoceerr.justrelax.core.ui.util.rememberWindowSizeClass
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixResultHeader
 import com.mustafakoceerr.justrelax.feature.mixer.components.MixerControls
@@ -59,8 +60,8 @@ fun MixerRoute(onSaveScene: () -> Unit, viewModel: MixerViewModel = koinViewMode
 }
 
 /**
- * Pick a count, shuffle, then tune the mix layer by layer. On expanded windows the controls stay
- * in a pane on the left and the layers take the rest; otherwise the controls scroll above them.
+ * Pick a count, shuffle, then tune the mix layer by layer. On large windows the controls stay in
+ * a pane on the left and the layers take the rest; otherwise the controls scroll above them.
  */
 @Composable
 fun MixerScreen(
@@ -74,7 +75,9 @@ fun MixerScreen(
     onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
     onSave: () -> Unit,
 ) {
-    val isExpanded = rememberWindowSizeClass() == WindowWidthSize.EXPANDED
+    // A pane needs height too: in a short window (a phone on its side) the shuffle button would
+    // sit below the fold, so everything scrolls together there.
+    val showsControlsPane = rememberWindowSizeClass() == WindowWidthSize.EXPANDED && !rememberIsCompactHeight()
 
     JustRelaxTabScaffold(title = stringResource(Res.string.mixer_screen_title)) { innerPadding ->
         val controls = @Composable {
@@ -100,7 +103,7 @@ fun MixerScreen(
             )
         }
 
-        if (isExpanded) {
+        if (showsControlsPane) {
             Row(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
                 Box(
                     modifier = Modifier
