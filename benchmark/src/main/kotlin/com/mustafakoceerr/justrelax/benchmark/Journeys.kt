@@ -3,7 +3,6 @@ package com.mustafakoceerr.justrelax.benchmark
 import android.graphics.Point
 import androidx.benchmark.macro.MacrobenchmarkScope
 import androidx.test.uiautomator.By
-import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import java.util.regex.Pattern
@@ -58,14 +57,27 @@ fun MacrobenchmarkScope.openTimerSetup(): UiObject2 {
     return waitFor(Tags.TIMER_WHEEL_MINUTE)
 }
 
+/**
+ * Flicks [view] up and then down inside its own bounds. UiObject2.fling did not reach the timer's
+ * wheel on a real phone (no frames were drawn), so the swipe is spelled out.
+ */
 fun MacrobenchmarkScope.flingTwice(view: UiObject2) {
-    // Keep gestures away from the screen edges, where they become system back or home gestures.
-    view.setGestureMargin(device.displayWidth / 10)
-    view.fling(Direction.DOWN)
-    device.waitForIdle()
-    view.fling(Direction.UP)
+    flick(view, up = true)
+    flick(view, up = false)
+}
+
+/** One fast swipe up (to later numbers) or down inside [view]. */
+fun MacrobenchmarkScope.flick(view: UiObject2, up: Boolean) {
+    val bounds = view.visibleBounds
+    val x = bounds.centerX()
+    val low = bounds.top + bounds.height() * 3 / 4
+    val high = bounds.top + bounds.height() / 4
+    if (up) device.swipe(x, low, x, high, FLICK_STEPS) else device.swipe(x, high, x, low, FLICK_STEPS)
     device.waitForIdle()
 }
+
+/** About 5 ms per step: a 80 ms swipe, fast enough to fling and with enough points to measure its speed. */
+private const val FLICK_STEPS = 16
 
 /**
  * Moves a few categories to the right on Home and back. The built-in pack has only a handful of

@@ -29,8 +29,8 @@ Frame times are `frameDurationCpuMs` P50 / P90 / P99. Startup is `timeToInitialD
 |---|---|---|
 | Cold start, no profile | 731 ms | |
 | Cold start, Baseline Profile | 764 ms (library profiles only, no app profile yet) | |
-| Timer: fling the minute wheel | 5.9 / 7.2 / 10.2 | |
-| Timer: running countdown, 5 s | 7.8 / 8.7 / 13.2 | |
+| Timer: fling the minute wheel | 6.6 / 9.2 / 10.2 | |
+| Timer: running countdown, 5 s | 7.5 / 8.0 / 11.5 (338 frames) | |
 | Home: switch categories | 7.7 / 18.8 / 37.4 | |
 | Home: drag volume | 10.4 / 15.5 / 24.6 | |
 
