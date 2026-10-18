@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">言語の選択</string>
     <string name="language_system_default">システム既定</string>
-    <string name="section_content">コンテンツ</string>
-    <string name="section_support_legal">サポート &amp; 法的情報</string>
     <string name="settings_language_title">言語</string>
     <string name="settings_title">設定</string>
     <string name="theme_dark">ダーク</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">購入が完了しませんでした。もう一度お試しください。</string>
     <string name="support_unavailable">現在チップはご利用いただけません。</string>
     <string name="support_note">チップはストアを通じた1回限りの支払いです。何も解除されず、アプリは誰にとっても同じです。</string>
+    <string name="section_sounds">サウンド</string>
+    <string name="section_privacy">プライバシー</string>
+    <string name="section_support">サポート</string>
+    <string name="settings_theme_title">テーマ</string>
+    <string name="settings_my_sounds_title">マイサウンド</string>
+    <string name="settings_my_sounds_subtitle">自分のファイルと Freesound の音</string>
+    <string name="settings_version">バージョン %1$s</string>
+    <string name="settings_tagline">休息と集中のための音</string>
 </resources>

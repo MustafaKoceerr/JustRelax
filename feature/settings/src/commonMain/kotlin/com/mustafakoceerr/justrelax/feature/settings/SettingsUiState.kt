@@ -15,5 +15,6 @@ data class SettingsUiState(
     val isUsageDataEnabled: Boolean = false,
     /** The store offers tips, so the support row shows. */
     val canTip: Boolean = false,
+    val versionName: String = "",
     val userMessage: UiText? = null,
 )

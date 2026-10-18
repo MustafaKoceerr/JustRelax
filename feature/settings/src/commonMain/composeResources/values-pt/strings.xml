@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">Seleção de idioma</string>
     <string name="language_system_default">Padrão do sistema</string>
-    <string name="section_content">Conteúdo</string>
-    <string name="section_support_legal">Suporte &amp; Legal</string>
     <string name="settings_language_title">Idioma</string>
     <string name="settings_title">Configurações</string>
     <string name="theme_dark">Escuro</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">A compra não foi concluída. Tente novamente.</string>
     <string name="support_unavailable">As gorjetas não estão disponíveis agora.</string>
     <string name="support_note">A gorjeta é um pagamento único pela loja. Ela não desbloqueia nada; o app continua igual para todos.</string>
+    <string name="section_sounds">Sons</string>
+    <string name="section_privacy">Privacidade</string>
+    <string name="section_support">Suporte</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_my_sounds_title">Meus sons</string>
+    <string name="settings_my_sounds_subtitle">Seus arquivos e achados do Freesound</string>
+    <string name="settings_version">Versão %1$s</string>
+    <string name="settings_tagline">Sons para descansar e focar</string>
 </resources>

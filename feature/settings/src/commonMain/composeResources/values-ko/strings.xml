@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">언어 선택</string>
     <string name="language_system_default">시스템 기본값</string>
-    <string name="section_content">콘텐츠</string>
-    <string name="section_support_legal">지원 &amp; 법적 고지</string>
     <string name="settings_language_title">언어</string>
     <string name="settings_title">설정</string>
     <string name="theme_dark">다크</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">구매가 완료되지 않았습니다. 다시 시도해 주세요.</string>
     <string name="support_unavailable">지금은 팁을 사용할 수 없습니다.</string>
     <string name="support_note">팁은 스토어를 통한 일회성 결제입니다. 잠금 해제되는 기능은 없으며 앱은 모두에게 똑같습니다.</string>
+    <string name="section_sounds">사운드</string>
+    <string name="section_privacy">개인정보</string>
+    <string name="section_support">지원</string>
+    <string name="settings_theme_title">테마</string>
+    <string name="settings_my_sounds_title">내 사운드</string>
+    <string name="settings_my_sounds_subtitle">내 파일과 Freesound에서 찾은 소리</string>
+    <string name="settings_version">버전 %1$s</string>
+    <string name="settings_tagline">휴식과 집중을 위한 소리</string>
 </resources>

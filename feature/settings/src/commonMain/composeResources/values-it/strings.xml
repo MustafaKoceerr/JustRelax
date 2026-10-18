@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">Selezione lingua</string>
     <string name="language_system_default">Predefinito di sistema</string>
-    <string name="section_content">Contenuti</string>
-    <string name="section_support_legal">Supporto &amp; Legale</string>
     <string name="settings_language_title">Lingua</string>
     <string name="settings_title">Impostazioni</string>
     <string name="theme_dark">Scuro</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">L’acquisto non è andato a buon fine. Riprova.</string>
     <string name="support_unavailable">Le mance non sono disponibili al momento.</string>
     <string name="support_note">Una mancia è un pagamento unico tramite lo store. Non sblocca nulla; l’app resta uguale per tutti.</string>
+    <string name="section_sounds">Suoni</string>
+    <string name="section_privacy">Privacy</string>
+    <string name="section_support">Supporto</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_my_sounds_title">I miei suoni</string>
+    <string name="settings_my_sounds_subtitle">I tuoi file e le scoperte su Freesound</string>
+    <string name="settings_version">Versione %1$s</string>
+    <string name="settings_tagline">Suoni per riposare e concentrarsi</string>
 </resources>

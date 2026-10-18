@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">Språkval</string>
     <string name="language_system_default">Systemstandard</string>
-    <string name="section_content">Innehåll</string>
-    <string name="section_support_legal">Support &amp; Juridik</string>
     <string name="settings_language_title">Språk</string>
     <string name="settings_title">Inställningar</string>
     <string name="theme_dark">Mörkt</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">Köpet gick inte igenom. Försök igen.</string>
     <string name="support_unavailable">Dricks är inte tillgängligt just nu.</string>
     <string name="support_note">Dricks är en engångsbetalning via butiken. Den låser inte upp något; appen är densamma för alla.</string>
+    <string name="section_sounds">Ljud</string>
+    <string name="section_privacy">Integritet</string>
+    <string name="section_support">Support</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_my_sounds_title">Mina ljud</string>
+    <string name="settings_my_sounds_subtitle">Dina egna filer och fynd från Freesound</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_tagline">Ljud för vila och fokus</string>
 </resources>

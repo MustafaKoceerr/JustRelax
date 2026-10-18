@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.settings
 
+import com.mustafakoceerr.justrelax.core.common.AppInfo
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeConsentRepository
 import com.mustafakoceerr.justrelax.core.model.ConsentStatus
 import com.mustafakoceerr.justrelax.core.data.language.LanguageStrategy
@@ -43,6 +44,7 @@ class SettingsViewModelTest {
         languageController = FakeLanguageController(strategy),
         consentRepository = consent,
         tipRepository = tips,
+        appInfo = AppInfo(versionName = "1.4.0"),
     )
 
     private fun TestScope.observedViewModel(strategy: LanguageStrategy = LanguageStrategy.IN_APP) =
@@ -58,6 +60,14 @@ class SettingsViewModelTest {
         advanceUntilIdle()
 
         assertTrue(viewModel.uiState.value.canTip)
+    }
+
+    @Test
+    fun theVersion_isTheAppsOwn() = runMainTest {
+        val viewModel = observedViewModel()
+        advanceUntilIdle()
+
+        assertEquals("1.4.0", viewModel.uiState.value.versionName)
     }
 
     @Test
