@@ -26,6 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
@@ -52,6 +54,8 @@ import com.mustafakoceerr.justrelax.core.ui.util.volumeAfterDrag
 import org.jetbrains.compose.resources.stringResource
 
 private const val ANIM_DURATION = 300
+private val HANDLE_WIDTH = 4.dp
+private val HANDLE_HEIGHT = 28.dp
 
 /**
  * A sound in the library. A tap plays or stops it; while it plays, sliding across the tile sets
@@ -78,6 +82,7 @@ fun SoundTile(
     // Grows the fill in when the sound starts instead of showing it at once.
     val fillShown = animateFloatAsState(if (isPlaying) 1f else 0f, tween(ANIM_DURATION), label = "TileFill")
     val fillColor = MaterialTheme.colorScheme.primaryContainer
+    val handleColor = MaterialTheme.colorScheme.primary
     val iconCircle by animateColorAsState(
         if (isPlaying) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHighest,
         tween(ANIM_DURATION),
@@ -97,7 +102,19 @@ fun SoundTile(
                 .fillMaxSize()
                 .drawBehind {
                     val shown = fillShown.value
-                    if (shown > 0f) drawRect(fillColor, size = Size(size.width * latestVolume() * shown, size.height))
+                    if (shown > 0f) {
+                        val edge = size.width * latestVolume() * shown
+                        drawRect(fillColor, size = Size(edge, size.height))
+                        // A short handle on the fill's edge, so the tile reads as something to slide.
+                        val handleHeight = HANDLE_HEIGHT.toPx()
+                        val handleWidth = HANDLE_WIDTH.toPx()
+                        drawRoundRect(
+                            color = handleColor.copy(alpha = shown),
+                            topLeft = Offset((edge - handleWidth / 2).coerceIn(0f, size.width - handleWidth), (size.height - handleHeight) / 2),
+                            size = Size(handleWidth, handleHeight),
+                            cornerRadius = CornerRadius(handleWidth / 2),
+                        )
+                    }
                 }
                 .then(
                     if (isPlaying) {
