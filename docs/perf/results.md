@@ -48,3 +48,18 @@ After `compose-stability.conf` (PR #46), which marks the read-only collections, 
 | unstable | 4 | 0 |
 | runtime-checked (UiState, List, …) | 56 | 50 |
 | unstable classes | 26 (mostly ViewModels and UiStates) | 21 (ViewModels, the app classes, two small helpers) |
+
+## Volume drag: where the main thread's time goes (emulator, relative)
+Pixel 8a emulator (API 34), `nonMinifiedRelease`, one bed and one event playing, the bed's slider dragged back and forth ten times. Recorded with Perfetto: system trace plus 250 Hz callstack sampling of the app. Three runs each after a warm-up. Emulator times are not comparable to the phone; the split between parts is what counts.
+
+| | #54 (volumes out of uiState) | Engine on an audio thread |
+|---|---|---|
+| Main thread samples during the drag | 145–183 | 131–140 |
+| …of those in the engine or Media3 | 25–41 | 0–5 |
+| `Choreographer#doFrame` average | 2.10–2.24 ms | 2.00–2.03 ms |
+| Frame duration P90 (frame timeline) | 6.20–6.37 ms | 6.03–6.24 ms |
+
+- Before the change, `SoundscapeSession` collected on `Main.immediate`. Every slider step ran `DefaultSoundscapeEngine.apply` inside the main thread's input handling, and so did `ExoPlayer.setVolume` with its listener and `DefaultAnalyticsCollector` callbacks.
+- The engine and the bed ExoPlayers now run on one `JustRelaxAudio` thread; the media session player stays on main.
+- `resolve()` and `EventScheduler.sync` were not hot (0–2 samples), so they were left as they are.
+- The phone (`LibraryBenchmark#dragVolume`) has not been measured yet; see `docs/owner-todo.md`.

@@ -1,15 +1,13 @@
 package com.mustafakoceerr.justrelax.core.playback.player
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.mustafakoceerr.justrelax.core.common.AudioDefaults
+import com.mustafakoceerr.justrelax.core.playback.AudioThread
 import com.mustafakoceerr.justrelax.core.playback.MEDIA_AUDIO_ATTRIBUTES
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -17,20 +15,20 @@ import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.resume
 import kotlin.math.min
 
-/** One looping ExoPlayer instance. All player access is confined to the main thread. */
+/** One looping ExoPlayer instance. All player access is confined to the [audioThread]. */
 internal class ExoSoundPlayer(
-    private val context: Context
+    private val context: Context,
+    private val audioThread: AudioThread,
 ) : SoundPlayer {
 
-    private val mainHandler = Handler(Looper.getMainLooper())
     private var exoPlayer: ExoPlayer? = null
     private var targetVolume: Float = AudioDefaults.BASE_VOLUME
 
-    override suspend fun prepare(clip: String, volume: Float) = withContext(Dispatchers.Main) {
+    override suspend fun prepare(clip: String, volume: Float) = withContext(audioThread.dispatcher) {
         releasePlayer()
         targetVolume = volume
         exoPlayer = ExoPlayer.Builder(context)
-            .setLooper(Looper.getMainLooper())
+            .setLooper(audioThread.looper)
             // Focus and the wake lock belong to SoundscapePlayer, once for the whole mix; if every
             // layer handled focus, the mix's own players would take it from each other.
             .setAudioAttributes(MEDIA_AUDIO_ATTRIBUTES, /* handleAudioFocus = */ false)
@@ -44,7 +42,7 @@ internal class ExoSoundPlayer(
             }
     }
 
-    override suspend fun play(fadeInDurationMs: Long, startAtFraction: Float) = withContext(Dispatchers.Main) {
+    override suspend fun play(fadeInDurationMs: Long, startAtFraction: Float) = withContext(audioThread.dispatcher) {
         val player = exoPlayer ?: return@withContext
         // The duration is only known once the source is ready.
         if (player.awaitReady() && player.duration > 0) {
@@ -67,24 +65,24 @@ internal class ExoSoundPlayer(
                     }
                 }
                 addListener(listener)
-                continuation.invokeOnCancellation { mainHandler.post { removeListener(listener) } }
+                continuation.invokeOnCancellation { audioThread.handler.post { removeListener(listener) } }
             }
         } != null
     }
 
-    override suspend fun pause() = withContext(Dispatchers.Main) {
+    override suspend fun pause() = withContext(audioThread.dispatcher) {
         exoPlayer?.pause()
         Unit
     }
 
-    override suspend fun resume() = withContext(Dispatchers.Main) {
+    override suspend fun resume() = withContext(audioThread.dispatcher) {
         // A pause may have interrupted the fade-in, so restore the full volume.
         exoPlayer?.volume = targetVolume
         exoPlayer?.play()
         Unit
     }
 
-    override suspend fun release() = withContext(Dispatchers.Main) {
+    override suspend fun release() = withContext(audioThread.dispatcher) {
         releasePlayer()
     }
 
@@ -93,7 +91,7 @@ internal class ExoSoundPlayer(
             targetVolume = volume
             exoPlayer?.volume = volume
         }
-        if (Looper.myLooper() == Looper.getMainLooper()) apply() else mainHandler.post(apply)
+        if (audioThread.isCurrent) apply() else audioThread.handler.post(apply)
     }
 
     private fun releasePlayer() {

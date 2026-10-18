@@ -11,12 +11,14 @@ import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
 import com.mustafakoceerr.justrelax.core.testing.testClip
 import com.mustafakoceerr.justrelax.core.testing.testSound
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlin.coroutines.ContinuationInterceptor
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -27,6 +29,8 @@ class SoundscapeSessionTest {
 
     private class FakeEngine : SoundscapeEngine {
         override val activeSoundIds = MutableStateFlow(emptySet<String>())
+        /** The dispatcher of every call, to check where the engine's work runs. */
+        val callDispatchers = mutableSetOf<ContinuationInterceptor?>()
         val applied = mutableListOf<PlayableScene>()
         var running = false
         var masterVolume = 1f
@@ -34,20 +38,28 @@ class SoundscapeSessionTest {
         var stopped = false
 
         override suspend fun apply(scene: PlayableScene) {
+            recordDispatcher()
             applied += scene
         }
 
         override suspend fun setRunning(running: Boolean) {
+            recordDispatcher()
             this.running = running
         }
 
         override suspend fun setMasterVolume(volume: Float) {
+            recordDispatcher()
             masterVolume = volume
             masterVolumes += volume
         }
 
         override suspend fun stop() {
+            recordDispatcher()
             stopped = true
+        }
+
+        private suspend fun recordDispatcher() {
+            callDispatchers += currentCoroutineContext()[ContinuationInterceptor]
         }
     }
 
@@ -74,6 +86,33 @@ class SoundscapeSessionTest {
     private suspend fun TestScope.play(vararg ids: String) {
         ids.forEach { scene.toggle(it) }
         runCurrent()
+    }
+
+    @Test
+    fun theEngineWorks_onItsOwnDispatcher() = runTest {
+        val sessionDispatcher = StandardTestDispatcher(testScheduler, name = "session")
+        val engineDispatcher = StandardTestDispatcher(testScheduler, name = "engine")
+        var engineScopeDispatcher: ContinuationInterceptor? = null
+        val session = SoundscapeSession(
+            sceneRepository = scene,
+            soundRepository = sounds,
+            engineFactory = { scope -> engine.also { engineScopeDispatcher = scope.coroutineContext[ContinuationInterceptor] } },
+            sleepTimer = timer,
+            context = sessionDispatcher,
+            engineContext = engineDispatcher,
+        )
+        runCurrent()
+
+        play("rain")
+        session.setPlayWhenReady(true)
+        scene.setVolume("rain", 0.2f)
+        runCurrent()
+        session.release()
+        runCurrent()
+
+        assertEquals(engineDispatcher, engineScopeDispatcher)
+        assertEquals(setOf<ContinuationInterceptor?>(engineDispatcher), engine.callDispatchers)
+        assertTrue(engine.stopped)
     }
 
     @Test

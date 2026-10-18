@@ -16,6 +16,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
+import com.mustafakoceerr.justrelax.core.playback.AudioThread
 import com.mustafakoceerr.justrelax.core.playback.di.playbackModule
 import com.mustafakoceerr.justrelax.core.playback.player.SoundPlayerFactory
 import com.mustafakoceerr.justrelax.core.playback.timer.SleepTimer
@@ -70,6 +71,8 @@ class PlaybackServiceTest {
                     single<SceneRepository> { scene }
                     single<SleepTimer> { timer }
                     single<SoundPlayerFactory> { SoundPlayerFactory { FakeSoundPlayer().also { beds += it } } }
+                    // The engine on the main looper too, so idle() also runs its work.
+                    single { AudioThread(Looper.getMainLooper()) }
                 },
             )
         }

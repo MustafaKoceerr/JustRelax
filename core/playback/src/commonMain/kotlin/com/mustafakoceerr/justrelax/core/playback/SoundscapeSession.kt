@@ -31,6 +31,9 @@ import kotlin.time.Duration.Companion.seconds
  * The platform-independent half of the player: it renders the scene from [SceneRepository] on the
  * [engine] and owns play/pause. The platform player (Android: a Media3 SimpleBasePlayer) maps its
  * commands and audio-focus decisions onto [setPlayWhenReady], [setSuppressed] and [setDuckVolume].
+ *
+ * The engine runs on [engineContext], so on Android a slider drag only posts the new scene to the
+ * audio thread instead of running the engine and its players inside the main thread's input handling.
  */
 internal class SoundscapeSession(
     private val sceneRepository: SceneRepository,
@@ -38,6 +41,7 @@ internal class SoundscapeSession(
     engineFactory: (CoroutineScope) -> SoundscapeEngine,
     private val sleepTimer: SleepTimer,
     context: CoroutineContext,
+    engineContext: CoroutineContext = context,
 ) {
     enum class PlayWhenReadyReason { USER, AUDIO_FOCUS_LOSS, BECOMING_NOISY, SLEEP_TIMER, SCENE_CLEARED }
 
@@ -51,7 +55,8 @@ internal class SoundscapeSession(
     }
 
     private val scope = CoroutineScope(context + SupervisorJob())
-    private val engine = engineFactory(scope)
+    private val engineScope = CoroutineScope(scope.coroutineContext + engineContext)
+    private val engine = engineFactory(engineScope)
 
     private val _state = MutableStateFlow(State(hasContent = sceneRepository.scene.value.layers.isNotEmpty()))
     val state: StateFlow<State> = _state.asStateFlow()
@@ -61,7 +66,7 @@ internal class SoundscapeSession(
     private var fadeJob: Job? = null
 
     private val jobs = listOf(
-        scope.launch {
+        engineScope.launch {
             combine(sceneRepository.scene, soundRepository.getSounds(), ::resolve)
                 .distinctUntilChanged()
                 .conflate() // a slow apply should skip to the latest scene, never cancel half-way
@@ -74,7 +79,7 @@ internal class SoundscapeSession(
                 .drop(1)
                 .collect(::onContentChanged)
         },
-        scope.launch {
+        engineScope.launch {
             combine(_state.map { it.isRunning }, duckVolume, fadeVolume) { running, duck, fade -> running to duck * fade }
                 .distinctUntilChanged()
                 .collect { (running, volume) ->
@@ -107,7 +112,7 @@ internal class SoundscapeSession(
     fun release() {
         cancelFade()
         jobs.forEach { it.cancel() }
-        scope.launch {
+        engineScope.launch {
             engine.stop()
             scope.cancel()
         }
