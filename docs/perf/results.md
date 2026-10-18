@@ -25,14 +25,19 @@ Samsung Galaxy A52 (SM-A525F), Android 14, 90 Hz (11.1 ms per frame). "Stay awak
 ## Results
 Frame times are `frameDurationCpuMs` P50 / P90 / P99. Startup is `timeToInitialDisplayMs` median.
 
-| Benchmark | Before | After |
+| Benchmark | Before (#44) | After (#46) |
 |---|---|---|
-| Cold start, no profile | 731 ms | |
-| Cold start, Baseline Profile | 764 ms (library profiles only, no app profile yet) | |
-| Timer: fling the minute wheel | 6.6 / 9.2 / 10.2 | |
-| Timer: running countdown, 5 s | 7.5 / 8.0 / 11.5 (338 frames) | |
-| Home: switch categories | 7.7 / 18.8 / 37.4 | |
-| Home: drag volume | 10.4 / 15.5 / 24.6 | |
+| Cold start, no profile | 731 ms | 603 ms |
+| Cold start, Baseline Profile | 764 ms (library profiles only, no app profile yet) | 571 ms (app profile) |
+| Timer: fling the minute wheel | 6.6 / 9.2 / 10.2 | 7.0 / 9.6 / 11.6 (3D drum) |
+| Timer: running countdown, 5 s | 7.5 / 8.0 / 11.5 (338 frames) | 7.0 / 7.6 / 9.2 (514 frames: the ring glides) |
+| Home: switch categories | 7.7 / 18.8 / 37.4 | 7.6 / 13.8 / 32.1 |
+| Home: drag volume | 10.4 / 15.5 / 24.6 | 12.0 / 17.7 / 23.8 |
+
+Notes:
+- Before and after were measured the same day, five iterations each (startup: ten). Differences of about 1 ms are within the run-to-run noise.
+- Dragging a volume slider did not get faster. The shell no longer recomposes for it, but Home and its grid still do; that needs a trace to look into.
+- The new wheel costs a little more per frame (each row is scaled, faded and tilted), still under the 11.1 ms budget at P95.
 
 ## Compose stability (composable parameters)
 After `compose-stability.conf` (PR #46), which marks the read-only collections, `Instant`, `core:model` and two `core:media` value classes as stable.
