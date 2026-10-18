@@ -9,4 +9,5 @@
     <string name="timer_action_pause">Pausa</string>
     <string name="timer_action_resume">Fortsätt</string>
     <string name="timer_action_start">Starta</string>
+    <string name="timer_type_value">Skriv ett värde</string>
 </resources>

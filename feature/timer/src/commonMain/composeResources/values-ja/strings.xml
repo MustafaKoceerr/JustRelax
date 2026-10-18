@@ -9,4 +9,5 @@
     <string name="timer_action_pause">一時停止</string>
     <string name="timer_action_resume">再開</string>
     <string name="timer_action_start">開始</string>
+    <string name="timer_type_value">数値を入力</string>
 </resources>

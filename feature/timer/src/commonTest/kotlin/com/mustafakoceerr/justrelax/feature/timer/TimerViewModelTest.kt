@@ -4,18 +4,26 @@ import com.mustafakoceerr.justrelax.core.analytics.EventTypes
 import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
 import com.mustafakoceerr.justrelax.core.testing.fake.TestAnalyticsHelper
 import app.cash.turbine.test
+import com.mustafakoceerr.justrelax.core.playback.timer.TimerState
+import com.mustafakoceerr.justrelax.core.playback.timer.TimerStatus
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeClock
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSleepTimer
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 class TimerViewModelTest {
 
     private val timer = FakeSleepTimer()
     private val analytics = TestAnalyticsHelper()
-    private fun viewModel() = TimerViewModel(timer, analytics)
+    // 10:00:30 UTC
+    private val clock = FakeClock(Instant.parse("2026-10-18T10:00:30Z"))
+    private fun viewModel() = TimerViewModel(timer, analytics, clock)
 
     @Test
     fun idleTimer_showsSetup() = runMainTest {
@@ -79,5 +87,47 @@ class TimerViewModelTest {
             listOf("under_15m", "30_60m", "over_2h"),
             analytics.events.filter { it.type == EventTypes.TIMER_STARTED }.map { it.params.getValue("duration_bucket") },
         )
+    }
+
+    @Test
+    fun aRunningTimerShowsWhenItEnds_toTheMinute() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.startTimer(seconds = 600)
+
+            // 10:00:30 + 10 min = 10:10:30, shown as 10:10.
+            assertEquals(Instant.parse("2026-10-18T10:10:00Z"), awaitItem().endsAt)
+        }
+    }
+
+    @Test
+    fun theEndTimeStaysTheSameWhileTheTimerTicks() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.startTimer(seconds = 600)
+            val first = awaitItem().endsAt
+
+            clock.current += 1.seconds
+            timer.state.value = TimerState(TimerStatus.RUNNING, totalSeconds = 600, remainingSeconds = 599)
+
+            val ticked = awaitItem()
+            assertEquals(599, ticked.remainingSeconds)
+            assertEquals(first, ticked.endsAt)
+        }
+    }
+
+    @Test
+    fun aPausedOrIdleTimerHasNoEndTime() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.uiState.test {
+            assertNull(awaitItem().endsAt)
+            viewModel.startTimer(seconds = 600)
+            awaitItem()
+
+            viewModel.toggleTimer()
+            assertNull(awaitItem().endsAt)
+        }
     }
 }
