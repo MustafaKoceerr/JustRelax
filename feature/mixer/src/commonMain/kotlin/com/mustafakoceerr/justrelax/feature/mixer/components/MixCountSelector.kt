@@ -31,7 +31,7 @@ fun MixCountSelector(
     selectedCount: Int,
     onCountSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    availableCounts: List<Int> = (RandomSceneGenerator.MIN_LAYERS..RandomSceneGenerator.MAX_LAYERS).toList()
+    availableCounts: List<Int> = MIX_COUNTS,
 ) {
     Column(modifier = modifier) {
         Text(
@@ -49,7 +49,7 @@ fun MixCountSelector(
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
-            items(items = availableCounts) { number ->
+            items(items = availableCounts, key = { it }) { number ->
                 MixNumberChip(
                     number = number,
                     isSelected = number == selectedCount,
@@ -96,3 +96,6 @@ private fun MixNumberChip(
         }
     }
 }
+
+/** Built once, not on every call as a default argument. */
+private val MIX_COUNTS: List<Int> = (RandomSceneGenerator.MIN_LAYERS..RandomSceneGenerator.MAX_LAYERS).toList()

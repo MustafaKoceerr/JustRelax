@@ -11,4 +11,5 @@
     <string name="err_unknown">Er is een onverwachte fout opgetreden. Probeer het later opnieuw.</string>
     <string name="action_clear">Wissen</string>
     <string name="ai_action_try_another_variation">Probeer een andere variant</string>
+    <string name="ai_action_send">Verzenden</string>
 </resources>

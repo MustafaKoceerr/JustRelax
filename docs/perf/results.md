@@ -35,9 +35,11 @@ Frame times are `frameDurationCpuMs` P50 / P90 / P99. Startup is `timeToInitialD
 | Home: drag volume | | |
 
 ## Compose stability (composable parameters)
+After `compose-stability.conf` (PR #46), which marks the read-only collections, `Instant`, `core:model` and two `core:media` value classes as stable.
+
 | | Before | After |
 |---|---|---|
-| stable | 392 | |
-| unstable | 4 | |
-| runtime-checked (UiState, List, …) | 56 | |
-| unstable classes | 26 (mostly ViewModels and UiStates) | |
+| stable | 392 | 441 |
+| unstable | 4 | 0 |
+| runtime-checked (UiState, List, …) | 56 | 50 |
+| unstable classes | 26 (mostly ViewModels and UiStates) | 21 (ViewModels, the app classes, two small helpers) |

@@ -26,6 +26,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -73,6 +75,11 @@ class SceneViewModel(
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SceneUiState())
+
+    val miniPlayer: StateFlow<MiniPlayerUiState> = uiState
+        .map { scene -> MiniPlayerUiState(icons = scene.layers.map { it.icon }, isPlaying = scene.isPlaying) }
+        .distinctUntilChanged()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MiniPlayerUiState())
 
     fun togglePlayPause() {
         if (playbackController.isPlaying.value) playbackController.pause() else playbackController.play()

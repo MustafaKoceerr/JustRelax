@@ -13,6 +13,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.volume_level
+import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
 
 @Composable
@@ -22,6 +25,7 @@ fun VolumeSlider(
     modifier: Modifier = Modifier
 ) {
     val percentage = (value * 100).roundToInt()
+    val label = stringResource(Res.string.volume_level)
 
     Slider(
         value = value,
@@ -31,7 +35,7 @@ fun VolumeSlider(
             .height(24.dp)
             .testTag(TestTags.VOLUME_SLIDER)
             .semantics {
-                contentDescription = "Volume Level"
+                contentDescription = label
                 stateDescription = "$percentage%"
             },
         colors = SliderDefaults.colors(

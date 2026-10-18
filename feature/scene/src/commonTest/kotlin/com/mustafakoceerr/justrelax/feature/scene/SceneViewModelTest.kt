@@ -21,6 +21,7 @@ import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.err_mix_save_name_exists
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.msg_mix_saved_success
+import app.cash.turbine.test
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -68,6 +69,25 @@ class SceneViewModelTest {
         assertEquals(listOf("rain"), viewModel.uiState.value.layers.map { it.soundId })
         assertTrue(viewModel.uiState.value.isPlaying)
         assertTrue(viewModel.uiState.value.isVisible)
+    }
+
+    /** Volume drags change the scene many times a second; the mini player must not redraw for them. */
+    @Test
+    fun theMiniPlayerIgnoresVolumeChanges() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.miniPlayer.test {
+            var state = awaitItem()
+            if (!state.isVisible) state = awaitItem()
+            assertTrue(state.isVisible)
+            assertTrue(state.isPlaying)
+
+            viewModel.changeVolume("rain", 0.3f)
+            advanceUntilIdle()
+            expectNoEvents()
+
+            viewModel.togglePlayPause()
+            assertFalse(awaitItem().isPlaying)
+        }
     }
 
     @Test

@@ -11,4 +11,5 @@
     <string name="err_unknown">예기치 않은 오류가 발생했습니다. 나중에 다시 시도해주세요.</string>
     <string name="action_clear">지우기</string>
     <string name="ai_action_try_another_variation">다른 변형 시도</string>
+    <string name="ai_action_send">보내기</string>
 </resources>

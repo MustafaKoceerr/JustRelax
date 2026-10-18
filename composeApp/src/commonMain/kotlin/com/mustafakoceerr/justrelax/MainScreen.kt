@@ -56,7 +56,7 @@ import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.scene.SceneViewModel
 import com.mustafakoceerr.justrelax.feature.scene.components.MiniPlayerBar
-import com.mustafakoceerr.justrelax.feature.scene.SceneUiState
+import com.mustafakoceerr.justrelax.feature.scene.MiniPlayerUiState
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import com.mustafakoceerr.justrelax.core.ui.util.WindowWidthSize
 import com.mustafakoceerr.justrelax.core.ui.util.rememberWindowSizeClass
@@ -87,8 +87,29 @@ import com.mustafakoceerr.justrelax.core.analytics.logScreenView
 @Composable
 fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit) {
     val sceneViewModel = koinViewModel<SceneViewModel>()
-    val sceneState by sceneViewModel.uiState.collectAsStateWithLifecycle()
+    // Only what the mini player shows: a volume drag changes the scene many times a second, and
+    // reading the whole scene here would redraw the shell for each step.
+    val miniPlayer by sceneViewModel.miniPlayer.collectAsStateWithLifecycle()
     val snackbarController = koinInject<GlobalSnackbarController>()
+
+    SceneMessagesAndDialog(sceneViewModel, snackbarController)
+
+    MainScreenLayout(
+        tabState = rememberSaveable(saver = MainTabState.Saver) { MainTabState() },
+        miniPlayer = miniPlayer,
+        onPlayPause = sceneViewModel::togglePlayPause,
+        onStopAll = sceneViewModel::stopAll,
+        onSaveMix = sceneViewModel::openSaveDialog,
+        scenePanel = { modifier -> ScenePanelRoute(sceneViewModel, modifier) },
+        onOpenSettings = onOpenSettings,
+        onOpenMySounds = onOpenMySounds,
+        snackbarHostState = snackbarController.hostState
+    )
+}
+
+@Composable
+private fun SceneMessagesAndDialog(sceneViewModel: SceneViewModel, snackbarController: GlobalSnackbarController) {
+    val sceneState by sceneViewModel.uiState.collectAsStateWithLifecycle()
 
     UserMessageEffect(sceneState.userMessage, sceneViewModel::onMessageShown) {
         snackbarController.showSnackbar(it)
@@ -101,28 +122,21 @@ fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit) {
             onConfirm = sceneViewModel::saveMix,
         )
     }
+}
 
-    MainScreenLayout(
-        tabState = rememberSaveable(saver = MainTabState.Saver) { MainTabState() },
-        sceneState = sceneState,
+/** Collects the scene itself, so its volume changes redraw only the panel. */
+@Composable
+private fun ScenePanelRoute(sceneViewModel: SceneViewModel, modifier: Modifier) {
+    val sceneState by sceneViewModel.uiState.collectAsStateWithLifecycle()
+    ScenePanel(
+        state = sceneState,
         onPlayPause = sceneViewModel::togglePlayPause,
         onStopAll = sceneViewModel::stopAll,
-        onSaveMix = sceneViewModel::openSaveDialog,
-        scenePanel = { modifier ->
-            ScenePanel(
-                state = sceneState,
-                onPlayPause = sceneViewModel::togglePlayPause,
-                onStopAll = sceneViewModel::stopAll,
-                onSave = sceneViewModel::openSaveDialog,
-                onVolumeChange = sceneViewModel::changeVolume,
-                onFrequencyChange = sceneViewModel::changeFrequency,
-                onRemove = sceneViewModel::remove,
-                modifier = modifier,
-            )
-        },
-        onOpenSettings = onOpenSettings,
-        onOpenMySounds = onOpenMySounds,
-        snackbarHostState = snackbarController.hostState
+        onSave = sceneViewModel::openSaveDialog,
+        onVolumeChange = sceneViewModel::changeVolume,
+        onFrequencyChange = sceneViewModel::changeFrequency,
+        onRemove = sceneViewModel::remove,
+        modifier = modifier,
     )
 }
 
@@ -130,7 +144,7 @@ fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit) {
 @Composable
 private fun MainScreenLayout(
     tabState: MainTabState,
-    sceneState: SceneUiState,
+    miniPlayer: MiniPlayerUiState,
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
     onSaveMix: () -> Unit,
@@ -188,7 +202,7 @@ private fun MainScreenLayout(
                 bottomBar = {
                     if (!isKeyboardOpen && !showsScenePane) {
                         MiniPlayer(
-                            sceneState = sceneState,
+                            state = miniPlayer,
                             onPlayPause = onPlayPause,
                             onStopAll = onStopAll,
                             onSaveMix = onSaveMix,
@@ -247,7 +261,7 @@ private fun MainScreenLayout(
  */
 @Composable
 private fun MiniPlayer(
-    sceneState: SceneUiState,
+    state: MiniPlayerUiState,
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
     onSaveMix: () -> Unit,
@@ -260,7 +274,7 @@ private fun MiniPlayer(
         contentAlignment = Alignment.BottomCenter,
     ) {
         AnimatedVisibility(
-            visible = sceneState.isVisible,
+            visible = state.isVisible,
             modifier = Modifier.widthIn(max = MINI_PLAYER_MAX_WIDTH),
             enter = slideInVertically(
                 animationSpec = tween(220),
@@ -272,9 +286,8 @@ private fun MiniPlayer(
             ) + fadeOut(animationSpec = tween(150))
         ) {
             MiniPlayerBar(
-                isVisible = true,
-                activeIcons = sceneState.layers.map { it.icon },
-                isPlaying = sceneState.isPlaying,
+                activeIcons = state.icons,
+                isPlaying = state.isPlaying,
                 onPlayPauseClick = onPlayPause,
                 onStopAllClick = onStopAll,
                 onSaveClick = onSaveMix,

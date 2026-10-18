@@ -10,7 +10,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,23 +24,23 @@ import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import org.koin.compose.viewmodel.koinViewModel
-import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
+import com.mustafakoceerr.justrelax.core.model.LocalizedSound
+import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTabScaffold
+import com.mustafakoceerr.justrelax.core.ui.components.SoundCardGrid
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.ai.components.AiMixInfo
 import com.mustafakoceerr.justrelax.feature.ai.components.AiPromptInput
 import com.mustafakoceerr.justrelax.feature.ai.components.AiResultActions
-import com.mustafakoceerr.justrelax.feature.ai.components.AiResultGrid
 import com.mustafakoceerr.justrelax.feature.ai.components.AiVisualizer
 import com.mustafakoceerr.justrelax.feature.ai.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.ai.generated.resources.*
@@ -82,41 +81,37 @@ fun AiScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val hasResults = uiState.hasResult
 
-    val suggestions = listOf(
-        stringResource(Res.string.ai_suggestion_rainforest),
-        stringResource(Res.string.ai_suggestion_deep_sleep),
-        stringResource(Res.string.ai_suggestion_cafe),
-        stringResource(Res.string.ai_suggestion_meditation)
-    )
+    val rainforest = stringResource(Res.string.ai_suggestion_rainforest)
+    val deepSleep = stringResource(Res.string.ai_suggestion_deep_sleep)
+    val cafe = stringResource(Res.string.ai_suggestion_cafe)
+    val meditation = stringResource(Res.string.ai_suggestion_meditation)
+    val suggestions = remember(rainforest, deepSleep, cafe, meditation) { listOf(rainforest, deepSleep, cafe, meditation) }
+    // Made here, not inside the grid's builder, so it stays the same object and the cards can skip.
+    val onCardClick: (LocalizedSound) -> Unit = remember(onSoundClick) { { sound -> onSoundClick(sound.id) } }
 
-    Scaffold(
-        // Combine status bars and IME insets to handle keyboard padding correctly
+    JustRelaxTabScaffold(
+        title = stringResource(Res.string.ai_screen_title),
+        // Status bar and keyboard insets, so the prompt stays above the keyboard.
         contentWindowInsets = WindowInsets.statusBars.union(WindowInsets.ime),
-        containerColor = Color.Transparent,
-        topBar = {
-            JustRelaxTopBar(
-                title = stringResource(Res.string.ai_screen_title),
-                navigationIcon = {
-                    if (hasResults) {
-                        IconButton(onClick = onEditPrompt) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(CoreRes.string.action_back)
-                            )
-                        }
-                    }
-                },
-                actions = {
-                    if (hasResults) {
-                        IconButton(onClick = onClearMix) {
-                            Icon(
-                                imageVector = Icons.Rounded.DeleteOutline,
-                                contentDescription = stringResource(Res.string.action_clear)
-                            )
-                        }
-                    }
+        navigationIcon = {
+            if (hasResults) {
+                IconButton(onClick = onEditPrompt) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(CoreRes.string.action_back)
+                    )
                 }
-            )
+            }
+        },
+        actions = {
+            if (hasResults) {
+                IconButton(onClick = onClearMix) {
+                    Icon(
+                        imageVector = Icons.Rounded.DeleteOutline,
+                        contentDescription = stringResource(Res.string.action_clear)
+                    )
+                }
+            }
         }
     ) { innerPadding ->
 
@@ -142,14 +137,14 @@ fun AiScreen(
                 ) { targetHasResults ->
 
                     if (targetHasResults) {
-                        AiResultGrid(
+                        SoundCardGrid(
                             sounds = uiState.mixSounds,
                             cards = uiState.sceneCards,
-                            onToggleSound = onSoundClick,
+                            onSoundClick = onCardClick,
                             onVolumeChange = onVolumeChange,
                             onFrequencyChange = onFrequencyChange,
-                            contentPadding = PaddingValues(16.dp),
-                            headerContent = {
+                            modifier = Modifier.fillMaxSize(),
+                            header = {
                                 Column {
                                     AiMixInfo(
                                         name = uiState.mixName,

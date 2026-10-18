@@ -11,4 +11,5 @@
     <string name="err_unknown">Une erreur inattendue s’est produite. Veuillez réessayer plus tard.</string>
     <string name="action_clear">Effacer</string>
     <string name="ai_action_try_another_variation">Essayer une autre variante</string>
+    <string name="ai_action_send">Envoyer</string>
 </resources>

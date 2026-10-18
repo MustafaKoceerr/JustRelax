@@ -29,4 +29,8 @@
     <string name="action_play">Oynat</string>
     <string name="action_stop">Durdur</string>
     <string name="action_listen">Dinle</string>
+    <string name="sound_state_playing">Çalıyor</string>
+    <string name="sound_state_stopped">Durduruldu</string>
+    <string name="volume_level">Ses düzeyi</string>
+    <string name="loading">Yükleniyor</string>
 </resources>

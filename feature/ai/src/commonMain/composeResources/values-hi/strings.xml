@@ -11,4 +11,5 @@
     <string name="err_unknown">एक अप्रत्याशित त्रुटि हुई। कृपया बाद में फिर से प्रयास करें।</string>
     <string name="action_clear">साफ़ करें</string>
     <string name="ai_action_try_another_variation">एक और वैरिएशन आज़माएँ</string>
+    <string name="ai_action_send">भेजें</string>
 </resources>

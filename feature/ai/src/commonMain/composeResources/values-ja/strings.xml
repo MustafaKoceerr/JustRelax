@@ -11,4 +11,5 @@
     <string name="err_unknown">予期しないエラーが発生しました。後でもう一度お試しください。</string>
     <string name="action_clear">クリア</string>
     <string name="ai_action_try_another_variation">別のバリエーションを試す</string>
+    <string name="ai_action_send">送信</string>
 </resources>

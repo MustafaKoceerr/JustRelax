@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.saved.components
 
+import com.mustafakoceerr.justrelax.core.ui.components.SoundIconBadge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -34,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -155,7 +157,8 @@ private fun MixIconsRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         icons.forEachIndexed { index, icon ->
-            var isVisible by remember { mutableStateOf(false) }
+            // Saveable: a list item scrolled back into view keeps its icons instead of animating them again.
+            var isVisible by rememberSaveable { mutableStateOf(false) }
 
             LaunchedEffect(Unit) {
                 delay(index * 100L)
@@ -169,26 +172,7 @@ private fun MixIconsRow(
                     initialScale = 0.5f
                 )
             ) {
-                Surface(
-                    shape = CircleShape,
-                    border = BorderStroke(
-                        width = 2.dp,
-                        color = backgroundColor
-                    ),
-                    modifier = Modifier.size(36.dp),
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = icon.imageVector,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(20.dp)
-                                .padding(1.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
+                SoundIconBadge(icon = icon, borderColor = backgroundColor, tint = MaterialTheme.colorScheme.primary)
             }
         }
     }

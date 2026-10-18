@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.scene.components
 
+import com.mustafakoceerr.justrelax.core.ui.components.EmptyHint
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -80,12 +81,7 @@ fun ScenePanel(
         }
 
         if (state.layers.isEmpty()) {
-            Text(
-                text = stringResource(Res.string.scene_empty),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(vertical = 24.dp),
-            )
+            EmptyHint(stringResource(Res.string.scene_empty))
         } else {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(16.dp),

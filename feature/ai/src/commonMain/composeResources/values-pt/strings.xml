@@ -11,4 +11,5 @@
     <string name="err_unknown">Ocorreu um erro inesperado. Tente novamente mais tarde.</string>
     <string name="action_clear">Limpar</string>
     <string name="ai_action_try_another_variation">Tentar outra variação</string>
+    <string name="ai_action_send">Enviar</string>
 </resources>

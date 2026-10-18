@@ -39,7 +39,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 }
             }
 
-            configureComposeCompilerReports()
+            configureComposeCompiler()
 
             extensions.configure<KotlinAndroidProjectExtension> {
                 compilerOptions {

@@ -1,16 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.scene.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.BorderStroke
+import com.mustafakoceerr.justrelax.core.ui.components.SoundIconBadge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,44 +29,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_title
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_pause
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_stop_all
+import org.jetbrains.compose.resources.stringResource
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 
+/** The scene that is playing, as a bar. The caller animates it in and out. */
 @Composable
 fun MiniPlayerBar(
-    isVisible: Boolean,
-    activeIcons: List<SoundIcon>,
-    isPlaying: Boolean,
-    onPlayPauseClick: () -> Unit,
-    onStopAllClick: () -> Unit,
-    onSaveClick: () -> Unit,
-    onOpenScene: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    AnimatedVisibility(
-        visible = isVisible,
-        modifier = modifier,
-        enter = slideInVertically(
-            initialOffsetY = { fullHeight -> fullHeight },
-            animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
-        ) + fadeIn(),
-        exit = slideOutVertically(
-            targetOffsetY = { fullHeight -> fullHeight },
-            animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
-        ) + fadeOut()
-    ) {
-        MiniPlayerBarContent(
-            activeIcons = activeIcons,
-            isPlaying = isPlaying,
-            onPlayPauseClick = onPlayPauseClick,
-            onStopAllClick = onStopAllClick,
-            onSaveClick = onSaveClick,
-            onOpenScene = onOpenScene,
-        )
-    }
-}
-
-@Composable
-private fun MiniPlayerBarContent(
     activeIcons: List<SoundIcon>,
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
@@ -123,7 +89,12 @@ private fun MiniPlayerBarContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items(activeIcons) { icon ->
-                    SoundIconItem(icon)
+                    SoundIconBadge(
+                        icon = icon,
+                        borderColor = MaterialTheme.colorScheme.primaryContainer,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(2.dp),
+                    )
                 }
             }
 
@@ -138,7 +109,7 @@ private fun MiniPlayerBarContent(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.FavoriteBorder,
-                        contentDescription = "Save Mix",
+                        contentDescription = stringResource(CoreRes.string.save_mix_dialog_title),
                         modifier = Modifier.size(24.dp),
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -155,7 +126,7 @@ private fun MiniPlayerBarContent(
                 ) {
                     Icon(
                         imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
-                        contentDescription = "Play/Pause",
+                        contentDescription = stringResource(if (isPlaying) Res.string.action_pause else CoreRes.string.action_play),
                         modifier = Modifier.size(28.dp),
                         tint = MaterialTheme.colorScheme.onSecondaryContainer
                     )
@@ -167,33 +138,12 @@ private fun MiniPlayerBarContent(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Close,
-                        contentDescription = "Close all",
+                        contentDescription = stringResource(Res.string.action_stop_all),
                         modifier = Modifier.size(24.dp),
                         tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun SoundIconItem(icon: SoundIcon) {
-    Surface(
-        modifier = Modifier
-            .size(36.dp)
-            .padding(2.dp),
-        shape = CircleShape,
-        color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer)
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Icon(
-                imageVector = icon.imageVector,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
         }
     }
 }

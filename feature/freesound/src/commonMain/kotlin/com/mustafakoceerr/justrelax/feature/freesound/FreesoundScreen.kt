@@ -1,5 +1,9 @@
 package com.mustafakoceerr.justrelax.feature.freesound
 
+import com.mustafakoceerr.justrelax.core.ui.util.formatClipLength
+import com.mustafakoceerr.justrelax.core.ui.extensions.readableWidth
+import com.mustafakoceerr.justrelax.core.ui.components.EmptyHint
+import com.mustafakoceerr.justrelax.core.ui.components.CenteredLoading
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_stop
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_listen
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
@@ -12,7 +16,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,7 +31,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -109,7 +111,7 @@ fun FreesoundScreen(
         snackbarHostState = snackbarHostState,
     ) { innerPadding ->
         Box(Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-            Column(Modifier.widthIn(max = 720.dp).fillMaxWidth().imePadding()) {
+            Column(Modifier.readableWidth().fillMaxWidth().imePadding()) {
                 OutlinedTextField(
                     value = uiState.query,
                     onValueChange = onQueryChange,
@@ -125,26 +127,14 @@ fun FreesoundScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
                 )
                 when {
-                    uiState.isSearching -> Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
-                    !uiState.hasSearched -> Hint(stringResource(Res.string.freesound_intro))
-                    uiState.results.isEmpty() -> Hint(stringResource(Res.string.freesound_no_results))
+                    uiState.isSearching -> CenteredLoading(Modifier.fillMaxWidth().padding(32.dp))
+                    !uiState.hasSearched -> EmptyHint(stringResource(Res.string.freesound_intro))
+                    uiState.results.isEmpty() -> EmptyHint(stringResource(Res.string.freesound_no_results))
                     else -> Results(uiState, onLoadMore, onTogglePreview, onAdd)
                 }
             }
         }
     }
-}
-
-@Composable
-private fun Hint(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(24.dp),
-    )
 }
 
 @Composable
@@ -170,7 +160,7 @@ private fun Results(
                 headlineContent = { Text(sound.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                 supportingContent = {
                     Text(
-                        "${stringResource(Res.string.freesound_by, sound.author)} · ${sound.license.label} · ${formatSeconds(sound.durationMs)}",
+                        "${stringResource(Res.string.freesound_by, sound.author)} · ${sound.license.label} · ${formatClipLength(sound.durationMs)}",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -198,10 +188,4 @@ private fun Results(
             }
         }
     }
-}
-
-
-private fun formatSeconds(ms: Long): String {
-    val seconds = (ms + 500) / 1_000
-    return "${seconds / 60}:${(seconds % 60).toString().padStart(2, '0')}"
 }

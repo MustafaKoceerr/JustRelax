@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.library.components
 
+import com.mustafakoceerr.justrelax.core.ui.components.CenteredLoading
+import com.mustafakoceerr.justrelax.core.ui.components.SoundCardGrid
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.library_empty_title
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.library_empty_message
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_retry
@@ -18,12 +20,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -41,7 +42,7 @@ fun LibraryContent(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val categories = uiState.categories.keys.toList()
+    val categories = remember(uiState.categories) { uiState.categories.keys.toList() }
     val selectedCategory = uiState.selectedCategory
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -54,9 +55,7 @@ fun LibraryContent(
         }
 
         if (uiState.isLoading) {
-            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
+            CenteredLoading(modifier = Modifier.weight(1f))
         } else if (uiState.isEmpty) {
             EmptyLibrary(onRetry = onRetry, modifier = Modifier.weight(1f))
         } else {
