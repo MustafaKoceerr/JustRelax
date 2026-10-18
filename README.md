@@ -122,14 +122,14 @@ Versions come from [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 | Area | Library |
 |---|---|
 | Language and build | Kotlin `2.4.20`, Android Gradle Plugin `9.4.1`, Gradle convention plugins in `build-logic` |
-| Platforms | Android (min SDK 29, target 36, compile 37); iOS builds but is off until its audio engine exists |
+| Platforms | Android (min SDK 29, target 36, compile 37); iOS 18.4+ (off by default, not released yet: no file import or analytics) |
 | UI | Compose Multiplatform `1.12.1`, Material 3, Material 3 Adaptive (bar, rail or drawer by window size), Compottie (Lottie) |
 | Navigation | Navigation 3 `1.1.2` |
 | State | ViewModel + `StateFlow`, Kotlin Coroutines `1.11.0` |
 | DI | Koin `4.2.2` |
 | Network | Ktor `3.6.0`, kotlinx.serialization `1.11.0` |
 | Storage | SQLDelight `2.4.0`, DataStore `1.2.1`, Okio `3.18.2` |
-| Audio | Media3 `1.11.1`: ExoPlayer, MediaSession, Transformer (trimming) |
+| Audio | Android: Media3 `1.11.1` (ExoPlayer, MediaSession, Transformer for trimming). iOS: AVAudioEngine, AVAudioSession, MediaPlayer |
 | Analytics | Firebase Analytics and Crashlytics, only after the user agrees |
 | Backend | Cloudflare Workers (API proxy) and R2 (sound CDN), free plan |
 | Tests | kotlin.test, Turbine, Robolectric, Ktor MockEngine, vitest, Python unittest |
@@ -142,7 +142,7 @@ The app follows Google's [app architecture guide](https://developer.android.com/
 
 - **UI layer:** a screen observes one `UiState` from its ViewModel and sends it events (MVVM). Screens are stateless composables, so they can be previewed and tested.
 - **Data layer:** repositories are the single source of truth. The sound catalog is offline-first: it is cached in SQLDelight and refreshed from the CDN once a day.
-- **Playback:** one `SoundscapePlayer` (a Media3 `Player`) runs in a `MediaSessionService`. It mixes beds and schedules events, so playback keeps going in the background and shows in the system media controls.
+- **Playback:** one `SoundscapePlayer` (a Media3 `Player`) runs in a `MediaSessionService`. It mixes beds and schedules events, so playback keeps going in the background and shows in the system media controls. On iOS the same session runs in-process on one `AVAudioEngine` (`AvAudioGraph`); `IosAudioSession` follows iOS's default interruption and route-change behaviour and drives the lock screen controls. iOS 18.4 is the minimum because that is where AVFoundation reads the pack's Ogg Opus clips.
 - **API keys never ship in the app.** AI and Freesound calls go through a Cloudflare Worker. The Worker checks Play Integrity, issues a short session and rate-limits each install.
 
 ```text
@@ -181,7 +181,7 @@ Each feature module depends only on `core` modules, never on another feature.
 ```
 
 - **Firebase:** Analytics and Crashlytics are added only when `androidApp/google-services.json` exists. Without it the app builds and runs normally.
-- **iOS:** set `justrelax.ios.enabled=true` in `gradle.properties` (or pass `-Pjustrelax.ios.enabled=true`) and open `iosApp/` in Xcode.
+- **iOS:** set `justrelax.ios.enabled=true` in `gradle.properties` (or pass `-Pjustrelax.ios.enabled=true`) and open `iosApp/` in Xcode. iOS tests run on the simulator with `./gradlew iosSimulatorArm64Test -Pjustrelax.ios.enabled=true` (Xcode must be the selected developer directory, not only the command line tools).
 - **API proxy:** see [`server/api-proxy/README.md`](server/api-proxy/README.md) (`npm test`, `npm run deploy`).
 - **Sound pack:** see [`tools/sound-pipeline/README.md`](tools/sound-pipeline/README.md) (`python3 -m unittest discover -s tools/sound-pipeline`).
 
