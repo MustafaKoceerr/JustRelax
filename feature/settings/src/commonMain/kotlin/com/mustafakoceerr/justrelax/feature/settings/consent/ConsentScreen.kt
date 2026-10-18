@@ -28,13 +28,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
-import justrelax.feature.settings.generated.resources.Res
-import justrelax.feature.settings.generated.resources.consent_accept
-import justrelax.feature.settings.generated.resources.consent_body
-import justrelax.feature.settings.generated.resources.consent_decline
-import justrelax.feature.settings.generated.resources.consent_later_hint
-import justrelax.feature.settings.generated.resources.consent_privacy_policy
-import justrelax.feature.settings.generated.resources.consent_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.consent_accept
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.consent_body
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.consent_decline
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.consent_later_hint
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.consent_privacy_policy
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.consent_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 

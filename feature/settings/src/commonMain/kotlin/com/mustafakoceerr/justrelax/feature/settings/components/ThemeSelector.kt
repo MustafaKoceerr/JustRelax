@@ -28,11 +28,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.AppTheme
-import justrelax.feature.settings.generated.resources.Res
-import justrelax.feature.settings.generated.resources.theme_dark
-import justrelax.feature.settings.generated.resources.theme_light
-import justrelax.feature.settings.generated.resources.theme_section_title
-import justrelax.feature.settings.generated.resources.theme_system
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.theme_dark
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.theme_light
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.theme_section_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.theme_system
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 

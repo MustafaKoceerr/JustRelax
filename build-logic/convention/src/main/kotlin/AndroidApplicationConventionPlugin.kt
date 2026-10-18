@@ -32,6 +32,11 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 buildFeatures {
                     compose = true
                 }
+
+                // Robolectric tests need the merged resources.
+                testOptions {
+                    unitTests.isIncludeAndroidResources = true
+                }
             }
 
             extensions.configure<KotlinAndroidProjectExtension> {

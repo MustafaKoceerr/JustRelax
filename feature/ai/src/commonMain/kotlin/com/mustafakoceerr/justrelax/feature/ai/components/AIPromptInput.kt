@@ -27,8 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import justrelax.feature.ai.generated.resources.Res
-import justrelax.feature.ai.generated.resources.ai_prompt_placeholder
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.ai_prompt_placeholder
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

@@ -14,8 +14,8 @@ import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import justrelax.feature.settings.generated.resources.Res
-import justrelax.feature.settings.generated.resources.msg_all_sounds_downloaded
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.msg_all_sounds_downloaded
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

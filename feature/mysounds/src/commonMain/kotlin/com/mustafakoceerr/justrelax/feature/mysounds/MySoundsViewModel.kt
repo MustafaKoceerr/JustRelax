@@ -8,8 +8,8 @@ import com.mustafakoceerr.justrelax.core.media.ImportedAudio
 import com.mustafakoceerr.justrelax.core.media.MediaException
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import justrelax.feature.mysounds.generated.resources.Res
-import justrelax.feature.mysounds.generated.resources.mysounds_import_failed
+import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_import_failed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

@@ -31,11 +31,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
-import justrelax.feature.settings.generated.resources.Res
-import justrelax.feature.settings.generated.resources.download_all_completed_title
-import justrelax.feature.settings.generated.resources.download_all_subtitle_recommended
-import justrelax.feature.settings.generated.resources.download_all_title
-import justrelax.feature.settings.generated.resources.download_progress
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.download_all_completed_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.download_all_subtitle_recommended
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.download_all_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.download_progress
 import org.jetbrains.compose.resources.stringResource
 
 private enum class DownloadCardState { IDLE, DOWNLOADING, COMPLETED }

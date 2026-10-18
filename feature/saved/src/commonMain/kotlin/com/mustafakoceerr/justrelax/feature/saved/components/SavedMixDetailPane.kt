@@ -31,11 +31,11 @@ import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.feature.saved.SavedMixDetail
 import com.mustafakoceerr.justrelax.feature.saved.SavedSoundItem
 import com.mustafakoceerr.justrelax.feature.saved.util.formatDate
-import justrelax.feature.saved.generated.resources.Res
-import justrelax.feature.saved.generated.resources.action_delete
-import justrelax.feature.saved.generated.resources.action_play
-import justrelax.feature.saved.generated.resources.date_format_short
-import justrelax.feature.saved.generated.resources.saved_detail_placeholder
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.action_delete
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.action_play
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.date_format_short
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_detail_placeholder
 import org.jetbrains.compose.resources.stringResource
 
 /** The selected saved mix beside the list on wide windows: its sounds, play and delete. */

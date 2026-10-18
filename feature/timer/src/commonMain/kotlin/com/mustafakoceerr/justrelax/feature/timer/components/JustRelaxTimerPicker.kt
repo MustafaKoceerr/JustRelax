@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mustafakoceerr.justrelax.core.ui.util.WindowWidthSize
-import justrelax.feature.timer.generated.resources.Res
-import justrelax.feature.timer.generated.resources.timer_unit_hour
-import justrelax.feature.timer.generated.resources.timer_unit_minute
-import justrelax.feature.timer.generated.resources.timer_unit_second
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_unit_hour
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_unit_minute
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_unit_second
 import org.jetbrains.compose.resources.stringResource
 
 private data class PickerUiMetrics(

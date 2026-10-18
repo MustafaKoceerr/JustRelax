@@ -25,9 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
-import justrelax.feature.settings.generated.resources.Res
-import justrelax.feature.settings.generated.resources.language_selection_title
-import justrelax.feature.settings.generated.resources.language_system_default
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.language_selection_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.language_system_default
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

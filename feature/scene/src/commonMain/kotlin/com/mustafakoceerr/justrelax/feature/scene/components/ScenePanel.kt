@@ -31,13 +31,13 @@ import com.mustafakoceerr.justrelax.core.ui.components.VolumeSlider
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.feature.scene.SceneLayerItem
 import com.mustafakoceerr.justrelax.feature.scene.SceneUiState
-import justrelax.feature.scene.generated.resources.Res
-import justrelax.feature.scene.generated.resources.action_pause
-import justrelax.feature.scene.generated.resources.action_play
-import justrelax.feature.scene.generated.resources.action_save_scene
-import justrelax.feature.scene.generated.resources.action_stop_all
-import justrelax.feature.scene.generated.resources.scene_empty
-import justrelax.feature.scene.generated.resources.scene_panel_title
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_pause
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_play
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_save_scene
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_stop_all
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.scene_empty
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.scene_panel_title
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_remove
 import org.jetbrains.compose.resources.stringResource

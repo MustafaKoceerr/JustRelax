@@ -18,8 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.util.rememberWindowSizeClass
-import justrelax.feature.timer.generated.resources.Res
-import justrelax.feature.timer.generated.resources.timer_action_start
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_start
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

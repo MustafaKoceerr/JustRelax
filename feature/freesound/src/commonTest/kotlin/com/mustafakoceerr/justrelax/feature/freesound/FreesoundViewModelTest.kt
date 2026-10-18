@@ -15,11 +15,11 @@ import com.mustafakoceerr.justrelax.core.testing.fake.FakeFreesoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import justrelax.feature.freesound.generated.resources.Res
-import justrelax.feature.freesound.generated.resources.freesound_download_failed
-import justrelax.feature.freesound.generated.resources.freesound_failed
-import justrelax.feature.freesound.generated.resources.freesound_offline
-import justrelax.feature.freesound.generated.resources.freesound_rate_limited
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_download_failed
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_failed
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_offline
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_rate_limited
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test

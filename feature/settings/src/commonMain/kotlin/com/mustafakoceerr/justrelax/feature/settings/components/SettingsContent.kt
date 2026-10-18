@@ -28,20 +28,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.feature.settings.SettingsUiState
-import justrelax.feature.settings.generated.resources.Res
-import justrelax.feature.settings.generated.resources.credits_subtitle
-import justrelax.feature.settings.generated.resources.credits_title
-import justrelax.feature.settings.generated.resources.feedback_subtitle
-import justrelax.feature.settings.generated.resources.feedback_title
-import justrelax.feature.settings.generated.resources.privacy_policy_title
-import justrelax.feature.settings.generated.resources.settings_usage_data_subtitle
-import justrelax.feature.settings.generated.resources.settings_usage_data_title
-import justrelax.feature.settings.generated.resources.rate_app_subtitle
-import justrelax.feature.settings.generated.resources.rate_app_title
-import justrelax.feature.settings.generated.resources.section_content
-import justrelax.feature.settings.generated.resources.section_support_legal
-import justrelax.feature.settings.generated.resources.settings_language_title
-import justrelax.feature.settings.generated.resources.terms_conditions_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.credits_subtitle
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.credits_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.feedback_subtitle
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.feedback_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.privacy_policy_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.settings_usage_data_subtitle
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.settings_usage_data_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.rate_app_subtitle
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.rate_app_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.section_content
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.section_support_legal
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.settings_language_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.terms_conditions_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

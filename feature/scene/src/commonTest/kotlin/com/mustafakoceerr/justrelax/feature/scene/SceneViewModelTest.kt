@@ -18,9 +18,9 @@ import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import justrelax.feature.scene.generated.resources.Res
-import justrelax.feature.scene.generated.resources.err_mix_save_name_exists
-import justrelax.feature.scene.generated.resources.msg_mix_saved_success
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.err_mix_save_name_exists
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.msg_mix_saved_success
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test

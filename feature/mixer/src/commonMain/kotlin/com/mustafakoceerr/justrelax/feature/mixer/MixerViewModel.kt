@@ -10,8 +10,8 @@ import com.mustafakoceerr.justrelax.core.model.localized
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import justrelax.feature.mixer.generated.resources.Res
-import justrelax.feature.mixer.generated.resources.err_mixer_generate_failed
+import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.err_mixer_generate_failed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

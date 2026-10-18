@@ -25,8 +25,8 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.feature.settings.components.LanguageSelectionBottomSheet
 import com.mustafakoceerr.justrelax.feature.settings.components.SettingsContent
-import justrelax.feature.settings.generated.resources.Res
-import justrelax.feature.settings.generated.resources.settings_title
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.settings_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

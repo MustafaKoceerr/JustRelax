@@ -9,7 +9,6 @@ dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
-    compileOnly(libs.composeCompiler.gradlePlugin)
 }
 
 gradlePlugin {
@@ -25,6 +24,10 @@ gradlePlugin {
         register("kmpFeature") {
             id = "justrelax.kmp.feature"
             implementationClass = "KmpFeatureConventionPlugin"
+        }
+        register("koin") {
+            id = "justrelax.koin"
+            implementationClass = "KoinConventionPlugin"
         }
         register("androidApplication") {
             id = "justrelax.android.application"

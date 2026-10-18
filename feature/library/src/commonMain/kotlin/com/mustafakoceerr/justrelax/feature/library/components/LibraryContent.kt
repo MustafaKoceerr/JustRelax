@@ -1,9 +1,9 @@
 package com.mustafakoceerr.justrelax.feature.library.components
 
-import justrelax.feature.library.generated.resources.library_empty_title
-import justrelax.feature.library.generated.resources.library_empty_message
-import justrelax.feature.library.generated.resources.action_retry
-import justrelax.feature.library.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.library_empty_title
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.library_empty_message
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_retry
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material3.Text

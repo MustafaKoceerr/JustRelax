@@ -1,5 +1,6 @@
 plugins {
     id("justrelax.kmp.library")
+    id("justrelax.koin")
 }
 
 kotlin {
@@ -10,7 +11,6 @@ kotlin {
             implementation(project(":core:data"))
 
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.koin.core)
         }
 
         androidMain.dependencies {
@@ -18,8 +18,6 @@ kotlin {
             implementation(libs.androidx.media3.session)
             implementation(libs.androidx.media3.common)
             implementation(libs.kotlinx.coroutines.guava)
-            implementation(libs.koin.android)
-            implementation(libs.androidx.core.ktx)
         }
 
         commonTest.dependencies {
@@ -27,9 +25,7 @@ kotlin {
         }
 
         androidHostTest.dependencies {
-            implementation(libs.robolectric)
-            implementation(libs.androidx.test.core.ktx)
-            implementation(libs.kotlin.test.junit)
+            implementation(libs.bundles.robolectric.test)
         }
     }
 }

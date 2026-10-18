@@ -23,10 +23,10 @@ import org.koin.compose.viewmodel.koinViewModel
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTopBar
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.library.components.LibraryContent
-import justrelax.feature.library.generated.resources.Res
-import justrelax.feature.library.generated.resources.action_my_sounds
-import justrelax.feature.library.generated.resources.action_settings
-import justrelax.feature.library.generated.resources.home_screen_title
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_my_sounds
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_settings
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.home_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 

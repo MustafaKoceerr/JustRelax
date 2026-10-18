@@ -25,8 +25,8 @@ import io.github.alexzhirkevich.compottie.DotLottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
-import justrelax.feature.mixer.generated.resources.Res
-import justrelax.feature.mixer.generated.resources.mixer_empty_state_message
+import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.mixer_empty_state_message
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 

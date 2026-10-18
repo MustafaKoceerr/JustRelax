@@ -63,9 +63,6 @@ android {
         }
     }
 
-    testOptions {
-        unitTests.isIncludeAndroidResources = true
-    }
 }
 
 dependencies {
@@ -82,7 +79,6 @@ dependencies {
     // Playback service (Media3 session + notification)
     implementation(libs.androidx.media3.session)
     implementation(libs.androidx.media3.common)
-    implementation(libs.kotlinx.coroutines.guava)
 
     // The debug sound pack's catalog is read from assets (BuildTypeModule).
     debugImplementation(libs.kotlinx.serialization.json)
@@ -92,9 +88,7 @@ dependencies {
     testImplementation(projects.core.database)
     testImplementation(libs.sqldelight.runtime)
     testImplementation(libs.ktor.client.core)
-    testImplementation(libs.kotlin.test.junit)
     testImplementation(libs.koin.test)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.androidx.test.core.ktx)
+    testImplementation(libs.bundles.robolectric.test)
     testImplementation(libs.kotlinx.coroutines.test)
 }

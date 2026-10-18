@@ -11,10 +11,10 @@ import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import justrelax.feature.saved.generated.resources.Res
-import justrelax.feature.saved.generated.resources.action_undo
-import justrelax.feature.saved.generated.resources.err_play_mix_failed
-import justrelax.feature.saved.generated.resources.msg_mix_deleted
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.action_undo
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.err_play_mix_failed
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.msg_mix_deleted
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

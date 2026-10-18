@@ -1,63 +1,54 @@
 # ----------------------------------------------------------------------------------
-# 1. GENEL AYARLAR
+# 1. General
 # ----------------------------------------------------------------------------------
-# Hata raporlarında satır numaralarını görmek için
+# Line numbers in crash reports (Crashlytics uploads the mapping file).
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
 
-# Kotlin Metadata ve Annotation'ları koru (Kütüphanelerin birbirini tanıması için şart)
--keepattributes RuntimeVisibleAnnotations, RuntimeInvisibleAnnotations, AnnotationDefault
+# Annotations of every kind (incl. Kotlin metadata, parameter and type annotations, defaults)
+# and generic signatures that libraries read by reflection.
 -keepattributes *Annotation*
 -keepattributes Signature
 -keepattributes EnclosingMethod
 -keepattributes InnerClasses
--keepattributes Metadata
 
 # ----------------------------------------------------------------------------------
-# 2. KOTLINX SERIALIZATION (JSON) - BURASI KALSIN
+# 2. kotlinx.serialization (JSON)
 # ----------------------------------------------------------------------------------
-# Bu kurallar "Overly broad" değildir, çünkü sadece @Serializable ile işaretlenmiş
-# senin kendi modellerini korur. Bu gereklidir.
+# Only our own @Serializable classes are kept, so this is not overly broad.
 -keepclassmembers class * {
     @kotlinx.serialization.Serializable <init>(...);
 }
 -keep,allowobfuscation,allowshrinking class * {
     @kotlinx.serialization.Serializable <init>(...);
 }
-# Enum field'larının isimlerini koru (JSON value'su ile eşleşmesi için)
+# Enum constants keep the names their JSON values match.
 -keepclassmembers enum * {
     @kotlinx.serialization.SerialName <fields>;
 }
 
 # ----------------------------------------------------------------------------------
-# 3. KOIN (Optimize Edildi)
+# 3. Koin
 # ----------------------------------------------------------------------------------
-# Tüm kütüphaneyi tutmak yerine, sadece reflection ile oluşturulan yapıları tutuyoruz.
+# Only what Koin creates by reflection; the rest of the library can be shrunk.
 -dontwarn org.koin.**
-# Eğer "java.lang.NoSuchMethodException: <init>" hatası alırsan burayı açabilirsin:
+# If a "java.lang.NoSuchMethodException: <init>" appears, enable this:
 # -keep class * extends org.koin.core.component.KoinComponent
 
 # ----------------------------------------------------------------------------------
-# 4. KTOR & NETWORK (Optimize Edildi)
+# 4. Ktor and network
 # ----------------------------------------------------------------------------------
-# Tüm Ktor'u tutmaya gerek yok. Sadece motor yükleyicileri.
+# Only the engine loaders are needed, not all of Ktor.
 -keep class io.ktor.client.engine.** { *; }
 
-# OkHttp kullanıyorsan (Ktor altında)
+# OkHttp and Okio under Ktor.
 -dontwarn okhttp3.**
 -dontwarn okio.**
 
 # ----------------------------------------------------------------------------------
-# 5. MEDIA3 & EXOPLAYER (Optimize Edildi)
+# 5. Media3
 # ----------------------------------------------------------------------------------
-# Media3 çok modülerdir. Kullanılmayan codecler silinsin.
-# Sadece temel bileşenleri ve varsa veritabanı işlemlerini koruyalım.
+# Media3 is modular; unused codecs may be removed.
 -dontwarn androidx.media3.**
-# Eğer release modda ses çalmazsa, şu satırın başındaki '#' işaretini kaldır:
+# If release builds play no sound, enable this:
 # -keep class androidx.media3.exoplayer.DefaultRenderersFactory { *; }
-
-# ----------------------------------------------------------------------------------
-# 7. VOYAGER (Navigation)
-# ----------------------------------------------------------------------------------
-# Voyager ekranları (Screen) reflection ile state saklıyorsa class isimleri lazım olabilir.
--keepnames class * implements cafe.adriel.voyager.core.screen.Screen
