@@ -12,6 +12,14 @@ PR'lar birbirinin üstüne yığılı; bu sırayla birleştir. Her biri bir önc
 - [ ] #41 Üretim kodundaki tekrarlar ve ölü kod
 - [ ] #42 Test tekrarları ve eksik testler
 - [ ] #43 README
+- [ ] #44 Performans ölçümü: Macrobenchmark, Baseline Profile, test tag'leri
+- [ ] #45 Samsung tarzı uyku zamanlayıcısı
+- [ ] #46 Ses sürüklerken daha az yeniden çizim, `core:ui`'da ortak bileşenler
+
+## Performans ölçümü (telefonda)
+Benchmark'lar `benchmarkRelease` sürümünü kurar. Bu sürüm debug anahtarıyla imzalı, telefondaki Play sürümüyle aynı paket adını taşıyor. Bu yüzden önce Play sürümü kaldırılmalı; o telefondaki kayıtlı karışımlar ve indirilen sesler silinir.
+- [ ] Telefonda JustRelax'ı kaldır, ya da başka bir test telefonu bağla.
+- [ ] Ölçümü Claude çalıştırır: önce `perf/benchmark` dalında ("önce"), sonra `perf/ui-cleanup` dalında ("sonra"). Sonuçlar `docs/perf/results.md`'ye, Baseline Profile `androidApp/src/release/generated/`'a yazılır.
 
 ## 2. Play Integrity (AI ve Freesound bunsuz yayında çalışmaz)
 - [ ] Play Console → JustRelax → *Test and release → App integrity → Play Integrity API → Link a Cloud project* ile yeni bir proje oluştur. Ücretsiz, faturalandırma gerekmez.
