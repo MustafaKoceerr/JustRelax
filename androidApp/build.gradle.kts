@@ -25,8 +25,8 @@ android {
 
     defaultConfig {
         applicationId = "com.mustafakoceerr.justrelax"
-        versionCode = 5
-        versionName = "1.2.0"
+        versionCode = 6
+        versionName = "1.3.0"
         buildConfigField(
             "long",
             "PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER",
