@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Privacybeleid - JustRelax</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 1em; line-height: 1.6; max-width: 900px; margin: 0 auto; }
+    h1, h2 { line-height: 1.2; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .muted { color: #666; }
+  </style>
+</head>
+<body>
+
+<h1>Privacybeleid</h1>
+<p class="muted">Ingangsdatum: 2026-10-18</p>
+
+<p>
+  Dit privacybeleid geldt voor de mobiele app JustRelax (de “App”), gemaakt en aangeboden door Mustafa Kocer
+  (de “Aanbieder”). Het legt uit wat je apparaat verlaat wanneer je de App gebruikt, waarom, en wat op je apparaat blijft.
+</p>
+
+<h2>Samenvatting</h2>
+<ul>
+  <li>Geen account of registratie. Geen advertenties en geen advertentie-ID.</li>
+  <li>Gebruiksstatistieken en crashrapporten (Google Firebase) worden <strong>alleen verstuurd als je dat toestaat</strong>, en je kunt dit op elk moment uitzetten in Instellingen.</li>
+  <li>Als je de AI-mix gebruikt, gaat je tekst naar OpenAI. Als je online naar geluiden zoekt, gaat je zoekopdracht naar Freesound.</li>
+  <li>Geluiden die je uit je eigen bestanden importeert, verlaten je apparaat nooit.</li>
+  <li>De Aanbieder verkoopt je gegevens niet en bewaart geen persoonsgegevens op zijn eigen servers.</li>
+</ul>
+
+<h2>Wat je apparaat verlaat</h2>
+<table>
+  <tr><th>Wat</th><th>Waarheen</th><th>Wanneer</th></tr>
+  <tr>
+    <td>De tekst die je typt voor een AI-mix, en de namen, categorieën en tags van de geluiden die je hebt gedownload</td>
+    <td>OpenAI, via de server van de Aanbieder (<code>api.mustafakoceerr.com</code>)</td>
+    <td>Alleen wanneer je om een AI-mix vraagt</td>
+  </tr>
+  <tr>
+    <td>De tekst waarmee je online naar geluiden zoekt</td>
+    <td>Freesound, via de server van de Aanbieder</td>
+    <td>Alleen wanneer je zoekt</td>
+  </tr>
+  <tr>
+    <td>Een willekeurige installatie-ID</td>
+    <td>De server van de Aanbieder</td>
+    <td>Met AI- en online zoekverzoeken</td>
+  </tr>
+  <tr>
+    <td>Een Play Integrity-token (Android)</td>
+    <td>Google, via de server van de Aanbieder</td>
+    <td>Wanneer de AI-mix of de online zoekfunctie een sessie start, hooguit ongeveer eens per uur</td>
+  </tr>
+  <tr>
+    <td>Verzoeken om geluidsbestanden en de geluidscatalogus</td>
+    <td>Het content delivery network van de Aanbieder (<code>cdn.mustafakoceerr.com</code>, Cloudflare)</td>
+    <td>Wanneer geluiden worden getoond of gedownload</td>
+  </tr>
+  <tr>
+    <td>Gebruiksgebeurtenissen en de Firebase-app-instantie-ID</td>
+    <td>Google Firebase Analytics</td>
+    <td>Alleen als je gebruiksgegevens hebt toegestaan</td>
+  </tr>
+  <tr>
+    <td>Crashrapporten en opgevangen fouten</td>
+    <td>Google Firebase Crashlytics</td>
+    <td>Alleen als je gebruiksgegevens hebt toegestaan</td>
+  </tr>
+</table>
+
+<h2>Details</h2>
+
+<p><strong>AI-mix.</strong>
+  Om een mix te maken, stuurt de App de zin die je schrijft, samen met de namen, categorieën en tags van je gedownloade geluiden,
+  naar de API van OpenAI. Je zin kan persoonsgegevens bevatten als je die erin zet; schrijf dus geen gevoelige informatie.
+  De server van de Aanbieder stuurt het verzoek door en bewaart het niet. OpenAI verwerkt het volgens zijn eigen API-voorwaarden;
+  op het moment van schrijven kan OpenAI API-verzoeken tot 30 dagen bewaren om misbruik op te sporen en gebruikt het ze standaard
+  niet om zijn modellen te trainen.
+</p>
+
+<p><strong>Online geluiden (Freesound).</strong>
+  Wanneer je naar geluiden zoekt, wordt je zoektekst via de server van de Aanbieder naar Freesound gestuurd, en voorbeelden en
+  downloads komen van de servers van Freesound. Alleen geluiden met Creative Commons-licenties die dit gebruik toestaan worden
+  getoond, en hun makers worden in de App vermeld.
+</p>
+
+<p><strong>Installatie-ID en Play Integrity.</strong>
+  Bij de installatie maakt de App een willekeurige ID die alleen bij deze installatie hoort en niet aan jou is gekoppeld.
+  Die wordt meegestuurd met AI- en zoekverzoeken, zodat de server van de Aanbieder kan beperken hoeveel verzoeken één installatie
+  doet. Op Android bevestigt Google Play Integrity dat het verzoek van de echte App komt. Deze worden alleen gebruikt om misbruik te
+  voorkomen. Als je de gegevens van de App wist of de App opnieuw installeert, ontstaat er een nieuwe ID.
+</p>
+
+<p><strong>Serverlogboeken.</strong>
+  De server van de Aanbieder draait op Cloudflare Workers. Hij houdt geen database bij van gebruikers of verzoeken; de limieten
+  zijn tellers die na 60 seconden verlopen. De logboeken van Cloudflare, die het pad van het verzoek (en dus de zoektekst) bevatten,
+  worden hooguit 3 dagen bewaard. Zoals bij elke online dienst ontvangen Cloudflare, OpenAI, Freesound en Google de technische
+  informatie die nodig is om een verzoek te beantwoorden, zoals je IP-adres en het tijdstip.
+</p>
+
+<p><strong>Gebruiksstatistieken en crashrapporten.</strong>
+  Bij de eerste start vraagt de App of hij anonieme gebruiksstatistieken en crashrapporten via Google Firebase mag versturen.
+  Als je weigert, wordt er niets verstuurd. Als je toestemming geeft:
+</p>
+<ul>
+  <li><strong>Firebase Analytics</strong> ontvangt gebeurtenissen zoals welke schermen worden geopend, welk catalogusgeluid wordt afgespeeld
+    en de categorie ervan, hoeveel geluiden een opgeslagen mix heeft, of een AI-verzoek of zoekopdracht lukte en het soort fout,
+    hoeveel zoekresultaten er waren, het soort geïmporteerd geluid en het bereik van de duur van een slaaptimer, samen met een
+    Firebase-app-instantie-ID. Het ontvangt niet wat je typt, zoekt of importeert.</li>
+  <li><strong>Firebase Crashlytics</strong> ontvangt crashrapporten en opgevangen fouten met de stacktrace, het apparaatmodel en de
+    versie van het besturingssysteem.</li>
+</ul>
+<p>
+  Je kunt je keuze op elk moment wijzigen in <em>Instellingen → Gebruiksgegevens en crashrapporten</em>. Google bewaart
+  Analytics-gegevens hooguit 14 maanden. Op het moment van schrijven worden deze diensten alleen in de Android-versie gebruikt.
+</p>
+
+<p><strong>Fooien.</strong>
+  Waar de App optionele fooien aanbiedt, zijn dit eenmalige aankopen die worden verwerkt door Google Play of de Apple App Store.
+  De Aanbieder ontvangt alleen een bevestiging dat de aankoop is gelukt; hij ziet je betaalgegevens nooit.
+  Een fooi ontgrendelt niets.
+</p>
+
+<h2>Wat op je apparaat blijft</h2>
+<ul>
+  <li><strong>Geluiden die je importeert</strong> uit je bestanden blijven in de privéopslag van de App. Ze worden nooit geüpload en zitten
+    niet in back-ups van het apparaat.</li>
+  <li><strong>Opgeslagen mixen, je bibliotheek en gedownloade geluiden</strong> worden bewaard in de opslag van de App op je apparaat.</li>
+  <li><strong>Instellingen</strong> (thema, taal, je keuze over gebruiksgegevens) worden op het apparaat opgeslagen; op Android kunnen ze in
+    je Google-back-up zitten, en dat zijn de enige App-gegevens waarvoor dat geldt.</li>
+</ul>
+<p>De App gebruikt je locatie, microfoon, camera, contacten of foto’s niet.</p>
+
+<h2>Diensten van derden</h2>
+<ul>
+  <li><strong>OpenAI</strong> (AI-mix): <a href="https://openai.com/policies/privacy-policy">privacybeleid</a></li>
+  <li><strong>Freesound</strong>, beheerd door de Music Technology Group van de Universitat Pompeu Fabra (online geluiden): <a href="https://freesound.org/help/privacy/">privacybeleid</a></li>
+  <li><strong>Google</strong> (Firebase Analytics, Firebase Crashlytics, Play Integrity, Google Play): <a href="https://policies.google.com/privacy">privacybeleid</a></li>
+  <li><strong>Apple</strong> (App Store-aankopen op iOS): <a href="https://www.apple.com/legal/privacy/">privacybeleid</a></li>
+  <li><strong>Cloudflare</strong> (server en content delivery): <a href="https://www.cloudflare.com/privacypolicy/">privacybeleid</a></li>
+</ul>
+<p>
+  Deze aanbieders verwerken gegevens namens de Aanbieder of om de functie te leveren waar je om vroeg, en kunnen dat buiten je land
+  doen. De Aanbieder verkoopt je gegevens niet en deelt ze niet voor advertenties.
+</p>
+
+<h2>Rechtsgrond (EER, VK en vergelijkbare wetten)</h2>
+<ul>
+  <li>Gebruiksstatistieken en crashrapporten: je toestemming, die je in Instellingen kunt intrekken.</li>
+  <li>AI-mix en online zoeken: het leveren van de functie waar je om vroeg.</li>
+  <li>Installatie-ID en Play Integrity: het gerechtvaardigd belang om misbruik van de dienst te voorkomen.</li>
+</ul>
+
+<h2>Je keuzes</h2>
+<ul>
+  <li>Weiger gebruiksstatistieken en crashrapporten of zet ze uit in Instellingen.</li>
+  <li>Gebruik de AI-mix en de online zoekfunctie niet als je niet wilt dat er tekst naar OpenAI of Freesound gaat.</li>
+  <li>Wis de gegevens van de App in de instellingen van je apparaat, of verwijder de App, om alles wat op het apparaat staat te verwijderen.</li>
+  <li>Neem contact op met de Aanbieder voor elke vraag of elk verzoek over je gegevens.</li>
+</ul>
+
+<h2>Beveiliging</h2>
+<p>
+  Alle verbindingen gebruiken versleutelde HTTPS. Geen enkele methode van verzending of opslag is volledig veilig, maar de Aanbieder
+  neemt redelijke maatregelen om de informatie die de App verwerkt te beschermen.
+</p>
+
+<h2>Privacy van kinderen</h2>
+<p>
+  De App is niet bedoeld voor kinderen jonger dan 13 jaar, en de Aanbieder verzamelt niet bewust persoonsgegevens van kinderen.
+  Als je denkt dat een kind via de App persoonsgegevens heeft verstrekt, neem dan contact op.
+</p>
+
+<h2>Wijzigingen in dit beleid</h2>
+<p>
+  Dit beleid kan van tijd tot tijd worden bijgewerkt. Wijzigingen worden op deze pagina gepubliceerd met een nieuwe ingangsdatum.
+</p>
+
+<h2>Contact</h2>
+<p>
+  Vragen over dit beleid of over je gegevens: <a href="mailto:kocerlabs@gmail.com">kocerlabs@gmail.com</a>
+</p>
+
+</body>
+</html>

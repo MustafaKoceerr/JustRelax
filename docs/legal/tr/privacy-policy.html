@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Gizlilik Politikası - JustRelax</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 1em; line-height: 1.6; max-width: 900px; margin: 0 auto; }
+    h1, h2 { line-height: 1.2; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .muted { color: #666; }
+  </style>
+</head>
+<body>
+
+<h1>Gizlilik Politikası</h1>
+<p class="muted">Yürürlük tarihi: 2026-10-18</p>
+
+<p>
+  Bu Gizlilik Politikası, Mustafa Kocer (“Hizmet Sağlayıcı”) tarafından geliştirilen ve sunulan JustRelax mobil uygulaması
+  (“Uygulama”) için geçerlidir. Uygulamayı kullanırken cihazınızdan neyin, neden çıktığını ve neyin cihazınızda kaldığını açıklar.
+</p>
+
+<h2>Özet</h2>
+<ul>
+  <li>Hesap ya da kayıt yok. Reklam yok, reklam kimliği kullanılmaz.</li>
+  <li>Kullanım istatistikleri ve çökme raporları (Google Firebase) <strong>yalnızca izin verirseniz</strong> gönderilir; bu izni Ayarlar’dan istediğiniz zaman kapatabilirsiniz.</li>
+  <li>AI karışımını kullanırsanız yazdığınız metin OpenAI’a gider. İnternette ses ararsanız aramanız Freesound’a gider.</li>
+  <li>Kendi dosyalarınızdan içe aktardığınız sesler cihazınızdan hiç çıkmaz.</li>
+  <li>Hizmet Sağlayıcı verilerinizi satmaz ve kendi sunucularında kişisel veri tutmaz.</li>
+</ul>
+
+<h2>Cihazınızdan çıkanlar</h2>
+<table>
+  <tr><th>Ne</th><th>Nereye</th><th>Ne zaman</th></tr>
+  <tr>
+    <td>AI karışımı için yazdığınız metin ve indirdiğiniz seslerin adları, kategorileri ve etiketleri</td>
+    <td>Hizmet Sağlayıcı’nın sunucusu (<code>api.mustafakoceerr.com</code>) üzerinden OpenAI</td>
+    <td>Yalnızca AI karışımı istediğinizde</td>
+  </tr>
+  <tr>
+    <td>İnternette ses ararken yazdığınız metin</td>
+    <td>Hizmet Sağlayıcı’nın sunucusu üzerinden Freesound</td>
+    <td>Yalnızca arama yaptığınızda</td>
+  </tr>
+  <tr>
+    <td>Rastgele bir kurulum kimliği</td>
+    <td>Hizmet Sağlayıcı’nın sunucusu</td>
+    <td>AI ve internet araması istekleriyle birlikte</td>
+  </tr>
+  <tr>
+    <td>Bir Play Integrity belirteci (Android)</td>
+    <td>Hizmet Sağlayıcı’nın sunucusu üzerinden Google</td>
+    <td>AI karışımı ya da internet araması bir oturum başlattığında, en fazla yaklaşık saatte bir</td>
+  </tr>
+  <tr>
+    <td>Ses dosyaları ve ses kataloğu istekleri</td>
+    <td>Hizmet Sağlayıcı’nın içerik dağıtım ağı (<code>cdn.mustafakoceerr.com</code>, Cloudflare)</td>
+    <td>Sesler listelenirken ya da indirilirken</td>
+  </tr>
+  <tr>
+    <td>Kullanım olayları ve Firebase uygulama örneği kimliği</td>
+    <td>Google Firebase Analytics</td>
+    <td>Yalnızca kullanım verisine izin verdiyseniz</td>
+  </tr>
+  <tr>
+    <td>Çökme raporları ve yakalanan hatalar</td>
+    <td>Google Firebase Crashlytics</td>
+    <td>Yalnızca kullanım verisine izin verdiyseniz</td>
+  </tr>
+</table>
+
+<h2>Ayrıntılar</h2>
+
+<p><strong>AI karışımı.</strong>
+  Uygulama bir karışım oluşturmak için yazdığınız cümleyi, indirdiğiniz seslerin adları, kategorileri ve etiketleriyle birlikte
+  OpenAI’ın API’sine gönderir. Cümlenize kendiniz eklerseniz kişisel bilgi içerebilir; lütfen hassas bilgi yazmayın.
+  Hizmet Sağlayıcı’nın sunucusu isteği iletir ve saklamaz. OpenAI isteği kendi API koşullarına göre işler; bu metnin
+  yazıldığı tarihte OpenAI, kötüye kullanımı tespit etmek için API isteklerini 30 güne kadar saklayabilmekte ve varsayılan
+  olarak modellerini bunlarla eğitmemektedir.
+</p>
+
+<p><strong>İnternetteki sesler (Freesound).</strong>
+  Ses aradığınızda arama metniniz Hizmet Sağlayıcı’nın sunucusu üzerinden Freesound’a gönderilir; ön dinlemeler ve indirmeler
+  Freesound’un sunucularından gelir. Yalnızca bu kullanıma izin veren Creative Commons lisanslı sesler gösterilir ve
+  sahipleri Uygulama’da belirtilir.
+</p>
+
+<p><strong>Kurulum kimliği ve Play Integrity.</strong>
+  Uygulama kurulduğunda yalnızca bu kuruluma ait, sizinle ilişkilendirilmeyen rastgele bir kimlik oluşturur. Bu kimlik,
+  Hizmet Sağlayıcı’nın sunucusu bir kurulumun yapabileceği istek sayısını sınırlayabilsin diye AI ve arama istekleriyle
+  gönderilir. Android’de Google Play Integrity, isteğin gerçek Uygulama’dan geldiğini doğrular. Bunlar yalnızca kötüye
+  kullanımı önlemek için kullanılır. Uygulama verilerini silmek ya da Uygulama’yı yeniden kurmak yeni bir kimlik oluşturur.
+</p>
+
+<p><strong>Sunucu günlükleri.</strong>
+  Hizmet Sağlayıcı’nın sunucusu Cloudflare Workers üzerinde çalışır. Kullanıcıların ya da isteklerin tutulduğu bir veritabanı
+  yoktur; istek sınırları 60 saniye sonra sıfırlanan sayaçlardır. İstek yolunu (dolayısıyla arama metnini) da içeren Cloudflare
+  günlükleri en fazla 3 gün tutulur. Her çevrimiçi hizmette olduğu gibi Cloudflare, OpenAI, Freesound ve Google da bir isteği
+  yanıtlamak için gereken IP adresiniz ve zaman gibi teknik bilgileri alır.
+</p>
+
+<p><strong>Kullanım istatistikleri ve çökme raporları.</strong>
+  Uygulama ilk açılışta Google Firebase üzerinden anonim kullanım istatistikleri ve çökme raporları gönderip gönderemeyeceğini
+  sorar. Reddederseniz hiçbir şey gönderilmez. İzin verirseniz:
+</p>
+<ul>
+  <li><strong>Firebase Analytics</strong> şu tür olayları alır: hangi ekranların açıldığı, hangi katalog sesinin çalındığı ve kategorisi,
+    kaydedilen bir karışımda kaç ses olduğu, bir AI isteğinin ya da aramanın başarılı olup olmadığı ve hata türü, kaç arama
+    sonucu bulunduğu, içe aktarılan bir sesin türü ve uyku zamanlayıcısı süresinin aralığı; bunlarla birlikte bir Firebase
+    uygulama örneği kimliği. Yazdıklarınızı, aradıklarınızı ya da içe aktardıklarınızı almaz.</li>
+  <li><strong>Firebase Crashlytics</strong> çökme raporlarını ve yakalanan hataları yığın izi, cihaz modeli ve işletim sistemi
+    sürümüyle birlikte alır.</li>
+</ul>
+<p>
+  Seçiminizi istediğiniz zaman <em>Ayarlar → Kullanım verisi ve çökme raporları</em> bölümünden değiştirebilirsiniz.
+  Analytics verileri Google tarafından en fazla 14 ay saklanır. Bu metnin yazıldığı tarihte bu hizmetler yalnızca Android
+  sürümünde kullanılmaktadır.
+</p>
+
+<p><strong>Bahşiş.</strong>
+  Uygulama isteğe bağlı bahşiş sunduğunda bunlar Google Play ya da Apple App Store tarafından işlenen tek seferlik satın
+  almalardır. Hizmet Sağlayıcı yalnızca satın almanın tamamlandığı bilgisini alır; ödeme bilgilerinizi hiçbir zaman görmez.
+  Bahşiş hiçbir şeyin kilidini açmaz.
+</p>
+
+<h2>Cihazınızda kalanlar</h2>
+<ul>
+  <li><strong>Dosyalarınızdan içe aktardığınız sesler</strong> Uygulama’nın özel depolama alanında kalır. Hiçbir zaman yüklenmez ve
+    cihaz yedeklerine dahil edilmez.</li>
+  <li><strong>Kayıtlı karışımlar, kütüphaneniz ve indirilen sesler</strong> cihazınızda Uygulama’nın depolama alanında tutulur.</li>
+  <li><strong>Ayarlar</strong> (tema, dil, kullanım verisi tercihiniz) cihazda saklanır; Android’de Google cihaz yedeğinize dahil
+    edilebilir. Yedeğe giren tek Uygulama verisi budur.</li>
+</ul>
+<p>Uygulama konumunuzu, mikrofonunuzu, kameranızı, kişilerinizi ya da fotoğraflarınızı kullanmaz.</p>
+
+<h2>Üçüncü taraf hizmetler</h2>
+<ul>
+  <li><strong>OpenAI</strong> (AI karışımı): <a href="https://openai.com/policies/privacy-policy">gizlilik politikası</a></li>
+  <li><strong>Freesound</strong>, Universitat Pompeu Fabra Müzik Teknolojisi Grubu tarafından işletilir (internetteki sesler): <a href="https://freesound.org/help/privacy/">gizlilik politikası</a></li>
+  <li><strong>Google</strong> (Firebase Analytics, Firebase Crashlytics, Play Integrity, Google Play): <a href="https://policies.google.com/privacy">gizlilik politikası</a></li>
+  <li><strong>Apple</strong> (iOS’ta App Store satın almaları): <a href="https://www.apple.com/legal/privacy/">gizlilik politikası</a></li>
+  <li><strong>Cloudflare</strong> (sunucu ve içerik dağıtımı): <a href="https://www.cloudflare.com/privacypolicy/">gizlilik politikası</a></li>
+</ul>
+<p>
+  Bu sağlayıcılar verileri Hizmet Sağlayıcı adına ya da istediğiniz özelliği sunmak için işler ve bunu ülkeniz dışında
+  yapabilir. Hizmet Sağlayıcı verilerinizi satmaz ve reklam amacıyla paylaşmaz.
+</p>
+
+<h2>Hukuki dayanak (AEA, Birleşik Krallık ve benzeri yasalar)</h2>
+<ul>
+  <li>Kullanım istatistikleri ve çökme raporları: Ayarlar’dan geri alabileceğiniz açık rızanız.</li>
+  <li>AI karışımı ve internet araması: istediğiniz özelliğin sunulması.</li>
+  <li>Kurulum kimliği ve Play Integrity: hizmetin kötüye kullanılmasını önleme yönündeki meşru menfaat.</li>
+</ul>
+
+<h2>Seçenekleriniz</h2>
+<ul>
+  <li>Kullanım istatistiklerini ve çökme raporlarını reddedin ya da Ayarlar’dan kapatın.</li>
+  <li>OpenAI’a ya da Freesound’a metin gönderilmesini istemiyorsanız AI karışımını ve internet aramasını kullanmayın.</li>
+  <li>Cihazda saklanan her şeyi kaldırmak için Uygulama verilerini cihaz ayarlarından silin ya da Uygulama’yı kaldırın.</li>
+  <li>Verilerinizle ilgili her soru ya da talep için Hizmet Sağlayıcı ile iletişime geçin.</li>
+</ul>
+
+<h2>Güvenlik</h2>
+<p>
+  Tüm bağlantılar şifreli HTTPS kullanır. Hiçbir iletim ya da depolama yöntemi tamamen güvenli değildir; ancak Hizmet
+  Sağlayıcı, Uygulama’nın işlediği bilgileri korumak için makul önlemleri alır.
+</p>
+
+<h2>Çocukların gizliliği</h2>
+<p>
+  Uygulama 13 yaşından küçük çocuklara yönelik değildir ve Hizmet Sağlayıcı çocuklardan bilerek kişisel bilgi toplamaz.
+  Bir çocuğun Uygulama aracılığıyla kişisel bilgi verdiğini düşünüyorsanız lütfen iletişime geçin.
+</p>
+
+<h2>Bu politikadaki değişiklikler</h2>
+<p>
+  Bu politika zaman zaman güncellenebilir. Değişiklikler bu sayfada yeni bir yürürlük tarihiyle yayımlanır.
+</p>
+
+<h2>İletişim</h2>
+<p>
+  Bu politika ya da verilerinizle ilgili sorular: <a href="mailto:kocerlabs@gmail.com">kocerlabs@gmail.com</a>
+</p>
+
+</body>
+</html>

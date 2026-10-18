@@ -3,20 +3,7 @@
 Claude'un tek başına yapamadığı işler, öncelik sırasıyla. Biten maddeyi silebilir ya da işaretleyebilirsin.
 
 ## 1. PR'ları birleştir
-PR'lar birbirinin üstüne yığılı; bu sırayla birleştir. Her biri bir öncekinin dalını temel alır, birleştirince GitHub sonrakinin tabanını kendisi günceller.
-- [ ] #36 Anahtar proxy'si, Play Integrity, yalnızca ayarların yedeklenmesi
-- [ ] #37 Mikrofon kaydının kaldırılması, bu liste
-- [ ] #38 Crashlytics ve Analytics (ilk açılışta izin)
-- [ ] #39 Mixer'daki çift snackbar ve karanlık temadaki beyaz pencere
-- [ ] #40 Build temizliği: ortak convention'lar, katalog, CI'a proxy ve pipeline testleri
-- [ ] #41 Üretim kodundaki tekrarlar ve ölü kod
-- [ ] #42 Test tekrarları ve eksik testler
-- [ ] #43 README
-- [ ] #44 Performans ölçümü: Macrobenchmark, Baseline Profile, test tag'leri
-- [ ] #45 Samsung tarzı uyku zamanlayıcısı
-- [ ] #46 Ses sürüklerken daha az yeniden çizim, `core:ui`'da ortak bileşenler
-- [ ] #47 iOS'ta gerçek ses (AVAudioEngine, kilit ekranı kontrolleri, iOS 18.4+)
-- [ ] #48 "Bana bir kahve ısmarla" bahşiş ekranı (şimdilik yalnızca debug'da görünür)
+- [x] #36–#48 main'e birleştirildi (2026-10-18, main CI yeşil).
 
 ## Performans ölçümü
 Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ayrı bir paket adıyla (`com.mustafakoceerr.justrelax.benchmark`) kuruluyor ve Play sürümüyle yan yana durabiliyor.
@@ -50,7 +37,9 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 
 ## 6. Play Console ve gizlilik
 - [ ] Veri güvenliği formunu `docs/play-data-safety.md`'ye göre doldur.
-- [ ] Gizlilik politikasını güncelle (`cdn.mustafakoceerr.com/legal/<dil>/privacy-policy.html`). Neyin anlatılması gerektiği aynı dosyanın sonunda.
+- [x] Gizlilik politikası güncellendi ve 12 dilde yayında (2026-10-18). Kaynağı `docs/legal/`.
+- [ ] İstersen kullanım koşullarını (`terms-conditions.html`) da güncelletebilirsin; hâlâ yalnızca OpenAI'dan söz ediyor.
+- [ ] Firebase'de Analytics saklama süresini seçerken politikada "en fazla 14 ay" yazdığını unutma (2 ya da 14 ay, ikisi de uyuyor).
 
 ## 7. İçerik
 - [ ] 15 yerleşik sesin kaynak lisanslarını doğrula (`tools/sound-pipeline/manifest.json`'daki `license_note`). Şu an `OWN` olarak yayında.
