@@ -34,8 +34,25 @@ android {
         )
     }
 
+    // The Play upload key, read from local.properties (RELEASE_STORE_FILE, RELEASE_STORE_PASSWORD,
+    // RELEASE_KEY_ALIAS, optional RELEASE_KEY_PASSWORD). Without them release builds unsigned, as on CI.
+    val releaseStoreFile = localProperties.getProperty("RELEASE_STORE_FILE")?.let(::file)
+    val releaseSigning = releaseStoreFile?.let { storeFile ->
+        if (!storeFile.exists()) throw GradleException("RELEASE_STORE_FILE not found: $storeFile")
+        val storePassword = localProperties.getProperty("RELEASE_STORE_PASSWORD")
+            ?: throw GradleException("RELEASE_STORE_PASSWORD is missing in local.properties")
+        signingConfigs.create("release") {
+            this.storeFile = storeFile
+            this.storePassword = storePassword
+            keyAlias = localProperties.getProperty("RELEASE_KEY_ALIAS")
+                ?: throw GradleException("RELEASE_KEY_ALIAS is missing in local.properties")
+            keyPassword = localProperties.getProperty("RELEASE_KEY_PASSWORD") ?: storePassword
+        }
+    }
+
     buildTypes {
         getByName("release") {
+            releaseSigning?.let { signingConfig = it }
             buildConfigField("String", "API_BASE_URL", "\"https://api.mustafakoceerr.com/\"")
             isMinifyEnabled = true
             isShrinkResources = true

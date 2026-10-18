@@ -21,12 +21,18 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 - [ ] Eski v1 anahtarının hesabı bulunamadı. Bulursan (Gmail'de `from:openai.com`, myaccount.google.com/connections) o anahtarı **Revoke** et.
 
 ## 4. Yayın (sen yapacaksın)
-- [ ] **Yükleme anahtarı:** eski jks'nin şifresi unutuldu. Play Console → *Test et ve yayınla → Uygulama bütünlüğü → Play Uygulama İmzalama → Ayarlar*. "Uygulama imzalama anahtarı sertifikası" ile "Yükleme anahtarı sertifikası" ayrı görünüyorsa:
-  1. Android Studio'da yeni anahtar oluştur: *Build → Generate Signed App Bundle → Create new…*, alias `upload`.
-  2. `keytool -export -rfc -keystore <jks> -alias upload -file upload_certificate.pem` komutuyla sertifikayı çıkar.
-  3. *Yükleme anahtarı sıfırlama isteğinde bulun* ile `.pem`'i gönder.
-  Şifreyi şifre yöneticine, jks'yi Drive'a koy. Sayfa farklı görünüyorsa Claude'a göster.
-- [ ] `androidApp/build.gradle.kts`'teki `versionCode` (şu an 5), Play'deki son sürümün kodundan büyük olmalı.
+- [x] **Yükleme anahtarı:** yeni anahtar oluşturuldu, `.pem` Play Console'a gönderildi (2026-10-18). Sıfırlama Play'in onayından sonra geçerli olur (yaklaşık 2 gün).
+- [x] `versionCode` 6, `versionName` 1.3.0 (2026-10-18, etiket `v1.3.0`).
+- [ ] **İmzalı AAB'yi komutla al.** Şifreleri sen yaz; `local.properties` git'e girmez:
+  ```
+  RELEASE_STORE_FILE=/jks/dosyasının/tam/yolu.jks
+  RELEASE_STORE_PASSWORD=
+  RELEASE_KEY_ALIAS=upload
+  # Anahtar şifresi store şifresinden farklıysa:
+  # RELEASE_KEY_PASSWORD=
+  ```
+  Sonra `./gradlew :androidApp:bundleRelease` çalıştır. Çıktı: `androidApp/build/outputs/bundle/release/androidApp-release.aab`. Bu satırlar yoksa release imzasız çıkar; Android Studio'daki *Generate Signed App Bundle* sihirbazı da çalışmaya devam eder.
+  İmzayı kontrol et: `keytool -printcert -jarfile androidApp/build/outputs/bundle/release/androidApp-release.aab` çıktısındaki SHA-256, Play Console → *Uygulama bütünlüğü → Play Uygulama İmzalama* sayfasındaki **yükleme anahtarı sertifikasının** SHA-256'sıyla aynı olmalı.
 - [ ] Internal testing kanalına imzalı AAB yükle; Play'den kurulan sürümde AI karışımını ve Freesound aramasını dene. Integrity yalnızca Play'den kurulan uygulamada geçer.
 
 ## 5. Firebase (Crashlytics ve Analytics)
@@ -62,4 +68,5 @@ Ekran ve mimari hazır; debug sürümünde örnek fiyatlarla görünüyor, yayı
 
 ## 8. İsteğe bağlı / sonra
 - [ ] iOS: App Attest (AI ve Freesound için) ve Firebase iOS, iOS yayınına doğru.
-- [ ] GitHub'daki eski 12 dal (`hotfix`, `improve-ui`, `Multimodules` vb.): istersen silinebilir.
+- [x] Main'e birleşmiş eski dallar GitHub'dan ve yerelden silindi (2026-10-19).
+- [ ] İstersen GitHub → *Settings → General → Automatically delete head branches*'i aç; birleşen PR dalları kendiliğinden silinir.
