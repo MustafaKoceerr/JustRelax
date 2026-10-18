@@ -26,7 +26,6 @@ import androidx.compose.material.icons.rounded.CloudDownload
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Insights
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.LibraryMusic
@@ -53,6 +52,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.AppTheme
+import com.mustafakoceerr.justrelax.core.ui.components.AppMark
 import com.mustafakoceerr.justrelax.core.ui.util.WindowWidthSize
 import com.mustafakoceerr.justrelax.core.ui.util.rememberWindowSizeClass
 import com.mustafakoceerr.justrelax.feature.settings.SettingsUiState
@@ -229,11 +229,7 @@ fun SettingsContent(
 private fun AppCard(versionName: String) {
     Surface(shape = MaterialTheme.shapes.large, color = MaterialTheme.colorScheme.surfaceContainerHigh, modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
-            Surface(shape = MaterialTheme.shapes.medium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(56.dp)) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(Icons.Rounded.GraphicEq, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(30.dp))
-                }
-            }
+            AppMark()
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(text = "Just Relax", style = MaterialTheme.typography.titleLarge)

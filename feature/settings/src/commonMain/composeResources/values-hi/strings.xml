@@ -24,7 +24,6 @@
     <string name="credits_empty">अभी तक अन्य रचनाकारों की कोई ध्वनि नहीं है।</string>
     <string name="credits_author">%1$s द्वारा</string>
     <string name="consent_title">JustRelax को बेहतर बनाने में मदद करें</string>
-    <string name="consent_body">आपकी अनुमति से ऐप Google Firebase के ज़रिए गुमनाम उपयोग आँकड़े (जैसे कौन-सी स्क्रीन इस्तेमाल होती हैं) और क्रैश रिपोर्ट भेजता है। आप जो लिखते, खोजते या इम्पोर्ट करते हैं, वह नहीं भेजा जाता, और आपकी ध्वनियाँ फ़ोन से बाहर नहीं जातीं।</string>
     <string name="consent_privacy_policy">गोपनीयता नीति पढ़ें</string>
     <string name="consent_accept">अनुमति दें</string>
     <string name="consent_decline">नहीं, धन्यवाद</string>
@@ -52,4 +51,6 @@
     <string name="settings_my_sounds_subtitle">आपकी फ़ाइलें और Freesound से मिली आवाज़ें</string>
     <string name="settings_version">संस्करण %1$s</string>
     <string name="settings_tagline">आराम और एकाग्रता के लिए आवाज़ें</string>
+    <string name="consent_point_sent">आपकी अनुमति से भेजा जाता है: गुमनाम उपयोग आँकड़े, जैसे कौन-सी स्क्रीन इस्तेमाल होती हैं, और क्रैश रिपोर्ट, Google Firebase के ज़रिए।</string>
+    <string name="consent_point_never">कभी शामिल नहीं: जो भी आप लिखते, खोजते या इम्पोर्ट करते हैं। आपकी आवाज़ें आपके फ़ोन पर ही रहती हैं।</string>
 </resources>

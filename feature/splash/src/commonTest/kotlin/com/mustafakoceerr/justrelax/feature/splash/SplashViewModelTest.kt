@@ -10,7 +10,9 @@ import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -42,6 +44,17 @@ class SplashViewModelTest {
         assertEquals(SplashUiState.Ready(needsConsent = false), viewModel.uiState.value)
         assertEquals(listOf("rain"), repository.downloadRequests)
         assertTrue(setup.isStarterPackInstalled.value)
+    }
+
+    /** The splash only covers the start; it no longer holds the app back for two seconds. */
+    @Test
+    fun theAppOpens_inUnderASecond() = runMainTest {
+        val viewModel = viewModel()
+
+        advanceTimeBy(700)
+        runCurrent()
+
+        assertEquals(SplashUiState.Ready(needsConsent = false), viewModel.uiState.value)
     }
 
     @Test

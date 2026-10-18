@@ -24,7 +24,6 @@
     <string name="credits_empty">ほかの作者のサウンドはまだありません。</string>
     <string name="credits_author">作者: %1$s</string>
     <string name="consent_title">JustRelax の改善にご協力ください</string>
-    <string name="consent_body">許可いただいた場合、アプリは Google Firebase を通じて匿名の利用統計（どの画面が使われたかなど）とクラッシュレポートを送信します。入力・検索・読み込んだ内容は送信されず、サウンドが端末の外に出ることはありません。</string>
     <string name="consent_privacy_policy">プライバシーポリシーを読む</string>
     <string name="consent_accept">許可する</string>
     <string name="consent_decline">許可しない</string>
@@ -52,4 +51,6 @@
     <string name="settings_my_sounds_subtitle">自分のファイルと Freesound の音</string>
     <string name="settings_version">バージョン %1$s</string>
     <string name="settings_tagline">休息と集中のための音</string>
+    <string name="consent_point_sent">許可した場合に送信：どの画面が使われたかなどの匿名の利用統計とクラッシュレポート（Google Firebase 経由）。</string>
+    <string name="consent_point_never">含まれないもの：入力・検索・インポートした内容。あなたの音は端末に残ります。</string>
 </resources>

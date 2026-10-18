@@ -24,7 +24,6 @@
     <string name="credits_empty">Ancora nessun suono di altri autori.</string>
     <string name="credits_author">di %1$s</string>
     <string name="consent_title">Aiuta a migliorare JustRelax</string>
-    <string name="consent_body">Con il tuo permesso, l’app invia statistiche d’uso anonime (ad esempio quali schermate vengono usate) e rapporti sugli arresti anomali tramite Google Firebase. Non viene inviato nulla di ciò che scrivi, cerchi o importi, e i tuoi suoni non lasciano mai il telefono.</string>
     <string name="consent_privacy_policy">Leggi l’informativa sulla privacy</string>
     <string name="consent_accept">Consenti</string>
     <string name="consent_decline">No, grazie</string>
@@ -52,4 +51,6 @@
     <string name="settings_my_sounds_subtitle">I tuoi file e le scoperte su Freesound</string>
     <string name="settings_version">Versione %1$s</string>
     <string name="settings_tagline">Suoni per riposare e concentrarsi</string>
+    <string name="consent_point_sent">Inviato con il tuo permesso: statistiche d’uso anonime, come le schermate usate, e rapporti sugli arresti anomali, tramite Google Firebase.</string>
+    <string name="consent_point_never">Mai incluso: ciò che scrivi, cerchi o importi. I tuoi suoni restano sul telefono.</string>
 </resources>

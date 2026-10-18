@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- core:ui Color.kt backgroundDark -->
-    <color name="window_background">#1E1B18</color>
+    <color name="window_background">#15120F</color>
 </resources>

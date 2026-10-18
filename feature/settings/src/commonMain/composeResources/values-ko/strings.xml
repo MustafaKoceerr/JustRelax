@@ -24,7 +24,6 @@
     <string name="credits_empty">아직 다른 제작자의 소리가 없어요.</string>
     <string name="credits_author">제작: %1$s</string>
     <string name="consent_title">JustRelax 개선에 도움을 주세요</string>
-    <string name="consent_body">허용하면 앱이 Google Firebase를 통해 익명의 사용 통계(예: 어떤 화면을 사용하는지)와 오류 보고서를 보내요. 입력하거나 검색하거나 가져온 내용은 보내지 않으며, 사운드는 휴대폰 밖으로 나가지 않아요.</string>
     <string name="consent_privacy_policy">개인정보 처리방침 읽기</string>
     <string name="consent_accept">허용</string>
     <string name="consent_decline">허용 안 함</string>
@@ -52,4 +51,6 @@
     <string name="settings_my_sounds_subtitle">내 파일과 Freesound에서 찾은 소리</string>
     <string name="settings_version">버전 %1$s</string>
     <string name="settings_tagline">휴식과 집중을 위한 소리</string>
+    <string name="consent_point_sent">허락하면 전송: 어떤 화면을 쓰는지 같은 익명 사용 통계와 오류 보고서(Google Firebase를 통해).</string>
+    <string name="consent_point_never">포함되지 않음: 입력하거나 검색하거나 가져온 내용. 내 소리는 휴대폰에만 있어요.</string>
 </resources>

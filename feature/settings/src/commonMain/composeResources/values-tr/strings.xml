@@ -24,7 +24,6 @@
     <string name="credits_empty">Henüz başka yazarlara ait ses yok.</string>
     <string name="credits_author">%1$s</string>
     <string name="consent_title">JustRelax'i geliştirmemize yardım et</string>
-    <string name="consent_body">İzin verirsen uygulama, Google Firebase üzerinden anonim kullanım istatistikleri (örneğin hangi ekranların kullanıldığı) ve çökme raporları gönderir. Yazdıkların, aramaların ve içe aktardığın dosyalar gönderilmez; seslerin telefonundan çıkmaz.</string>
     <string name="consent_privacy_policy">Gizlilik politikasını oku</string>
     <string name="consent_accept">İzin ver</string>
     <string name="consent_decline">Hayır, teşekkürler</string>
@@ -52,4 +51,6 @@
     <string name="settings_my_sounds_subtitle">Kendi dosyaların ve Freesound’dan buldukların</string>
     <string name="settings_version">Sürüm %1$s</string>
     <string name="settings_tagline">Dinlenmek ve odaklanmak için sesler</string>
+    <string name="consent_point_sent">İzin verirsen gönderilir: hangi ekranların kullanıldığı gibi anonim kullanım istatistikleri ve çökme raporları, Google Firebase üzerinden.</string>
+    <string name="consent_point_never">Asla içermez: yazdığın, aradığın ya da içe aktardığın hiçbir şey. Seslerin telefonunda kalır.</string>
 </resources>
