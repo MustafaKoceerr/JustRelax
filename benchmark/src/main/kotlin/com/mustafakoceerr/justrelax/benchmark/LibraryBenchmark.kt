@@ -20,7 +20,7 @@ class LibraryBenchmark {
     val rule = MacrobenchmarkRule()
 
     @Test
-    fun scrollSounds() = rule.measureRepeated(
+    fun switchCategories() = rule.measureRepeated(
         packageName = PACKAGE_NAME,
         metrics = listOf(FrameTimingMetric()),
         compilationMode = CompilationMode.Partial(),
@@ -28,7 +28,7 @@ class LibraryBenchmark {
         iterations = 5,
         setupBlock = { startApp() },
     ) {
-        scrollSoundGrid()
+        switchCategories()
     }
 
     /** Every drag step changes the scene; this shows how much of the screen redraws for it. */

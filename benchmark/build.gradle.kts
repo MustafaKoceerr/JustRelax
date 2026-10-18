@@ -8,7 +8,8 @@ plugins {
 }
 
 android {
-    namespace = "com.mustafakoceerr.justrelax.benchmark"
+    // Also the test APK's id; it must differ from the app's benchmark build (com.mustafakoceerr.justrelax.benchmark).
+    namespace = "com.mustafakoceerr.justrelax.macrobenchmark"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

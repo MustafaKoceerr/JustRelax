@@ -9,6 +9,7 @@ object TestTags {
     const val CONSENT_ACCEPT = "consent_accept"
     const val CONSENT_DECLINE = "consent_decline"
 
+    const val CATEGORY_TAB = "category_tab"
     const val SOUND_GRID = "sound_grid"
     const val SOUND_CARD = "sound_card"
     const val VOLUME_SLIDER = "volume_slider"
