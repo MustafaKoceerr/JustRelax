@@ -5,6 +5,8 @@ import androidx.benchmark.macro.FrameTimingMetric
 import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.junit4.MacrobenchmarkRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.Until
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,8 +43,11 @@ class TimerBenchmark {
         setupBlock = {
             startApp()
             // Any non-zero time enables Start.
-            flingTwice(openTimerSetup())
-            waitFor(Tags.TIMER_START).click()
+            flick(openTimerSetup(), up = true)
+            // Start turns on only once the wheel has come to rest on its new value.
+            val start = device.wait(Until.findObject(By.res(Tags.TIMER_START).enabled(true)), 10_000)
+                ?: error("Start stayed disabled after turning the wheel")
+            start.click()
             waitFor(Tags.TIMER_CANCEL)
         },
     ) {
