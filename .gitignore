@@ -37,6 +37,8 @@ captures/
 .cxx/
 *.apk
 output.json
+# Generate Signed Bundle's default destination (the AAB and its mapping.txt)
+androidApp/release/
 
 # IntelliJ
 .idea/
