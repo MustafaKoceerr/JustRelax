@@ -39,6 +39,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 }
             }
 
+            configureComposeCompilerReports()
+
             extensions.configure<KotlinAndroidProjectExtension> {
                 compilerOptions {
                     jvmTarget.set(JVM_TARGET)

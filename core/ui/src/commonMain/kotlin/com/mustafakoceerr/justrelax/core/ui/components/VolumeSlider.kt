@@ -7,10 +7,12 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import kotlin.math.roundToInt
 
 @Composable
@@ -27,6 +29,7 @@ fun VolumeSlider(
         valueRange = 0f..1f,
         modifier = modifier
             .height(24.dp)
+            .testTag(TestTags.VOLUME_SLIDER)
             .semantics {
                 contentDescription = "Volume Level"
                 stateDescription = "$percentage%"

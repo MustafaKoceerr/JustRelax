@@ -8,8 +8,10 @@ import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.provider.Provider
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
@@ -73,5 +75,17 @@ internal fun KotlinMultiplatformAndroidLibraryExtension.configureAndroidLibrary(
 
     (this as? KotlinMultiplatformAndroidLibraryTarget)?.compilerOptions {
         jvmTarget.set(JVM_TARGET)
+    }
+}
+
+/**
+ * Compose compiler stability reports, only with `-Pjustrelax.composeReports=true`:
+ * `build/compose-reports/` in each module (`*-classes.txt`, `*-composables.txt`).
+ */
+internal fun Project.configureComposeCompilerReports() {
+    if (providers.gradleProperty("justrelax.composeReports").orNull?.toBoolean() != true) return
+    extensions.configure<ComposeCompilerGradlePluginExtension> {
+        reportsDestination.set(layout.buildDirectory.dir("compose-reports"))
+        metricsDestination.set(layout.buildDirectory.dir("compose-reports"))
     }
 }

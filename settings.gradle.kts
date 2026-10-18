@@ -33,6 +33,7 @@ dependencyResolutionManagement {
 
 
 include(":androidApp")
+include(":benchmark")
 include(":composeApp")
 
 include(":core:common")
