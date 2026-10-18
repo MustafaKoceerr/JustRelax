@@ -269,7 +269,7 @@ private fun ThemeChoice(current: AppTheme, onSelect: (AppTheme) -> Unit) {
     }
 }
 
-/** Downloads every sound: a chevron to start, its progress while it runs, a check when done. */
+/** Downloads every sound: a tap starts it, the row shows its progress while it runs and a check when done. */
 @Composable
 private fun DownloadAllRow(uiState: SettingsUiState, onDownload: () -> Unit) {
     val isDone = uiState.isLibraryComplete
@@ -281,11 +281,7 @@ private fun DownloadAllRow(uiState: SettingsUiState, onDownload: () -> Unit) {
         onClick = if (isDone || isRunning) null else onDownload,
         trailing = {
             Crossfade(targetState = isDone, label = "DownloadTrailing") { done ->
-                if (done) {
-                    Icon(Icons.Rounded.CheckCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                } else if (!isRunning) {
-                    Icon(Icons.Rounded.CloudDownload, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
+                if (done) Icon(Icons.Rounded.CheckCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             }
         },
     ) {
