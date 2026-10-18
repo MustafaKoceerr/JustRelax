@@ -11,7 +11,6 @@ import com.mustafakoceerr.justrelax.feature.settings.SettingsRoute
 import com.mustafakoceerr.justrelax.feature.settings.credits.CreditsRoute
 import com.mustafakoceerr.justrelax.feature.mysounds.MySoundsRoute
 import com.mustafakoceerr.justrelax.feature.mysounds.editor.SoundEditorRoute
-import com.mustafakoceerr.justrelax.feature.mysounds.record.RecorderRoute
 import com.mustafakoceerr.justrelax.feature.freesound.FreesoundRoute
 import com.mustafakoceerr.justrelax.navigation.asEditorOrigin
 import com.mustafakoceerr.justrelax.navigation.Route
@@ -90,7 +89,6 @@ private fun JustRelaxNavDisplay() {
                 MySoundsRoute(
                     onBack = { backStack.goBack() },
                     onOpenEditor = { backStack.navigate(Route.SoundEditor(it.path, it.displayName)) },
-                    onOpenRecorder = { backStack.navigate(Route.Recorder) },
                     onOpenFreesound = { backStack.navigate(Route.Freesound) },
                 )
             }
@@ -98,16 +96,6 @@ private fun JustRelaxNavDisplay() {
                 FreesoundRoute(
                     onBack = { backStack.goBack() },
                     onOpenEditor = { backStack.navigate(Route.SoundEditor(it.path, it.name, it.origin.asEditorOrigin())) },
-                )
-            }
-            entry<Route.Recorder> {
-                RecorderRoute(
-                    onBack = { backStack.goBack() },
-                    // The editor replaces the recorder, so back from it returns to My sounds.
-                    onOpenEditor = {
-                        backStack.goBack()
-                        backStack.navigate(Route.SoundEditor(it.path, it.displayName))
-                    },
                 )
             }
             entry<Route.SoundEditor> { route ->

@@ -30,12 +30,5 @@
     <string name="mysounds_problem_too_short_for_bed">A loop needs at least 5 seconds.</string>
     <string name="mysounds_problem_too_long_for_event">A one-shot can be up to 10 seconds.</string>
     <string name="mysounds_problem_outside_file">The selection is outside the file.</string>
-    <string name="mysounds_record">Record</string>
-    <string name="mysounds_record_title">Record a sound</string>
-    <string name="mysounds_record_hint">Hold your phone near the sound. Recording stops after 5 minutes or when you leave the app.</string>
-    <string name="mysounds_record_start">Start recording</string>
-    <string name="mysounds_record_stop">Stop and edit</string>
-    <string name="mysounds_record_failed">Recording did not work. Try again.</string>
-    <string name="mysounds_record_permission_denied">JustRelax needs the microphone to record a sound. You can allow it in the system settings.</string>
     <string name="mysounds_search_online">Search Freesound</string>
 </resources>

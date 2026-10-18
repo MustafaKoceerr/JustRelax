@@ -30,12 +30,5 @@
     <string name="mysounds_problem_too_short_for_bed">ループは5秒以上必要です。</string>
     <string name="mysounds_problem_too_long_for_event">ワンショットは最長10秒です。</string>
     <string name="mysounds_problem_outside_file">選択範囲がファイルの外にあります。</string>
-    <string name="mysounds_record">録音</string>
-    <string name="mysounds_record_title">サウンドを録音</string>
-    <string name="mysounds_record_hint">スマートフォンを音の近くに置いてください。録音は5分後、またはアプリを離れると停止します。</string>
-    <string name="mysounds_record_start">録音を開始</string>
-    <string name="mysounds_record_stop">停止して編集</string>
-    <string name="mysounds_record_failed">録音できませんでした。もう一度お試しください。</string>
-    <string name="mysounds_record_permission_denied">サウンドを録音するには JustRelax にマイクへのアクセスが必要です。システム設定で許可できます。</string>
     <string name="mysounds_search_online">Freesound で検索</string>
 </resources>
