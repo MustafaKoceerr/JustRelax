@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.library.components
 
+import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
+import androidx.compose.ui.platform.testTag
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -50,6 +52,7 @@ fun CategoryTabRow(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
+                    .testTag(TestTags.CATEGORY_TAB)
                     .padding(vertical = 8.dp)
                     .clip(CircleShape)
                     .clickable { onCategorySelected(category) }

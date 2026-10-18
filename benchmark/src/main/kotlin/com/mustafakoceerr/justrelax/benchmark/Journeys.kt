@@ -14,6 +14,7 @@ const val PACKAGE_NAME = "com.mustafakoceerr.justrelax.benchmark"
 /** A copy of core:ui's TestTags; the benchmark module does not depend on app code. */
 object Tags {
     const val CONSENT_DECLINE = "consent_decline"
+    const val CATEGORY_TAB = "category_tab"
     const val SOUND_GRID = "sound_grid"
     const val SOUND_CARD = "sound_card"
     const val VOLUME_SLIDER = "volume_slider"
@@ -66,14 +67,25 @@ fun MacrobenchmarkScope.flingTwice(view: UiObject2) {
     device.waitForIdle()
 }
 
-fun MacrobenchmarkScope.scrollSoundGrid() {
-    val grid = waitFor(Tags.SOUND_GRID)
-    grid.setGestureMargin(device.displayWidth / 10)
-    grid.fling(Direction.DOWN)
-    device.waitForIdle()
-    grid.fling(Direction.UP)
+/**
+ * Moves a few categories to the right on Home and back. The built-in pack has only a handful of
+ * sounds per category, too few to scroll the grid, so changing category is what redraws it.
+ * The row centers the selected tab, so the last visible tab is the next one and the first the previous.
+ */
+fun MacrobenchmarkScope.switchCategories() {
+    waitFor(Tags.SOUND_GRID)
+    repeat(CATEGORY_HOPS) { selectVisibleCategory(last = true) }
+    repeat(CATEGORY_HOPS) { selectVisibleCategory(last = false) }
+}
+
+private fun MacrobenchmarkScope.selectVisibleCategory(last: Boolean) {
+    val tabs = device.findObjects(By.res(Tags.CATEGORY_TAB))
+    if (tabs.isEmpty()) return
+    (if (last) tabs.last() else tabs.first()).click()
     device.waitForIdle()
 }
+
+private const val CATEGORY_HOPS = 3
 
 /** Drags [slider] from one end to the other and back. */
 fun MacrobenchmarkScope.dragAcross(slider: UiObject2) {

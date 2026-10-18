@@ -22,7 +22,7 @@ class BaselineProfileGenerator {
         includeInStartupProfile = true,
     ) {
         startApp()
-        scrollSoundGrid()
+        switchCategories()
 
         flingTwice(openTimerSetup())
 

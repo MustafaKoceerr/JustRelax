@@ -20,19 +20,19 @@ Compose compiler stability reports land in each module's `build/compose-reports/
 `--rerun-tasks` is needed because a cached compile does not write the reports.
 
 ## Device
-_To fill in: model, Android version, refresh rate._
+Samsung Galaxy A52 (SM-A525F), Android 14, 90 Hz (11.1 ms per frame). "Stay awake" on: with the screen locked, benchmarks record no frames.
 
 ## Results
 Frame times are `frameDurationCpuMs` P50 / P90 / P99. Startup is `timeToInitialDisplayMs` median.
 
 | Benchmark | Before | After |
 |---|---|---|
-| Cold start, no profile | | |
-| Cold start, Baseline Profile | | |
-| Timer: fling the minute wheel | | |
-| Timer: running countdown, 5 s | | |
-| Home: scroll sounds | | |
-| Home: drag volume | | |
+| Cold start, no profile | 731 ms | |
+| Cold start, Baseline Profile | 764 ms (library profiles only, no app profile yet) | |
+| Timer: fling the minute wheel | 5.9 / 7.2 / 10.2 | |
+| Timer: running countdown, 5 s | 7.8 / 8.7 / 13.2 | |
+| Home: switch categories | 7.7 / 18.8 / 37.4 | |
+| Home: drag volume | 10.4 / 15.5 / 24.6 | |
 
 ## Compose stability (composable parameters)
 | | Before | After |
