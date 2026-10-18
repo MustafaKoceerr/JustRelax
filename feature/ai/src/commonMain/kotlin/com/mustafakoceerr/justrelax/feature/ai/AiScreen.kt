@@ -61,6 +61,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.soundLayerItems
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import com.mustafakoceerr.justrelax.core.ui.util.WindowWidthSize
+import com.mustafakoceerr.justrelax.core.ui.util.rememberIsCompactHeight
 import com.mustafakoceerr.justrelax.core.ui.util.rememberWindowSizeClass
 import com.mustafakoceerr.justrelax.feature.ai.components.AiComposer
 import com.mustafakoceerr.justrelax.feature.ai.components.AiDataNoticeDialog
@@ -115,8 +116,8 @@ fun AiRoute(onSaveScene: (suggestedName: String) -> Unit, viewModel: AiViewModel
 
 /**
  * Describe a moment and get a scene. The prompt field stays at the bottom, above the keyboard,
- * so a result can be refined by editing the prompt. On expanded windows a result shows its name
- * and the prompt field in a pane beside the layers.
+ * so a result can be refined by editing the prompt. On large windows a result shows its name and
+ * the prompt field in a pane beside the layers.
  */
 @Composable
 fun AiScreen(
@@ -134,7 +135,8 @@ fun AiScreen(
 ) {
     val suggestions = rememberSuggestions()
     val hasResult = uiState.hasResult
-    val isExpanded = rememberWindowSizeClass() == WindowWidthSize.EXPANDED
+    // In a short window (a phone on its side) a side pane leaves no room for the prompt field.
+    val showsSidePane = rememberWindowSizeClass() == WindowWidthSize.EXPANDED && !rememberIsCompactHeight()
 
     JustRelaxTabScaffold(
         title = stringResource(Res.string.ai_screen_title),
@@ -180,7 +182,7 @@ fun AiScreen(
             )
         }
 
-        if (isExpanded && hasResult) {
+        if (showsSidePane && hasResult) {
             Row(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
                 Column(modifier = Modifier.width(SIDE_PANE_WIDTH).fillMaxHeight()) {
                     Box(modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(24.dp)) { header() }
