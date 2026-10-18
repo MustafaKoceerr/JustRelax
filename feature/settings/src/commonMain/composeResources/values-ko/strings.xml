@@ -25,4 +25,12 @@
     <string name="credits_subtitle">소리와 제작자</string>
     <string name="credits_empty">아직 다른 제작자의 소리가 없어요.</string>
     <string name="credits_author">제작: %1$s</string>
+    <string name="consent_title">JustRelax 개선에 도움을 주세요</string>
+    <string name="consent_body">허용하면 앱이 Google Firebase를 통해 익명의 사용 통계(예: 어떤 화면을 사용하는지)와 오류 보고서를 보내요. 입력하거나 검색하거나 가져온 내용은 보내지 않으며, 사운드는 휴대폰 밖으로 나가지 않아요.</string>
+    <string name="consent_privacy_policy">개인정보 처리방침 읽기</string>
+    <string name="consent_accept">허용</string>
+    <string name="consent_decline">허용 안 함</string>
+    <string name="consent_later_hint">설정에서 언제든지 바꿀 수 있어요.</string>
+    <string name="settings_usage_data_title">사용 데이터 및 오류 보고서</string>
+    <string name="settings_usage_data_subtitle">버그 수정에 도움이 되는 익명 통계</string>
 </resources>

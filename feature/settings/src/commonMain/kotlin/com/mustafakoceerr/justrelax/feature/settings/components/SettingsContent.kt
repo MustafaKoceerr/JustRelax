@@ -16,11 +16,13 @@ import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Mail
+import androidx.compose.material.icons.rounded.Insights
 import androidx.compose.material.icons.rounded.PrivacyTip
 import androidx.compose.material.icons.rounded.StarRate
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,6 +34,8 @@ import justrelax.feature.settings.generated.resources.credits_title
 import justrelax.feature.settings.generated.resources.feedback_subtitle
 import justrelax.feature.settings.generated.resources.feedback_title
 import justrelax.feature.settings.generated.resources.privacy_policy_title
+import justrelax.feature.settings.generated.resources.settings_usage_data_subtitle
+import justrelax.feature.settings.generated.resources.settings_usage_data_title
 import justrelax.feature.settings.generated.resources.rate_app_subtitle
 import justrelax.feature.settings.generated.resources.rate_app_title
 import justrelax.feature.settings.generated.resources.section_content
@@ -51,6 +55,7 @@ fun SettingsContent(
     onOpenPrivacyPolicy: () -> Unit,
     onOpenTermsAndConditions: () -> Unit,
     onOpenCredits: () -> Unit,
+    onUsageDataChange: (Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -98,6 +103,15 @@ fun SettingsContent(
                 color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
             )
 
+            SettingsTile(
+                icon = Icons.Rounded.Insights,
+                title = stringResource(Res.string.settings_usage_data_title),
+                subtitle = stringResource(Res.string.settings_usage_data_subtitle),
+                onClick = { onUsageDataChange(!uiState.isUsageDataEnabled) },
+                trailingContent = {
+                    Switch(checked = uiState.isUsageDataEnabled, onCheckedChange = onUsageDataChange)
+                },
+            )
             SettingsTile(
                 icon = Icons.Rounded.PrivacyTip,
                 title = stringResource(Res.string.privacy_policy_title),

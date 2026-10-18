@@ -1,5 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.scene
 
+import com.mustafakoceerr.justrelax.core.analytics.EventTypes
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.testing.fake.TestAnalyticsHelper
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
@@ -40,6 +43,7 @@ class SceneViewModelTest {
     private val scene = InMemorySceneRepository(sounds)
     private val playback = FakePlaybackController()
     private val savedScenes = FakeSavedSceneRepository()
+    private val analytics = TestAnalyticsHelper()
 
     private suspend fun TestScope.viewModel(): SceneViewModel {
         scene.toggle("rain")
@@ -50,6 +54,7 @@ class SceneViewModelTest {
             playbackController = playback,
             savedSceneRepository = savedScenes,
             languageController = language,
+            analytics = analytics,
         ).also { observe(it.uiState) }
     }
 
@@ -176,5 +181,18 @@ class SceneViewModelTest {
         advanceUntilIdle()
 
         assertEquals(listOf("fire"), viewModel.uiState.value.layers.map { it.soundId })
+    }
+
+    @Test
+    fun aSavedMixIsCountedWithItsSize_butNotItsName() = runMainTest {
+        val viewModel = viewModel()
+
+        viewModel.saveMix("Night")
+        advanceUntilIdle()
+        savedScenes.saveResult = Resource.Error(AppError.SaveMix.NameAlreadyExists())
+        viewModel.saveMix("Night")
+        advanceUntilIdle()
+
+        assertEquals(listOf(AnalyticsEvent(EventTypes.MIX_SAVED, mapOf("layer_count" to "1"))), analytics.events)
     }
 }

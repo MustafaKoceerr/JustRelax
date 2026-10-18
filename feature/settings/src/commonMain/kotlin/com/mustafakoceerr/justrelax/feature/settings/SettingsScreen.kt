@@ -54,6 +54,7 @@ fun SettingsRoute(
         onOpenPrivacyPolicy = viewModel::openPrivacyPolicy,
         onOpenTermsAndConditions = viewModel::openTermsAndConditions,
         onOpenCredits = onOpenCredits,
+        onUsageDataChange = viewModel::setUsageDataEnabled,
     )
 }
 
@@ -73,6 +74,7 @@ fun SettingsScreen(
     onOpenPrivacyPolicy: () -> Unit,
     onOpenTermsAndConditions: () -> Unit,
     onOpenCredits: () -> Unit,
+    onUsageDataChange: (Boolean) -> Unit,
 ) {
     JustRelaxBackground {
         Scaffold(
@@ -100,6 +102,7 @@ fun SettingsScreen(
                     onOpenPrivacyPolicy = onOpenPrivacyPolicy,
                     onOpenTermsAndConditions = onOpenTermsAndConditions,
                     onOpenCredits = onOpenCredits,
+                    onUsageDataChange = onUsageDataChange,
                 )
 
                 if (uiState.isLanguageSheetOpen) {

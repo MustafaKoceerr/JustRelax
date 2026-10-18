@@ -16,6 +16,10 @@ sealed interface Route : NavKey {
     @Serializable
     data object Main : Route
 
+    /** Asks once, before the app opens, whether usage analytics and crash reports may be sent. */
+    @Serializable
+    data object Consent : Route
+
     @Serializable
     data object Settings : Route
 
@@ -42,6 +46,7 @@ sealed interface Route : NavKey {
             polymorphic(NavKey::class) {
                 subclass(Splash::class)
                 subclass(Main::class)
+                subclass(Consent::class)
                 subclass(Settings::class)
                 subclass(Credits::class)
                 subclass(MySounds::class)
@@ -51,6 +56,19 @@ sealed interface Route : NavKey {
         }
     }
 }
+
+/** The name analytics uses for a destination; never its arguments (paths, names). */
+val Route.screenName: String
+    get() = when (this) {
+        Route.Splash -> "splash"
+        Route.Main -> "main"
+        Route.Consent -> "consent"
+        Route.Settings -> "settings"
+        Route.Credits -> "credits"
+        Route.MySounds -> "my_sounds"
+        Route.Freesound -> "freesound"
+        is Route.SoundEditor -> "sound_editor"
+    }
 
 /** Opens [route] on top of the stack, unless it is already the current destination. */
 fun <T : NavKey> MutableList<T>.navigate(route: T) {

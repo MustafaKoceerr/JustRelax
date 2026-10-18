@@ -1,5 +1,10 @@
 package com.mustafakoceerr.justrelax.feature.mysounds.editor
 
+import com.mustafakoceerr.justrelax.core.analytics.CrashReporter
+import com.mustafakoceerr.justrelax.core.analytics.Params
+import com.mustafakoceerr.justrelax.core.analytics.EventTypes
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsHelper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.data.repository.UserSoundDraft
@@ -37,6 +42,8 @@ class SoundEditorViewModel(
     private val waveformReader: WaveformReader,
     private val previewer: ClipPreviewer,
     private val userSoundRepository: UserSoundRepository,
+    private val analytics: AnalyticsHelper,
+    private val crashReporter: CrashReporter,
 ) : ViewModel() {
 
     private val editorState = MutableStateFlow(
@@ -99,8 +106,15 @@ class SoundEditorViewModel(
             )
             try {
                 userSoundRepository.create(draft)
+                analytics.logEvent(
+                    AnalyticsEvent(
+                        EventTypes.SOUND_IMPORTED,
+                        mapOf(Params.KIND to draft.kind.name, Params.SOURCE to if (origin == null) "file" else "freesound"),
+                    ),
+                )
                 editorState.update { it.copy(isSaving = false, isSaved = true) }
             } catch (e: MediaException) {
+                crashReporter.recordException(e)
                 editorState.update {
                     it.copy(isSaving = false, userMessage = UiText.Resource(Res.string.mysounds_save_failed))
                 }

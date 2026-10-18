@@ -8,6 +8,7 @@ import com.mustafakoceerr.justrelax.core.network.di.networkModule
 import com.mustafakoceerr.justrelax.core.ui.di.uiModule
 import com.mustafakoceerr.justrelax.core.data.di.dataModule
 import com.mustafakoceerr.justrelax.core.media.di.mediaModule
+import com.mustafakoceerr.justrelax.core.analytics.di.analyticsModule
 import com.mustafakoceerr.justrelax.feature.mysounds.di.mySoundsModule
 import com.mustafakoceerr.justrelax.feature.freesound.di.freesoundModule
 import com.mustafakoceerr.justrelax.feature.ai.di.aiModule
@@ -39,6 +40,7 @@ val appModules: List<Module>
         networkModule,
         dataModule,
         mediaModule,
+        analyticsModule,
         uiModule,
 
         playbackModule,

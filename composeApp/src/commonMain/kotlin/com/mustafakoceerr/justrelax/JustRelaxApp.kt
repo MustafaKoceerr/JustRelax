@@ -8,6 +8,7 @@ import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.ui.theme.JustRelaxTheme
 import com.mustafakoceerr.justrelax.feature.splash.SplashRoute
 import com.mustafakoceerr.justrelax.feature.settings.SettingsRoute
+import com.mustafakoceerr.justrelax.feature.settings.consent.ConsentRoute
 import com.mustafakoceerr.justrelax.feature.settings.credits.CreditsRoute
 import com.mustafakoceerr.justrelax.feature.mysounds.MySoundsRoute
 import com.mustafakoceerr.justrelax.feature.mysounds.editor.SoundEditorRoute
@@ -27,6 +28,11 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
+import androidx.compose.runtime.LaunchedEffect
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsHelper
+import com.mustafakoceerr.justrelax.core.analytics.logScreenView
+import com.mustafakoceerr.justrelax.navigation.screenName
 
 @Composable
 fun JustRelaxApp() {
@@ -52,6 +58,13 @@ private fun JustRelaxNavDisplay() {
         Route.Splash,
     )
 
+    val analytics = koinInject<AnalyticsHelper>()
+    val currentRoute = backStack.lastOrNull() as? Route
+    LaunchedEffect(currentRoute) {
+        // Main reports its tabs itself (MainScreen); its own view is not counted twice.
+        if (currentRoute != null && currentRoute != Route.Main) analytics.logScreenView(currentRoute.screenName)
+    }
+
     NavDisplay(
         backStack = backStack,
         onBack = { backStack.goBack() },
@@ -68,7 +81,13 @@ private fun JustRelaxNavDisplay() {
         },
         entryProvider = entryProvider {
             entry<Route.Splash> {
-                SplashRoute(onNavigateToMain = { backStack.resetTo(Route.Main) })
+                SplashRoute(
+                    onNavigateToMain = { backStack.resetTo(Route.Main) },
+                    onNavigateToConsent = { backStack.resetTo(Route.Consent) },
+                )
+            }
+            entry<Route.Consent> {
+                ConsentRoute(onDone = { backStack.resetTo(Route.Main) })
             }
             entry<Route.Main> {
                 MainRoute(

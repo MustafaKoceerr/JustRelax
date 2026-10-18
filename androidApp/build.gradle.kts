@@ -6,6 +6,13 @@ plugins {
     id("justrelax.android.application")
 }
 
+// Firebase (Crashlytics, Analytics) needs the project's google-services.json, which is not in git.
+// Without it the app builds and runs, and core:analytics sends nothing.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+    apply(plugin = "com.google.firebase.crashlytics")
+}
+
 // Not secret, but specific to the Play Console account: the Google Cloud project linked for Play Integrity.
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")

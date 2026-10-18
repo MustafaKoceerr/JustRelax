@@ -1,5 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.settings
 
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeConsentRepository
+import com.mustafakoceerr.justrelax.core.model.ConsentStatus
 import com.mustafakoceerr.justrelax.core.data.language.LanguageStrategy
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
@@ -27,12 +29,15 @@ class SettingsViewModelTest {
     private val launcher = FakeSystemLauncher()
     private val repository = FakeSoundRepository(listOf(testSound("rain"), testSound("fire")))
 
+    private val consent = FakeConsentRepository(ConsentStatus.DENIED)
+
     private fun viewModel(strategy: LanguageStrategy = LanguageStrategy.IN_APP) = SettingsViewModel(
         preferences = preferences,
         soundRepository = repository,
         legalRepository = FakeLegalRepository(),
         systemLauncher = launcher,
         languageController = FakeLanguageController(strategy),
+        consentRepository = consent,
     )
 
     private fun TestScope.observedViewModel(strategy: LanguageStrategy = LanguageStrategy.IN_APP) =
@@ -122,5 +127,18 @@ class SettingsViewModelTest {
         advanceUntilIdle()
 
         assertTrue(launcher.openedUrls.single().endsWith("/privacy"))
+    }
+
+    @Test
+    fun usageDataCanBeTurnedOnAndOffInSettings() = runMainTest {
+        val viewModel = observedViewModel()
+        advanceUntilIdle()
+        assertFalse(viewModel.uiState.value.isUsageDataEnabled)
+
+        viewModel.setUsageDataEnabled(true)
+        advanceUntilIdle()
+
+        assertEquals(ConsentStatus.GRANTED, consent.consent.value)
+        assertTrue(viewModel.uiState.value.isUsageDataEnabled)
     }
 }

@@ -6,6 +6,8 @@ import com.mustafakoceerr.justrelax.core.data.freesound.NetworkFreesoundReposito
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepositoryImpl
 import com.mustafakoceerr.justrelax.core.data.repository.AppSetupRepository
+import com.mustafakoceerr.justrelax.core.data.repository.ConsentRepository
+import com.mustafakoceerr.justrelax.core.data.repository.DataStoreConsentRepository
 import com.mustafakoceerr.justrelax.core.data.repository.AppSetupRepositoryImpl
 import com.mustafakoceerr.justrelax.core.data.repository.DatabaseSavedSceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.LegalRepository
@@ -55,6 +57,7 @@ val dataModule = module {
     singleOf(::OfflineFirstSoundRepository) { bind<SoundRepository>() }
     singleOf(::DatabaseSavedSceneRepository) { bind<SavedSceneRepository>() }
     single<UserPreferencesRepository> { UserPreferencesRepositoryImpl(get(named(DataConstants.SETTINGS)), get(), get()) }
+    single<ConsentRepository> { DataStoreConsentRepository(get(named(DataConstants.SETTINGS)), get(), get(), get()) }
     single<AppSetupRepository> { AppSetupRepositoryImpl(get(named(DataConstants.STATE)), get()) }
     singleOf(::LegalRepositoryImpl) { bind<LegalRepository>() }
     singleOf(::AiMixRepositoryImpl) { bind<AiMixRepository>() }

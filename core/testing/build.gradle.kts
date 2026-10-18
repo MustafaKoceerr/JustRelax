@@ -8,6 +8,7 @@ kotlin {
         commonMain.dependencies {
             api(project(":core:data"))
             api(project(":core:media"))
+            api(project(":core:analytics"))
             api(project(":core:playback"))
             api(project(":core:ui"))
             api(libs.kotlinx.coroutines.test)

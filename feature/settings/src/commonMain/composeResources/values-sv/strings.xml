@@ -25,4 +25,12 @@
     <string name="credits_subtitle">Ljud och deras upphovspersoner</string>
     <string name="credits_empty">Inga ljud från andra upphovspersoner än.</string>
     <string name="credits_author">av %1$s</string>
+    <string name="consent_title">Hjälp till att förbättra JustRelax</string>
+    <string name="consent_body">Med ditt tillstånd skickar appen anonym användningsstatistik (till exempel vilka skärmar som används) och kraschrapporter via Google Firebase. Inget du skriver, söker eller importerar skickas, och dina ljud lämnar aldrig telefonen.</string>
+    <string name="consent_privacy_policy">Läs integritetspolicyn</string>
+    <string name="consent_accept">Tillåt</string>
+    <string name="consent_decline">Nej tack</string>
+    <string name="consent_later_hint">Du kan ändra detta när som helst i Inställningar.</string>
+    <string name="settings_usage_data_title">Användningsdata och kraschrapporter</string>
+    <string name="settings_usage_data_subtitle">Anonym statistik som hjälper till att rätta fel</string>
 </resources>

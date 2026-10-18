@@ -11,6 +11,6 @@ val mySoundsModule = module {
     viewModelOf(::MySoundsViewModel)
     // The file to edit comes from the route: parametersOf(sourcePath, suggestedName, origin).
     viewModel { (sourcePath: String, suggestedName: String?, origin: SoundOrigin?) ->
-        SoundEditorViewModel(sourcePath, suggestedName, origin, get(), get(), get())
+        SoundEditorViewModel(sourcePath, suggestedName, origin, get(), get(), get(), get(), get())
     }
 }

@@ -3,7 +3,9 @@ package com.mustafakoceerr.justrelax.feature.splash
 import com.mustafakoceerr.justrelax.core.common.AppError
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.data.repository.StarterPackInstaller
+import com.mustafakoceerr.justrelax.core.model.ConsentStatus
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeAppSetupRepository
+import com.mustafakoceerr.justrelax.core.testing.fake.FakeConsentRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
@@ -17,10 +19,12 @@ class SplashViewModelTest {
 
     private val repository = FakeSoundRepository(listOf(testSound("rain", isInitial = true)))
     private val setup = FakeAppSetupRepository(installed = false)
+    private val consent = FakeConsentRepository(ConsentStatus.GRANTED)
 
     private fun TestScope.viewModel() = SplashViewModel(
         soundRepository = repository,
         starterPackInstaller = StarterPackInstaller(repository, setup, scope = this),
+        consentRepository = consent,
     )
 
     @Test
@@ -35,7 +39,7 @@ class SplashViewModelTest {
         val viewModel = viewModel()
         advanceUntilIdle()
 
-        assertEquals(SplashUiState.Ready, viewModel.uiState.value)
+        assertEquals(SplashUiState.Ready(needsConsent = false), viewModel.uiState.value)
         assertEquals(listOf("rain"), repository.downloadRequests)
         assertTrue(setup.isStarterPackInstalled.value)
     }
@@ -46,6 +50,23 @@ class SplashViewModelTest {
         val viewModel = viewModel()
         advanceUntilIdle()
 
-        assertEquals(SplashUiState.Ready, viewModel.uiState.value)
+        assertEquals(SplashUiState.Ready(needsConsent = false), viewModel.uiState.value)
+    }
+
+    @Test
+    fun withoutAnAnswerTheUserIsAskedFirst() = runMainTest {
+        consent.consent.value = ConsentStatus.UNKNOWN
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        assertEquals(SplashUiState.Ready(needsConsent = true), viewModel.uiState.value)
+    }
+
+    @Test
+    fun theStoredAnswerIsAppliedAtEveryStart() = runMainTest {
+        viewModel()
+        advanceUntilIdle()
+
+        assertEquals(1, consent.appliedCount)
     }
 }

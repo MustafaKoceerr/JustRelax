@@ -1,5 +1,8 @@
 package com.mustafakoceerr.justrelax.feature.ai
 
+import com.mustafakoceerr.justrelax.core.analytics.EventTypes
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.testing.fake.TestAnalyticsHelper
 import com.mustafakoceerr.justrelax.core.data.repository.InMemorySceneRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakePlaybackController
 import com.mustafakoceerr.justrelax.core.common.AppError
@@ -54,11 +57,13 @@ class AiViewModelTest {
     private val repository = FakeSoundRepository(listOf(rain, fire))
     private val scene = InMemorySceneRepository(repository)
     private val playback = FakePlaybackController()
+    private val analytics = TestAnalyticsHelper()
 
     private fun TestScope.viewModel() = AiViewModel(
         aiMixRepository = ai,
         sceneRepository = scene,
         playbackController = playback,
+        analytics = analytics,
     ).also { observe(it.uiState) }
 
     @Test
@@ -155,5 +160,27 @@ class AiViewModelTest {
         advanceUntilIdle()
 
         assertEquals(mapOf("fire" to EventFrequency.RARE), viewModel.uiState.value.soundFrequencies)
+    }
+
+    @Test
+    fun aRequestAndAFailureAreCounted_withoutTheUsersWords() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.updatePrompt("a secret rainy night")
+
+        viewModel.generateMix()
+        advanceUntilIdle()
+        ai.result = Resource.Error(AppError.Network.RateLimited())
+        viewModel.generateMix()
+        advanceUntilIdle()
+
+        assertEquals(
+            listOf(
+                AnalyticsEvent(EventTypes.AI_MIX_REQUESTED),
+                AnalyticsEvent(EventTypes.AI_MIX_REQUESTED),
+                AnalyticsEvent(EventTypes.AI_MIX_FAILED, mapOf("error" to "RateLimited")),
+            ),
+            analytics.events,
+        )
+        assertTrue(analytics.events.none { event -> event.params.values.any { "secret" in it } })
     }
 }

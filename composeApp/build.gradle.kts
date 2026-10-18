@@ -26,6 +26,7 @@ kotlin {
             implementation(project(":core:playback"))
             implementation(project(":core:data"))
             implementation(project(":core:media"))
+            implementation(project(":core:analytics"))
 
             implementation(project(":feature:library"))
             implementation(project(":feature:mixer"))

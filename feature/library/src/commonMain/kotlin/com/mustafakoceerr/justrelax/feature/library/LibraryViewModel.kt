@@ -1,5 +1,9 @@
 package com.mustafakoceerr.justrelax.feature.library
 
+import com.mustafakoceerr.justrelax.core.analytics.Params
+import com.mustafakoceerr.justrelax.core.analytics.EventTypes
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsHelper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.common.Resource
@@ -28,6 +32,7 @@ class LibraryViewModel(
     private val playbackController: PlaybackController,
     private val soundRepository: SoundRepository,
     private val starterPackInstaller: StarterPackInstaller,
+    private val analytics: AnalyticsHelper,
 ) : ViewModel() {
 
     private data class ScreenState(
@@ -63,7 +68,7 @@ class LibraryViewModel(
         viewModelScope.launch {
             when {
                 sceneRepository.scene.value.layer(sound.id) != null -> sceneRepository.toggle(sound.id)
-                sound.isDownloaded -> play(sound.id)
+                sound.isDownloaded -> play(sound)
                 else -> downloadAndPlay(sound)
             }
         }
@@ -83,10 +88,18 @@ class LibraryViewModel(
 
     fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
 
-    private suspend fun play(soundId: String) {
-        when (val result = sceneRepository.toggle(soundId)) {
+    private suspend fun play(sound: LocalizedSound) {
+        when (val result = sceneRepository.toggle(sound.id)) {
             is Resource.Error -> showMessage(UiText.DynamicString(result.error.message ?: "An unknown error occurred."))
-            else -> playbackController.play()
+            else -> {
+                playbackController.play()
+                analytics.logEvent(
+                    AnalyticsEvent(
+                        EventTypes.SOUND_PLAY,
+                        mapOf(Params.SOUND_ID to sound.id, Params.CATEGORY to sound.category.name, Params.SOURCE to sound.source.name),
+                    ),
+                )
+            }
         }
     }
 
@@ -95,7 +108,7 @@ class LibraryViewModel(
         val downloaded = soundRepository.download(sound.id)
         screenState.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - sound.id) }
 
-        if (downloaded) play(sound.id) else showMessage(UiText.Resource(Res.string.download_failed))
+        if (downloaded) play(sound) else showMessage(UiText.Resource(Res.string.download_failed))
     }
 
     private fun showMessage(message: UiText) = screenState.update { it.copy(userMessage = message) }

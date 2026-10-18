@@ -11,5 +11,7 @@ data class SettingsUiState(
     val isDownloadingLibrary: Boolean = false,
     val downloadProgress: Float = 0f,
     val isLibraryComplete: Boolean = false,
+    /** Usage analytics and crash reports are sent. */
+    val isUsageDataEnabled: Boolean = false,
     val userMessage: UiText? = null,
 )

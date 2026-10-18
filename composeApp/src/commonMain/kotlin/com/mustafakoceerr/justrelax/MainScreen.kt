@@ -71,6 +71,9 @@ import com.mustafakoceerr.justrelax.navigation.MainTabState
 import com.mustafakoceerr.justrelax.tabs.MainTabContent
 import com.mustafakoceerr.justrelax.tabs.icon
 import com.mustafakoceerr.justrelax.tabs.title
+import androidx.compose.runtime.LaunchedEffect
+import com.mustafakoceerr.justrelax.core.analytics.AnalyticsHelper
+import com.mustafakoceerr.justrelax.core.analytics.logScreenView
 
 /**
  * The main shell: a navigation bar on phones and a rail on wider windows (Material's navigation
@@ -134,6 +137,9 @@ private fun MainScreenLayout(
     onOpenMySounds: () -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
+    val analytics = koinInject<AnalyticsHelper>()
+    LaunchedEffect(tabState.selected) { analytics.logScreenView("main_${tabState.selected.name.lowercase()}") }
+
     val showsScenePane = rememberWindowSizeClass() == WindowWidthSize.EXPANDED && tabState.selected == MainTab.HOME
     var isSceneSheetOpen by rememberSaveable { mutableStateOf(false) }
 
