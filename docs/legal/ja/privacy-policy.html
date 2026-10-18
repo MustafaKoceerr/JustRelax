@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>プライバシーポリシー - JustRelax</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 1em; line-height: 1.6; max-width: 900px; margin: 0 auto; }
+    h1, h2 { line-height: 1.2; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .muted { color: #666; }
+  </style>
+</head>
+<body>
+
+<h1>プライバシーポリシー</h1>
+<p class="muted">施行日：2026-10-18</p>
+
+<p>
+  本プライバシーポリシーは、Mustafa Kocer（以下「サービス提供者」）が作成・提供するモバイルアプリ JustRelax（以下「本アプリ」）に
+  適用されます。本アプリの利用時に何がどのような理由で端末の外に送られ、何が端末内に残るかを説明します。
+</p>
+
+<h2>概要</h2>
+<ul>
+  <li>アカウントや登録は不要です。広告はなく、広告IDも使用しません。</li>
+  <li>利用統計とクラッシュレポート（Google Firebase）は<strong>許可した場合にのみ</strong>送信され、設定からいつでもオフにできます。</li>
+  <li>AIミックスを使うと、入力した文章が OpenAI に送られます。オンラインでサウンドを検索すると、検索語が Freesound に送られます。</li>
+  <li>ご自身のファイルから取り込んだサウンドが端末の外に出ることはありません。</li>
+  <li>サービス提供者はお客様のデータを販売せず、自身のサーバーに個人データを保存しません。</li>
+</ul>
+
+<h2>端末の外に送られるもの</h2>
+<table>
+  <tr><th>内容</th><th>送信先</th><th>タイミング</th></tr>
+  <tr>
+    <td>AIミックスのために入力した文章と、ダウンロード済みサウンドの名前・カテゴリ・タグ</td>
+    <td>サービス提供者のサーバー（<code>api.mustafakoceerr.com</code>）を経由して OpenAI</td>
+    <td>AIミックスを依頼したときのみ</td>
+  </tr>
+  <tr>
+    <td>オンラインでサウンドを検索するときの検索語</td>
+    <td>サービス提供者のサーバーを経由して Freesound</td>
+    <td>検索したときのみ</td>
+  </tr>
+  <tr>
+    <td>ランダムなインストールID</td>
+    <td>サービス提供者のサーバー</td>
+    <td>AIおよびオンライン検索のリクエストとともに</td>
+  </tr>
+  <tr>
+    <td>Play Integrity トークン（Android）</td>
+    <td>サービス提供者のサーバーを経由して Google</td>
+    <td>AIミックスまたはオンライン検索がセッションを開始するとき（多くても約1時間に1回）</td>
+  </tr>
+  <tr>
+    <td>サウンドファイルとサウンドカタログのリクエスト</td>
+    <td>サービス提供者のコンテンツ配信ネットワーク（<code>cdn.mustafakoceerr.com</code>、Cloudflare）</td>
+    <td>サウンドの一覧表示やダウンロードのとき</td>
+  </tr>
+  <tr>
+    <td>利用イベントと Firebase アプリインスタンスID</td>
+    <td>Google Firebase Analytics</td>
+    <td>利用データを許可した場合のみ</td>
+  </tr>
+  <tr>
+    <td>クラッシュレポートと捕捉したエラー</td>
+    <td>Google Firebase Crashlytics</td>
+    <td>利用データを許可した場合のみ</td>
+  </tr>
+</table>
+
+<h2>詳細</h2>
+
+<p><strong>AIミックス。</strong>
+  ミックスを作成するため、本アプリは入力された文章を、ダウンロード済みサウンドの名前・カテゴリ・タグとともに OpenAI の API に送信します。
+  文章にご自身で個人情報を書き込んだ場合はそれも含まれるため、機微な情報は入力しないでください。サービス提供者のサーバーはリクエストを
+  中継するだけで保存しません。OpenAI は独自の API 規約に従って処理します。本ポリシー作成時点では、OpenAI は不正利用の検知のため
+  API リクエストを最大30日間保持する場合があり、既定ではモデルの学習には使用しません。
+</p>
+
+<p><strong>オンラインのサウンド（Freesound）。</strong>
+  サウンドを検索すると、検索語はサービス提供者のサーバーを経由して Freesound に送られ、試聴やダウンロードは Freesound のサーバーから
+  行われます。この利用を許可するクリエイティブ・コモンズ・ライセンスのサウンドのみが表示され、作者は本アプリ内に表示されます。
+</p>
+
+<p><strong>インストールIDと Play Integrity。</strong>
+  本アプリはインストール時に、そのインストールだけに属し、お客様個人とは結び付かないランダムなIDを作成します。このIDは、サービス提供者の
+  サーバーが1つのインストールからのリクエスト数を制限できるよう、AIおよび検索のリクエストとともに送信されます。Android では Google
+  Play Integrity が、リクエストが正規の本アプリから送られたことを確認します。これらは不正利用の防止にのみ使用されます。本アプリのデータを
+  消去するか再インストールすると、新しいIDが作成されます。
+</p>
+
+<p><strong>サーバーのログ。</strong>
+  サービス提供者のサーバーは Cloudflare Workers 上で動作します。ユーザーやリクエストのデータベースは持たず、リクエスト制限は60秒で
+  期限切れになるカウンターです。リクエストのパス（つまり検索語）を含む Cloudflare のログは最長3日間保存されます。他のオンライン
+  サービスと同様に、Cloudflare、OpenAI、Freesound、Google は、リクエストに応答するために必要な IP アドレスや時刻などの技術情報を受け取ります。
+</p>
+
+<p><strong>利用統計とクラッシュレポート。</strong>
+  本アプリは初回起動時に、Google Firebase を通じて匿名の利用統計とクラッシュレポートを送信してよいかを確認します。拒否した場合は何も
+  送信されません。許可した場合：
+</p>
+<ul>
+  <li><strong>Firebase Analytics</strong> は、開いた画面、再生したカタログサウンドとそのカテゴリ、保存したミックスのサウンド数、AIリクエストや
+    検索の成否とエラーの種類、検索結果の件数、取り込んだサウンドの種類、スリープタイマーの長さの範囲などのイベントを、Firebase アプリ
+    インスタンスIDとともに受け取ります。入力・検索・取り込みの内容は受け取りません。</li>
+  <li><strong>Firebase Crashlytics</strong> は、クラッシュレポートと捕捉したエラーを、スタックトレース、端末のモデル、OS のバージョンとともに受け取ります。</li>
+</ul>
+<p>
+  選択は <em>設定 → 利用データとクラッシュレポート</em> からいつでも変更できます。Analytics のデータは Google により最長14か月保存されます。
+  本ポリシー作成時点では、これらのサービスは Android 版でのみ使用しています。
+</p>
+
+<p><strong>チップ。</strong>
+  本アプリが任意のチップを提供する場合、それは Google Play または Apple App Store が処理する1回限りの購入です。サービス提供者が
+  受け取るのは購入が完了したという確認のみで、お支払い情報を見ることはありません。チップによって解除される機能はありません。
+</p>
+
+<h2>端末内に残るもの</h2>
+<ul>
+  <li><strong>ファイルから取り込んだサウンド</strong>は本アプリの専用ストレージに残ります。アップロードされることはなく、端末のバックアップにも含まれません。</li>
+  <li><strong>保存したミックス、ライブラリ、ダウンロードしたサウンド</strong>は端末内の本アプリのストレージに保存されます。</li>
+  <li><strong>設定</strong>（テーマ、言語、利用データの選択）は端末に保存されます。Android では Google の端末バックアップに含まれる場合があり、
+    バックアップに含まれる本アプリのデータはこれだけです。</li>
+</ul>
+<p>本アプリは位置情報、マイク、カメラ、連絡先、写真を使用しません。</p>
+
+<h2>第三者サービス</h2>
+<ul>
+  <li><strong>OpenAI</strong>（AIミックス）：<a href="https://openai.com/policies/privacy-policy">プライバシーポリシー</a></li>
+  <li><strong>Freesound</strong>（ポンペウ・ファブラ大学 Music Technology Group が運営、オンラインのサウンド）：<a href="https://freesound.org/help/privacy/">プライバシーポリシー</a></li>
+  <li><strong>Google</strong>（Firebase Analytics、Firebase Crashlytics、Play Integrity、Google Play）：<a href="https://policies.google.com/privacy">プライバシーポリシー</a></li>
+  <li><strong>Apple</strong>（iOS での App Store 購入）：<a href="https://www.apple.com/legal/privacy/">プライバシーポリシー</a></li>
+  <li><strong>Cloudflare</strong>（サーバーとコンテンツ配信）：<a href="https://www.cloudflare.com/privacypolicy/">プライバシーポリシー</a></li>
+</ul>
+<p>
+  これらの事業者は、サービス提供者に代わって、またはお客様が求めた機能を提供するためにデータを処理し、お住まいの国の外で処理する
+  場合があります。サービス提供者はお客様のデータを販売せず、広告目的で共有しません。
+</p>
+
+<h2>法的根拠（EEA、英国および同様の法律）</h2>
+<ul>
+  <li>利用統計とクラッシュレポート：設定から撤回できるお客様の同意。</li>
+  <li>AIミックスとオンライン検索：お客様が求めた機能の提供。</li>
+  <li>インストールIDと Play Integrity：サービスの不正利用を防ぐという正当な利益。</li>
+</ul>
+
+<h2>お客様の選択</h2>
+<ul>
+  <li>利用統計とクラッシュレポートを拒否するか、設定でオフにできます。</li>
+  <li>OpenAI や Freesound に文章を送りたくない場合は、AIミックスとオンライン検索を使用しないでください。</li>
+  <li>端末の設定から本アプリのデータを消去するか、本アプリをアンインストールすると、端末に保存されたものはすべて削除されます。</li>
+  <li>データに関するご質問やご要望は、サービス提供者までお問い合わせください。</li>
+</ul>
+
+<h2>セキュリティ</h2>
+<p>
+  すべての通信は暗号化された HTTPS を使用します。完全に安全な送信・保存の方法はありませんが、サービス提供者は本アプリが扱う情報を
+  保護するために合理的な措置を講じます。
+</p>
+
+<h2>子どものプライバシー</h2>
+<p>
+  本アプリは13歳未満の子どもを対象としておらず、サービス提供者は子どもから意図的に個人情報を収集することはありません。子どもが
+  本アプリを通じて個人情報を提供したと思われる場合は、ご連絡ください。
+</p>
+
+<h2>本ポリシーの変更</h2>
+<p>
+  本ポリシーは随時更新されることがあります。変更内容は新しい施行日とともにこのページに掲載します。
+</p>
+
+<h2>お問い合わせ</h2>
+<p>
+  本ポリシーやお客様のデータに関するご質問：<a href="mailto:kocerlabs@gmail.com">kocerlabs@gmail.com</a>
+</p>
+
+</body>
+</html>

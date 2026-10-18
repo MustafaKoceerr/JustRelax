@@ -3,20 +3,7 @@
 Claude'un tek başına yapamadığı işler, öncelik sırasıyla. Biten maddeyi silebilir ya da işaretleyebilirsin.
 
 ## 1. PR'ları birleştir
-PR'lar birbirinin üstüne yığılı; bu sırayla birleştir. Her biri bir öncekinin dalını temel alır, birleştirince GitHub sonrakinin tabanını kendisi günceller.
-- [ ] #36 Anahtar proxy'si, Play Integrity, yalnızca ayarların yedeklenmesi
-- [ ] #37 Mikrofon kaydının kaldırılması, bu liste
-- [ ] #38 Crashlytics ve Analytics (ilk açılışta izin)
-- [ ] #39 Mixer'daki çift snackbar ve karanlık temadaki beyaz pencere
-- [ ] #40 Build temizliği: ortak convention'lar, katalog, CI'a proxy ve pipeline testleri
-- [ ] #41 Üretim kodundaki tekrarlar ve ölü kod
-- [ ] #42 Test tekrarları ve eksik testler
-- [ ] #43 README
-- [ ] #44 Performans ölçümü: Macrobenchmark, Baseline Profile, test tag'leri
-- [ ] #45 Samsung tarzı uyku zamanlayıcısı
-- [ ] #46 Ses sürüklerken daha az yeniden çizim, `core:ui`'da ortak bileşenler
-- [ ] #47 iOS'ta gerçek ses (AVAudioEngine, kilit ekranı kontrolleri, iOS 18.4+)
-- [ ] #48 "Bana bir kahve ısmarla" bahşiş ekranı (şimdilik yalnızca debug'da görünür)
+- [x] #36–#48 main'e birleştirildi (2026-10-18, main CI yeşil).
 
 ## Performans ölçümü
 Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ayrı bir paket adıyla (`com.mustafakoceerr.justrelax.benchmark`) kuruluyor ve Play sürümüyle yan yana durabiliyor.
@@ -45,12 +32,16 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 - [ ] Play'den kurulan sürümde AI karışımı ve Freesound aramasını dene. Integrity yalnızca Play'den kurulan uygulamada geçer.
 
 ## 5. Firebase (Crashlytics ve Analytics)
-- [ ] Bir kez `! firebase login` çalıştır; Firebase projesini ve Android uygulamasını Firebase MCP ile ben oluştururum. Ya da `google-services.json`'u kendin `androidApp/` klasörüne koy.
-- [ ] Firebase konsolunda Analytics veri saklama süresini seç (*Project settings → Data settings*).
+- [x] Proje `justrelax-app` açıldı (2026-10-18). İki Android uygulaması var: `com.mustafakoceerr.justrelax` ve benchmark için `com.mustafakoceerr.justrelax.benchmark`. `androidApp/google-services.json` yerinde ve git'e girmiyor. Emülatörde denendi: izin yokken hiçbir şey gitmiyor, izin verilince olaylar ve bir çökme raporu gönderiliyor.
+- [x] Google Analytics bağlandı; DebugView'de olaylar görüldü (2026-10-18).
+- [x] Saklama süresi: olay verisi 2 ay, kullanıcı verisi 14 ay (politikadaki "en fazla 14 ay" ile uyumlu).
+- [ ] Yeni bir bilgisayarda ya da CI'da Firebase'li build gerekirse `google-services.json`'u konsoldan indir (*Project settings → Your apps*).
 
 ## 6. Play Console ve gizlilik
 - [ ] Veri güvenliği formunu `docs/play-data-safety.md`'ye göre doldur.
-- [ ] Gizlilik politikasını güncelle (`cdn.mustafakoceerr.com/legal/<dil>/privacy-policy.html`). Neyin anlatılması gerektiği aynı dosyanın sonunda.
+- [x] Gizlilik politikası güncellendi ve 12 dilde yayında (2026-10-18). Kaynağı `docs/legal/`.
+- [ ] **v2 yayından önce:** OpenAI'da "Share inputs and outputs" açıldı (2026-10-18, ücretsiz günlük kota için). Gizlilik politikası (12 dil) şu an "OpenAI bunları varsayılan olarak modellerini eğitmek için kullanmaz" diyor; bu artık yanlış. Politika ve `docs/play-data-safety.md` (AI cümlesi OpenAI ile **paylaşılıyor**, eğitim için) güncellenmeli. Claude yapar, sen onaylarsın.
+- [ ] İstersen kullanım koşullarını (`terms-conditions.html`) da güncelletebilirsin; hâlâ yalnızca OpenAI'dan söz ediyor.
 
 ## 7. İçerik
 - [ ] 15 yerleşik sesin kaynak lisanslarını doğrula (`tools/sound-pipeline/manifest.json`'daki `license_note`). Şu an `OWN` olarak yayında.

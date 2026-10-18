@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Datenschutzerklärung - JustRelax</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 1em; line-height: 1.6; max-width: 900px; margin: 0 auto; }
+    h1, h2 { line-height: 1.2; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .muted { color: #666; }
+  </style>
+</head>
+<body>
+
+<h1>Datenschutzerklärung</h1>
+<p class="muted">Gültig ab: 2026-10-18</p>
+
+<p>
+  Diese Datenschutzerklärung gilt für die mobile App JustRelax (die „App“), entwickelt und bereitgestellt von
+  Mustafa Kocer (der „Anbieter“). Sie erklärt, was Ihr Gerät verlässt, wenn Sie die App nutzen, warum, und was auf
+  Ihrem Gerät bleibt.
+</p>
+
+<h2>Zusammenfassung</h2>
+<ul>
+  <li>Kein Konto, keine Registrierung. Keine Werbung und keine Werbe-ID.</li>
+  <li>Nutzungsstatistiken und Absturzberichte (Google Firebase) werden <strong>nur gesendet, wenn Sie zustimmen</strong>, und Sie können dies jederzeit in den Einstellungen abschalten.</li>
+  <li>Wenn Sie den KI-Mix nutzen, geht Ihr Text an OpenAI. Wenn Sie online nach Sounds suchen, geht Ihre Suche an Freesound.</li>
+  <li>Sounds, die Sie aus eigenen Dateien importieren, verlassen Ihr Gerät nie.</li>
+  <li>Der Anbieter verkauft Ihre Daten nicht und speichert auf seinen eigenen Servern keine personenbezogenen Daten.</li>
+</ul>
+
+<h2>Was Ihr Gerät verlässt</h2>
+<table>
+  <tr><th>Was</th><th>Wohin</th><th>Wann</th></tr>
+  <tr>
+    <td>Der Text, den Sie für einen KI-Mix eingeben, sowie Namen, Kategorien und Tags der heruntergeladenen Sounds</td>
+    <td>OpenAI, über den Server des Anbieters (<code>api.mustafakoceerr.com</code>)</td>
+    <td>Nur wenn Sie einen KI-Mix anfordern</td>
+  </tr>
+  <tr>
+    <td>Der Text, mit dem Sie online nach Sounds suchen</td>
+    <td>Freesound, über den Server des Anbieters</td>
+    <td>Nur wenn Sie suchen</td>
+  </tr>
+  <tr>
+    <td>Eine zufällige Installations-ID</td>
+    <td>Der Server des Anbieters</td>
+    <td>Mit KI- und Online-Suchanfragen</td>
+  </tr>
+  <tr>
+    <td>Ein Play-Integrity-Token (Android)</td>
+    <td>Google, über den Server des Anbieters</td>
+    <td>Wenn der KI-Mix oder die Online-Suche eine Sitzung startet, höchstens etwa einmal pro Stunde</td>
+  </tr>
+  <tr>
+    <td>Anfragen nach Sounddateien und dem Soundkatalog</td>
+    <td>Das Content-Delivery-Netzwerk des Anbieters (<code>cdn.mustafakoceerr.com</code>, Cloudflare)</td>
+    <td>Wenn Sounds aufgelistet oder heruntergeladen werden</td>
+  </tr>
+  <tr>
+    <td>Nutzungsereignisse und die Firebase-App-Instanz-ID</td>
+    <td>Google Firebase Analytics</td>
+    <td>Nur wenn Sie Nutzungsdaten erlaubt haben</td>
+  </tr>
+  <tr>
+    <td>Absturzberichte und abgefangene Fehler</td>
+    <td>Google Firebase Crashlytics</td>
+    <td>Nur wenn Sie Nutzungsdaten erlaubt haben</td>
+  </tr>
+</table>
+
+<h2>Einzelheiten</h2>
+
+<p><strong>KI-Mix.</strong>
+  Um einen Mix zu erstellen, sendet die App den von Ihnen geschriebenen Satz zusammen mit Namen, Kategorien und Tags Ihrer
+  heruntergeladenen Sounds an die API von OpenAI. Ihr Satz kann personenbezogene Daten enthalten, wenn Sie solche hineinschreiben;
+  bitte geben Sie keine sensiblen Informationen ein. Der Server des Anbieters leitet die Anfrage weiter und speichert sie nicht.
+  OpenAI verarbeitet sie nach seinen eigenen API-Bedingungen; zum Zeitpunkt der Erstellung kann OpenAI API-Anfragen bis zu 30 Tage
+  aufbewahren, um Missbrauch zu erkennen, und verwendet sie standardmäßig nicht zum Training seiner Modelle.
+</p>
+
+<p><strong>Online-Sounds (Freesound).</strong>
+  Wenn Sie nach Sounds suchen, wird Ihr Suchtext über den Server des Anbieters an Freesound gesendet; Vorschauen und Downloads
+  kommen von den Servern von Freesound. Es werden nur Sounds unter Creative-Commons-Lizenzen angezeigt, die diese Nutzung erlauben,
+  und ihre Urheber werden in der App genannt.
+</p>
+
+<p><strong>Installations-ID und Play Integrity.</strong>
+  Bei der Installation erzeugt die App eine zufällige ID, die nur zu dieser Installation gehört und nicht mit Ihnen verknüpft ist.
+  Sie wird mit KI- und Suchanfragen gesendet, damit der Server des Anbieters begrenzen kann, wie viele Anfragen eine Installation
+  stellt. Unter Android bestätigt Google Play Integrity, dass die Anfrage von der echten App kommt. Beides dient nur der
+  Missbrauchsverhinderung. Wenn Sie die App-Daten löschen oder die App neu installieren, entsteht eine neue ID.
+</p>
+
+<p><strong>Server-Protokolle.</strong>
+  Der Server des Anbieters läuft auf Cloudflare Workers. Er führt keine Datenbank über Nutzer oder Anfragen; seine Anfragegrenzen
+  sind Zähler, die nach 60 Sekunden ablaufen. Die Protokolle von Cloudflare, die den Anfragepfad (und damit den Suchtext) enthalten,
+  werden höchstens 3 Tage aufbewahrt. Wie jeder Online-Dienst erhalten Cloudflare, OpenAI, Freesound und Google die technischen
+  Informationen, die zur Beantwortung einer Anfrage nötig sind, etwa Ihre IP-Adresse und den Zeitpunkt.
+</p>
+
+<p><strong>Nutzungsstatistiken und Absturzberichte.</strong>
+  Beim ersten Start fragt die App, ob sie anonyme Nutzungsstatistiken und Absturzberichte über Google Firebase senden darf.
+  Wenn Sie ablehnen, wird nichts gesendet. Wenn Sie zustimmen:
+</p>
+<ul>
+  <li><strong>Firebase Analytics</strong> erhält Ereignisse wie: welche Bildschirme geöffnet werden, welcher Katalog-Sound abgespielt wird
+    und seine Kategorie, wie viele Sounds ein gespeicherter Mix enthält, ob eine KI-Anfrage oder Suche erfolgreich war und die Art eines
+    Fehlers, wie viele Suchergebnisse gefunden wurden, die Art eines importierten Sounds und den Bereich der Dauer eines Schlaftimers,
+    zusammen mit einer Firebase-App-Instanz-ID. Es erhält nicht, was Sie eingeben, suchen oder importieren.</li>
+  <li><strong>Firebase Crashlytics</strong> erhält Absturzberichte und abgefangene Fehler mit Stacktrace, Gerätemodell und
+    Betriebssystemversion.</li>
+</ul>
+<p>
+  Sie können Ihre Wahl jederzeit unter <em>Einstellungen → Nutzungsdaten und Absturzberichte</em> ändern. Analytics-Daten werden von
+  Google höchstens 14 Monate aufbewahrt. Zum Zeitpunkt der Erstellung werden diese Dienste nur in der Android-Version verwendet.
+</p>
+
+<p><strong>Trinkgeld.</strong>
+  Wo die App optionales Trinkgeld anbietet, handelt es sich um einmalige Käufe, die von Google Play oder dem Apple App Store
+  abgewickelt werden. Der Anbieter erhält nur eine Bestätigung, dass der Kauf erfolgt ist; Ihre Zahlungsdaten sieht er nie.
+  Ein Trinkgeld schaltet nichts frei.
+</p>
+
+<h2>Was auf Ihrem Gerät bleibt</h2>
+<ul>
+  <li><strong>Sounds, die Sie aus Ihren Dateien importieren,</strong> bleiben im privaten Speicher der App. Sie werden nie hochgeladen und
+    sind nicht in Gerätesicherungen enthalten.</li>
+  <li><strong>Gespeicherte Mixe, Ihre Bibliothek und heruntergeladene Sounds</strong> liegen im Speicher der App auf Ihrem Gerät.</li>
+  <li><strong>Einstellungen</strong> (Design, Sprache, Ihre Wahl zu Nutzungsdaten) werden auf dem Gerät gespeichert; unter Android können
+    sie in Ihrer Google-Gerätesicherung enthalten sein. Das sind die einzigen App-Daten, für die das gilt.</li>
+</ul>
+<p>Die App verwendet weder Ihren Standort noch Mikrofon, Kamera, Kontakte oder Fotos.</p>
+
+<h2>Dienste Dritter</h2>
+<ul>
+  <li><strong>OpenAI</strong> (KI-Mix): <a href="https://openai.com/policies/privacy-policy">Datenschutzerklärung</a></li>
+  <li><strong>Freesound</strong>, betrieben von der Music Technology Group der Universitat Pompeu Fabra (Online-Sounds): <a href="https://freesound.org/help/privacy/">Datenschutzerklärung</a></li>
+  <li><strong>Google</strong> (Firebase Analytics, Firebase Crashlytics, Play Integrity, Google Play): <a href="https://policies.google.com/privacy">Datenschutzerklärung</a></li>
+  <li><strong>Apple</strong> (App-Store-Käufe unter iOS): <a href="https://www.apple.com/legal/privacy/">Datenschutzerklärung</a></li>
+  <li><strong>Cloudflare</strong> (Server und Content Delivery): <a href="https://www.cloudflare.com/privacypolicy/">Datenschutzerklärung</a></li>
+</ul>
+<p>
+  Diese Anbieter verarbeiten Daten im Auftrag des Anbieters oder um die von Ihnen gewünschte Funktion bereitzustellen, und können
+  dies außerhalb Ihres Landes tun. Der Anbieter verkauft Ihre Daten nicht und gibt sie nicht für Werbung weiter.
+</p>
+
+<h2>Rechtsgrundlage (EWR, Vereinigtes Königreich und ähnliche Gesetze)</h2>
+<ul>
+  <li>Nutzungsstatistiken und Absturzberichte: Ihre Einwilligung, die Sie in den Einstellungen widerrufen können.</li>
+  <li>KI-Mix und Online-Suche: Bereitstellung der von Ihnen gewünschten Funktion.</li>
+  <li>Installations-ID und Play Integrity: das berechtigte Interesse, Missbrauch des Dienstes zu verhindern.</li>
+</ul>
+
+<h2>Ihre Möglichkeiten</h2>
+<ul>
+  <li>Lehnen Sie Nutzungsstatistiken und Absturzberichte ab oder schalten Sie sie in den Einstellungen aus.</li>
+  <li>Nutzen Sie den KI-Mix und die Online-Suche nicht, wenn kein Text an OpenAI oder Freesound gehen soll.</li>
+  <li>Löschen Sie die App-Daten in den Geräteeinstellungen oder deinstallieren Sie die App, um alles auf dem Gerät Gespeicherte zu entfernen.</li>
+  <li>Wenden Sie sich mit jeder Frage oder Anfrage zu Ihren Daten an den Anbieter.</li>
+</ul>
+
+<h2>Sicherheit</h2>
+<p>
+  Alle Verbindungen nutzen verschlüsseltes HTTPS. Keine Übertragungs- oder Speichermethode ist vollkommen sicher, aber der Anbieter
+  ergreift angemessene Maßnahmen, um die von der App verarbeiteten Informationen zu schützen.
+</p>
+
+<h2>Datenschutz von Kindern</h2>
+<p>
+  Die App richtet sich nicht an Kinder unter 13 Jahren, und der Anbieter erhebt wissentlich keine personenbezogenen Daten von Kindern.
+  Wenn Sie glauben, dass ein Kind über die App personenbezogene Daten angegeben hat, melden Sie sich bitte.
+</p>
+
+<h2>Änderungen dieser Erklärung</h2>
+<p>
+  Diese Erklärung kann von Zeit zu Zeit aktualisiert werden. Änderungen werden auf dieser Seite mit einem neuen Gültigkeitsdatum veröffentlicht.
+</p>
+
+<h2>Kontakt</h2>
+<p>
+  Fragen zu dieser Erklärung oder zu Ihren Daten: <a href="mailto:kocerlabs@gmail.com">kocerlabs@gmail.com</a>
+</p>
+
+</body>
+</html>

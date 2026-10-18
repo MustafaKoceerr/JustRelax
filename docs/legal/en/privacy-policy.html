@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Privacy Policy - JustRelax</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 1em; line-height: 1.6; max-width: 900px; margin: 0 auto; }
+    h1, h2 { line-height: 1.2; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .muted { color: #666; }
+  </style>
+</head>
+<body>
+
+<h1>Privacy Policy</h1>
+<p class="muted">Effective date: 2026-10-18</p>
+
+<p>
+  This Privacy Policy applies to the JustRelax mobile application (the “Application”) created and provided by
+  Mustafa Kocer (the “Service Provider”). It explains what leaves your device when you use the Application, why,
+  and what stays on your device.
+</p>
+
+<h2>Summary</h2>
+<ul>
+  <li>No account or registration. No ads, and no advertising ID.</li>
+  <li>Usage statistics and crash reports (Google Firebase) are sent <strong>only if you allow them</strong>, and you can turn them off at any time in Settings.</li>
+  <li>If you use the AI mix, your text goes to OpenAI. If you search for sounds online, your search goes to Freesound.</li>
+  <li>Sounds you import from your own files never leave your device.</li>
+  <li>The Service Provider does not sell your data and keeps no personal data on its own servers.</li>
+</ul>
+
+<h2>What leaves your device</h2>
+<table>
+  <tr><th>What</th><th>Where it goes</th><th>When</th></tr>
+  <tr>
+    <td>The text you type for an AI mix, and the names, categories and tags of the sounds you have downloaded</td>
+    <td>OpenAI, through the Service Provider’s server (<code>api.mustafakoceerr.com</code>)</td>
+    <td>Only when you ask for an AI mix</td>
+  </tr>
+  <tr>
+    <td>The text you search for online sounds</td>
+    <td>Freesound, through the Service Provider’s server</td>
+    <td>Only when you search</td>
+  </tr>
+  <tr>
+    <td>A random installation ID</td>
+    <td>The Service Provider’s server</td>
+    <td>With AI and online search requests</td>
+  </tr>
+  <tr>
+    <td>A Play Integrity token (Android)</td>
+    <td>Google, through the Service Provider’s server</td>
+    <td>When the AI mix or online search starts a session, at most about once an hour</td>
+  </tr>
+  <tr>
+    <td>Requests for sound files and the sound catalog</td>
+    <td>The Service Provider’s content delivery network (<code>cdn.mustafakoceerr.com</code>, Cloudflare)</td>
+    <td>When sounds are listed or downloaded</td>
+  </tr>
+  <tr>
+    <td>Usage events and the Firebase app instance ID</td>
+    <td>Google Firebase Analytics</td>
+    <td>Only if you allowed usage data</td>
+  </tr>
+  <tr>
+    <td>Crash reports and caught errors</td>
+    <td>Google Firebase Crashlytics</td>
+    <td>Only if you allowed usage data</td>
+  </tr>
+</table>
+
+<h2>Details</h2>
+
+<p><strong>AI mix.</strong>
+  To create a mix, the Application sends the sentence you write, together with the names, categories and tags of your
+  downloaded sounds, to OpenAI’s API. Your sentence may contain personal information if you choose to include it,
+  so please do not write sensitive information. The Service Provider’s server passes the request on and does not store it.
+  OpenAI processes it under its own API terms; at the time of writing, OpenAI may keep API requests for up to 30 days
+  to detect abuse and does not use them to train its models by default.
+</p>
+
+<p><strong>Online sounds (Freesound).</strong>
+  When you search for sounds, your search text is sent to Freesound through the Service Provider’s server, and previews
+  and downloads come from Freesound’s servers. Only sounds under Creative Commons licenses that allow this use are shown,
+  and their authors are credited in the Application.
+</p>
+
+<p><strong>Installation ID and Play Integrity.</strong>
+  When the Application is installed, it creates a random ID that belongs only to this installation and is not linked to you.
+  It is sent with AI and search requests so that the Service Provider’s server can limit how many requests one installation
+  makes. On Android, Google Play Integrity confirms that the request comes from the genuine Application. These are used only
+  to prevent abuse. Clearing the Application’s data or reinstalling it creates a new ID.
+</p>
+
+<p><strong>Server logs.</strong>
+  The Service Provider’s server runs on Cloudflare Workers. It keeps no database of users or requests; its request limits are
+  counters that expire after 60 seconds. Cloudflare’s logs, which include the request path (and so the search text), are kept
+  for at most 3 days. Like any online service, Cloudflare, OpenAI, Freesound and Google receive technical information needed to
+  answer a request, such as your IP address and the time.
+</p>
+
+<p><strong>Usage statistics and crash reports.</strong>
+  On first launch the Application asks whether it may send anonymous usage statistics and crash reports through Google Firebase.
+  If you decline, nothing is sent. If you allow it:
+</p>
+<ul>
+  <li><strong>Firebase Analytics</strong> receives events such as which screens are opened, which catalog sound is played and its
+    category, how many sounds a saved mix has, whether an AI request or search succeeded and the type of any error, how many
+    search results were found, the type of an imported sound, and the range of a sleep timer’s length, together with a Firebase
+    app instance ID. It does not receive what you type, search or import.</li>
+  <li><strong>Firebase Crashlytics</strong> receives crash reports and caught errors with the stack trace, device model and
+    operating system version.</li>
+</ul>
+<p>
+  You can change your choice at any time in <em>Settings → Usage data and crash reports</em>. Analytics data is kept by Google for
+  at most 14 months. At the time of writing these services are used only in the Android version.
+</p>
+
+<p><strong>Tips.</strong>
+  Where the Application offers optional tips, they are one-time purchases processed by Google Play or the Apple App Store.
+  The Service Provider receives only a confirmation that the purchase went through; it never sees your payment details.
+  A tip unlocks nothing.
+</p>
+
+<h2>What stays on your device</h2>
+<ul>
+  <li><strong>Sounds you import</strong> from your files stay in the Application’s private storage. They are never uploaded and are not
+    included in device backups.</li>
+  <li><strong>Saved mixes, your library and downloaded sounds</strong> are kept in the Application’s storage on your device.</li>
+  <li><strong>Settings</strong> (theme, language, your usage data choice) are stored on the device; on Android they may be included in
+    your Google device backup, which is the only Application data that is.</li>
+</ul>
+<p>The Application does not use your location, microphone, camera, contacts or photos.</p>
+
+<h2>Third-party services</h2>
+<ul>
+  <li><strong>OpenAI</strong> (AI mix): <a href="https://openai.com/policies/privacy-policy">privacy policy</a></li>
+  <li><strong>Freesound</strong>, run by the Music Technology Group of Universitat Pompeu Fabra (online sounds): <a href="https://freesound.org/help/privacy/">privacy policy</a></li>
+  <li><strong>Google</strong> (Firebase Analytics, Firebase Crashlytics, Play Integrity, Google Play): <a href="https://policies.google.com/privacy">privacy policy</a></li>
+  <li><strong>Apple</strong> (App Store purchases on iOS): <a href="https://www.apple.com/legal/privacy/">privacy policy</a></li>
+  <li><strong>Cloudflare</strong> (server and content delivery): <a href="https://www.cloudflare.com/privacypolicy/">privacy policy</a></li>
+</ul>
+<p>
+  These providers process data on the Service Provider’s behalf or to provide the feature you asked for, and may do so outside
+  your country. The Service Provider does not sell your data or share it for advertising.
+</p>
+
+<h2>Legal basis (EEA, UK and similar laws)</h2>
+<ul>
+  <li>Usage statistics and crash reports: your consent, which you can withdraw in Settings.</li>
+  <li>AI mix and online search: providing the feature you asked for.</li>
+  <li>Installation ID and Play Integrity: the legitimate interest of preventing abuse of the service.</li>
+</ul>
+
+<h2>Your choices</h2>
+<ul>
+  <li>Decline or turn off usage statistics and crash reports in Settings.</li>
+  <li>Do not use the AI mix or the online search if you do not want text sent to OpenAI or Freesound.</li>
+  <li>Clear the Application’s data in your device settings, or uninstall it, to remove everything stored on the device.</li>
+  <li>Contact the Service Provider with any question or request about your data.</li>
+</ul>
+
+<h2>Security</h2>
+<p>
+  All connections use encrypted HTTPS. No method of transmission or storage is completely secure, but the Service Provider takes
+  reasonable measures to protect the information the Application handles.
+</p>
+
+<h2>Children’s privacy</h2>
+<p>
+  The Application is not directed to children under 13, and the Service Provider does not knowingly collect personal information
+  from children. If you believe a child has provided personal information through the Application, please get in touch.
+</p>
+
+<h2>Changes to this policy</h2>
+<p>
+  This policy may be updated from time to time. Changes are posted on this page with a new effective date.
+</p>
+
+<h2>Contact</h2>
+<p>
+  Questions about this policy or your data: <a href="mailto:kocerlabs@gmail.com">kocerlabs@gmail.com</a>
+</p>
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Informativa sulla privacy - JustRelax</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 1em; line-height: 1.6; max-width: 900px; margin: 0 auto; }
+    h1, h2 { line-height: 1.2; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .muted { color: #666; }
+  </style>
+</head>
+<body>
+
+<h1>Informativa sulla privacy</h1>
+<p class="muted">Data di entrata in vigore: 2026-10-18</p>
+
+<p>
+  La presente Informativa sulla privacy si applica all’app mobile JustRelax (l’“Applicazione”), creata e fornita da
+  Mustafa Kocer (il “Fornitore del servizio”). Spiega cosa lascia il tuo dispositivo quando usi l’Applicazione, perché,
+  e cosa resta sul tuo dispositivo.
+</p>
+
+<h2>Riepilogo</h2>
+<ul>
+  <li>Nessun account o registrazione. Nessuna pubblicità e nessun ID pubblicitario.</li>
+  <li>Le statistiche di utilizzo e i rapporti sugli arresti anomali (Google Firebase) vengono inviati <strong>solo se lo consenti</strong>, e puoi disattivarli in qualsiasi momento nelle Impostazioni.</li>
+  <li>Se usi il mix con IA, il tuo testo va a OpenAI. Se cerchi suoni online, la tua ricerca va a Freesound.</li>
+  <li>I suoni che importi dai tuoi file non lasciano mai il tuo dispositivo.</li>
+  <li>Il Fornitore del servizio non vende i tuoi dati e non conserva dati personali sui propri server.</li>
+</ul>
+
+<h2>Cosa lascia il tuo dispositivo</h2>
+<table>
+  <tr><th>Cosa</th><th>Dove va</th><th>Quando</th></tr>
+  <tr>
+    <td>Il testo che scrivi per un mix con IA, e i nomi, le categorie e i tag dei suoni che hai scaricato</td>
+    <td>OpenAI, tramite il server del Fornitore del servizio (<code>api.mustafakoceerr.com</code>)</td>
+    <td>Solo quando chiedi un mix con IA</td>
+  </tr>
+  <tr>
+    <td>Il testo con cui cerchi suoni online</td>
+    <td>Freesound, tramite il server del Fornitore del servizio</td>
+    <td>Solo quando cerchi</td>
+  </tr>
+  <tr>
+    <td>Un ID di installazione casuale</td>
+    <td>Il server del Fornitore del servizio</td>
+    <td>Con le richieste di IA e di ricerca online</td>
+  </tr>
+  <tr>
+    <td>Un token Play Integrity (Android)</td>
+    <td>Google, tramite il server del Fornitore del servizio</td>
+    <td>Quando il mix con IA o la ricerca online avviano una sessione, al massimo circa una volta all’ora</td>
+  </tr>
+  <tr>
+    <td>Richieste di file audio e del catalogo dei suoni</td>
+    <td>La rete di distribuzione dei contenuti del Fornitore del servizio (<code>cdn.mustafakoceerr.com</code>, Cloudflare)</td>
+    <td>Quando i suoni vengono elencati o scaricati</td>
+  </tr>
+  <tr>
+    <td>Eventi di utilizzo e l’ID di istanza dell’app Firebase</td>
+    <td>Google Firebase Analytics</td>
+    <td>Solo se hai consentito i dati di utilizzo</td>
+  </tr>
+  <tr>
+    <td>Rapporti sugli arresti anomali ed errori intercettati</td>
+    <td>Google Firebase Crashlytics</td>
+    <td>Solo se hai consentito i dati di utilizzo</td>
+  </tr>
+</table>
+
+<h2>Dettagli</h2>
+
+<p><strong>Mix con IA.</strong>
+  Per creare un mix, l’Applicazione invia la frase che scrivi, insieme ai nomi, alle categorie e ai tag dei suoni scaricati,
+  all’API di OpenAI. La frase può contenere informazioni personali se scegli di includerle, quindi non scrivere informazioni
+  sensibili. Il server del Fornitore del servizio inoltra la richiesta e non la conserva. OpenAI la elabora secondo i propri
+  termini API; al momento della stesura, OpenAI può conservare le richieste API fino a 30 giorni per individuare abusi e, per
+  impostazione predefinita, non le usa per addestrare i propri modelli.
+</p>
+
+<p><strong>Suoni online (Freesound).</strong>
+  Quando cerchi suoni, il testo della ricerca viene inviato a Freesound tramite il server del Fornitore del servizio, e le
+  anteprime e i download arrivano dai server di Freesound. Vengono mostrati solo suoni con licenze Creative Commons che
+  consentono questo uso, e i loro autori sono citati nell’Applicazione.
+</p>
+
+<p><strong>ID di installazione e Play Integrity.</strong>
+  All’installazione, l’Applicazione crea un ID casuale che appartiene solo a questa installazione e non è collegato a te.
+  Viene inviato con le richieste di IA e di ricerca affinché il server del Fornitore del servizio possa limitare il numero di
+  richieste di un’installazione. Su Android, Google Play Integrity conferma che la richiesta proviene dall’Applicazione
+  autentica. Servono solo a prevenire abusi. Cancellare i dati dell’Applicazione o reinstallarla crea un nuovo ID.
+</p>
+
+<p><strong>Log del server.</strong>
+  Il server del Fornitore del servizio funziona su Cloudflare Workers. Non tiene alcun database di utenti o richieste; i suoi
+  limiti di richieste sono contatori che scadono dopo 60 secondi. I log di Cloudflare, che includono il percorso della richiesta
+  (e quindi il testo della ricerca), sono conservati per al massimo 3 giorni. Come qualsiasi servizio online, Cloudflare, OpenAI,
+  Freesound e Google ricevono le informazioni tecniche necessarie per rispondere a una richiesta, come il tuo indirizzo IP e l’orario.
+</p>
+
+<p><strong>Statistiche di utilizzo e rapporti sugli arresti anomali.</strong>
+  Al primo avvio, l’Applicazione chiede se può inviare statistiche di utilizzo anonime e rapporti sugli arresti anomali tramite
+  Google Firebase. Se rifiuti, non viene inviato nulla. Se acconsenti:
+</p>
+<ul>
+  <li><strong>Firebase Analytics</strong> riceve eventi come quali schermate vengono aperte, quale suono del catalogo viene riprodotto e la
+    sua categoria, quanti suoni contiene un mix salvato, se una richiesta di IA o una ricerca è riuscita e il tipo di errore, quanti
+    risultati di ricerca sono stati trovati, il tipo di un suono importato e l’intervallo di durata di un timer per dormire, insieme
+    a un ID di istanza dell’app Firebase. Non riceve ciò che scrivi, cerchi o importi.</li>
+  <li><strong>Firebase Crashlytics</strong> riceve i rapporti sugli arresti anomali e gli errori intercettati con lo stack trace, il modello
+    del dispositivo e la versione del sistema operativo.</li>
+</ul>
+<p>
+  Puoi cambiare la tua scelta in qualsiasi momento in <em>Impostazioni → Dati di utilizzo e rapporti sugli arresti anomali</em>.
+  Google conserva i dati di Analytics per al massimo 14 mesi. Al momento della stesura, questi servizi sono usati solo nella versione Android.
+</p>
+
+<p><strong>Mance.</strong>
+  Quando l’Applicazione offre mance facoltative, si tratta di acquisti singoli elaborati da Google Play o dall’App Store di Apple.
+  Il Fornitore del servizio riceve solo la conferma che l’acquisto è andato a buon fine; non vede mai i tuoi dati di pagamento.
+  Una mancia non sblocca nulla.
+</p>
+
+<h2>Cosa resta sul tuo dispositivo</h2>
+<ul>
+  <li><strong>I suoni che importi</strong> dai tuoi file restano nella memoria privata dell’Applicazione. Non vengono mai caricati e non sono
+    inclusi nei backup del dispositivo.</li>
+  <li><strong>I mix salvati, la tua libreria e i suoni scaricati</strong> sono conservati nella memoria dell’Applicazione sul tuo dispositivo.</li>
+  <li><strong>Le impostazioni</strong> (tema, lingua, la tua scelta sui dati di utilizzo) sono salvate sul dispositivo; su Android possono essere
+    incluse nel tuo backup Google, e sono gli unici dati dell’Applicazione inclusi.</li>
+</ul>
+<p>L’Applicazione non usa la tua posizione, il microfono, la fotocamera, i contatti o le foto.</p>
+
+<h2>Servizi di terze parti</h2>
+<ul>
+  <li><strong>OpenAI</strong> (mix con IA): <a href="https://openai.com/policies/privacy-policy">informativa sulla privacy</a></li>
+  <li><strong>Freesound</strong>, gestito dal Music Technology Group dell’Universitat Pompeu Fabra (suoni online): <a href="https://freesound.org/help/privacy/">informativa sulla privacy</a></li>
+  <li><strong>Google</strong> (Firebase Analytics, Firebase Crashlytics, Play Integrity, Google Play): <a href="https://policies.google.com/privacy">informativa sulla privacy</a></li>
+  <li><strong>Apple</strong> (acquisti sull’App Store su iOS): <a href="https://www.apple.com/legal/privacy/">informativa sulla privacy</a></li>
+  <li><strong>Cloudflare</strong> (server e distribuzione dei contenuti): <a href="https://www.cloudflare.com/privacypolicy/">informativa sulla privacy</a></li>
+</ul>
+<p>
+  Questi fornitori trattano i dati per conto del Fornitore del servizio o per offrire la funzione che hai richiesto, e possono farlo
+  al di fuori del tuo paese. Il Fornitore del servizio non vende i tuoi dati e non li condivide per scopi pubblicitari.
+</p>
+
+<h2>Base giuridica (SEE, Regno Unito e leggi simili)</h2>
+<ul>
+  <li>Statistiche di utilizzo e rapporti sugli arresti anomali: il tuo consenso, che puoi revocare nelle Impostazioni.</li>
+  <li>Mix con IA e ricerca online: fornire la funzione che hai richiesto.</li>
+  <li>ID di installazione e Play Integrity: il legittimo interesse a prevenire l’abuso del servizio.</li>
+</ul>
+
+<h2>Le tue scelte</h2>
+<ul>
+  <li>Rifiuta o disattiva le statistiche di utilizzo e i rapporti sugli arresti anomali nelle Impostazioni.</li>
+  <li>Non usare il mix con IA né la ricerca online se non vuoi che del testo venga inviato a OpenAI o a Freesound.</li>
+  <li>Cancella i dati dell’Applicazione nelle impostazioni del dispositivo, o disinstallala, per rimuovere tutto ciò che è salvato sul dispositivo.</li>
+  <li>Contatta il Fornitore del servizio per qualsiasi domanda o richiesta sui tuoi dati.</li>
+</ul>
+
+<h2>Sicurezza</h2>
+<p>
+  Tutte le connessioni usano HTTPS crittografato. Nessun metodo di trasmissione o archiviazione è completamente sicuro, ma il
+  Fornitore del servizio adotta misure ragionevoli per proteggere le informazioni gestite dall’Applicazione.
+</p>
+
+<h2>Privacy dei minori</h2>
+<p>
+  L’Applicazione non è rivolta ai minori di 13 anni, e il Fornitore del servizio non raccoglie consapevolmente informazioni personali
+  dai minori. Se ritieni che un minore abbia fornito informazioni personali tramite l’Applicazione, contattaci.
+</p>
+
+<h2>Modifiche a questa informativa</h2>
+<p>
+  Questa informativa può essere aggiornata di tanto in tanto. Le modifiche sono pubblicate su questa pagina con una nuova data di entrata in vigore.
+</p>
+
+<h2>Contatti</h2>
+<p>
+  Domande su questa informativa o sui tuoi dati: <a href="mailto:kocerlabs@gmail.com">kocerlabs@gmail.com</a>
+</p>
+
+</body>
+</html>

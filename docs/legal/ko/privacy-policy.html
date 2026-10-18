@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>개인정보 처리방침 - JustRelax</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 1em; line-height: 1.6; max-width: 900px; margin: 0 auto; }
+    h1, h2 { line-height: 1.2; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .muted { color: #666; }
+  </style>
+</head>
+<body>
+
+<h1>개인정보 처리방침</h1>
+<p class="muted">시행일: 2026-10-18</p>
+
+<p>
+  본 개인정보 처리방침은 Mustafa Kocer(이하 “서비스 제공자”)가 만들고 제공하는 모바일 앱 JustRelax(이하 “앱”)에 적용됩니다.
+  앱을 사용할 때 무엇이 왜 기기 밖으로 전송되는지, 그리고 무엇이 기기에 남는지를 설명합니다.
+</p>
+
+<h2>요약</h2>
+<ul>
+  <li>계정이나 가입이 필요 없습니다. 광고가 없고 광고 ID도 사용하지 않습니다.</li>
+  <li>사용 통계와 오류 보고서(Google Firebase)는 <strong>허용한 경우에만</strong> 전송되며, 설정에서 언제든지 끌 수 있습니다.</li>
+  <li>AI 믹스를 사용하면 입력한 글이 OpenAI로 전송됩니다. 온라인에서 사운드를 검색하면 검색어가 Freesound로 전송됩니다.</li>
+  <li>내 파일에서 가져온 사운드는 절대 기기 밖으로 나가지 않습니다.</li>
+  <li>서비스 제공자는 사용자의 데이터를 판매하지 않으며 자체 서버에 개인 데이터를 보관하지 않습니다.</li>
+</ul>
+
+<h2>기기 밖으로 전송되는 것</h2>
+<table>
+  <tr><th>무엇</th><th>어디로</th><th>언제</th></tr>
+  <tr>
+    <td>AI 믹스를 위해 입력한 글과, 다운로드한 사운드의 이름·카테고리·태그</td>
+    <td>서비스 제공자의 서버(<code>api.mustafakoceerr.com</code>)를 거쳐 OpenAI</td>
+    <td>AI 믹스를 요청할 때만</td>
+  </tr>
+  <tr>
+    <td>온라인에서 사운드를 검색할 때 입력한 검색어</td>
+    <td>서비스 제공자의 서버를 거쳐 Freesound</td>
+    <td>검색할 때만</td>
+  </tr>
+  <tr>
+    <td>임의로 생성된 설치 ID</td>
+    <td>서비스 제공자의 서버</td>
+    <td>AI 및 온라인 검색 요청과 함께</td>
+  </tr>
+  <tr>
+    <td>Play Integrity 토큰(Android)</td>
+    <td>서비스 제공자의 서버를 거쳐 Google</td>
+    <td>AI 믹스나 온라인 검색이 세션을 시작할 때, 많아야 약 1시간에 한 번</td>
+  </tr>
+  <tr>
+    <td>사운드 파일과 사운드 카탈로그 요청</td>
+    <td>서비스 제공자의 콘텐츠 전송 네트워크(<code>cdn.mustafakoceerr.com</code>, Cloudflare)</td>
+    <td>사운드 목록을 불러오거나 다운로드할 때</td>
+  </tr>
+  <tr>
+    <td>사용 이벤트와 Firebase 앱 인스턴스 ID</td>
+    <td>Google Firebase Analytics</td>
+    <td>사용 데이터를 허용한 경우에만</td>
+  </tr>
+  <tr>
+    <td>오류 보고서와 포착된 오류</td>
+    <td>Google Firebase Crashlytics</td>
+    <td>사용 데이터를 허용한 경우에만</td>
+  </tr>
+</table>
+
+<h2>자세한 내용</h2>
+
+<p><strong>AI 믹스.</strong>
+  믹스를 만들기 위해 앱은 사용자가 쓴 문장을 다운로드한 사운드의 이름·카테고리·태그와 함께 OpenAI의 API로 전송합니다. 문장에 직접
+  개인정보를 쓰면 그 정보도 포함되므로 민감한 정보는 입력하지 마세요. 서비스 제공자의 서버는 요청을 전달할 뿐 저장하지 않습니다.
+  OpenAI는 자체 API 약관에 따라 처리합니다. 이 방침 작성 시점에 OpenAI는 악용 탐지를 위해 API 요청을 최대 30일간 보관할 수 있으며,
+  기본적으로 이를 모델 학습에 사용하지 않습니다.
+</p>
+
+<p><strong>온라인 사운드(Freesound).</strong>
+  사운드를 검색하면 검색어가 서비스 제공자의 서버를 거쳐 Freesound로 전송되고, 미리 듣기와 다운로드는 Freesound의 서버에서 제공됩니다.
+  이 용도를 허용하는 크리에이티브 커먼즈 라이선스의 사운드만 표시되며, 제작자는 앱에 표시됩니다.
+</p>
+
+<p><strong>설치 ID와 Play Integrity.</strong>
+  앱은 설치될 때 해당 설치에만 속하고 사용자 개인과 연결되지 않는 임의의 ID를 만듭니다. 이 ID는 서비스 제공자의 서버가 한 설치에서 보내는
+  요청 수를 제한할 수 있도록 AI 및 검색 요청과 함께 전송됩니다. Android에서는 Google Play Integrity가 요청이 정품 앱에서 왔는지 확인합니다.
+  이는 악용 방지에만 사용됩니다. 앱 데이터를 지우거나 앱을 다시 설치하면 새 ID가 만들어집니다.
+</p>
+
+<p><strong>서버 로그.</strong>
+  서비스 제공자의 서버는 Cloudflare Workers에서 실행됩니다. 사용자나 요청에 대한 데이터베이스는 없으며, 요청 제한은 60초 후 만료되는
+  카운터입니다. 요청 경로(따라서 검색어)를 포함하는 Cloudflare 로그는 최대 3일간 보관됩니다. 다른 온라인 서비스와 마찬가지로 Cloudflare,
+  OpenAI, Freesound, Google은 요청에 응답하는 데 필요한 IP 주소와 시간 같은 기술 정보를 받습니다.
+</p>
+
+<p><strong>사용 통계와 오류 보고서.</strong>
+  앱은 처음 실행할 때 Google Firebase를 통해 익명의 사용 통계와 오류 보고서를 보내도 되는지 묻습니다. 거부하면 아무것도 전송되지 않습니다.
+  허용하면:
+</p>
+<ul>
+  <li><strong>Firebase Analytics</strong>는 어떤 화면을 열었는지, 어떤 카탈로그 사운드를 재생했는지와 그 카테고리, 저장한 믹스에 사운드가 몇 개인지,
+    AI 요청이나 검색의 성공 여부와 오류 유형, 검색 결과 수, 가져온 사운드의 유형, 수면 타이머 길이의 범위 같은 이벤트를 Firebase 앱 인스턴스 ID와
+    함께 받습니다. 사용자가 입력하거나 검색하거나 가져온 내용은 받지 않습니다.</li>
+  <li><strong>Firebase Crashlytics</strong>는 오류 보고서와 포착된 오류를 스택 트레이스, 기기 모델, 운영체제 버전과 함께 받습니다.</li>
+</ul>
+<p>
+  선택은 <em>설정 → 사용 데이터 및 오류 보고서</em>에서 언제든지 바꿀 수 있습니다. Analytics 데이터는 Google이 최대 14개월간 보관합니다.
+  이 방침 작성 시점에 이 서비스들은 Android 버전에서만 사용됩니다.
+</p>
+
+<p><strong>팁.</strong>
+  앱이 선택적 팁을 제공하는 경우, 이는 Google Play 또는 Apple App Store가 처리하는 1회성 구매입니다. 서비스 제공자는 구매가 완료되었다는
+  확인만 받으며 결제 정보는 절대 보지 못합니다. 팁으로 잠금 해제되는 기능은 없습니다.
+</p>
+
+<h2>기기에 남는 것</h2>
+<ul>
+  <li><strong>내 파일에서 가져온 사운드</strong>는 앱의 전용 저장소에 남습니다. 업로드되지 않으며 기기 백업에도 포함되지 않습니다.</li>
+  <li><strong>저장한 믹스, 라이브러리, 다운로드한 사운드</strong>는 기기 안의 앱 저장소에 보관됩니다.</li>
+  <li><strong>설정</strong>(테마, 언어, 사용 데이터 선택)은 기기에 저장됩니다. Android에서는 Google 기기 백업에 포함될 수 있으며, 백업에 포함되는
+    앱 데이터는 이것뿐입니다.</li>
+</ul>
+<p>앱은 위치, 마이크, 카메라, 연락처, 사진을 사용하지 않습니다.</p>
+
+<h2>제3자 서비스</h2>
+<ul>
+  <li><strong>OpenAI</strong>(AI 믹스): <a href="https://openai.com/policies/privacy-policy">개인정보 처리방침</a></li>
+  <li><strong>Freesound</strong>, 폼페우 파브라 대학교 Music Technology Group 운영(온라인 사운드): <a href="https://freesound.org/help/privacy/">개인정보 처리방침</a></li>
+  <li><strong>Google</strong>(Firebase Analytics, Firebase Crashlytics, Play Integrity, Google Play): <a href="https://policies.google.com/privacy">개인정보 처리방침</a></li>
+  <li><strong>Apple</strong>(iOS의 App Store 구매): <a href="https://www.apple.com/legal/privacy/">개인정보 처리방침</a></li>
+  <li><strong>Cloudflare</strong>(서버 및 콘텐츠 전송): <a href="https://www.cloudflare.com/privacypolicy/">개인정보 처리방침</a></li>
+</ul>
+<p>
+  이 업체들은 서비스 제공자를 대신하여 또는 사용자가 요청한 기능을 제공하기 위해 데이터를 처리하며, 사용자의 국가 밖에서 처리할 수 있습니다.
+  서비스 제공자는 사용자의 데이터를 판매하거나 광고 목적으로 공유하지 않습니다.
+</p>
+
+<h2>법적 근거(EEA, 영국 및 유사한 법률)</h2>
+<ul>
+  <li>사용 통계와 오류 보고서: 설정에서 철회할 수 있는 사용자의 동의.</li>
+  <li>AI 믹스와 온라인 검색: 사용자가 요청한 기능의 제공.</li>
+  <li>설치 ID와 Play Integrity: 서비스 악용을 방지하려는 정당한 이익.</li>
+</ul>
+
+<h2>사용자의 선택</h2>
+<ul>
+  <li>사용 통계와 오류 보고서를 거부하거나 설정에서 끌 수 있습니다.</li>
+  <li>OpenAI나 Freesound로 글이 전송되는 것을 원하지 않으면 AI 믹스와 온라인 검색을 사용하지 마세요.</li>
+  <li>기기 설정에서 앱 데이터를 지우거나 앱을 삭제하면 기기에 저장된 모든 것이 삭제됩니다.</li>
+  <li>데이터에 관한 질문이나 요청은 서비스 제공자에게 문의하세요.</li>
+</ul>
+
+<h2>보안</h2>
+<p>
+  모든 연결은 암호화된 HTTPS를 사용합니다. 완벽하게 안전한 전송이나 저장 방법은 없지만, 서비스 제공자는 앱이 다루는 정보를 보호하기 위해
+  합리적인 조치를 취합니다.
+</p>
+
+<h2>아동의 개인정보</h2>
+<p>
+  앱은 13세 미만 아동을 대상으로 하지 않으며, 서비스 제공자는 아동의 개인정보를 고의로 수집하지 않습니다. 아동이 앱을 통해 개인정보를
+  제공했다고 생각되면 연락해 주세요.
+</p>
+
+<h2>방침의 변경</h2>
+<p>
+  이 방침은 수시로 업데이트될 수 있습니다. 변경 사항은 새로운 시행일과 함께 이 페이지에 게시됩니다.
+</p>
+
+<h2>문의</h2>
+<p>
+  이 방침이나 사용자의 데이터에 관한 질문: <a href="mailto:kocerlabs@gmail.com">kocerlabs@gmail.com</a>
+</p>
+
+</body>
+</html>

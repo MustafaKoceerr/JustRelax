@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Integritetspolicy - JustRelax</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 1em; line-height: 1.6; max-width: 900px; margin: 0 auto; }
+    h1, h2 { line-height: 1.2; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .muted { color: #666; }
+  </style>
+</head>
+<body>
+
+<h1>Integritetspolicy</h1>
+<p class="muted">Gäller från: 2026-10-18</p>
+
+<p>
+  Denna integritetspolicy gäller mobilappen JustRelax (”Appen”), skapad och tillhandahållen av Mustafa Kocer
+  (”Tjänsteleverantören”). Den förklarar vad som lämnar din enhet när du använder Appen, varför, och vad som stannar på din enhet.
+</p>
+
+<h2>Sammanfattning</h2>
+<ul>
+  <li>Inget konto och ingen registrering. Ingen reklam och inget annons-ID.</li>
+  <li>Användningsstatistik och kraschrapporter (Google Firebase) skickas <strong>bara om du tillåter det</strong>, och du kan stänga av det när som helst i Inställningar.</li>
+  <li>Om du använder AI-mixen skickas din text till OpenAI. Om du söker efter ljud på nätet skickas din sökning till Freesound.</li>
+  <li>Ljud som du importerar från dina egna filer lämnar aldrig din enhet.</li>
+  <li>Tjänsteleverantören säljer inte dina uppgifter och lagrar inga personuppgifter på sina egna servrar.</li>
+</ul>
+
+<h2>Vad som lämnar din enhet</h2>
+<table>
+  <tr><th>Vad</th><th>Vart</th><th>När</th></tr>
+  <tr>
+    <td>Texten du skriver för en AI-mix, samt namn, kategorier och taggar för ljuden du har laddat ner</td>
+    <td>OpenAI, via Tjänsteleverantörens server (<code>api.mustafakoceerr.com</code>)</td>
+    <td>Bara när du ber om en AI-mix</td>
+  </tr>
+  <tr>
+    <td>Texten du söker efter ljud med på nätet</td>
+    <td>Freesound, via Tjänsteleverantörens server</td>
+    <td>Bara när du söker</td>
+  </tr>
+  <tr>
+    <td>Ett slumpmässigt installations-ID</td>
+    <td>Tjänsteleverantörens server</td>
+    <td>Med AI- och nätsökningsförfrågningar</td>
+  </tr>
+  <tr>
+    <td>En Play Integrity-token (Android)</td>
+    <td>Google, via Tjänsteleverantörens server</td>
+    <td>När AI-mixen eller nätsökningen startar en session, högst ungefär en gång i timmen</td>
+  </tr>
+  <tr>
+    <td>Förfrågningar efter ljudfiler och ljudkatalogen</td>
+    <td>Tjänsteleverantörens innehållsnätverk (<code>cdn.mustafakoceerr.com</code>, Cloudflare)</td>
+    <td>När ljud listas eller laddas ner</td>
+  </tr>
+  <tr>
+    <td>Användningshändelser och Firebase-appinstansens ID</td>
+    <td>Google Firebase Analytics</td>
+    <td>Bara om du har tillåtit användningsdata</td>
+  </tr>
+  <tr>
+    <td>Kraschrapporter och fångade fel</td>
+    <td>Google Firebase Crashlytics</td>
+    <td>Bara om du har tillåtit användningsdata</td>
+  </tr>
+</table>
+
+<h2>Detaljer</h2>
+
+<p><strong>AI-mix.</strong>
+  För att skapa en mix skickar Appen meningen du skriver, tillsammans med namn, kategorier och taggar för dina nedladdade ljud,
+  till OpenAI:s API. Din mening kan innehålla personuppgifter om du väljer att skriva in sådana, så skriv inte känslig information.
+  Tjänsteleverantörens server skickar vidare förfrågan och sparar den inte. OpenAI behandlar den enligt sina egna API-villkor;
+  när detta skrivs kan OpenAI spara API-förfrågningar i upp till 30 dagar för att upptäcka missbruk och använder dem som standard
+  inte för att träna sina modeller.
+</p>
+
+<p><strong>Ljud på nätet (Freesound).</strong>
+  När du söker efter ljud skickas din söktext till Freesound via Tjänsteleverantörens server, och förhandslyssningar och
+  nedladdningar kommer från Freesounds servrar. Bara ljud med Creative Commons-licenser som tillåter den här användningen visas,
+  och deras upphovspersoner anges i Appen.
+</p>
+
+<p><strong>Installations-ID och Play Integrity.</strong>
+  När Appen installeras skapar den ett slumpmässigt ID som bara hör till den här installationen och inte är kopplat till dig.
+  Det skickas med AI- och sökförfrågningar så att Tjänsteleverantörens server kan begränsa hur många förfrågningar en installation
+  gör. På Android bekräftar Google Play Integrity att förfrågan kommer från den äkta Appen. De används bara för att förhindra missbruk.
+  Om du rensar Appens data eller installerar om den skapas ett nytt ID.
+</p>
+
+<p><strong>Serverloggar.</strong>
+  Tjänsteleverantörens server körs på Cloudflare Workers. Den har ingen databas över användare eller förfrågningar; gränserna är
+  räknare som löper ut efter 60 sekunder. Cloudflares loggar, som innehåller förfrågans sökväg (och därmed söktexten), sparas i
+  högst 3 dagar. Som alla nättjänster tar Cloudflare, OpenAI, Freesound och Google emot den tekniska information som behövs för att
+  besvara en förfrågan, till exempel din IP-adress och tidpunkten.
+</p>
+
+<p><strong>Användningsstatistik och kraschrapporter.</strong>
+  Vid första start frågar Appen om den får skicka anonym användningsstatistik och kraschrapporter via Google Firebase.
+  Om du tackar nej skickas ingenting. Om du tillåter det:
+</p>
+<ul>
+  <li><strong>Firebase Analytics</strong> tar emot händelser som vilka skärmar som öppnas, vilket katalogljud som spelas och dess kategori,
+    hur många ljud en sparad mix har, om en AI-förfrågan eller sökning lyckades och typen av fel, hur många sökresultat som hittades,
+    typen av ett importerat ljud och intervallet för en sömntimers längd, tillsammans med ett Firebase-appinstans-ID. Den tar inte
+    emot det du skriver, söker eller importerar.</li>
+  <li><strong>Firebase Crashlytics</strong> tar emot kraschrapporter och fångade fel med stackspårning, enhetsmodell och
+    operativsystemversion.</li>
+</ul>
+<p>
+  Du kan ändra ditt val när som helst under <em>Inställningar → Användningsdata och kraschrapporter</em>. Google sparar
+  Analytics-data i högst 14 månader. När detta skrivs används dessa tjänster bara i Android-versionen.
+</p>
+
+<p><strong>Dricks.</strong>
+  När Appen erbjuder valfri dricks är det engångsköp som hanteras av Google Play eller Apples App Store. Tjänsteleverantören får
+  bara en bekräftelse på att köpet gick igenom; den ser aldrig dina betalningsuppgifter. Dricks låser inte upp något.
+</p>
+
+<h2>Vad som stannar på din enhet</h2>
+<ul>
+  <li><strong>Ljud som du importerar</strong> från dina filer stannar i Appens privata lagring. De laddas aldrig upp och ingår inte i
+    enhetens säkerhetskopior.</li>
+  <li><strong>Sparade mixar, ditt bibliotek och nedladdade ljud</strong> sparas i Appens lagring på din enhet.</li>
+  <li><strong>Inställningar</strong> (tema, språk, ditt val om användningsdata) sparas på enheten; på Android kan de ingå i din
+    Google-säkerhetskopia, och det är de enda appdata som gör det.</li>
+</ul>
+<p>Appen använder inte din plats, mikrofon, kamera, kontakter eller foton.</p>
+
+<h2>Tredjepartstjänster</h2>
+<ul>
+  <li><strong>OpenAI</strong> (AI-mix): <a href="https://openai.com/policies/privacy-policy">integritetspolicy</a></li>
+  <li><strong>Freesound</strong>, drivs av Music Technology Group vid Universitat Pompeu Fabra (ljud på nätet): <a href="https://freesound.org/help/privacy/">integritetspolicy</a></li>
+  <li><strong>Google</strong> (Firebase Analytics, Firebase Crashlytics, Play Integrity, Google Play): <a href="https://policies.google.com/privacy">integritetspolicy</a></li>
+  <li><strong>Apple</strong> (App Store-köp på iOS): <a href="https://www.apple.com/legal/privacy/">integritetspolicy</a></li>
+  <li><strong>Cloudflare</strong> (server och innehållsleverans): <a href="https://www.cloudflare.com/privacypolicy/">integritetspolicy</a></li>
+</ul>
+<p>
+  Dessa leverantörer behandlar uppgifter för Tjänsteleverantörens räkning eller för att leverera funktionen du bad om, och kan göra
+  det utanför ditt land. Tjänsteleverantören säljer inte dina uppgifter och delar dem inte för reklam.
+</p>
+
+<h2>Rättslig grund (EES, Storbritannien och liknande lagar)</h2>
+<ul>
+  <li>Användningsstatistik och kraschrapporter: ditt samtycke, som du kan återkalla i Inställningar.</li>
+  <li>AI-mix och nätsökning: att leverera funktionen du bad om.</li>
+  <li>Installations-ID och Play Integrity: det berättigade intresset att förhindra missbruk av tjänsten.</li>
+</ul>
+
+<h2>Dina val</h2>
+<ul>
+  <li>Tacka nej till eller stäng av användningsstatistik och kraschrapporter i Inställningar.</li>
+  <li>Använd inte AI-mixen eller nätsökningen om du inte vill att text skickas till OpenAI eller Freesound.</li>
+  <li>Rensa Appens data i enhetens inställningar, eller avinstallera den, för att ta bort allt som är sparat på enheten.</li>
+  <li>Kontakta Tjänsteleverantören med frågor eller önskemål om dina uppgifter.</li>
+</ul>
+
+<h2>Säkerhet</h2>
+<p>
+  Alla anslutningar använder krypterad HTTPS. Ingen metod för överföring eller lagring är helt säker, men Tjänsteleverantören vidtar
+  rimliga åtgärder för att skydda den information som Appen hanterar.
+</p>
+
+<h2>Barns integritet</h2>
+<p>
+  Appen riktar sig inte till barn under 13 år, och Tjänsteleverantören samlar inte medvetet in personuppgifter från barn.
+  Om du tror att ett barn har lämnat personuppgifter via Appen, hör av dig.
+</p>
+
+<h2>Ändringar i denna policy</h2>
+<p>
+  Denna policy kan uppdateras då och då. Ändringar publiceras på denna sida med ett nytt datum för när den gäller från.
+</p>
+
+<h2>Kontakt</h2>
+<p>
+  Frågor om denna policy eller dina uppgifter: <a href="mailto:kocerlabs@gmail.com">kocerlabs@gmail.com</a>
+</p>
+
+</body>
+</html>
