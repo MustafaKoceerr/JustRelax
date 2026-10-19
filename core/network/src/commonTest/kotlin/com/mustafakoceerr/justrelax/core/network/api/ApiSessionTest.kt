@@ -40,7 +40,8 @@ class ApiSessionTest {
             when (request.url.encodedPath) {
                 "/v1/session" -> if (sessionStatus == HttpStatusCode.OK) {
                     issued++
-                    respond("""{"token":"session-$issued","expiresAt":${(clock.now() + 1.hours).toEpochMilliseconds()}}""", HttpStatusCode.OK, jsonHeaders)
+                    val keyToken = sessionKeyToken?.let { ""","keyToken":"$it"""" }.orEmpty()
+                    respond("""{"token":"session-$issued","expiresAt":${(clock.now() + 1.hours).toEpochMilliseconds()}$keyToken}""", HttpStatusCode.OK, jsonHeaders)
                 } else {
                     respond("""{"error":"x"}""", sessionStatus, jsonHeaders)
                 }
@@ -54,8 +55,56 @@ class ApiSessionTest {
         enableLogging = false,
     )
     private var staleFirstSession = false
+    private var sessionKeyToken: String? = null
 
     private fun session() = ApiSession(client, "https://api.test/", { "install-1" }, integrity, clock)
+
+    @Test
+    fun aKeyTokenInTheSessionResponse_isHandedToTheIntegrityProvider() = runTest {
+        val received = mutableListOf<String?>()
+        integrity = object : IntegrityTokenProvider {
+            override suspend fun token(requestHash: String) = "attestation"
+            override suspend fun onSessionIssued(keyToken: String?) {
+                received += keyToken
+            }
+        }
+        sessionKeyToken = "key-token"
+
+        session().bearer()
+
+        assertEquals(listOf<String?>("key-token"), received)
+    }
+
+    @Test
+    fun aRefusedProof_isReportedToTheProvider() = runTest {
+        var refused = 0
+        integrity = object : IntegrityTokenProvider {
+            override suspend fun token(requestHash: String) = "assertion"
+            override suspend fun onRefused() {
+                refused++
+            }
+        }
+        sessionStatus = HttpStatusCode.Forbidden
+
+        assertFailsWith<AppError.Network.IntegrityFailed> { session().bearer() }
+
+        assertEquals(1, refused)
+    }
+
+    @Test
+    fun aSessionWithoutAKeyToken_tellsTheProviderNothing() = runTest {
+        val received = mutableListOf<String?>()
+        integrity = object : IntegrityTokenProvider {
+            override suspend fun token(requestHash: String) = "play-token"
+            override suspend fun onSessionIssued(keyToken: String?) {
+                received += keyToken
+            }
+        }
+
+        session().bearer()
+
+        assertEquals(emptyList(), received)
+    }
 
     @Test
     fun theRequestHashIsTheSameAsTheServers() {

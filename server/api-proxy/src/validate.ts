@@ -1,4 +1,4 @@
-import { isRecord } from "./encoding";
+import { base64UrlDecode, isRecord } from "./encoding";
 
 export interface SessionRequest {
   installId: string;
@@ -31,6 +31,51 @@ const LANGUAGE: RegExp = /^[A-Za-z]{2,30}$/;
 const MAX_PROMPT: number = 500;
 const MAX_SOUNDS: number = 200;
 const MAX_SEARCH_PAGE: number = 50;
+
+/** What the iOS app sends as its integrity token: a new key's attestation, or an assertion by a key checked before. */
+export type AppAttestProof =
+  | { keyId: string; timestampMs: number; attestation: Uint8Array }
+  | { keyId: string; timestampMs: number; assertion: Uint8Array; keyToken: string };
+
+export const APP_ATTEST_PREFIX: string = "appattest.v1.";
+
+const KEY_ID: RegExp = /^[A-Za-z0-9+/]{43}=$/;
+const STANDARD_BASE64: RegExp = /^[A-Za-z0-9+/]+={0,2}$/;
+
+/** `appattest.v1.<base64url JSON>`; null when it is anything else. */
+export function parseAppAttestToken(token: string): AppAttestProof | null {
+  if (!token.startsWith(APP_ATTEST_PREFIX)) return null;
+  const json: Uint8Array | null = base64UrlDecode(token.slice(APP_ATTEST_PREFIX.length));
+  if (json === null) return null;
+  let fields: unknown;
+  try {
+    fields = JSON.parse(new TextDecoder().decode(json));
+  } catch {
+    return null;
+  }
+  if (!isRecord(fields)) return null;
+  const { keyId, timestampMs, attestation, assertion, keyToken } = fields;
+  if (typeof keyId !== "string" || !KEY_ID.test(keyId)) return null;
+  if (typeof timestampMs !== "number" || !Number.isSafeInteger(timestampMs)) return null;
+  if (typeof attestation === "string" && assertion === undefined) {
+    const bytes: Uint8Array | null = standardBase64(attestation);
+    return bytes === null ? null : { keyId, timestampMs, attestation: bytes };
+  }
+  if (typeof assertion === "string" && attestation === undefined && typeof keyToken === "string") {
+    const bytes: Uint8Array | null = standardBase64(assertion);
+    return bytes === null ? null : { keyId, timestampMs, assertion: bytes, keyToken };
+  }
+  return null;
+}
+
+function standardBase64(text: string): Uint8Array | null {
+  if (!STANDARD_BASE64.test(text)) return null;
+  try {
+    return Uint8Array.from(atob(text), (char: string): number => char.charCodeAt(0));
+  } catch {
+    return null;
+  }
+}
 
 export function parseSessionRequest(body: unknown): SessionRequest | null {
   if (!isRecord(body)) return null;

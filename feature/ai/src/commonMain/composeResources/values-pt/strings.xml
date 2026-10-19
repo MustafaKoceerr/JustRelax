@@ -25,6 +25,6 @@
     <string name="ai_prompt_quote">“%1$s”</string>
     <string name="err_ai_offline">Sem conexão com a IA. Verifique sua internet e tente novamente.</string>
     <string name="err_ai_busy">Muitas solicitações. Aguarde um minuto e tente novamente.</string>
-    <string name="err_ai_unverified">Não foi possível verificar esta cópia do app. Instale o Just Relax pelo Google Play para usar a IA.</string>
+    <string name="err_ai_unverified">Não foi possível verificar esta cópia do app. Instale o Just Relax pela loja oficial para usar a IA.</string>
     <string name="err_ai_unavailable">A IA não está respondendo agora. Tente novamente mais tarde.</string>
 </resources>

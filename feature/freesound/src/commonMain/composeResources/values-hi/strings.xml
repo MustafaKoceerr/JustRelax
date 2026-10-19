@@ -11,7 +11,7 @@
     <string name="freesound_offline">इंटरनेट कनेक्शन नहीं है।</string>
     <string name="freesound_rate_limited">बहुत ज़्यादा खोजें। एक मिनट रुककर फिर कोशिश करें।</string>
     <string name="freesound_failed">खोज नहीं हो सकी। फिर से कोशिश करें।</string>
-    <string name="freesound_unverified">ऐप की इस कॉपी को सत्यापित नहीं किया जा सका। Freesound पर खोजने के लिए Just Relax को Google Play से इंस्टॉल करें।</string>
+    <string name="freesound_unverified">ऐप की इस कॉपी को सत्यापित नहीं किया जा सका। Freesound पर खोजने के लिए Just Relax को आधिकारिक ऐप स्टोर से इंस्टॉल करें।</string>
     <string name="freesound_download_failed">ध्वनि डाउनलोड नहीं हो सकी। फिर से कोशिश करें।</string>
     <string name="freesound_discover_title">ध्वनियाँ खोजें</string>
     <string name="freesound_try">इनमें से आज़माएँ</string>

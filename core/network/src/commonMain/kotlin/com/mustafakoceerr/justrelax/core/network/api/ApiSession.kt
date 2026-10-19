@@ -22,10 +22,16 @@ fun interface InstallIdProvider {
     suspend fun installId(): String
 }
 
-/** A Play Integrity token whose request hash is [requestHash]. */
+/** Proof that this is the genuine app, bound to [token]'s request hash: Play Integrity or App Attest. */
 fun interface IntegrityTokenProvider {
     /** @throws AppError.Network.IntegrityFailed if the platform cannot provide one. */
     suspend fun token(requestHash: String): String
+
+    /** The proxy accepted an App Attest key and returned [keyToken] for later sessions. */
+    suspend fun onSessionIssued(keyToken: String?) = Unit
+
+    /** The proxy refused the proof; anything kept for the next one should be dropped. */
+    suspend fun onRefused() = Unit
 }
 
 /** The request hash for a session, the same as the API proxy's `sessionRequestHash`. */
@@ -71,18 +77,23 @@ internal class ApiSession(
             }
         }
         when {
-            response.status == HttpStatusCode.Forbidden -> throw AppError.Network.IntegrityFailed("refused by the proxy")
+            response.status == HttpStatusCode.Forbidden -> {
+                integrity.onRefused()
+                throw AppError.Network.IntegrityFailed("refused by the proxy")
+            }
             response.status == HttpStatusCode.TooManyRequests -> throw AppError.Network.RateLimited()
             !response.status.isSuccess() -> throw AppError.Network.ServerError(response.status.value)
         }
-        return response.bodyOrSerializationError()
+        return response.bodyOrSerializationError<SessionResponse>().also { session ->
+            session.keyToken?.let { integrity.onSessionIssued(it) }
+        }
     }
 
     @Serializable
     private data class SessionRequest(val installId: String, val integrityToken: String)
 
     @Serializable
-    private data class SessionResponse(val token: String, val expiresAt: Long)
+    private data class SessionResponse(val token: String, val expiresAt: Long, val keyToken: String? = null)
 
     private companion object {
         const val RENEW_BEFORE_MS = 60_000L

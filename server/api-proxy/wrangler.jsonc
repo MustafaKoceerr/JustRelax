@@ -9,6 +9,10 @@
   "observability": { "enabled": true },
   "vars": {
     "PACKAGE_NAME": "com.mustafakoceerr.justrelax",
+    // "<Team ID>.com.mustafakoceerr.justrelax" for App Attest; iOS sessions are refused while empty.
+    "APPLE_APP_ID": "",
+    // Only TestFlight and App Store keys in production; "true" also accepts builds run from Xcode.
+    "APP_ATTEST_ALLOW_DEVELOPMENT": "false",
     "INTEGRITY_REQUIRED": "true"
   },
   // Secrets (wrangler secret put): OPENAI_API_KEY, FREESOUND_API_KEY, SESSION_SECRET,

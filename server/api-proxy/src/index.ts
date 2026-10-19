@@ -1,3 +1,4 @@
+import { verifyAssertion, verifyAttestation } from "./appattest";
 import { GoogleIntegrityDecoder, parseServiceAccount, type ServiceAccount } from "./google";
 import { handle, type Env } from "./handler";
 
@@ -23,6 +24,7 @@ export default {
       fetch: (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => fetch(input, init),
       now: Date.now,
       decodeIntegrity: async (token: string): Promise<unknown> => (await integrityDecoder(env)?.decode(token)) ?? null,
+      appAttest: { verifyAttestation, verifyAssertion },
     });
   },
 } satisfies ExportedHandler<Env>;

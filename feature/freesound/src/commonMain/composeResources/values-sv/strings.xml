@@ -11,7 +11,7 @@
     <string name="freesound_offline">Ingen internetanslutning.</string>
     <string name="freesound_rate_limited">För många sökningar. Vänta en minut och försök igen.</string>
     <string name="freesound_failed">Sökningen misslyckades. Försök igen.</string>
-    <string name="freesound_unverified">Den här kopian av appen kunde inte verifieras. Installera Just Relax från Google Play för att söka på Freesound.</string>
+    <string name="freesound_unverified">Den här kopian av appen kunde inte verifieras. Installera Just Relax från den officiella appbutiken för att söka på Freesound.</string>
     <string name="freesound_download_failed">Ljudet kunde inte laddas ned. Försök igen.</string>
     <string name="freesound_discover_title">Upptäck ljud</string>
     <string name="freesound_try">Prova till exempel</string>

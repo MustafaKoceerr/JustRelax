@@ -11,7 +11,7 @@
     <string name="freesound_offline">인터넷에 연결되어 있지 않아요.</string>
     <string name="freesound_rate_limited">검색이 너무 많아요. 1분 후 다시 시도하세요.</string>
     <string name="freesound_failed">검색하지 못했어요. 다시 시도하세요.</string>
-    <string name="freesound_unverified">이 앱을 확인할 수 없습니다. Freesound에서 검색하려면 Google Play에서 Just Relax를 설치하세요.</string>
+    <string name="freesound_unverified">이 앱을 확인할 수 없습니다. Freesound에서 검색하려면 공식 스토어에서 Just Relax를 설치하세요.</string>
     <string name="freesound_download_failed">사운드를 다운로드하지 못했어요. 다시 시도하세요.</string>
     <string name="freesound_discover_title">사운드 둘러보기</string>
     <string name="freesound_try">이런 건 어때요</string>

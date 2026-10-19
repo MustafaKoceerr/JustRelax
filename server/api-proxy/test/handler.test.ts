@@ -1,11 +1,14 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { handle, type Deps, type Env } from "../src/handler";
-import { issueSession } from "../src/session";
+import type { AssertionResult, AttestationResult } from "../src/appattest";
+import { issueKeyToken, issueSession } from "../src/session";
 import { PACKAGE_NAME, verdict } from "./fixtures";
 
 const NOW: number = 1_800_000_000_000;
 const SECRET: string = "session-secret";
 const INSTALL: string = "1b4e28ba-2fa1-11d2-883f-0016d3cca427";
+const APP_ID: string = "TEAM123456.com.mustafakoceerr.justrelax";
+const PUBLIC_KEY: Uint8Array = Uint8Array.from([4, 9, 9, 9]);
 
 class FakeLimiter implements RateLimit {
   readonly keys: string[] = [];
@@ -27,6 +30,9 @@ let upstream: Upstream[];
 let upstreamResponse: Response;
 let decoded: unknown;
 let deps: Deps;
+let attestation: AttestationResult;
+let assertion: AssertionResult;
+let appAttestCalls: { kind: string; clientData: string; keyId?: string; publicKey?: number[]; appId: string; allowDevelopment?: boolean }[];
 
 function fakeEnv(): Env {
   return {
@@ -35,6 +41,8 @@ function fakeEnv(): Env {
     SESSION_SECRET: SECRET,
     GOOGLE_SERVICE_ACCOUNT_JSON: "{}",
     PACKAGE_NAME,
+    APPLE_APP_ID: APP_ID,
+    APP_ATTEST_ALLOW_DEVELOPMENT: "false",
     INTEGRITY_REQUIRED: "true",
     SESSION_LIMITER: new FakeLimiter(),
     AI_LIMITER: new FakeLimiter(),
@@ -56,7 +64,27 @@ beforeEach((): void => {
       return upstreamResponse;
     },
     decodeIntegrity: async (): Promise<unknown> => decoded,
+    appAttest: {
+      verifyAttestation: async (
+        _: Uint8Array,
+        clientData: Uint8Array,
+        keyId: string,
+        appId: string,
+        __: number,
+        allowDevelopment: boolean,
+      ): Promise<AttestationResult> => {
+        appAttestCalls.push({ kind: "attestation", clientData: new TextDecoder().decode(clientData), keyId, appId, allowDevelopment });
+        return attestation;
+      },
+      verifyAssertion: async (_: Uint8Array, clientData: Uint8Array, publicKey: Uint8Array, appId: string): Promise<AssertionResult> => {
+        appAttestCalls.push({ kind: "assertion", clientData: new TextDecoder().decode(clientData), publicKey: [...publicKey], appId });
+        return assertion;
+      },
+    },
   };
+  attestation = { ok: true, publicKey: PUBLIC_KEY };
+  assertion = { ok: true, counter: 2 };
+  appAttestCalls = [];
 });
 
 async function session(): Promise<string> {
@@ -148,6 +176,85 @@ describe("POST /v1/session", () => {
     );
 
     expect(response.status).toBe(429);
+  });
+});
+
+describe("POST /v1/session from iOS (App Attest)", () => {
+  const install: string = "install-1";
+  const keyId: string = "s/134MbeEEZDZKCvOTf+jZgNhpoDwdXZ8cKfTym8FUg=";
+
+  function appAttestToken(fields: Record<string, unknown>): string {
+    return `appattest.v1.${btoa(JSON.stringify(fields)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "")}`;
+  }
+
+  async function createSession(fields: Record<string, unknown>): Promise<Response> {
+    return handle(
+      request("/v1/session", { method: "POST", body: JSON.stringify({ installId: install, integrityToken: appAttestToken(fields) }) }),
+      env,
+      deps,
+    );
+  }
+
+  it("checks a new key's attestation over the session hash and time, then returns a session and the key token", async () => {
+    const response: Response = await createSession({ keyId, timestampMs: NOW - 5_000, attestation: btoa("attestation") });
+
+    expect(response.status).toBe(200);
+    const body = (await json(response)) as { token: string; expiresAt: number; keyToken: string };
+    expect(body.expiresAt).toBe(NOW + 3_600_000);
+    expect(typeof body.keyToken).toBe("string");
+    expect(appAttestCalls).toEqual([
+      { kind: "attestation", clientData: `${SESSION_HASH}:${NOW - 5_000}`, keyId, appId: APP_ID, allowDevelopment: false },
+    ]);
+  });
+
+  it("later accepts an assertion signed by the attested key", async () => {
+    const keyToken: string = await issueKeyToken({ installId: install, keyId, publicKey: PUBLIC_KEY }, SECRET);
+
+    const response: Response = await createSession({ keyId, timestampMs: NOW, assertion: btoa("assertion"), keyToken });
+
+    expect(response.status).toBe(200);
+    const body = (await json(response)) as { token: string; keyToken?: string };
+    expect(typeof body.token).toBe("string");
+    expect(body.keyToken).toBeUndefined();
+    expect(appAttestCalls).toEqual([{ kind: "assertion", clientData: `${SESSION_HASH}:${NOW}`, publicKey: [...PUBLIC_KEY], appId: APP_ID }]);
+  });
+
+  it("refuses a failed check, another install's key, an old timestamp and a malformed token", async () => {
+    attestation = { ok: false, reason: "chain" };
+    const failed: Response = await createSession({ keyId, timestampMs: NOW, attestation: btoa("attestation") });
+    expect(failed.status).toBe(403);
+    expect(await json(failed)).toEqual({ error: "integrity_chain" });
+
+    const foreignKey: string = await issueKeyToken({ installId: "install-2", keyId, publicKey: PUBLIC_KEY }, SECRET);
+    const stolen: Response = await createSession({ keyId, timestampMs: NOW, assertion: btoa("assertion"), keyToken: foreignKey });
+    expect(await json(stolen)).toEqual({ error: "integrity_key_token" });
+
+    const stale: Response = await createSession({ keyId, timestampMs: NOW - 11 * 60_000, attestation: btoa("attestation") });
+    expect(await json(stale)).toEqual({ error: "integrity_stale" });
+
+    const fromTheFuture: Response = await createSession({ keyId, timestampMs: NOW + 2 * 60_000, attestation: btoa("attestation") });
+    expect(await json(fromTheFuture)).toEqual({ error: "integrity_stale" });
+
+    const malformed: Response = await createSession({ keyId });
+    expect(await json(malformed)).toEqual({ error: "integrity_malformed" });
+    expect(appAttestCalls.length).toBe(1);
+  });
+
+  it("passes development keys through only where the environment allows them", async () => {
+    env.APP_ATTEST_ALLOW_DEVELOPMENT = "true";
+
+    await createSession({ keyId, timestampMs: NOW, attestation: btoa("attestation") });
+
+    expect(appAttestCalls[0]?.allowDevelopment).toBe(true);
+  });
+
+  it("is unavailable until the App ID is configured", async () => {
+    env.APPLE_APP_ID = "";
+
+    const response: Response = await createSession({ keyId, timestampMs: NOW, attestation: btoa("attestation") });
+
+    expect(response.status).toBe(503);
+    expect(await json(response)).toEqual({ error: "appattest_unavailable" });
   });
 });
 
