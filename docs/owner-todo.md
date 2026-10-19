@@ -64,13 +64,20 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 - [ ] Son ses seçimini yap. Pipeline, yükleme ve önbellek temizleme adımları `tools/sound-pipeline/README.md`'de.
 - [ ] Kendi seslerimden kaydedilmiş bir döngüde başa dönüşü dinle. AAC'de boşluk ya da tık varsa söyle; yedek çözüm hazır.
 
-## iOS sesi (#47)
-Kod ve simülatör testleri hazır; kulakla dinlemek senin işin. Simülatörde ya da iPhone'da (iOS 18.4+):
-- [ ] Bir yağmur ve bir olay sesi (kuşlar, çan) çal: ikisi de duyuluyor, olaylar sağda solda rastgele çıkıyor.
-- [ ] Döngünün başa dönüşünde boşluk ya da tık var mı?
-- [ ] Kilit ekranında ve Denetim Merkezi'nde JustRelax görünüyor; oynat/duraklat çalışıyor.
+## iOS sesi
+Simülatörde doğrulananlar (2026-10-19):
+- Uygulama arka plandayken ses sürüyor.
+- Uyku zamanlayıcısı arka planda süresi dolunca sesi durduruyor.
+- 10 dakikalık bir döngü belleği şişirmeden çalıyor.
+- Güncellemeden sonra indirilen sesler bulunuyor.
+- Kilit ekranına giden bilgi (başlık, alt yazı, görsel, oynat/duraklat/Durdur) test ediliyor.
+
+Simülatör kilit ekranında uygulamaların sesini göstermiyor ve uygulamalar arasında hakemlik yapmıyor (Safari ile JustRelax aynı anda çalabiliyor). Bu yüzden şunlar ilk TestFlight sürümünde bir iPhone'da (iOS 18.4+) denenmeli:
+- [ ] Kilit ekranında ve Denetim Merkezi'nde JustRelax görünüyor: "Rahatlatıcı Sesler" başlığı, yaprak görseli, oynat/duraklat çalışıyor.
+- [ ] Başka bir uygulama (Müzik, YouTube) çalmaya başlayınca JustRelax susuyor ve kendiliğinden devam etmiyor.
 - [ ] Arama gelince ses duruyor, kapanınca devam ediyor; kulaklığı çıkarınca duruyor.
-- [ ] Başka bir uygulama (Müzik) çalmaya başlayınca JustRelax susuyor.
+- [ ] Uygulamayı açık bırakıp kilitle, 10 dakika bekle: ses sürüyor.
+- [ ] Döngünün başa dönüşünde boşluk ya da tık var mı (yerleşik bir ses ve içe aktarılmış uzun bir ses)?
 
 ## Bahşiş (#48)
 Ekran ve mimari hazır; debug sürümünde örnek fiyatlarla görünüyor, yayın sürümünde gizli. Gerçek ödeme için:
