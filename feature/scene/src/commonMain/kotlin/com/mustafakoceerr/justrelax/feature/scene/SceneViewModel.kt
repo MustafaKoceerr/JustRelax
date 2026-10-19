@@ -18,13 +18,6 @@ import com.mustafakoceerr.justrelax.core.playback.timer.TimerStatus
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.scene.generated.resources.err_mix_save_empty_name
-import com.mustafakoceerr.justrelax.feature.scene.generated.resources.err_mix_save_name_exists
-import com.mustafakoceerr.justrelax.feature.scene.generated.resources.err_mix_save_no_sound
-import com.mustafakoceerr.justrelax.feature.scene.generated.resources.err_unknown
-import com.mustafakoceerr.justrelax.feature.scene.generated.resources.msg_mix_saved_success
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -50,7 +43,7 @@ class SceneViewModel(
         val isSaveDialogVisible: Boolean = false,
         val saveDialogName: String = "",
         val isSaving: Boolean = false,
-        val userMessage: UiText? = null,
+        val userMessage: SceneMessage? = null,
     )
 
     private val screenState = MutableStateFlow(ScreenState())
@@ -157,16 +150,14 @@ class SceneViewModel(
 
     fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
 
-    private fun Resource<Unit>.toMessage(name: String): UiText? = when (this) {
-        is Resource.Success -> UiText.Resource(Res.string.msg_mix_saved_success, listOf(name))
-        is Resource.Error -> UiText.Resource(
-            when (error) {
-                is AppError.SaveMix.EmptyName -> Res.string.err_mix_save_empty_name
-                is AppError.SaveMix.NameAlreadyExists -> Res.string.err_mix_save_name_exists
-                is AppError.SaveMix.NoSoundsPlaying -> Res.string.err_mix_save_no_sound
-                else -> Res.string.err_unknown
-            }
-        )
+    private fun Resource<Unit>.toMessage(name: String): SceneMessage? = when (this) {
+        is Resource.Success -> SceneMessage.Saved(name)
+        is Resource.Error -> when (error) {
+            is AppError.SaveMix.EmptyName -> SceneMessage.EmptyName
+            is AppError.SaveMix.NameAlreadyExists -> SceneMessage.NameTaken
+            is AppError.SaveMix.NoSoundsPlaying -> SceneMessage.NothingPlaying
+            else -> SceneMessage.SaveFailed
+        }
         Resource.Loading -> null
     }
 }

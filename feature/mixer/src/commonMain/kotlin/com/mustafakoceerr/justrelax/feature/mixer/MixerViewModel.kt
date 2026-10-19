@@ -11,9 +11,6 @@ import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.playback.toggleAndPlay
 import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.err_mixer_generate_failed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -37,7 +34,7 @@ class MixerViewModel(
         val isGenerating: Boolean = false,
         val mixedSounds: List<LocalizedSound> = emptyList(),
         val lockedIds: Set<String> = emptySet(),
-        val userMessage: UiText? = null,
+        val userMessage: MixerMessage? = null,
     )
 
     private val screenState = MutableStateFlow(ScreenState())
@@ -84,7 +81,7 @@ class MixerViewModel(
                     it.copy(
                         isGenerating = false,
                         mixedSounds = emptyList(),
-                        userMessage = UiText.Resource(Res.string.err_mixer_generate_failed),
+                        userMessage = MixerMessage.GenerateFailed,
                     )
                 }
                 return@launch

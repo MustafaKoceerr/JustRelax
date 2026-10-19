@@ -82,6 +82,13 @@ import com.mustafakoceerr.justrelax.feature.ai.generated.resources.ai_thinking
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_busy
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_empty_response
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_no_sounds
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_offline
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_unavailable
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_unverified
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_unknown
 
 @Composable
 fun AiRoute(onSaveScene: (suggestedName: String) -> Unit, viewModel: AiViewModel = koinViewModel()) {
@@ -89,7 +96,7 @@ fun AiRoute(onSaveScene: (suggestedName: String) -> Unit, viewModel: AiViewModel
     val volumeOf = rememberVolumeOf(viewModel.volumes.collectAsStateWithLifecycle())
     val snackbarController = koinInject<GlobalSnackbarController>()
 
-    UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarController.showSnackbar(it) }
+    UserMessageEffect(uiState.userMessage?.text(), viewModel::onMessageShown) { snackbarController.showSnackbar(it) }
 
     if (uiState.showAiDataNotice) {
         AiDataNoticeDialog(
@@ -332,3 +339,16 @@ private val SIDE_PANE_WIDTH = 400.dp
 private val COMPOSER_MAX_WIDTH = 720.dp
 private val IDLE_MAX_WIDTH = 640.dp
 private val LAYER_MIN_WIDTH = 320.dp
+
+@Composable
+private fun AiMessage.text(): String = stringResource(
+    when (this) {
+        AiMessage.NoSounds -> Res.string.err_ai_no_sounds
+        AiMessage.EmptyResponse -> Res.string.err_ai_empty_response
+        AiMessage.Offline -> Res.string.err_ai_offline
+        AiMessage.Busy -> Res.string.err_ai_busy
+        AiMessage.Unverified -> Res.string.err_ai_unverified
+        AiMessage.Unavailable -> Res.string.err_ai_unavailable
+        AiMessage.Unknown -> Res.string.err_unknown
+    }
+)

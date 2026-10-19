@@ -18,10 +18,7 @@ import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.model.SoundOrigin
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.mysounds.editor.SoundEditorUiState.Companion.MAX_NAME_LENGTH
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_save_failed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -116,7 +113,7 @@ class SoundEditorViewModel(
             } catch (e: MediaException) {
                 crashReporter.recordException(e)
                 editorState.update {
-                    it.copy(isSaving = false, userMessage = UiText.Resource(Res.string.mysounds_save_failed))
+                    it.copy(isSaving = false, userMessage = SoundEditorMessage.SaveFailed)
                 }
             }
         }

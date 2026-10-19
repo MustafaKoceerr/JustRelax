@@ -7,9 +7,6 @@ import com.mustafakoceerr.justrelax.core.media.AudioImporter
 import com.mustafakoceerr.justrelax.core.media.ImportedAudio
 import com.mustafakoceerr.justrelax.core.media.MediaException
 import com.mustafakoceerr.justrelax.core.model.Sound
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_import_failed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +24,7 @@ class MySoundsViewModel(
         val isImporting: Boolean = false,
         val editorToOpen: ImportedAudio? = null,
         val soundToDeleteId: String? = null,
-        val userMessage: UiText? = null,
+        val userMessage: MySoundsMessage? = null,
     )
 
     private val screenState = MutableStateFlow(ScreenState())
@@ -57,7 +54,7 @@ class MySoundsViewModel(
                 screenState.update { it.copy(isImporting = false, editorToOpen = imported) }
             } catch (e: MediaException) {
                 screenState.update {
-                    it.copy(isImporting = false, userMessage = UiText.Resource(Res.string.mysounds_import_failed))
+                    it.copy(isImporting = false, userMessage = MySoundsMessage.ImportFailed)
                 }
             }
         }

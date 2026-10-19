@@ -18,15 +18,6 @@ import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.playback.toggleAndPlay
 import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
 import com.mustafakoceerr.justrelax.core.ui.system.SystemLauncher
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.ai.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_busy
-import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_empty_response
-import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_no_sounds
-import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_offline
-import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_unavailable
-import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_unverified
-import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_unknown
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -53,7 +44,7 @@ class AiViewModel(
         val mix: AiGeneratedMix? = null,
         val lastPrompt: String = "",
         val showAiDataNotice: Boolean = false,
-        val userMessage: UiText? = null,
+        val userMessage: AiMessage? = null,
     )
 
     private val screenState = MutableStateFlow(ScreenState())
@@ -159,15 +150,13 @@ class AiViewModel(
 
     fun onMessageShown() = screenState.update { it.copy(userMessage = null) }
 
-    private fun AppError.toMessage() = UiText.Resource(
-        when (this) {
-            is AppError.Ai.NoDownloadedSounds -> Res.string.err_ai_no_sounds
-            is AppError.Ai.EmptyResponse -> Res.string.err_ai_empty_response
-            is AppError.Network.NoInternet, is AppError.Network.TimeOut -> Res.string.err_ai_offline
-            is AppError.Network.RateLimited -> Res.string.err_ai_busy
-            is AppError.Network.IntegrityFailed -> Res.string.err_ai_unverified
-            is AppError.Network.ServerError, is AppError.Ai.ApiError -> Res.string.err_ai_unavailable
-            else -> Res.string.err_unknown
-        }
-    )
+    private fun AppError.toMessage() = when (this) {
+        is AppError.Ai.NoDownloadedSounds -> AiMessage.NoSounds
+        is AppError.Ai.EmptyResponse -> AiMessage.EmptyResponse
+        is AppError.Network.NoInternet, is AppError.Network.TimeOut -> AiMessage.Offline
+        is AppError.Network.RateLimited -> AiMessage.Busy
+        is AppError.Network.IntegrityFailed -> AiMessage.Unverified
+        is AppError.Network.ServerError, is AppError.Ai.ApiError -> AiMessage.Unavailable
+        else -> AiMessage.Unknown
+    }
 }

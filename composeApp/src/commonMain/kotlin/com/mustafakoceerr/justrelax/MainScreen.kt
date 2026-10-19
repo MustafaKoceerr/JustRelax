@@ -56,6 +56,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.rememberVolumeOf
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.scene.SceneViewModel
+import com.mustafakoceerr.justrelax.feature.scene.text
 import com.mustafakoceerr.justrelax.feature.freesound.FreesoundEditorRequest
 import com.mustafakoceerr.justrelax.feature.scene.components.MiniPlayerBar
 import com.mustafakoceerr.justrelax.feature.scene.MiniPlayerUiState
@@ -125,7 +126,7 @@ fun MainRoute(
 private fun SceneMessagesAndDialog(sceneViewModel: SceneViewModel, snackbarController: GlobalSnackbarController) {
     val sceneState by sceneViewModel.uiState.collectAsStateWithLifecycle()
 
-    UserMessageEffect(sceneState.userMessage, sceneViewModel::onMessageShown) {
+    UserMessageEffect(sceneState.userMessage?.text(), sceneViewModel::onMessageShown) {
         snackbarController.showSnackbar(it)
     }
 

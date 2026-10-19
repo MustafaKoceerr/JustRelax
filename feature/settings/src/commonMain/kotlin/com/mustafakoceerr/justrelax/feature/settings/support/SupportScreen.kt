@@ -72,6 +72,7 @@ import com.mustafakoceerr.justrelax.feature.settings.generated.resources.tip_sma
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.support_failed
 
 @Composable
 fun SupportRoute(
@@ -81,7 +82,7 @@ fun SupportRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarHostState.showSnackbar(it) }
+    UserMessageEffect(uiState.userMessage?.text(), viewModel::onMessageShown) { snackbarHostState.showSnackbar(it) }
 
     SupportScreen(uiState = uiState, snackbarHostState = snackbarHostState, onBack = onBack, onTip = viewModel::tip)
 }
@@ -309,3 +310,8 @@ private val TipTier.icon: ImageVector
 private val SIDE_BY_SIDE_WIDTH = 600.dp
 private const val BOB_DURATION_MS = 1_600
 private const val DISABLED_ALPHA = 0.5f
+
+@Composable
+private fun SupportMessage.text(): String = when (this) {
+    SupportMessage.PurchaseFailed -> stringResource(Res.string.support_failed)
+}

@@ -2,7 +2,6 @@ package com.mustafakoceerr.justrelax.feature.settings
 
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 data class SettingsUiState(
     val theme: AppTheme = AppTheme.SYSTEM,
@@ -16,5 +15,5 @@ data class SettingsUiState(
     /** The store offers tips, so the support row shows. */
     val canTip: Boolean = false,
     val versionName: String = "",
-    val userMessage: UiText? = null,
+    val userMessage: SettingsMessage? = null,
 )

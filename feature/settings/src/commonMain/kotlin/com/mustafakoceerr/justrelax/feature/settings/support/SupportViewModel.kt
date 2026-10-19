@@ -6,9 +6,6 @@ import com.mustafakoceerr.justrelax.core.data.repository.TipRepository
 import com.mustafakoceerr.justrelax.core.model.TipProduct
 import com.mustafakoceerr.justrelax.core.model.TipResult
 import com.mustafakoceerr.justrelax.core.model.TipTier
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.settings.generated.resources.support_failed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +21,7 @@ data class SupportUiState(
     val purchasingTier: TipTier? = null,
     /** The tip just given, for the thank-you. */
     val thankedTier: TipTier? = null,
-    val userMessage: UiText? = null,
+    val userMessage: SupportMessage? = null,
 )
 
 /** Tips for the developer through the store's in-app purchases. */
@@ -35,7 +32,7 @@ class SupportViewModel(
     private data class ScreenState(
         val purchasingTier: TipTier? = null,
         val thankedTier: TipTier? = null,
-        val userMessage: UiText? = null,
+        val userMessage: SupportMessage? = null,
     )
 
     private val screenState = MutableStateFlow(ScreenState())
@@ -59,7 +56,7 @@ class SupportViewModel(
                 when (result) {
                     TipResult.Success -> it.copy(purchasingTier = null, thankedTier = tier)
                     TipResult.Cancelled -> it.copy(purchasingTier = null)
-                    is TipResult.Failed -> it.copy(purchasingTier = null, userMessage = UiText.Resource(Res.string.support_failed))
+                    is TipResult.Failed -> it.copy(purchasingTier = null, userMessage = SupportMessage.PurchaseFailed)
                 }
             }
         }

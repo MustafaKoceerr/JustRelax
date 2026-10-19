@@ -55,6 +55,7 @@ import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysound
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_import_failed
 
 @Composable
 fun MySoundsRoute(
@@ -67,7 +68,7 @@ fun MySoundsRoute(
     val snackbarHostState = remember { SnackbarHostState() }
     val openPicker = rememberAudioPicker(viewModel::import)
 
-    UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarHostState.showSnackbar(it) }
+    UserMessageEffect(uiState.userMessage?.text(), viewModel::onMessageShown) { snackbarHostState.showSnackbar(it) }
     LaunchedEffect(uiState.editorToOpen) {
         uiState.editorToOpen?.let {
             viewModel.onEditorOpened()
@@ -182,4 +183,9 @@ private fun ImportIcon(isImporting: Boolean) {
     } else {
         Icon(Icons.Rounded.Add, contentDescription = null)
     }
+}
+
+@Composable
+private fun MySoundsMessage.text(): String = when (this) {
+    MySoundsMessage.ImportFailed -> stringResource(Res.string.mysounds_import_failed)
 }

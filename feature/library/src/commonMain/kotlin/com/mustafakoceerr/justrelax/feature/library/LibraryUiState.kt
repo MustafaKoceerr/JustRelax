@@ -3,7 +3,6 @@ package com.mustafakoceerr.justrelax.feature.library
 import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 data class LibraryUiState(
     val isLoading: Boolean = true,
@@ -12,7 +11,7 @@ data class LibraryUiState(
     /** Which sounds play and how often, for the sound cards. Volumes are in [LibraryViewModel.volumes]. */
     val sceneCards: SceneCards = SceneCards(),
     val downloadingSoundIds: Set<String> = emptySet(),
-    val userMessage: UiText? = null,
+    val userMessage: LibraryMessage? = null,
 ) {
     /** Nothing in the library yet, e.g. a first launch without internet. */
     val isEmpty: Boolean get() = !isLoading && categories.isEmpty()

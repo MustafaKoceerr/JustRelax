@@ -80,6 +80,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_save_failed
 
 @Composable
 fun SoundEditorRoute(
@@ -92,7 +93,7 @@ fun SoundEditorRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarHostState.showSnackbar(it) }
+    UserMessageEffect(uiState.userMessage?.text(), viewModel::onMessageShown) { snackbarHostState.showSnackbar(it) }
     LaunchedEffect(uiState.isSaved) { if (uiState.isSaved) onBack() }
 
     SoundEditorScreen(
@@ -291,3 +292,8 @@ private val TrimProblem.messageRes: StringResource
         TrimProblem.TOO_SHORT_FOR_BED -> Res.string.mysounds_problem_too_short_for_bed
         TrimProblem.TOO_LONG_FOR_EVENT -> Res.string.mysounds_problem_too_long_for_event
     }
+
+@Composable
+private fun SoundEditorMessage.text(): String = when (this) {
+    SoundEditorMessage.SaveFailed -> stringResource(Res.string.mysounds_save_failed)
+}

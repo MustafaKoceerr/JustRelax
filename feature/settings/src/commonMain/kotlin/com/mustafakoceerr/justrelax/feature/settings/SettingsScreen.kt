@@ -21,6 +21,7 @@ import com.mustafakoceerr.justrelax.feature.settings.components.SettingsContent
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.settings_title
 import org.jetbrains.compose.resources.stringResource
+import com.mustafakoceerr.justrelax.feature.settings.generated.resources.msg_all_sounds_downloaded
 
 @Composable
 fun SettingsRoute(
@@ -33,7 +34,7 @@ fun SettingsRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarHostState.showSnackbar(it) }
+    UserMessageEffect(uiState.userMessage?.text(), viewModel::onMessageShown) { snackbarHostState.showSnackbar(it) }
 
     SettingsScreen(
         uiState = uiState,
@@ -107,4 +108,10 @@ fun SettingsScreen(
             }
         }
     }
+}
+
+@Composable
+private fun SettingsMessage.text(): String = when (this) {
+    SettingsMessage.LibraryDownloaded -> stringResource(Res.string.msg_all_sounds_downloaded)
+    is SettingsMessage.Text -> value
 }

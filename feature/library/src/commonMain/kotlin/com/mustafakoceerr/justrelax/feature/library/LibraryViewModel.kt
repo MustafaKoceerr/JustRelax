@@ -15,10 +15,7 @@ import com.mustafakoceerr.justrelax.core.data.repository.StarterPackInstaller
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.library.domain.usecase.GetLocalizedCategorizedSoundsUseCase
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.download_failed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -40,7 +37,7 @@ class LibraryViewModel(
     private data class ScreenState(
         val selectedCategory: SoundCategory? = null,
         val downloadingSoundIds: Set<String> = emptySet(),
-        val userMessage: UiText? = null,
+        val userMessage: LibraryMessage? = null,
     )
 
     private val screenState = MutableStateFlow(ScreenState())
@@ -95,7 +92,7 @@ class LibraryViewModel(
 
     private suspend fun play(sound: LocalizedSound) {
         when (val result = sceneRepository.toggle(sound.id)) {
-            is Resource.Error -> showMessage(UiText.DynamicString(result.error.message ?: "An unknown error occurred."))
+            is Resource.Error -> showMessage(LibraryMessage.Text(result.error.message ?: "An unknown error occurred."))
             else -> {
                 playbackController.play()
                 analytics.logEvent(
@@ -113,8 +110,8 @@ class LibraryViewModel(
         val downloaded = soundRepository.download(sound.id)
         screenState.update { it.copy(downloadingSoundIds = it.downloadingSoundIds - sound.id) }
 
-        if (downloaded) play(sound) else showMessage(UiText.Resource(Res.string.download_failed))
+        if (downloaded) play(sound) else showMessage(LibraryMessage.DownloadFailed)
     }
 
-    private fun showMessage(message: UiText) = screenState.update { it.copy(userMessage = message) }
+    private fun showMessage(message: LibraryMessage) = screenState.update { it.copy(userMessage = message) }
 }

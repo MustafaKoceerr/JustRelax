@@ -6,9 +6,6 @@ import com.mustafakoceerr.justrelax.core.model.TipTier
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeTipRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.settings.generated.resources.support_failed
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -86,7 +83,7 @@ class SupportViewModelTest {
         viewModel.tip(TipTier.SMALL)
         store.answer(TipResult.Failed("Billing unavailable"))
         advanceUntilIdle()
-        assertEquals(UiText.Resource(Res.string.support_failed), viewModel.uiState.value.userMessage)
+        assertEquals(SupportMessage.PurchaseFailed, viewModel.uiState.value.userMessage)
 
         viewModel.onMessageShown()
         advanceUntilIdle()

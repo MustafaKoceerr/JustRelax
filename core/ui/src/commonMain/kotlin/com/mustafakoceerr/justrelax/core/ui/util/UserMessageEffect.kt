@@ -9,13 +9,13 @@ import androidx.compose.runtime.LaunchedEffect
  */
 @Composable
 fun UserMessageEffect(
-    message: UiText?,
+    message: String?,
     onMessageShown: () -> Unit,
     show: suspend (String) -> Unit,
 ) {
     LaunchedEffect(message) {
         if (message == null) return@LaunchedEffect
-        show(message.resolve())
+        show(message)
         onMessageShown()
     }
 }

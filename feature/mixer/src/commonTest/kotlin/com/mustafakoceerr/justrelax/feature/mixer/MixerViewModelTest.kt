@@ -15,7 +15,6 @@ import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class MixerViewModelTest {
@@ -74,7 +73,7 @@ class MixerViewModelTest {
         viewModel.generateMix()
         advanceUntilIdle()
 
-        assertNotNull(viewModel.uiState.value.userMessage)
+        assertEquals(MixerMessage.GenerateFailed, viewModel.uiState.value.userMessage)
         assertTrue(viewModel.uiState.value.mixedSounds.isEmpty())
     }
 

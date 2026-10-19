@@ -37,6 +37,7 @@ import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.mixer_scre
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.err_mixer_generate_failed
 
 @Composable
 fun MixerRoute(onSaveScene: () -> Unit, viewModel: MixerViewModel = koinViewModel()) {
@@ -44,7 +45,7 @@ fun MixerRoute(onSaveScene: () -> Unit, viewModel: MixerViewModel = koinViewMode
     val volumeOf = rememberVolumeOf(viewModel.volumes.collectAsStateWithLifecycle())
     val snackbarController = koinInject<GlobalSnackbarController>()
 
-    UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarController.showSnackbar(it) }
+    UserMessageEffect(uiState.userMessage?.text(), viewModel::onMessageShown) { snackbarController.showSnackbar(it) }
 
     MixerScreen(
         uiState = uiState,
@@ -175,3 +176,8 @@ private fun MixLayerGrid(
 
 private val CONTROLS_PANE_WIDTH = 360.dp
 private val LAYER_MIN_WIDTH = 320.dp
+
+@Composable
+private fun MixerMessage.text(): String = when (this) {
+    MixerMessage.GenerateFailed -> stringResource(Res.string.err_mixer_generate_failed)
+}

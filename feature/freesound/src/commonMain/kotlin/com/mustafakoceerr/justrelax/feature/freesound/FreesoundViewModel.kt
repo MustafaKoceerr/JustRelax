@@ -13,13 +13,6 @@ import com.mustafakoceerr.justrelax.core.media.TrimRange
 import com.mustafakoceerr.justrelax.core.model.Attribution
 import com.mustafakoceerr.justrelax.core.model.FreesoundSound
 import com.mustafakoceerr.justrelax.core.model.SoundOrigin
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_download_failed
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_failed
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_offline
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_rate_limited
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_unverified
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,7 +21,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.StringResource
 
 /**
  * Searches Freesound page by page and plays previews. The preview takes audio focus, so the scene
@@ -96,7 +88,7 @@ class FreesoundViewModel(
             val path = repository.downloadPreview(sound)
             state.update {
                 if (path == null) {
-                    it.copy(downloadingId = null, userMessage = UiText.Resource(Res.string.freesound_download_failed))
+                    it.copy(downloadingId = null, userMessage = FreesoundMessage.DownloadFailed)
                 } else {
                     it.copy(downloadingId = null, editorToOpen = FreesoundEditorRequest(path, sound.name, sound.origin()))
                 }
@@ -136,17 +128,17 @@ class FreesoundViewModel(
                     hasSearched = it.hasSearched && number > 1,
                     isSearching = false,
                     isLoadingMore = false,
-                    userMessage = UiText.Resource(e.message()),
+                    userMessage = e.message(),
                 )
             }
         }
     }
 
-    private fun AppError.message(): StringResource = when (this) {
-        is AppError.Network.RateLimited -> Res.string.freesound_rate_limited
-        is AppError.Network.NoInternet, is AppError.Network.TimeOut -> Res.string.freesound_offline
-        is AppError.Network.IntegrityFailed -> Res.string.freesound_unverified
-        else -> Res.string.freesound_failed
+    private fun AppError.message(): FreesoundMessage = when (this) {
+        is AppError.Network.RateLimited -> FreesoundMessage.RateLimited
+        is AppError.Network.NoInternet, is AppError.Network.TimeOut -> FreesoundMessage.Offline
+        is AppError.Network.IntegrityFailed -> FreesoundMessage.Unverified
+        else -> FreesoundMessage.SearchFailed
     }
 
     private fun FreesoundSound.origin() = SoundOrigin(

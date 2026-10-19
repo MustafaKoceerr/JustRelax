@@ -100,6 +100,11 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_download_failed
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_failed
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_offline
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_rate_limited
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_unverified
 
 /**
  * Freesound search. It is the Discover tab ([onBack] null, no back button, messages in the shell's
@@ -115,7 +120,7 @@ fun FreesoundRoute(
     val snackbarHostState = remember { SnackbarHostState() }
     val shellSnackbar = koinInject<GlobalSnackbarController>()
 
-    UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) {
+    UserMessageEffect(uiState.userMessage?.text(), viewModel::onMessageShown) {
         if (onBack == null) shellSnackbar.showSnackbar(it) else snackbarHostState.showSnackbar(it)
     }
     LaunchedEffect(uiState.editorToOpen) {
@@ -372,3 +377,14 @@ private fun ResultCard(
 private val RESULT_MIN_WIDTH = 340.dp
 private const val CONTENT_SOUND = "sound"
 private const val CONTENT_MORE = "more"
+
+@Composable
+private fun FreesoundMessage.text(): String = stringResource(
+    when (this) {
+        FreesoundMessage.RateLimited -> Res.string.freesound_rate_limited
+        FreesoundMessage.Offline -> Res.string.freesound_offline
+        FreesoundMessage.Unverified -> Res.string.freesound_unverified
+        FreesoundMessage.SearchFailed -> Res.string.freesound_failed
+        FreesoundMessage.DownloadFailed -> Res.string.freesound_download_failed
+    }
+)

@@ -23,6 +23,7 @@ import com.mustafakoceerr.justrelax.feature.library.components.LibraryContent
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_my_sounds
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_settings
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.download_failed
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -36,7 +37,7 @@ fun LibraryRoute(
     val volumeOf = rememberVolumeOf(viewModel.volumes.collectAsStateWithLifecycle())
     val snackbarController = koinInject<GlobalSnackbarController>()
 
-    UserMessageEffect(uiState.userMessage, viewModel::onMessageShown) { snackbarController.showSnackbar(it) }
+    UserMessageEffect(uiState.userMessage?.text(), viewModel::onMessageShown) { snackbarController.showSnackbar(it) }
 
     LibraryScreen(
         uiState = uiState,
@@ -92,4 +93,10 @@ fun LibraryScreen(
             modifier = Modifier.padding(innerPadding)
         )
     }
+}
+
+@Composable
+private fun LibraryMessage.text(): String = when (this) {
+    LibraryMessage.DownloadFailed -> stringResource(Res.string.download_failed)
+    is LibraryMessage.Text -> value
 }

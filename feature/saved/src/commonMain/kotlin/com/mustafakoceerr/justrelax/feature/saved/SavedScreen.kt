@@ -28,6 +28,9 @@ import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesEmptyScre
 import com.mustafakoceerr.justrelax.feature.saved.components.SavedMixesList
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_screen_title
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.action_undo
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.err_play_mix_failed
+import com.mustafakoceerr.justrelax.feature.saved.generated.resources.msg_mix_deleted
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -40,11 +43,14 @@ fun SavedRoute(
     val snackbarController = koinInject<GlobalSnackbarController>()
 
     // Delete offers "undo" as the snackbar action, so this needs more than UserMessageEffect.
-    LaunchedEffect(uiState.message) {
-        val message = uiState.message ?: return@LaunchedEffect
+    val message = uiState.message
+    val messageText = message?.text()
+    val undoLabel = stringResource(Res.string.action_undo)
+    LaunchedEffect(message) {
+        if (message == null || messageText == null) return@LaunchedEffect
         val result = snackbarController.showSnackbar(
-            message = message.text.resolve(),
-            actionLabel = message.actionLabel?.resolve(),
+            message = messageText,
+            actionLabel = undoLabel.takeIf { message is SavedMessage.Deleted },
             duration = SnackbarDuration.Long,
         )
         if (result == SnackbarResult.ActionPerformed) viewModel.undoDelete()
@@ -133,3 +139,9 @@ fun SavedScreen(
 private enum class SavedContent { LOADING, EMPTY, MIXES }
 
 private val LIST_PANE_WIDTH = 400.dp
+
+@Composable
+private fun SavedMessage.text(): String = when (this) {
+    is SavedMessage.Deleted -> stringResource(Res.string.msg_mix_deleted, name)
+    SavedMessage.PlayFailed -> stringResource(Res.string.err_play_mix_failed)
+}

@@ -18,9 +18,6 @@ import com.mustafakoceerr.justrelax.core.testing.fake.FakeUserSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeWaveformReader
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_save_failed
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -226,7 +223,7 @@ class SoundEditorViewModelTest {
         assertFalse(state.isSaved)
         assertFalse(state.isSaving)
         assertTrue(state.canSave)
-        assertEquals(UiText.Resource(Res.string.mysounds_save_failed), state.userMessage)
+        assertEquals(SoundEditorMessage.SaveFailed, state.userMessage)
     }
 
     @Test
