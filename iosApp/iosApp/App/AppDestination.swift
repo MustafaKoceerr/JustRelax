@@ -6,6 +6,12 @@ struct AppDestination: View {
 
     var body: some View {
         switch route {
+        case .settings:
+            SettingsScreen()
+        case .credits:
+            CreditsScreen()
+        case .support:
+            SupportScreen()
         case .mySounds:
             MySoundsScreen()
         case .freesound:
