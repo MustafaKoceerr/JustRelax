@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.MoreVert
@@ -61,8 +60,6 @@ import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_more
 import com.mustafakoceerr.justrelax.feature.saved.util.formatDate
 import org.jetbrains.compose.resources.stringResource
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
-
-private val CardShape = RoundedCornerShape(24.dp)
 
 /**
  * A saved mix: cover, name, what's in it and a play/pause button. The one that plays is outlined
@@ -125,7 +122,7 @@ private fun CardContent(
 
     Surface(
         onClick = throttledClick,
-        shape = CardShape,
+        shape = MaterialTheme.shapes.large,
         color = containerColor,
         border = BorderStroke(if (isPlaying) 1.5.dp else 1.dp, borderColor),
         modifier = Modifier.fillMaxWidth(),
@@ -230,7 +227,7 @@ private fun DeleteBackground(isSwiping: Boolean) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color, CardShape)
+            .background(color, MaterialTheme.shapes.large)
             .padding(horizontal = 24.dp),
         contentAlignment = Alignment.CenterEnd,
     ) {

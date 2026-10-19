@@ -86,11 +86,13 @@ import com.mustafakoceerr.justrelax.core.analytics.logScreenView
  * cleared when the user leaves Main.
  */
 @Composable
-fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit) {
+fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit, onOpenTimer: () -> Unit) {
     val sceneViewModel = koinViewModel<SceneViewModel>()
     // Only what the mini player shows: a volume drag changes the scene many times a second, and
     // reading the whole scene here would redraw the shell for each step.
     val miniPlayer by sceneViewModel.miniPlayer.collectAsStateWithLifecycle()
+    // Read only inside the mini player's countdown, so its tick each second redraws just that.
+    val timerRemaining = sceneViewModel.timerRemaining.collectAsStateWithLifecycle()
     val snackbarController = koinInject<GlobalSnackbarController>()
 
     SceneMessagesAndDialog(sceneViewModel, snackbarController)
@@ -98,11 +100,12 @@ fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit) {
     MainScreenLayout(
         tabState = rememberSaveable(saver = MainTabState.Saver) { MainTabState() },
         miniPlayer = miniPlayer,
+        timerRemaining = { timerRemaining.value },
         onPlayPause = sceneViewModel::togglePlayPause,
         onStopAll = sceneViewModel::stopAll,
-        onSaveMix = sceneViewModel::openSaveDialog,
+        onOpenTimer = onOpenTimer,
         onSaveScene = sceneViewModel::openSaveDialog,
-        scenePanel = { modifier -> ScenePanelRoute(sceneViewModel, modifier) },
+        scenePanel = { modifier, openTimer -> ScenePanelRoute(sceneViewModel, openTimer, modifier) },
         onOpenSettings = onOpenSettings,
         onOpenMySounds = onOpenMySounds,
         snackbarHostState = snackbarController.hostState
@@ -129,7 +132,7 @@ private fun SceneMessagesAndDialog(sceneViewModel: SceneViewModel, snackbarContr
 
 /** Collects the scene itself, so its changes redraw only the panel; volume changes, only its sliders. */
 @Composable
-private fun ScenePanelRoute(sceneViewModel: SceneViewModel, modifier: Modifier) {
+private fun ScenePanelRoute(sceneViewModel: SceneViewModel, onOpenTimer: () -> Unit, modifier: Modifier) {
     val sceneState by sceneViewModel.uiState.collectAsStateWithLifecycle()
     val volumeOf = rememberVolumeOf(sceneViewModel.volumes.collectAsStateWithLifecycle())
     ScenePanel(
@@ -138,6 +141,7 @@ private fun ScenePanelRoute(sceneViewModel: SceneViewModel, modifier: Modifier) 
         onPlayPause = sceneViewModel::togglePlayPause,
         onStopAll = sceneViewModel::stopAll,
         onSave = sceneViewModel::openSaveDialog,
+        onOpenTimer = onOpenTimer,
         onVolumeChange = sceneViewModel::changeVolume,
         onFrequencyChange = sceneViewModel::changeFrequency,
         onRemove = sceneViewModel::remove,
@@ -150,12 +154,13 @@ private fun ScenePanelRoute(sceneViewModel: SceneViewModel, modifier: Modifier) 
 private fun MainScreenLayout(
     tabState: MainTabState,
     miniPlayer: MiniPlayerUiState,
+    timerRemaining: () -> Long?,
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
-    onSaveMix: () -> Unit,
+    onOpenTimer: () -> Unit,
     /** Opens the save dialog from a tab, optionally with a suggested name. */
     onSaveScene: (suggestedName: String?) -> Unit,
-    scenePanel: @Composable (Modifier) -> Unit,
+    scenePanel: @Composable (Modifier, onOpenTimer: () -> Unit) -> Unit,
     onOpenSettings: () -> Unit,
     onOpenMySounds: () -> Unit,
     snackbarHostState: SnackbarHostState
@@ -165,6 +170,11 @@ private fun MainScreenLayout(
 
     val showsScenePane = rememberWindowSizeClass() == WindowWidthSize.EXPANDED && tabState.selected == MainTab.HOME
     var isSceneSheetOpen by rememberSaveable { mutableStateOf(false) }
+    // The timer opens over the shell; a sheet it was opened from closes first.
+    val openTimer = {
+        isSceneSheetOpen = false
+        onOpenTimer()
+    }
 
     val density = LocalDensity.current
     val isKeyboardOpen = WindowInsets.ime.getBottom(density) > 0
@@ -210,9 +220,10 @@ private fun MainScreenLayout(
                     if (!isKeyboardOpen && !showsScenePane) {
                         MiniPlayer(
                             state = miniPlayer,
+                            timerRemaining = timerRemaining,
                             onPlayPause = onPlayPause,
                             onStopAll = onStopAll,
-                            onSaveMix = onSaveMix,
+                            onOpenTimer = openTimer,
                             onOpenScene = { isSceneSheetOpen = true },
                         )
                     }
@@ -248,7 +259,7 @@ private fun MainScreenLayout(
                                 .padding(8.dp)
                                 .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical + WindowInsetsSides.End)),
                         ) {
-                            scenePanel(Modifier.padding(top = 16.dp))
+                            scenePanel(Modifier.padding(top = 16.dp), openTimer)
                         }
                     }
                 }
@@ -258,7 +269,7 @@ private fun MainScreenLayout(
 
     if (isSceneSheetOpen && !showsScenePane) {
         ModalBottomSheet(onDismissRequest = { isSceneSheetOpen = false }) {
-            scenePanel(Modifier)
+            scenePanel(Modifier, openTimer)
         }
     }
 }
@@ -270,9 +281,10 @@ private fun MainScreenLayout(
 @Composable
 private fun MiniPlayer(
     state: MiniPlayerUiState,
+    timerRemaining: () -> Long?,
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
-    onSaveMix: () -> Unit,
+    onOpenTimer: () -> Unit,
     onOpenScene: () -> Unit,
 ) {
     Box(
@@ -295,10 +307,12 @@ private fun MiniPlayer(
         ) {
             MiniPlayerBar(
                 activeIcons = state.icons,
+                names = state.names,
                 isPlaying = state.isPlaying,
+                timerRemaining = timerRemaining,
                 onPlayPauseClick = onPlayPause,
                 onStopAllClick = onStopAll,
-                onSaveClick = onSaveMix,
+                onOpenTimer = onOpenTimer,
                 onOpenScene = onOpenScene,
                 modifier = Modifier.padding(bottom = 8.dp)
             )

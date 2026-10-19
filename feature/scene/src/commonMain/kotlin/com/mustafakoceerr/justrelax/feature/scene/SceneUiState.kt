@@ -30,6 +30,8 @@ data class SceneLayerItem(
 /** What the mini player shows. Volumes are left out, so dragging a slider does not redraw it. */
 data class MiniPlayerUiState(
     val icons: List<SoundIcon> = emptyList(),
+    /** In the app's language, in the scene's order. */
+    val names: List<String> = emptyList(),
     val isPlaying: Boolean = false,
 ) {
     val isVisible: Boolean get() = icons.isNotEmpty()

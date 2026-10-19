@@ -36,4 +36,5 @@
     <string name="sound_kind_bed">Toca o tempo todo</string>
     <string name="frequency_title">Frequência</string>
     <string name="action_pause">Pausar</string>
+    <string name="sleep_timer">Timer de sono</string>
 </resources>

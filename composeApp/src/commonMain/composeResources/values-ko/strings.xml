@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="tab_ai">AI</string>
-    <string name="tab_home">홈</string>
+    <string name="tab_home">사운드</string>
     <string name="tab_mixer">믹서</string>
     <string name="tab_saved">저장됨</string>
-    <string name="tab_timer">타이머</string>
 </resources>

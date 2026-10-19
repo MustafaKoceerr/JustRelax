@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.nunito_bold
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.nunito_medium
@@ -29,22 +30,25 @@ fun getAppTypography(): Typography {
     val nunito = getNunitoFontFamily()
 
     return remember(nunito) {
+        val base = Typography()
+        // Headings are a little heavier and tighter than Material's defaults, so titles stand out
+        // in the soft, rounded Nunito without needing more size.
         Typography(
-            displayLarge = Typography().displayLarge.copy(fontFamily = nunito),
-            displayMedium = Typography().displayMedium.copy(fontFamily = nunito),
-            displaySmall = Typography().displaySmall.copy(fontFamily = nunito),
-            headlineLarge = Typography().headlineLarge.copy(fontFamily = nunito),
-            headlineMedium = Typography().headlineMedium.copy(fontFamily = nunito),
-            headlineSmall = Typography().headlineSmall.copy(fontFamily = nunito),
-            titleLarge = Typography().titleLarge.copy(fontFamily = nunito),
-            titleMedium = Typography().titleMedium.copy(fontFamily = nunito),
-            titleSmall = Typography().titleSmall.copy(fontFamily = nunito),
-            bodyLarge = Typography().bodyLarge.copy(fontFamily = nunito),
-            bodyMedium = Typography().bodyMedium.copy(fontFamily = nunito),
-            bodySmall = Typography().bodySmall.copy(fontFamily = nunito),
-            labelLarge = Typography().labelLarge.copy(fontFamily = nunito),
-            labelMedium = Typography().labelMedium.copy(fontFamily = nunito),
-            labelSmall = Typography().labelSmall.copy(fontFamily = nunito)
+            displayLarge = base.displayLarge.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold),
+            displayMedium = base.displayMedium.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold),
+            displaySmall = base.displaySmall.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold),
+            headlineLarge = base.headlineLarge.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold, letterSpacing = (-0.25).sp),
+            headlineMedium = base.headlineMedium.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold, letterSpacing = (-0.25).sp),
+            headlineSmall = base.headlineSmall.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold, letterSpacing = (-0.15).sp),
+            titleLarge = base.titleLarge.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold),
+            titleMedium = base.titleMedium.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold),
+            titleSmall = base.titleSmall.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold),
+            bodyLarge = base.bodyLarge.copy(fontFamily = nunito),
+            bodyMedium = base.bodyMedium.copy(fontFamily = nunito),
+            bodySmall = base.bodySmall.copy(fontFamily = nunito),
+            labelLarge = base.labelLarge.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold),
+            labelMedium = base.labelMedium.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold),
+            labelSmall = base.labelSmall.copy(fontFamily = nunito, fontWeight = FontWeight.SemiBold),
         )
     }
 }

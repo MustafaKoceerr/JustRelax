@@ -36,4 +36,5 @@
     <string name="sound_kind_bed">ずっと流れる</string>
     <string name="frequency_title">頻度</string>
     <string name="action_pause">一時停止</string>
+    <string name="sleep_timer">スリープタイマー</string>
 </resources>

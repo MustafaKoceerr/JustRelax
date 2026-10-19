@@ -12,6 +12,8 @@ import com.mustafakoceerr.justrelax.core.data.language.LanguageController
 import com.mustafakoceerr.justrelax.core.data.repository.SavedSceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
+import com.mustafakoceerr.justrelax.core.playback.timer.SleepTimer
+import com.mustafakoceerr.justrelax.core.playback.timer.TimerStatus
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
@@ -40,6 +42,7 @@ class SceneViewModel(
     private val savedSceneRepository: SavedSceneRepository,
     languageController: LanguageController,
     private val analytics: AnalyticsHelper,
+    sleepTimer: SleepTimer,
 ) : ViewModel() {
 
     private data class ScreenState(
@@ -82,8 +85,22 @@ class SceneViewModel(
         .map { it.volumes }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
+    /**
+     * Seconds left on the sleep timer while it runs or is paused, else null. Kept apart from
+     * [miniPlayer], so the tick each second redraws only the countdown.
+     */
+    val timerRemaining: StateFlow<Long?> = sleepTimer.state
+        .map { timer -> timer.remainingSeconds.takeIf { timer.status != TimerStatus.IDLE } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
     val miniPlayer: StateFlow<MiniPlayerUiState> = uiState
-        .map { scene -> MiniPlayerUiState(icons = scene.layers.map { it.icon }, isPlaying = scene.isPlaying) }
+        .map { scene ->
+            MiniPlayerUiState(
+                icons = scene.layers.map { it.icon },
+                names = scene.layers.map { it.name },
+                isPlaying = scene.isPlaying,
+            )
+        }
         .distinctUntilChanged()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MiniPlayerUiState())
 

@@ -20,6 +20,7 @@ object Tags {
     const val TIMER_WHEEL_MINUTE = "timer_wheel_minute"
     const val TIMER_START = "timer_start"
     const val TIMER_CANCEL = "timer_cancel"
+    const val MINI_PLAYER_TIMER = "mini_player_timer"
     fun tab(name: String) = "tab_$name"
 }
 
@@ -50,9 +51,16 @@ fun MacrobenchmarkScope.openTab(name: String) {
     device.waitForIdle()
 }
 
-/** The Timer tab in setup mode; a timer left running by an earlier run is cancelled. */
+/**
+ * The sleep timer in setup mode; a timer left running by an earlier run is cancelled. It is opened
+ * from the mini player, so a sound is started first if nothing plays.
+ */
 fun MacrobenchmarkScope.openTimerSetup(): UiObject2 {
-    openTab("timer")
+    if (findOrNull(Tags.MINI_PLAYER_TIMER) == null) {
+        openTab("home")
+        waitFor(Tags.SOUND_CARD).click()
+    }
+    waitFor(Tags.MINI_PLAYER_TIMER).click()
     findOrNull(Tags.TIMER_CANCEL)?.click()
     return waitFor(Tags.TIMER_WHEEL_MINUTE)
 }

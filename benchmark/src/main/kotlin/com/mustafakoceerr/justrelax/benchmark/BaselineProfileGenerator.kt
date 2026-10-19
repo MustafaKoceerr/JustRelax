@@ -25,6 +25,7 @@ class BaselineProfileGenerator {
         switchCategories()
 
         flingTwice(openTimerSetup())
+        device.pressBack()
 
         openTab("ai")
         openTab("saved")

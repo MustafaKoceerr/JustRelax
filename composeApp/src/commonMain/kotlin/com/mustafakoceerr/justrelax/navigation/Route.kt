@@ -20,6 +20,10 @@ sealed interface Route : NavKey {
     @Serializable
     data object Consent : Route
 
+    /** The sleep timer, opened from the player. */
+    @Serializable
+    data object Timer : Route
+
     @Serializable
     data object Settings : Route
 
@@ -51,6 +55,7 @@ sealed interface Route : NavKey {
                 subclass(Splash::class)
                 subclass(Main::class)
                 subclass(Consent::class)
+                subclass(Timer::class)
                 subclass(Settings::class)
                 subclass(Credits::class)
                 subclass(Support::class)
@@ -68,6 +73,7 @@ val Route.screenName: String
         Route.Splash -> "splash"
         Route.Main -> "main"
         Route.Consent -> "consent"
+        Route.Timer -> "timer"
         Route.Settings -> "settings"
         Route.Credits -> "credits"
         Route.Support -> "support"

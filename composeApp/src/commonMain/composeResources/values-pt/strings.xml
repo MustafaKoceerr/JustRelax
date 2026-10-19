@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="tab_ai">IA</string>
-    <string name="tab_home">Início</string>
+    <string name="tab_home">Sons</string>
     <string name="tab_mixer">Mixer</string>
     <string name="tab_saved">Salvos</string>
-    <string name="tab_timer">Temporizador</string>
 </resources>

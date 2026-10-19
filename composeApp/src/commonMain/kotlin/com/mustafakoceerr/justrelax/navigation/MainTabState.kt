@@ -6,7 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.setValue
 
-enum class MainTab { HOME, TIMER, AI, SAVED, MIXER }
+/** The bottom-bar tabs, in bar order. The sleep timer is opened from the player instead. */
+enum class MainTab { HOME, MIXER, AI, SAVED }
 
 /**
  * Selected bottom-bar tab. Back on any tab other than [MainTab.HOME] returns to Home first;
