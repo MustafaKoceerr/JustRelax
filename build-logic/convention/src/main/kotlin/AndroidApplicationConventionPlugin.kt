@@ -13,7 +13,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.android.application")
-                apply("org.jetbrains.kotlin.plugin.compose")
+                apply("justrelax.android.compose")
             }
 
             extensions.configure<ApplicationExtension> {
@@ -29,17 +29,11 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     targetCompatibility = JAVA_VERSION
                 }
 
-                buildFeatures {
-                    compose = true
-                }
-
                 // Robolectric tests need the merged resources.
                 testOptions {
                     unitTests.isIncludeAndroidResources = true
                 }
             }
-
-            configureComposeCompiler()
 
             extensions.configure<KotlinAndroidProjectExtension> {
                 compilerOptions {

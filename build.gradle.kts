@@ -1,6 +1,7 @@
 plugins {
     // Load every plugin once in the root classloader so subprojects and the convention plugins share it.
     alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.androidTest) apply false
     alias(libs.plugins.baselineprofile) apply false
     alias(libs.plugins.composeMultiplatform) apply false

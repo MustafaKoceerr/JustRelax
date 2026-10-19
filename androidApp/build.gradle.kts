@@ -114,9 +114,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
-    // MainActivity turns test tags into resource ids for the benchmarks.
-    implementation(libs.compose.ui)
-    implementation(libs.compose.foundation)
     // Installs the Baseline Profile on devices without Play's cloud profiles (sideloads, benchmarks).
     implementation(libs.androidx.profileinstaller)
     baselineProfile(projects.benchmark)

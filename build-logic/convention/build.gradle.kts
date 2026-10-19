@@ -26,6 +26,10 @@ gradlePlugin {
             id = "justrelax.kmp.feature"
             implementationClass = "KmpFeatureConventionPlugin"
         }
+        register("kmpFeatureLegacy") {
+            id = "justrelax.kmp.feature.legacy"
+            implementationClass = "KmpFeatureLegacyConventionPlugin"
+        }
         register("koin") {
             id = "justrelax.koin"
             implementationClass = "KoinConventionPlugin"
@@ -33,6 +37,18 @@ gradlePlugin {
         register("androidApplication") {
             id = "justrelax.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
+        }
+        register("androidLibrary") {
+            id = "justrelax.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
+        register("androidCompose") {
+            id = "justrelax.android.compose"
+            implementationClass = "AndroidComposeConventionPlugin"
+        }
+        register("androidFeatureUi") {
+            id = "justrelax.android.feature.ui"
+            implementationClass = "AndroidFeatureUiConventionPlugin"
         }
     }
 }

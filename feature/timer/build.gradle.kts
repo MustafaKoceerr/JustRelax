@@ -1,5 +1,5 @@
 plugins {
-    id("justrelax.kmp.feature")
+    id("justrelax.kmp.feature.legacy")
 }
 
 kotlin {
