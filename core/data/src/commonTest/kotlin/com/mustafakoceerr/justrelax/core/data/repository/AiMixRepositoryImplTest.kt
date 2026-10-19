@@ -20,7 +20,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 class AiMixRepositoryImplTest {
 
@@ -28,10 +27,12 @@ class AiMixRepositoryImplTest {
         var response: Resource<NetworkAiMix> = Resource.Success(NetworkAiMix("Rainy Night", "Soft rain", emptyList()))
         var lastPrompt: String? = null
         var lastInventory: List<NetworkAiSound>? = null
+        var lastLanguage: String? = null
 
-        override suspend fun generateMix(prompt: String, inventory: List<NetworkAiSound>): Resource<NetworkAiMix> {
+        override suspend fun generateMix(prompt: String, inventory: List<NetworkAiSound>, language: String): Resource<NetworkAiMix> {
             lastPrompt = prompt
             lastInventory = inventory
+            lastLanguage = language
             return response
         }
     }
@@ -67,8 +68,8 @@ class AiMixRepositoryImplTest {
             ),
             network.lastInventory,
         )
-        assertTrue(network.lastPrompt!!.startsWith("rainy evening"))
-        assertTrue(network.lastPrompt!!.contains("in English language"))
+        assertEquals("rainy evening", network.lastPrompt)
+        assertEquals("English", network.lastLanguage)
     }
 
     @Test

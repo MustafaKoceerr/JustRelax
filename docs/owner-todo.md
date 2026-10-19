@@ -7,7 +7,7 @@ Claude'un tek başına yapamadığı işler, öncelik sırasıyla. Biten maddeyi
 
 ## Yeni tasarım: Mixer, AI ve Saved (PR #57 → #58 → #59)
 - [ ] PR'lara göz at ve sırayla birleştir (#57, sonra #58, sonra #59).
-- [ ] AI sonuç ekranını bir kez gör. Emülatörde yerel Worker OpenAI'dan 502 aldı; `server/api-proxy/.dev.vars`'taki `OPENAI_API_KEY` eski anahtar olabilir. Yeni anahtarı oraya yazarsan ben yerelde denerim; ya da Play'den kurulan sürümde bir öneriye dokunman yeter.
+- [x] AI sonuç ekranı telefonda yerel Worker'la görüldü (2026-10-19). Debug sürüm `localhost:8787`'ye gider: `npm run dev` + `adb reverse tcp:8787 tcp:8787`, `.dev.vars`'ta `OPENAI_API_KEY` dolu olmalı.
 - [ ] İsteğe bağlı: telefon bağlıyken bana "profil" de. Baseline Profile'ı yeniden üretirim; eskisinde kaldırılan Lottie ekranının satırları var (zararsız, sadece eski).
 
 ## Tasarım 2. tur: tema, gezinme, ana sayfa, ayarlar, açılış (yığılı PR'lar, #59'un üstünde)

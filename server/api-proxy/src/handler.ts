@@ -1,6 +1,6 @@
 import { buildSearchUrl, toSearchPage, type SearchPage } from "./freesound";
 import { evaluateVerdict, sessionRequestHash, type VerdictResult } from "./integrity";
-import { OPENAI_CHAT_URL, buildMixChatRequest, parseMixCompletion, type Mix } from "./openai";
+import { OPENAI_CHAT_URL, buildMixChatRequest, describeUsage, parseMixCompletion, type Mix } from "./openai";
 import { SESSION_TTL_MS, issueSession, verifySession } from "./session";
 import {
   parseMixRequest,
@@ -90,8 +90,15 @@ async function aiMix(request: Request, env: Env, deps: Deps): Promise<Response> 
     headers: { authorization: `Bearer ${env.OPENAI_API_KEY}`, "content-type": "application/json" },
     body: JSON.stringify(buildMixChatRequest(mixRequest)),
   });
-  if (!response.ok) return error(502, "upstream_error");
-  const mix: Mix | null = parseMixCompletion(await readJsonResponse(response), mixRequest);
+  if (!response.ok) {
+    // Only the status: the prompt is the user's text and is never logged.
+    console.error(`OpenAI answered ${response.status}`);
+    return error(502, "upstream_error");
+  }
+  const completion: unknown = await readJsonResponse(response);
+  const usage: string | null = describeUsage(completion);
+  if (usage !== null) console.log(usage);
+  const mix: Mix | null = parseMixCompletion(completion, mixRequest);
   return mix === null ? error(502, "upstream_error") : Response.json(mix);
 }
 
