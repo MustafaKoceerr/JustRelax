@@ -123,7 +123,7 @@ Versions come from [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 | Area | Library |
 |---|---|
 | Language and build | Kotlin `2.4.20`, Android Gradle Plugin `9.4.1`, Gradle convention plugins in `build-logic` |
-| Platforms | Android (min SDK 29, target 36, compile 37); iOS 27+ (off by default, not released yet: its SwiftUI screens are being written) |
+| Platforms | Android (min SDK 29, target 36, compile 37); iOS 27+ (off by default, not released yet) |
 | UI | Android: Jetpack Compose (BOM `2026.09.00`), Material 3, Material 3 Adaptive (bar, rail or drawer by window size). iOS: SwiftUI on the shared ViewModels, bridged with SKIE `0.10.15` |
 | Navigation | Android: Navigation 3 `1.2.0` |
 | State | ViewModel + `StateFlow`, Kotlin Coroutines `1.11.0` |
@@ -185,7 +185,7 @@ Each feature module depends only on `core` modules, never on another feature; `:
 ```
 
 - **Firebase:** Analytics and Crashlytics are added only when `androidApp/google-services.json` exists. Without it the app builds and runs normally.
-- **iOS:** set `justrelax.ios.enabled=true` in `gradle.properties` (or pass `-Pjustrelax.ios.enabled=true`) and open `iosApp/` in Xcode. Kotlin iOS tests run on the simulator with `./gradlew iosSimulatorArm64Test -Pjustrelax.ios.enabled=true`, Swift tests with `xcodebuild test -project iosApp/iosApp.xcodeproj -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 18 Pro' -only-testing:iosAppTests` (Xcode must be the selected developer directory, not only the command line tools). A SwiftUI screen keeps its shared ViewModels in a `ViewModelHost` and follows their `StateFlow`s with `for await`.
+- **iOS:** set `justrelax.ios.enabled=true` in `gradle.properties` (or pass `-Pjustrelax.ios.enabled=true`) and open `iosApp/` in Xcode. Kotlin iOS tests run on the simulator with `./gradlew iosSimulatorArm64Test -Pjustrelax.ios.enabled=true`, Swift tests with `xcodebuild test -project iosApp/iosApp.xcodeproj -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 18 Pro' -only-testing:iosAppTests` (Xcode must be the selected developer directory, not only the command line tools). A SwiftUI screen keeps its shared ViewModel in a `ViewModelHost`, inside an `@Observable` model that follows the ViewModel's `StateFlow`s with `for await`. Screens live under `iosApp/iosApp/Features/<feature>/`, shared pieces (colours, banners, sound cards) under `DesignSystem/`, and `AppNavigator` holds each tab's pushed screens. One UI test (`PlaySoundUITests`) walks the happy path: consent, play a sound, mini player.
 - **Strings:** Android's `res/values*/strings.xml` are the source. After changing them, run `python3 tools/strings/strings.py xcstrings` to update iOS's `Localizable.xcstrings`; CI fails if it is out of date.
 - **API proxy:** see [`server/api-proxy/README.md`](server/api-proxy/README.md) (`npm test`, `npm run deploy`).
 - **Sound pack:** see [`tools/sound-pipeline/README.md`](tools/sound-pipeline/README.md) (`python3 -m unittest discover -s tools/sound-pipeline`).

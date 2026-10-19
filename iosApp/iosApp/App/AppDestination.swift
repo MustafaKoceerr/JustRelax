@@ -6,11 +6,18 @@ struct AppDestination: View {
 
     var body: some View {
         switch route {
+        case .settings:
+            SettingsScreen()
+        case .credits:
+            CreditsScreen()
+        case .support:
+            SupportScreen()
+        case .mySounds:
+            MySoundsScreen()
         case .freesound:
             FreesoundScreen(isTab: false)
-        case .soundEditor:
-            // The editor comes with the My sounds screen.
-            ContentUnavailableView(String(localized: .mysoundsEditorTitle), systemImage: "waveform")
+        case .soundEditor(let request):
+            SoundEditorScreen(request: request)
         }
     }
 }
