@@ -1,6 +1,9 @@
+import co.touchlab.skie.configuration.DefaultArgumentInterop
+
 plugins {
     id("justrelax.kmp.library")
     id("justrelax.koin")
+    alias(libs.plugins.skie)
 }
 
 // What both apps share: the Koin graph and app-wide state. Android draws it in :androidApp, iOS in SwiftUI;
@@ -24,6 +27,21 @@ val exportedProjects = listOf(
     ":feature:freesound",
 )
 
+skie {
+    features {
+        // Kotlin's default arguments become Swift overloads (Kotlin/Native alone requires every
+        // argument). Only for our own code: overloads for library functions (kotlinx-datetime)
+        // fail to link.
+        group("com.mustafakoceerr.justrelax") {
+            DefaultArgumentInterop.Enabled(true)
+        }
+    }
+    // SKIE would otherwise send anonymous build statistics to Touchlab.
+    analytics {
+        enabled.set(false)
+    }
+}
+
 kotlin {
     // The iOS targets come from the convention; each is linked into the Xcode project by the
     // embedAndSignAppleFrameworkForXcode build phase.
@@ -31,6 +49,7 @@ kotlin {
         binaries.framework {
             baseName = "Shared"
             isStatic = true
+            binaryOption("bundleId", "com.mustafakoceerr.justrelax.shared")
             // The shared ViewModels and their state, the models they carry, and AnalyticsHelper and
             // CrashReporter, which Swift implements with the Firebase iOS SDK.
             exportedProjects.forEach { export(project(it)) }
