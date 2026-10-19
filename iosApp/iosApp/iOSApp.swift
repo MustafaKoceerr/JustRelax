@@ -9,7 +9,8 @@ struct iOSApp: App {
         KoinHelperKt.doInitKoin(analytics: firebase?.0, crashReporter: firebase?.1)
     }
 
-    var body: some Scene {
+    // SwiftUI.Scene: the shared framework has a Scene too (the soundscape).
+    var body: some SwiftUI.Scene {
         WindowGroup {
             ContentView()
         }

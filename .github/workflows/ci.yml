@@ -25,7 +25,7 @@ jobs:
 
       - name: Unit tests
         # KMP modules (AGP 9 android-kmp-library) run host tests; the app module runs regular unit tests.
-        run: ./gradlew testAndroidHostTest :androidApp:testDebugUnitTest --continue
+        run: ./gradlew testAndroidHostTest testDebugUnitTest --continue
 
       - name: Database migrations
         # Every schema change needs a migration that ends in the same schema as the CREATE statements.

@@ -2,7 +2,7 @@
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.4.20-blue.svg)](https://kotlinlang.org)
 [![Kotlin%20Multiplatform](https://img.shields.io/badge/Kotlin%20Multiplatform-KMP-7f52ff.svg)](https://kotlinlang.org/docs/multiplatform.html)
-[![Compose%20Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.12.1-3ddc84.svg)](https://www.jetbrains.com/compose-multiplatform/)
+[![Jetpack%20Compose](https://img.shields.io/badge/Jetpack%20Compose-BOM%202026.09.00-3ddc84.svg)](https://developer.android.com/compose)
 [![Architecture](https://img.shields.io/badge/Architecture-MVVM%20%C2%B7%20NiA-orange.svg)](https://developer.android.com/topic/architecture)
 
 > A **Kotlin Multiplatform** relaxation app: layer ambient sounds into a living soundscape, let AI suggest a mix, and fall asleep with a timer.
@@ -123,9 +123,9 @@ Versions come from [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 | Area | Library |
 |---|---|
 | Language and build | Kotlin `2.4.20`, Android Gradle Plugin `9.4.1`, Gradle convention plugins in `build-logic` |
-| Platforms | Android (min SDK 29, target 36, compile 37); iOS 18.4+ (off by default, not released yet: no file import or analytics) |
-| UI | Compose Multiplatform `1.12.1`, Material 3, Material 3 Adaptive (bar, rail or drawer by window size) |
-| Navigation | Navigation 3 `1.1.2` |
+| Platforms | Android (min SDK 29, target 36, compile 37); iOS 18.4+ (off by default, not released yet: its SwiftUI screens are being written) |
+| UI | Android: Jetpack Compose (BOM `2026.09.00`), Material 3, Material 3 Adaptive (bar, rail or drawer by window size). iOS: SwiftUI on the shared ViewModels |
+| Navigation | Android: Navigation 3 `1.2.0` |
 | State | ViewModel + `StateFlow`, Kotlin Coroutines `1.11.0` |
 | DI | Koin `4.2.2` |
 | Network | Ktor `3.6.0`, kotlinx.serialization `1.11.0` |
@@ -141,7 +141,7 @@ Versions come from [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 
 The app follows Google's [app architecture guide](https://developer.android.com/topic/architecture) and the layout of [Now in Android](https://github.com/android/nowinandroid):
 
-- **UI layer:** a screen observes one `UiState` from its ViewModel and sends it events (MVVM). Screens are stateless composables, so they can be previewed and tested.
+- **UI layer:** a screen observes one `UiState` from its ViewModel and sends it events (MVVM). The ViewModels and their state are shared Kotlin code; Android draws them with Compose and iOS with SwiftUI. A ViewModel reports one-off messages as its own type (for example `AiMessage.Offline`), and each platform picks the words.
 - **Data layer:** repositories are the single source of truth. The sound catalog is offline-first: it is cached in SQLDelight and refreshed from the CDN once a day.
 - **Playback:** one `SoundscapePlayer` (a Media3 `Player`) runs in a `MediaSessionService`. It mixes beds and schedules events, so playback keeps going in the background and shows in the system media controls. On iOS the same session runs in-process on one `AVAudioEngine` (`AvAudioGraph`); `IosAudioSession` follows iOS's default interruption and route-change behaviour and drives the lock screen controls. iOS 18.4 is the minimum because that is where AVFoundation reads the pack's Ogg Opus clips.
 - **API keys never ship in the app.** AI and Freesound calls go through a Cloudflare Worker. The Worker checks Play Integrity, issues a short session and rate-limits each install.
@@ -149,7 +149,7 @@ The app follows Google's [app architecture guide](https://developer.android.com/
 ```text
 .
 ├── androidApp/          Android application: activity, PlaybackService, Firebase
-├── composeApp/          Shared app shell: navigation, DI graph, iOS framework
+├── shared/              Koin graph and app-wide state; the iOS "Shared" framework
 ├── iosApp/              Xcode project
 ├── core/
 │   ├── common/          Result types, errors, dispatchers
@@ -160,16 +160,19 @@ The app follows Google's [app architecture guide](https://developer.android.com/
 │   ├── media/           Audio import, trimming and preview
 │   ├── playback/        Soundscape engine, MediaSession player, sleep timer
 │   ├── analytics/       Analytics and crash-reporting interfaces
-│   ├── ui/              Theme, shared components and strings
+│   ├── presentation/    UI models, formatters, test tags and system actions for both UIs
+│   ├── ui/              Android design system: theme, Compose components and strings
 │   └── testing/         Fakes and test helpers
-├── feature/             library, scene, mixer, ai, timer, saved, mysounds, freesound, settings, splash
-├── build-logic/         Convention plugins (KMP library, Compose, feature, Koin, Android app)
+├── feature/             library, scene, mixer, ai, timer, saved, mysounds, freesound, settings, splash:
+│                        each x/ has the shared ViewModels, x/ui/ the Android Compose screens
+├── build-logic/         Convention plugins (KMP library and feature, Android library, Compose and feature UI, Koin, Android app)
 ├── server/api-proxy/    Cloudflare Worker for AI, Freesound and sessions
 ├── tools/sound-pipeline/ Builds the sound pack (sounds-v2.json + Opus clips)
+├── tools/strings/       Copies Compose resource strings to Android resources
 └── docs/                Play data safety notes and the owner's to-do list
 ```
 
-Each feature module depends only on `core` modules, never on another feature.
+Each feature module depends only on `core` modules, never on another feature; `:feature:x:ui` also depends on its own `:feature:x`.
 
 ---
 
@@ -177,7 +180,7 @@ Each feature module depends only on `core` modules, never on another feature.
 
 ```sh
 ./gradlew :androidApp:installDebug                            # run on a device or emulator
-./gradlew testAndroidHostTest :androidApp:testDebugUnitTest   # all Kotlin unit tests
+./gradlew testAndroidHostTest testDebugUnitTest               # all Kotlin unit tests
 ./gradlew :core:database:verifySqlDelightMigration            # database migrations
 ```
 

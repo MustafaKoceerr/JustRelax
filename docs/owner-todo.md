@@ -87,7 +87,7 @@ Ekran ve mimari hazır; debug sürümünde örnek fiyatlarla görünüyor, yayı
 - [ ] Hazır olunca söyle: Play Billing ve StoreKit'i `TipRepository`'nin arkasına bağlarım; satır o zaman yayında da görünür.
 
 ## iOS yayını
-Xcode projesi hazır (bundle id `com.mustafakoceerr.justrelax`, sürüm 1.3.0); simülatörde UI testi geçiyor.
+Xcode projesi hazır (bundle id `com.mustafakoceerr.justrelax`, sürüm 1.3.0). iOS arayüzü SwiftUI ile yeniden yazılıyor (2026-10-19). O bitene kadar uygulama boş bir ekran gösterir ve `PlaySoundUITests` atlanır; bu yüzden TestFlight işleri ekranlar bitince anlamlı.
 - [ ] Xcode → *Settings → Accounts*'ta Apple ID'nle giriş yap. Team ID'yi (developer.apple.com → *Membership*) bana söyle ya da `iosApp/Configuration/Config.xcconfig`'teki `TEAM_ID=` satırına yaz. Sunucunun App Attest kontrolü de bunu bekliyor.
 - [ ] Team ID belli olunca `server/api-proxy/wrangler.jsonc`'deki `APPLE_APP_ID`'yi `<Team ID>.com.mustafakoceerr.justrelax` yap ve `npm run deploy` ile Worker'ı yayınla (ya da bana söyle, ben yaparım). Boşken iOS'ta AI ve Freesound "doğrulanamadı" der.
 - [ ] İlk TestFlight sürümünde AI karışımını ve Freesound aramasını dene. App Attest yalnızca gerçek iPhone'da çalışır; sunucu tarafı gerçek Apple verileriyle test edildi ama cihazda hiç denenmedi.

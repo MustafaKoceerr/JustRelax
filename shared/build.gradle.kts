@@ -5,6 +5,25 @@ plugins {
 
 // What both apps share: the Koin graph and app-wide state. Android draws it in :androidApp, iOS in SwiftUI;
 // the iOS app links this module as the "Shared" framework.
+
+// The modules Swift sees in the framework.
+val exportedProjects = listOf(
+    ":core:analytics",
+    ":core:model",
+    ":core:data",
+    ":core:presentation",
+    ":feature:library",
+    ":feature:mixer",
+    ":feature:saved",
+    ":feature:ai",
+    ":feature:timer",
+    ":feature:settings",
+    ":feature:scene",
+    ":feature:splash",
+    ":feature:mysounds",
+    ":feature:freesound",
+)
+
 kotlin {
     // The iOS targets come from the convention; each is linked into the Xcode project by the
     // embedAndSignAppleFrameworkForXcode build phase.
@@ -12,33 +31,20 @@ kotlin {
         binaries.framework {
             baseName = "Shared"
             isStatic = true
-            // Swift implements AnalyticsHelper and CrashReporter with the Firebase iOS SDK.
-            export(project(":core:analytics"))
+            // The shared ViewModels and their state, the models they carry, and AnalyticsHelper and
+            // CrashReporter, which Swift implements with the Firebase iOS SDK.
+            exportedProjects.forEach { export(project(it)) }
         }
     }
 
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:common"))
-            implementation(project(":core:model"))
-            implementation(project(":core:presentation"))
             implementation(project(":core:network"))
             implementation(project(":core:database"))
             implementation(project(":core:playback"))
-            implementation(project(":core:data"))
             implementation(project(":core:media"))
-            api(project(":core:analytics"))
-
-            implementation(project(":feature:library"))
-            implementation(project(":feature:mixer"))
-            implementation(project(":feature:saved"))
-            implementation(project(":feature:ai"))
-            implementation(project(":feature:timer"))
-            implementation(project(":feature:settings"))
-            implementation(project(":feature:scene"))
-            implementation(project(":feature:splash"))
-            implementation(project(":feature:mysounds"))
-            implementation(project(":feature:freesound"))
+            exportedProjects.forEach { api(project(it)) }
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.koin.core.viewmodel)
