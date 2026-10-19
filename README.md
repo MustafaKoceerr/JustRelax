@@ -123,8 +123,8 @@ Versions come from [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 | Area | Library |
 |---|---|
 | Language and build | Kotlin `2.4.20`, Android Gradle Plugin `9.4.1`, Gradle convention plugins in `build-logic` |
-| Platforms | Android (min SDK 29, target 36, compile 37); iOS 18.4+ (off by default, not released yet: its SwiftUI screens are being written) |
-| UI | Android: Jetpack Compose (BOM `2026.09.00`), Material 3, Material 3 Adaptive (bar, rail or drawer by window size). iOS: SwiftUI on the shared ViewModels |
+| Platforms | Android (min SDK 29, target 36, compile 37); iOS 27+ (off by default, not released yet) |
+| UI | Android: Jetpack Compose (BOM `2026.09.00`), Material 3, Material 3 Adaptive (bar, rail or drawer by window size). iOS: SwiftUI on the shared ViewModels, bridged with SKIE `0.10.15` |
 | Navigation | Android: Navigation 3 `1.2.0` |
 | State | ViewModel + `StateFlow`, Kotlin Coroutines `1.11.0` |
 | DI | Koin `4.2.2` |
@@ -143,7 +143,7 @@ The app follows Google's [app architecture guide](https://developer.android.com/
 
 - **UI layer:** a screen observes one `UiState` from its ViewModel and sends it events (MVVM). The ViewModels and their state are shared Kotlin code; Android draws them with Compose and iOS with SwiftUI. A ViewModel reports one-off messages as its own type (for example `AiMessage.Offline`), and each platform picks the words.
 - **Data layer:** repositories are the single source of truth. The sound catalog is offline-first: it is cached in SQLDelight and refreshed from the CDN once a day.
-- **Playback:** one `SoundscapePlayer` (a Media3 `Player`) runs in a `MediaSessionService`. It mixes beds and schedules events, so playback keeps going in the background and shows in the system media controls. On iOS the same session runs in-process on one `AVAudioEngine` (`AvAudioGraph`); `IosAudioSession` follows iOS's default interruption and route-change behaviour and drives the lock screen controls. iOS 18.4 is the minimum because that is where AVFoundation reads the pack's Ogg Opus clips.
+- **Playback:** one `SoundscapePlayer` (a Media3 `Player`) runs in a `MediaSessionService`. It mixes beds and schedules events, so playback keeps going in the background and shows in the system media controls. On iOS the same session runs in-process on one `AVAudioEngine` (`AvAudioGraph`); `IosAudioSession` follows iOS's default interruption and route-change behaviour and drives the lock screen controls. AVFoundation reads the pack's Ogg Opus clips from iOS 18.4; the app targets iOS 27 and is built with Xcode 27.1.
 - **API keys never ship in the app.** AI and Freesound calls go through a Cloudflare Worker. The Worker checks Play Integrity, issues a short session and rate-limits each install.
 
 ```text
@@ -168,7 +168,7 @@ The app follows Google's [app architecture guide](https://developer.android.com/
 ├── build-logic/         Convention plugins (KMP library and feature, Android library, Compose and feature UI, Koin, Android app)
 ├── server/api-proxy/    Cloudflare Worker for AI, Freesound and sessions
 ├── tools/sound-pipeline/ Builds the sound pack (sounds-v2.json + Opus clips)
-├── tools/strings/       Copies Compose resource strings to Android resources
+├── tools/strings/       Writes the iOS String Catalog from the Android strings
 └── docs/                Play data safety notes and the owner's to-do list
 ```
 
@@ -185,7 +185,8 @@ Each feature module depends only on `core` modules, never on another feature; `:
 ```
 
 - **Firebase:** Analytics and Crashlytics are added only when `androidApp/google-services.json` exists. Without it the app builds and runs normally.
-- **iOS:** set `justrelax.ios.enabled=true` in `gradle.properties` (or pass `-Pjustrelax.ios.enabled=true`) and open `iosApp/` in Xcode. iOS tests run on the simulator with `./gradlew iosSimulatorArm64Test -Pjustrelax.ios.enabled=true` (Xcode must be the selected developer directory, not only the command line tools).
+- **iOS:** set `justrelax.ios.enabled=true` in `gradle.properties` (or pass `-Pjustrelax.ios.enabled=true`) and open `iosApp/` in Xcode. Kotlin iOS tests run on the simulator with `./gradlew iosSimulatorArm64Test -Pjustrelax.ios.enabled=true`, Swift tests with `xcodebuild test -project iosApp/iosApp.xcodeproj -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 18 Pro' -only-testing:iosAppTests` (Xcode must be the selected developer directory, not only the command line tools). A SwiftUI screen keeps its shared ViewModel in a `ViewModelHost`, inside an `@Observable` model that follows the ViewModel's `StateFlow`s with `for await`. Screens live under `iosApp/iosApp/Features/<feature>/`, shared pieces (colours, banners, sound cards) under `DesignSystem/`, and `AppNavigator` holds each tab's pushed screens. One UI test (`PlaySoundUITests`) walks the happy path: consent, play a sound, mini player.
+- **Strings:** Android's `res/values*/strings.xml` are the source. After changing them, run `python3 tools/strings/strings.py xcstrings` to update iOS's `Localizable.xcstrings`; CI fails if it is out of date.
 - **API proxy:** see [`server/api-proxy/README.md`](server/api-proxy/README.md) (`npm test`, `npm run deploy`).
 - **Sound pack:** see [`tools/sound-pipeline/README.md`](tools/sound-pipeline/README.md) (`python3 -m unittest discover -s tools/sound-pipeline`).
 

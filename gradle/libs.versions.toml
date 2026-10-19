@@ -7,6 +7,8 @@ android-targetSdk = "36"
 # Android Compose (androidx); the BOM sets the version of every Compose library below.
 androidx-compose-bom = "2026.09.00"
 androidx-navigation3 = "1.2.0"
+# Swift-friendly API for the iOS framework: Flow as AsyncSequence, sealed classes as Swift enums.
+skie = "0.10.15"
 
 # AndroidX
 androidx-activity = "1.13.0"
@@ -172,3 +174,4 @@ android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-plugin" }
+skie = { id = "co.touchlab.skie", version.ref = "skie" }

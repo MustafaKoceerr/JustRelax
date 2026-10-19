@@ -46,8 +46,8 @@ internal class IosAudioSession(
     private val audioSession = AVAudioSession.sharedInstance()
 
     private val nowPlayingTexts = NowPlayingTexts(
-        title = localized("now_playing_title", "Calming Sounds"),
-        subtitle = localized("now_playing_subtitle", "Enjoy the moment with Just Relax"),
+        title = localized("notification_title", "Calming Sounds"),
+        subtitle = localized("notification_subtitle", "Enjoy the moment with Just Relax"),
     )
 
     /** The Android notification's artwork, from the app's asset catalog. */
@@ -130,7 +130,7 @@ internal class IosAudioSession(
         else -> null
     }
 
-    /** From the app's Localizable.strings, in the language iOS picked for the app. */
+    /** From the app's String Catalog (the Android notification's words), in the language iOS picked for the app. */
     private fun localized(key: String, english: String): String =
         NSBundle.mainBundle.localizedStringForKey(key, value = english, table = null)
 

@@ -3,7 +3,7 @@
     <string name="app_name">JustRelax</string>
     <string name="notification_subtitle">Just Relax でこの瞬間を楽しもう</string>
     <string name="notification_title">癒やしのサウンド</string>
-    <string name="action_stop">停止</string>
+    <string name="notification_action_stop">停止</string>
     <string name="notification_channel_name">再生コントロール</string>
     <string name="tab_ai">AI</string>
     <string name="tab_home">サウンド</string>
