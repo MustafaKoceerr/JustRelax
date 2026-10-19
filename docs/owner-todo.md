@@ -72,7 +72,7 @@ Simülatörde doğrulananlar (2026-10-19):
 - Güncellemeden sonra indirilen sesler bulunuyor.
 - Kilit ekranına giden bilgi (başlık, alt yazı, görsel, oynat/duraklat/Durdur) test ediliyor.
 
-Simülatör kilit ekranında uygulamaların sesini göstermiyor ve uygulamalar arasında hakemlik yapmıyor (Safari ile JustRelax aynı anda çalabiliyor). Bu yüzden şunlar ilk TestFlight sürümünde bir iPhone'da (iOS 18.4+) denenmeli:
+Simülatör kilit ekranında uygulamaların sesini göstermiyor ve uygulamalar arasında hakemlik yapmıyor (Safari ile JustRelax aynı anda çalabiliyor). Bu yüzden şunlar ilk TestFlight sürümünde bir iPhone'da (iOS 27+) denenmeli:
 - [ ] Kilit ekranında ve Denetim Merkezi'nde JustRelax görünüyor: "Rahatlatıcı Sesler" başlığı, yaprak görseli, oynat/duraklat çalışıyor.
 - [ ] Başka bir uygulama (Müzik, YouTube) çalmaya başlayınca JustRelax susuyor ve kendiliğinden devam etmiyor.
 - [ ] Arama gelince ses duruyor, kapanınca devam ediyor; kulaklığı çıkarınca duruyor.
