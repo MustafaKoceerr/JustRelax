@@ -11,6 +11,7 @@
     <string name="freesound_offline">Pas de connexion internet.</string>
     <string name="freesound_rate_limited">Trop de recherches. Attendez une minute et réessayez.</string>
     <string name="freesound_failed">La recherche a échoué. Réessayez.</string>
+    <string name="freesound_unverified">Cette copie de l’app n’a pas pu être vérifiée. Installe Just Relax depuis Google Play pour rechercher sur Freesound.</string>
     <string name="freesound_download_failed">Le son n’a pas pu être téléchargé. Réessayez.</string>
     <string name="freesound_discover_title">Découvrir des sons</string>
     <string name="freesound_try">Essayez</string>

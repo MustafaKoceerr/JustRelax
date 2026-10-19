@@ -19,6 +19,7 @@ import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freeso
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_failed
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_offline
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_rate_limited
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_unverified
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -138,6 +139,7 @@ class FreesoundViewModel(
     private fun AppError.message(): StringResource = when (this) {
         is AppError.Network.RateLimited -> Res.string.freesound_rate_limited
         is AppError.Network.NoInternet, is AppError.Network.TimeOut -> Res.string.freesound_offline
+        is AppError.Network.IntegrityFailed -> Res.string.freesound_unverified
         else -> Res.string.freesound_failed
     }
 
