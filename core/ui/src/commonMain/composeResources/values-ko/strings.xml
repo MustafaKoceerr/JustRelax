@@ -35,4 +35,5 @@
     <string name="loading">로드 중</string>
     <string name="sound_kind_bed">계속 재생돼요</string>
     <string name="frequency_title">빈도</string>
+    <string name="action_pause">일시정지</string>
 </resources>

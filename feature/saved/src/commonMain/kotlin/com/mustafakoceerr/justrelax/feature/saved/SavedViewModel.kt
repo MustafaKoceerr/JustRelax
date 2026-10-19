@@ -9,6 +9,7 @@ import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.SavedScene
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
+import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.Res
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -35,21 +37,29 @@ class SavedViewModel(
 
     private val message = MutableStateFlow<SavedMessage?>(null)
     private val selectedId = MutableStateFlow<Long?>(null)
+    /** The mix last played from here; it tells apart saved mixes made of the same sounds. */
+    private val playedId = MutableStateFlow<Long?>(null)
     private var lastDeletedScene: SavedScene? = null
     private var playbackJob: Job? = null
+
+    /** The sounds that play, or null while paused. Volume changes don't reach it. */
+    private val playingSoundIds = combine(sceneRepository.scene, playbackController.isPlaying) { scene, isPlaying ->
+        if (isPlaying) scene.soundIds else null
+    }.distinctUntilChanged()
 
     val uiState: StateFlow<SavedUiState> = combine(
         savedSceneRepository.getSavedScenes(),
         soundRepository.getSounds(),
         languageController.currentLanguage,
-        selectedId,
-        message,
-    ) { scenes, sounds, language, selectedId, message ->
+        combine(selectedId, message, ::Pair),
+        combine(playingSoundIds, playedId, ::Pair),
+    ) { scenes, sounds, language, (selectedId, message), (playingSoundIds, playedId) ->
         val soundsById = sounds.associateBy { it.id }
         SavedUiState(
             isLoading = false,
-            mixes = scenes.map { it.toItem(soundsById) },
+            mixes = scenes.map { it.toItem(soundsById, language.code) },
             selected = scenes.find { it.id == selectedId }?.toDetail(soundsById, language.code),
+            playingMixId = playingSoundIds?.let { ids -> playingMixId(scenes, ids, playedId) },
             message = message,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SavedUiState())
@@ -65,11 +75,22 @@ class SavedViewModel(
             try {
                 sceneRepository.replaceWith(saved.scene)
                 playbackController.play()
+                playedId.value = saved.id
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 message.value = SavedMessage(UiText.Resource(Res.string.err_play_mix_failed))
             }
+        }
+    }
+
+    /** Pauses the mix if it is the one playing, otherwise plays it. */
+    fun togglePlay(mixId: Long) {
+        viewModelScope.launch {
+            val scenes = savedSceneRepository.getSavedScenes().first()
+            val playingIds = sceneRepository.scene.value.soundIds.takeIf { playbackController.isPlaying.value }
+            val isThisPlaying = playingIds != null && playingMixId(scenes, playingIds, playedId.value) == mixId
+            if (isThisPlaying) playbackController.pause() else playMix(mixId)
         }
     }
 
@@ -98,15 +119,28 @@ class SavedViewModel(
         message.value = null
     }
 
+    /**
+     * The saved mix with the sounds that play. When several have them, it is the one last played
+     * from here, or none if that was not one of them.
+     */
+    private fun playingMixId(scenes: List<SavedScene>, playingSoundIds: Set<String>, playedId: Long?): Long? {
+        val matches = scenes.filter { it.scene.soundIds == playingSoundIds }
+        return matches.find { it.id == playedId }?.id ?: matches.singleOrNull()?.id
+    }
+
     private suspend fun findScene(id: Long): SavedScene? =
         savedSceneRepository.getSavedScenes().first().find { it.id == id }
 
-    private fun SavedScene.toItem(soundsById: Map<String, Sound>) = SavedMixItem(
-        id = id,
-        title = name,
-        date = createdAt,
-        icons = scene.layers.mapNotNull { soundsById[it.soundId]?.icon },
-    )
+    private fun SavedScene.toItem(soundsById: Map<String, Sound>, languageCode: String): SavedMixItem {
+        val sounds = scene.layers.mapNotNull { soundsById[it.soundId] }
+        return SavedMixItem(
+            id = id,
+            title = name,
+            date = createdAt,
+            icons = sounds.map { it.icon },
+            soundNames = sounds.map { it.getDisplayName(languageCode) },
+        )
+    }
 
     private fun SavedScene.toDetail(soundsById: Map<String, Sound>, languageCode: String) = SavedMixDetail(
         id = id,
@@ -123,3 +157,6 @@ class SavedViewModel(
         },
     )
 }
+
+/** A saved mix counts as playing whatever its volumes now are, as long as it has the same sounds. */
+private val Scene.soundIds: Set<String> get() = layers.mapTo(mutableSetOf()) { it.soundId }

@@ -5,6 +5,11 @@ Claude'un tek başına yapamadığı işler, öncelik sırasıyla. Biten maddeyi
 ## 1. PR'ları birleştir
 - [x] #36–#48 main'e birleştirildi (2026-10-18, main CI yeşil).
 
+## Yeni tasarım: Mixer, AI ve Saved (PR #57 → #58 → #59)
+- [ ] PR'lara göz at ve sırayla birleştir (#57, sonra #58, sonra #59).
+- [ ] AI sonuç ekranını bir kez gör. Emülatörde yerel Worker OpenAI'dan 502 aldı; `server/api-proxy/.dev.vars`'taki `OPENAI_API_KEY` eski anahtar olabilir. Yeni anahtarı oraya yazarsan ben yerelde denerim; ya da Play'den kurulan sürümde bir öneriye dokunman yeter.
+- [ ] İsteğe bağlı: telefon bağlıyken bana "profil" de. Baseline Profile'ı yeniden üretirim; eskisinde kaldırılan Lottie ekranının satırları var (zararsız, sadece eski).
+
 ## Performans ölçümü
 Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ayrı bir paket adıyla (`com.mustafakoceerr.justrelax.benchmark`) kuruluyor ve Play sürümüyle yan yana durabiliyor.
 - [ ] Telefonundaki JustRelax'ı Play Store'dan yeniden kur (ilk denemede ana kullanıcıdan kaldırıldı).

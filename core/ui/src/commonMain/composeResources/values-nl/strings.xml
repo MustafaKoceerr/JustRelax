@@ -35,4 +35,5 @@
     <string name="loading">Laden</string>
     <string name="sound_kind_bed">Speelt doorlopend</string>
     <string name="frequency_title">Hoe vaak</string>
+    <string name="action_pause">Pauzeren</string>
 </resources>

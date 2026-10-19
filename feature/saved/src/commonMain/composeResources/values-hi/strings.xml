@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="saved_empty_description">अपने पसंदीदा साउंड्स मिक्स करें और यहाँ सेव करें। अपनी शांति की कलेक्शन बनाना शुरू करें।</string>
+    <string name="saved_empty_description">कोई दृश्य पसंद आया? चलते समय उसे सहेजें, वह यहाँ आपका इंतज़ार करेगा।</string>
     <string name="saved_empty_image_cd">अभी तक कोई सेव किया हुआ मिक्स नहीं</string>
     <string name="saved_empty_title">अभी कोई रिकॉर्ड नहीं</string>
     <string name="saved_mix_metadata">%1$d ध्वनियाँ • %2$s</string>
@@ -11,4 +11,5 @@
     <string name="date_format_short">dd/MM/yyyy</string>
     <string name="err_play_mix_failed">मिक्स चलाने में असफल</string>
     <string name="saved_detail_placeholder">इसकी ध्वनियाँ देखने के लिए कोई सहेजा गया मिक्स चुनें।</string>
+    <string name="saved_more_options">और विकल्प</string>
 </resources>

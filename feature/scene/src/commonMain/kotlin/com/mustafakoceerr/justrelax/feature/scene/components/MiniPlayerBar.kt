@@ -29,11 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_pause
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.save_mix_dialog_title
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_pause
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_stop_all
 import org.jetbrains.compose.resources.stringResource
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
@@ -126,7 +126,7 @@ fun MiniPlayerBar(
                 ) {
                     Icon(
                         imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
-                        contentDescription = stringResource(if (isPlaying) Res.string.action_pause else CoreRes.string.action_play),
+                        contentDescription = stringResource(if (isPlaying) CoreRes.string.action_pause else CoreRes.string.action_play),
                         modifier = Modifier.size(28.dp),
                         tint = MaterialTheme.colorScheme.onSecondaryContainer
                     )

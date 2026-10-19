@@ -10,6 +10,8 @@ data class SavedMixItem(
     val title: String,
     val date: Instant,
     val icons: List<SoundIcon>,
+    /** In the app's language, in the mix's order. */
+    val soundNames: List<String>,
 )
 
 /** A saved scene opened beside the list on wide windows. */
@@ -38,5 +40,7 @@ data class SavedUiState(
     val isLoading: Boolean = true,
     val mixes: List<SavedMixItem> = emptyList(),
     val selected: SavedMixDetail? = null,
+    /** The saved mix that is playing right now, if any. */
+    val playingMixId: Long? = null,
     val message: SavedMessage? = null,
 )

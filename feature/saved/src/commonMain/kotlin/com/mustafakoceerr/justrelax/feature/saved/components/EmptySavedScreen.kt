@@ -24,6 +24,7 @@ import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_empt
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_empty_image_cd
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_empty_title
 import com.mustafakoceerr.justrelax.feature.saved.generated.resources.saved_empty_vector
+import com.mustafakoceerr.justrelax.core.ui.util.rememberIsCompactHeight
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -55,6 +56,9 @@ private fun EmptyStateVisual() {
         label = "offsetY"
     )
 
+    // Smaller in a short window, so the text and button stay in view.
+    val imageHeight = if (rememberIsCompactHeight()) 120.dp else 220.dp
+
     Box(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
@@ -63,7 +67,7 @@ private fun EmptyStateVisual() {
             painter = painterResource(Res.drawable.saved_empty_vector),
             contentDescription = stringResource(Res.string.saved_empty_image_cd),
             modifier = Modifier
-                .height(220.dp)
+                .height(imageHeight)
                 .fillMaxWidth()
                 .graphicsLayer { translationY = offsetY },
             contentScale = ContentScale.Fit

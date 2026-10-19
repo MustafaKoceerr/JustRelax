@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="saved_empty_description">Misture seus sons favoritos e salve-os aqui. Comece a criar sua coleção de paz.</string>
+    <string name="saved_empty_description">Gostou de uma cena? Salve enquanto ela toca e ela vai esperar por você aqui.</string>
     <string name="saved_empty_image_cd">Ainda não há mixes salvos</string>
     <string name="saved_empty_title">Nenhum registro ainda</string>
     <string name="saved_mix_metadata">%1$d sons • %2$s</string>
@@ -11,4 +11,5 @@
     <string name="date_format_short">dd/MM/yyyy</string>
     <string name="err_play_mix_failed">Falha ao reproduzir o mix</string>
     <string name="saved_detail_placeholder">Escolha uma mixagem salva para ver os sons.</string>
+    <string name="saved_more_options">Mais opções</string>
 </resources>

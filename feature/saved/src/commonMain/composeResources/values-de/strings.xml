@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="saved_empty_description">Mische deine Lieblingssounds und speichere sie hier. Erstelle deine eigene Ruhe-Sammlung.</string>
+    <string name="saved_empty_description">Gefällt dir eine Szene? Speichere sie, während sie läuft – hier wartet sie dann auf dich.</string>
     <string name="saved_empty_image_cd">Noch keine gespeicherten Mixe</string>
     <string name="saved_empty_title">Noch keine Einträge</string>
     <string name="saved_mix_metadata">%1$d Sounds • %2$s</string>
@@ -11,4 +11,5 @@
     <string name="date_format_short">dd.MM.yyyy</string>
     <string name="err_play_mix_failed">Mix konnte nicht abgespielt werden</string>
     <string name="saved_detail_placeholder">Wähle einen gespeicherten Mix, um seine Klänge zu sehen.</string>
+    <string name="saved_more_options">Weitere Optionen</string>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="saved_empty_description">Favori seslerini miksle ve buraya kaydet. Kendi huzur koleksiyonunu oluşturmaya başla.</string>
+    <string name="saved_empty_description">Bir sahneyi sevdin mi? Çalarken kaydet, seni burada beklesin.</string>
     <string name="saved_empty_image_cd">Henüz kaydedilmiş miks yok</string>
     <string name="saved_empty_title">Henüz Kayıt Yok</string>
     <string name="saved_mix_metadata">%1$d Ses • %2$s</string>
@@ -11,4 +11,5 @@
     <string name="date_format_short">dd.MM.yyyy</string>
     <string name="err_play_mix_failed">Miks oynatılamadı</string>
     <string name="saved_detail_placeholder">Seslerini görmek için kayıtlı bir miks seç.</string>
+    <string name="saved_more_options">Diğer seçenekler</string>
 </resources>

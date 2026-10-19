@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="saved_empty_description">좋아하는 사운드를 믹스해 여기 저장해 보세요. 나만의 평온 컬렉션을 만들어 보세요.</string>
+    <string name="saved_empty_description">마음에 드는 장면이 있나요? 재생 중에 저장하면 여기에서 기다리고 있을게요.</string>
     <string name="saved_empty_image_cd">저장된 믹스가 아직 없습니다</string>
     <string name="saved_empty_title">아직 기록이 없습니다</string>
     <string name="saved_mix_metadata">사운드 %1$d개 • %2$s</string>
@@ -11,4 +11,5 @@
     <string name="date_format_short">yyyy.MM.dd</string>
     <string name="err_play_mix_failed">믹스 재생에 실패했습니다</string>
     <string name="saved_detail_placeholder">저장한 믹스를 선택하면 소리를 볼 수 있어요.</string>
+    <string name="saved_more_options">더보기</string>
 </resources>

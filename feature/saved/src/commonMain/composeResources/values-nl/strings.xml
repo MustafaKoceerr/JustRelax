@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="saved_empty_description">Mix je favoriete geluiden en sla ze hier op. Begin met het opbouwen van je eigen rustcollectie.</string>
+    <string name="saved_empty_description">Vind je een scène mooi? Bewaar hem terwijl hij speelt, dan wacht hij hier op je.</string>
     <string name="saved_empty_image_cd">Nog geen opgeslagen mixes</string>
     <string name="saved_empty_title">Nog geen items</string>
     <string name="saved_mix_metadata">%1$d geluiden • %2$s</string>
@@ -11,4 +11,5 @@
     <string name="date_format_short">dd-MM-yyyy</string>
     <string name="err_play_mix_failed">Mix afspelen mislukt</string>
     <string name="saved_detail_placeholder">Kies een opgeslagen mix om de geluiden te zien.</string>
+    <string name="saved_more_options">Meer opties</string>
 </resources>

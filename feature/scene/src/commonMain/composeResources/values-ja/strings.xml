@@ -7,7 +7,6 @@
     <string name="err_unknown">予期しないエラーが発生しました。</string>
     <string name="scene_panel_title">あなたのシーン</string>
     <string name="scene_empty">ライブラリのサウンドをタップしてシーンを作りましょう。</string>
-    <string name="action_pause">一時停止</string>
     <string name="action_stop_all">すべて停止</string>
     <string name="action_save_scene">保存</string>
 </resources>

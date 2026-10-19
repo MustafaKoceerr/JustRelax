@@ -60,6 +60,86 @@ class SavedViewModelTest {
     }
 
     @Test
+    fun eachMix_namesItsSounds() = runMainTest {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        assertEquals(listOf("rain", "fire"), viewModel.uiState.value.mixes.single().soundNames)
+    }
+
+    @Test
+    fun theMixThatPlays_isMarked_untilItIsPaused() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.playMix(mixId = 1)
+        advanceUntilIdle()
+        assertEquals(1L, viewModel.uiState.value.playingMixId)
+
+        playback.pause()
+        advanceUntilIdle()
+        assertNull(viewModel.uiState.value.playingMixId)
+    }
+
+    @Test
+    fun aMixStaysMarked_whenItsVolumesAreChanged_butNotWhenItsSoundsAre() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.playMix(mixId = 1)
+        advanceUntilIdle()
+
+        scene.setVolume("rain", 0.9f)
+        advanceUntilIdle()
+        assertEquals(1L, viewModel.uiState.value.playingMixId)
+
+        scene.toggle("fire")
+        advanceUntilIdle()
+        assertNull(viewModel.uiState.value.playingMixId)
+    }
+
+    @Test
+    fun togglePlay_playsAMix_andPausesItWhenItIsPlaying() = runMainTest {
+        val viewModel = viewModel()
+        advanceUntilIdle()
+
+        viewModel.togglePlay(mixId = 1)
+        advanceUntilIdle()
+        assertEquals(night.scene, scene.scene.value)
+        assertTrue(playback.isPlaying.value)
+
+        viewModel.togglePlay(mixId = 1)
+        advanceUntilIdle()
+        assertFalse(playback.isPlaying.value)
+        assertEquals(1, playback.playCount)
+    }
+
+    @Test
+    fun twoMixesWithTheSameSounds_areToldApartByWhichOneWasPlayed() = runMainTest {
+        val louder = night.copy(id = 2, name = "Loud night", scene = Scene(listOf(Layer.Bed("rain", 0.9f), Layer.Event("fire", 0.9f, EventFrequency.OFTEN))))
+        repository.scenes.value = listOf(night, louder)
+        val viewModel = viewModel()
+
+        viewModel.togglePlay(mixId = 2)
+        advanceUntilIdle()
+        assertEquals(2L, viewModel.uiState.value.playingMixId)
+
+        viewModel.togglePlay(mixId = 1)
+        advanceUntilIdle()
+        assertEquals(1L, viewModel.uiState.value.playingMixId)
+        assertEquals(night.scene, scene.scene.value)
+        assertTrue(playback.isPlaying.value)
+    }
+
+    @Test
+    fun aSceneMatchingTwoMixes_thatNoneOfThemStarted_marksNeither() = runMainTest {
+        repository.scenes.value = listOf(night, night.copy(id = 2, name = "Copy"))
+        val viewModel = viewModel()
+
+        scene.replaceWith(night.scene)
+        playback.play()
+        advanceUntilIdle()
+
+        assertNull(viewModel.uiState.value.playingMixId)
+    }
+
+    @Test
     fun playingAScene_makesItTheCurrentScene_andPlays() = runMainTest {
         val viewModel = viewModel()
         advanceUntilIdle()

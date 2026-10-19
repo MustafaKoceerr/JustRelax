@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="saved_empty_description">Mixa dina favoritljud och spara dem här. Börja bygga din egen lugn-kollektion.</string>
+    <string name="saved_empty_description">Gillar du en scen? Spara den medan den spelas så väntar den här på dig.</string>
     <string name="saved_empty_image_cd">Inga sparade mixar ännu</string>
     <string name="saved_empty_title">Inga poster ännu</string>
     <string name="saved_mix_metadata">%1$d ljud • %2$s</string>
@@ -11,4 +11,5 @@
     <string name="date_format_short">yyyy-MM-dd</string>
     <string name="err_play_mix_failed">Det gick inte att spela upp mixen</string>
     <string name="saved_detail_placeholder">Välj en sparad mix för att se dess ljud.</string>
+    <string name="saved_more_options">Fler alternativ</string>
 </resources>

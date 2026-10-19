@@ -35,4 +35,5 @@
     <string name="loading">Wird geladen</string>
     <string name="sound_kind_bed">Spielt durchgehend</string>
     <string name="frequency_title">Wie oft</string>
+    <string name="action_pause">Pausieren</string>
 </resources>
