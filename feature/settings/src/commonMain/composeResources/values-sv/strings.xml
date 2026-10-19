@@ -24,7 +24,6 @@
     <string name="credits_empty">Inga ljud från andra upphovspersoner än.</string>
     <string name="credits_author">av %1$s</string>
     <string name="consent_title">Hjälp till att förbättra JustRelax</string>
-    <string name="consent_body">Med ditt tillstånd skickar appen anonym användningsstatistik (till exempel vilka skärmar som används) och kraschrapporter via Google Firebase. Inget du skriver, söker eller importerar skickas, och dina ljud lämnar aldrig telefonen.</string>
     <string name="consent_privacy_policy">Läs integritetspolicyn</string>
     <string name="consent_accept">Tillåt</string>
     <string name="consent_decline">Nej tack</string>
@@ -52,4 +51,6 @@
     <string name="settings_my_sounds_subtitle">Dina egna filer och fynd från Freesound</string>
     <string name="settings_version">Version %1$s</string>
     <string name="settings_tagline">Ljud för vila och fokus</string>
+    <string name="consent_point_sent">Skickas med ditt tillstånd: anonym användningsstatistik, till exempel vilka skärmar som används, och kraschrapporter, via Google Firebase.</string>
+    <string name="consent_point_never">Ingår aldrig: det du skriver, söker eller importerar. Dina ljud stannar på din telefon.</string>
 </resources>

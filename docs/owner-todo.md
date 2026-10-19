@@ -10,6 +10,11 @@ Claude'un tek başına yapamadığı işler, öncelik sırasıyla. Biten maddeyi
 - [ ] AI sonuç ekranını bir kez gör. Emülatörde yerel Worker OpenAI'dan 502 aldı; `server/api-proxy/.dev.vars`'taki `OPENAI_API_KEY` eski anahtar olabilir. Yeni anahtarı oraya yazarsan ben yerelde denerim; ya da Play'den kurulan sürümde bir öneriye dokunman yeter.
 - [ ] İsteğe bağlı: telefon bağlıyken bana "profil" de. Baseline Profile'ı yeniden üretirim; eskisinde kaldırılan Lottie ekranının satırları var (zararsız, sadece eski).
 
+## Tasarım 2. tur: tema, gezinme, ana sayfa, ayarlar, açılış (yığılı PR'lar, #59'un üstünde)
+- [ ] PR'ları sırayla birleştir: theme-shell → home → settings → launch.
+- [ ] Telefonda bir kez benchmark çalıştır: zamanlayıcı artık mini oynatıcıdan açılıyor, ses düzeyi de kartın üzerinde kaydırılarak ayarlanıyor. Benchmark adımları buna göre güncellendi ama henüz cihazda koşmadı.
+- [ ] iOS uygulama simgesi hâlâ KMP şablonunun mavi küpü (`iosApp/iosApp/Assets.xcassets/AppIcon.appiconset/app-icon-1024.png`). Android'deki yaprak simgesinin 1024 px sürümünü oraya koyman gerekiyor.
+
 ## Performans ölçümü
 Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ayrı bir paket adıyla (`com.mustafakoceerr.justrelax.benchmark`) kuruluyor ve Play sürümüyle yan yana durabiliyor.
 - [ ] Telefonundaki JustRelax'ı Play Store'dan yeniden kur (ilk denemede ana kullanıcıdan kaldırıldı).

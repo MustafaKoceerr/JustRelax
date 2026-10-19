@@ -1,0 +1,38 @@
+package com.mustafakoceerr.justrelax.core.ui.components
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
+import com.mustafakoceerr.justrelax.core.ui.generated.resources.app_mark
+import org.jetbrains.compose.resources.painterResource
+
+/**
+ * The app's icon (the leaf with a sound wave) in a circle, as the system splash shows it: for the
+ * splash, settings and anywhere else the app names itself.
+ */
+@Composable
+fun AppMark(modifier: Modifier = Modifier, size: Dp = 56.dp) {
+    Image(
+        painter = painterResource(Res.drawable.app_mark),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .size(size)
+            .clip(CircleShape)
+            // The artwork keeps the adaptive icon's padding; zoomed in, its cream tile fills the circle.
+            .graphicsLayer {
+                scaleX = ICON_ZOOM
+                scaleY = ICON_ZOOM
+            },
+    )
+}
+
+private const val ICON_ZOOM = 1.5f
