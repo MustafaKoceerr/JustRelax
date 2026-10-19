@@ -4,7 +4,7 @@
     <string name="err_mix_save_empty_name">ミックス名は空にできません。</string>
     <string name="err_mix_save_name_exists">この名前のミックスはすでに存在します。</string>
     <string name="err_mix_save_no_sound">保存する再生中のサウンドがありません。</string>
-    <string name="err_unknown">予期しないエラーが発生しました。</string>
+    <string name="err_mix_save_failed">予期しないエラーが発生しました。</string>
     <string name="scene_panel_title">あなたのシーン</string>
     <string name="scene_empty">ライブラリのサウンドをタップしてシーンを作りましょう。</string>
     <string name="action_stop_all">すべて停止</string>

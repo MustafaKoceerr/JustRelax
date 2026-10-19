@@ -1,9 +1,10 @@
 """Tests for the string converter: python3 -m unittest discover -s tools/strings"""
+import json
 import tempfile
 import unittest
 from pathlib import Path
 
-from strings import android_value, convert_file, convert_tree
+from strings import android_value, catalog_json, convert_file, convert_tree, swift_value
 
 
 class AndroidValueTest(unittest.TestCase):
@@ -62,6 +63,65 @@ class ConvertTreeTest(unittest.TestCase):
             self.assertEqual({res / "values" / "strings.xml", res / "values-fr" / "strings.xml"}, set(written))
             self.assertEqual('<resources><string name="a">C\\\'est</string></resources>', (res / "values-fr" / "strings.xml").read_text())
             self.assertFalse((res / "drawable").exists())
+
+
+class SwiftValueTest(unittest.TestCase):
+    def test_android_escapes_and_entities_are_undone(self):
+        self.assertEqual("L'IA & \"Mix\"", swift_value(r"L\'IA &amp; \"Mix\""))
+        self.assertEqual("@home", swift_value(r"\@home"))
+
+    def test_format_arguments_use_swift_specifiers(self):
+        self.assertEqual("Mix %1$@ saved, %2$lld left, 40%%", swift_value("Mix %1$s saved, %2$d left, 40%%"))
+        self.assertEqual("%@ and %lld", swift_value("%s and %d"))
+
+
+def write_res(root: Path, folder: str, body: str):
+    (root / folder).mkdir(parents=True, exist_ok=True)
+    (root / folder / "strings.xml").write_text(f"<resources>{body}</resources>")
+
+
+class CatalogTest(unittest.TestCase):
+    def test_every_module_and_language_lands_in_one_catalog(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            app, feature = Path(tmp, "app/res"), Path(tmp, "feature/res")
+            write_res(app, "values", '<string name="tab_home">Sounds</string>')
+            write_res(app, "values-tr", '<string name="tab_home">Sesler</string>')
+            write_res(feature, "values", r'<string name="err">It\'s %1$s</string>')
+
+            catalog = json.loads(catalog_json([app, feature]))
+
+            self.assertEqual("en", catalog["sourceLanguage"])
+            self.assertEqual({"en": "Sounds", "tr": "Sesler"}, {
+                language: unit["stringUnit"]["value"]
+                for language, unit in catalog["strings"]["tab_home"]["localizations"].items()
+            })
+            self.assertEqual("It's %1$@", catalog["strings"]["err"]["localizations"]["en"]["stringUnit"]["value"])
+            self.assertEqual("manual", catalog["strings"]["err"]["extractionState"])
+
+    def test_a_key_with_the_same_words_in_two_modules_is_kept_once(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            a, b = Path(tmp, "a/res"), Path(tmp, "b/res")
+            write_res(a, "values", '<string name="action_stop">Stop</string>')
+            write_res(b, "values", '<string name="action_stop">Stop</string>')
+
+            self.assertEqual(["action_stop"], list(json.loads(catalog_json([a, b]))["strings"]))
+
+    def test_a_key_with_different_words_in_two_modules_is_an_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            a, b = Path(tmp, "a/res"), Path(tmp, "b/res")
+            write_res(a, "values", '<string name="err_unknown">Something went wrong.</string>')
+            write_res(b, "values", '<string name="err_unknown">An unexpected error occurred.</string>')
+
+            with self.assertRaisesRegex(ValueError, "err_unknown"):
+                catalog_json([a, b])
+
+    def test_region_folders_become_language_tags(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            res = Path(tmp, "res")
+            write_res(res, "values", '<string name="a">A</string>')
+            write_res(res, "values-pt-rBR", '<string name="a">B</string>')
+
+            self.assertIn("pt-BR", json.loads(catalog_json([res]))["strings"]["a"]["localizations"])
 
 
 if __name__ == "__main__":

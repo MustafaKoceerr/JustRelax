@@ -3,7 +3,7 @@
     <string name="app_name">JustRelax</string>
     <string name="notification_subtitle">Just Relax와 함께 지금을 즐겨보세요</string>
     <string name="notification_title">편안한 사운드</string>
-    <string name="action_stop">정지</string>
+    <string name="notification_action_stop">정지</string>
     <string name="notification_channel_name">재생 컨트롤</string>
     <string name="tab_ai">AI</string>
     <string name="tab_home">사운드</string>

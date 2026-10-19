@@ -184,6 +184,16 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				es,
+				fr,
+				hi,
+				it,
+				ja,
+				ko,
+				nl,
+				pt,
+				sv,
 				tr,
 			);
 			mainGroup = CCB93A5B419645FD9CC5708C;
@@ -323,6 +333,7 @@
 					Shared,
 					"-lsqlite3",
 				);
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -362,6 +373,7 @@
 					Shared,
 					"-lsqlite3",
 				);
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

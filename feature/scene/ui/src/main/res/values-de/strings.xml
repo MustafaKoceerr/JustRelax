@@ -4,7 +4,7 @@
     <string name="err_mix_save_empty_name">Der Mix-Name darf nicht leer sein.</string>
     <string name="err_mix_save_name_exists">Ein Mix mit diesem Namen existiert bereits.</string>
     <string name="err_mix_save_no_sound">Es werden keine Sounds abgespielt, die gespeichert werden können.</string>
-    <string name="err_unknown">Ein unerwarteter Fehler ist aufgetreten.</string>
+    <string name="err_mix_save_failed">Ein unerwarteter Fehler ist aufgetreten.</string>
     <string name="scene_panel_title">Deine Szene</string>
     <string name="scene_empty">Tippe auf Klänge in der Bibliothek, um deine Szene zu bauen.</string>
     <string name="action_stop_all">Alle stoppen</string>

@@ -106,5 +106,6 @@ jobs:
       # The tests cover the pipeline's pure functions; ffmpeg is not needed.
       - run: python3 -m unittest discover -s tools/sound-pipeline
 
-      # The converter from Compose resource strings to Android resources.
+      # The string tools, and an iOS String Catalog that matches the Android strings.
       - run: python3 -m unittest discover -s tools/strings
+      - run: python3 tools/strings/strings.py xcstrings --check

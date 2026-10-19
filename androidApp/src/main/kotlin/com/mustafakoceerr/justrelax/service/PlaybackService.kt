@@ -85,7 +85,7 @@ class PlaybackService : MediaSessionService() {
         .build()
 
     private fun stopButton() = CommandButton.Builder(CommandButton.ICON_STOP)
-        .setDisplayName(getString(R.string.action_stop))
+        .setDisplayName(getString(R.string.notification_action_stop))
         .setSessionCommand(STOP_COMMAND)
         .build()
 

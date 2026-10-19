@@ -10,5 +10,5 @@ fun SceneMessage.text(): String = when (this) {
     SceneMessage.EmptyName -> stringResource(R.string.err_mix_save_empty_name)
     SceneMessage.NameTaken -> stringResource(R.string.err_mix_save_name_exists)
     SceneMessage.NothingPlaying -> stringResource(R.string.err_mix_save_no_sound)
-    SceneMessage.SaveFailed -> stringResource(R.string.err_unknown)
+    SceneMessage.SaveFailed -> stringResource(R.string.err_mix_save_failed)
 }

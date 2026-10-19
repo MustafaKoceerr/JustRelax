@@ -4,7 +4,7 @@
     <string name="err_mix_save_empty_name">Il nome del mix non può essere vuoto.</string>
     <string name="err_mix_save_name_exists">Esiste già un mix con questo nome.</string>
     <string name="err_mix_save_no_sound">Non ci sono suoni in riproduzione da salvare.</string>
-    <string name="err_unknown">Si è verificato un errore imprevisto.</string>
+    <string name="err_mix_save_failed">Si è verificato un errore imprevisto.</string>
     <string name="scene_panel_title">La tua scena</string>
     <string name="scene_empty">Tocca i suoni nella libreria per creare la tua scena.</string>
     <string name="action_stop_all">Ferma tutto</string>

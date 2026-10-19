@@ -4,7 +4,7 @@
     <string name="err_mix_save_empty_name">믹스 이름은 비워둘 수 없습니다.</string>
     <string name="err_mix_save_name_exists">이 이름의 믹스가 이미 존재합니다.</string>
     <string name="err_mix_save_no_sound">저장할 재생 중인 사운드가 없습니다.</string>
-    <string name="err_unknown">예기치 않은 오류가 발생했습니다.</string>
+    <string name="err_mix_save_failed">예기치 않은 오류가 발생했습니다.</string>
     <string name="scene_panel_title">나의 장면</string>
     <string name="scene_empty">라이브러리에서 소리를 눌러 장면을 만들어 보세요.</string>
     <string name="action_stop_all">모두 정지</string>
