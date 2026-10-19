@@ -23,4 +23,8 @@
     <string name="ai_result_label">AI-mix</string>
     <string name="ai_action_new">Nieuw</string>
     <string name="ai_prompt_quote">‘%1$s’</string>
+    <string name="err_ai_offline">Geen verbinding met de AI. Controleer je internet en probeer het opnieuw.</string>
+    <string name="err_ai_busy">Te veel verzoeken. Wacht een minuut en probeer het opnieuw.</string>
+    <string name="err_ai_unverified">Deze kopie van de app kon niet worden geverifieerd. Installeer Just Relax via Google Play om de AI te gebruiken.</string>
+    <string name="err_ai_unavailable">De AI reageert nu niet. Probeer het later opnieuw.</string>
 </resources>

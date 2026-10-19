@@ -19,9 +19,12 @@ import io.ktor.http.isSuccess
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.Serializable
 
-/** Asks a language model for a mix made only of the sounds in [inventory]. */
+/**
+ * Asks a language model for a mix made only of the sounds in [inventory], named and described in
+ * [language] (its English name, such as "Turkish").
+ */
 interface AiNetworkDataSource {
-    suspend fun generateMix(prompt: String, inventory: List<NetworkAiSound>): Resource<NetworkAiMix>
+    suspend fun generateMix(prompt: String, inventory: List<NetworkAiSound>, language: String): Resource<NetworkAiMix>
 }
 
 /**
@@ -34,7 +37,7 @@ internal class ProxyAiDataSource(
     private val baseUrl: String,
 ) : AiNetworkDataSource {
 
-    override suspend fun generateMix(prompt: String, inventory: List<NetworkAiSound>): Resource<NetworkAiMix> {
+    override suspend fun generateMix(prompt: String, inventory: List<NetworkAiSound>, language: String): Resource<NetworkAiMix> {
         if (inventory.isEmpty()) return Resource.Error(AppError.Ai.NoDownloadedSounds())
         return try {
             val response = session.authorized { bearer ->
@@ -42,7 +45,7 @@ internal class ProxyAiDataSource(
                     httpClient.post("${baseUrl}v1/ai/mix") {
                         header(HttpHeaders.Authorization, "Bearer $bearer")
                         contentType(ContentType.Application.Json)
-                        setBody(MixRequest(prompt, inventory))
+                        setBody(MixRequest(prompt, inventory, language))
                     }
                 }
             }
@@ -62,5 +65,5 @@ internal class ProxyAiDataSource(
     }
 
     @Serializable
-    private data class MixRequest(val prompt: String, val sounds: List<NetworkAiSound>)
+    private data class MixRequest(val prompt: String, val sounds: List<NetworkAiSound>, val language: String)
 }

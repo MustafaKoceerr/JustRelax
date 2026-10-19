@@ -23,4 +23,8 @@
     <string name="ai_result_label">Yapay zekâ miksi</string>
     <string name="ai_action_new">Yeni</string>
     <string name="ai_prompt_quote">“%1$s”</string>
+    <string name="err_ai_offline">AI’a bağlanılamadı. İnternetini kontrol edip tekrar dene.</string>
+    <string name="err_ai_busy">Çok fazla istek gönderildi. Bir dakika bekleyip tekrar dene.</string>
+    <string name="err_ai_unverified">Uygulamanın bu kopyası doğrulanamadı. AI’ı kullanmak için Just Relax’i Google Play’den yükle.</string>
+    <string name="err_ai_unavailable">AI şu anda yanıt vermiyor. Lütfen daha sonra tekrar dene.</string>
 </resources>

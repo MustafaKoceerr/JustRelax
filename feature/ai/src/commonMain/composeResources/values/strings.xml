@@ -23,4 +23,8 @@
     <string name="ai_result_label">AI mix</string>
     <string name="ai_action_new">New</string>
     <string name="ai_prompt_quote">“%1$s”</string>
+    <string name="err_ai_offline">No connection to the AI. Check your internet and try again.</string>
+    <string name="err_ai_busy">Too many requests. Wait a minute and try again.</string>
+    <string name="err_ai_unverified">This copy of the app couldn’t be verified. Install Just Relax from Google Play to use the AI.</string>
+    <string name="err_ai_unavailable">The AI isn’t responding right now. Please try again later.</string>
 </resources>

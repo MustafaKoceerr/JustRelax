@@ -23,4 +23,8 @@
     <string name="ai_result_label">AIミックス</string>
     <string name="ai_action_new">新規</string>
     <string name="ai_prompt_quote">「%1$s」</string>
+    <string name="err_ai_offline">AIに接続できません。インターネット接続を確認して、もう一度お試しください。</string>
+    <string name="err_ai_busy">リクエストが多すぎます。1分ほど待ってから、もう一度お試しください。</string>
+    <string name="err_ai_unverified">このアプリを確認できませんでした。AIを使うには、Google PlayからJust Relaxをインストールしてください。</string>
+    <string name="err_ai_unavailable">AIが現在応答していません。しばらくしてからもう一度お試しください。</string>
 </resources>

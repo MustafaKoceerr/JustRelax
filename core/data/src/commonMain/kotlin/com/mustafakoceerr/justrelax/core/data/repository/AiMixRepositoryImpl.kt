@@ -36,13 +36,9 @@ internal class AiMixRepositoryImpl(
         }
 
         val currentLanguage = languageController.getCurrentLanguage()
-        val modifiedPrompt = """
-            $prompt
+        val inventory = downloadedSounds.map { it.asInventoryItem() }
 
-            IMPORTANT: Provide the 'mix_name' and 'description' in ${currentLanguage.aiPromptName} language.
-        """.trimIndent()
-
-        val response = when (val aiResult = aiDataSource.generateMix(modifiedPrompt, downloadedSounds.map { it.asInventoryItem() })) {
+        val response = when (val aiResult = aiDataSource.generateMix(prompt, inventory, currentLanguage.aiPromptName)) {
             is Resource.Success -> aiResult.data
             is Resource.Error -> throw aiResult.error
             is Resource.Loading -> return@flow

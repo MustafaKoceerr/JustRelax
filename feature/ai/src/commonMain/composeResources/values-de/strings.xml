@@ -23,4 +23,8 @@
     <string name="ai_result_label">KI-Mix</string>
     <string name="ai_action_new">Neu</string>
     <string name="ai_prompt_quote">„%1$s“</string>
+    <string name="err_ai_offline">Keine Verbindung zur KI. Prüfe dein Internet und versuche es erneut.</string>
+    <string name="err_ai_busy">Zu viele Anfragen. Warte eine Minute und versuche es erneut.</string>
+    <string name="err_ai_unverified">Diese Kopie der App konnte nicht überprüft werden. Installiere Just Relax über Google Play, um die KI zu nutzen.</string>
+    <string name="err_ai_unavailable">Die KI antwortet gerade nicht. Bitte versuche es später erneut.</string>
 </resources>

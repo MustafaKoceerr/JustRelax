@@ -23,7 +23,11 @@ import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
 import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.ai.generated.resources.Res
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_busy
 import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_empty_response
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_offline
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_unavailable
+import com.mustafakoceerr.justrelax.feature.ai.generated.resources.err_ai_unverified
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.TestScope
@@ -213,6 +217,29 @@ class AiViewModelTest {
 
         assertFalse(viewModel.uiState.value.isLoading)
         assertTrue(viewModel.uiState.value.userMessage != null)
+    }
+
+    @Test
+    fun eachFailure_explainsItselfInsteadOfAGenericError() = runMainTest {
+        val expected = listOf(
+            AppError.Network.NoInternet() to Res.string.err_ai_offline,
+            AppError.Network.TimeOut() to Res.string.err_ai_offline,
+            AppError.Network.RateLimited() to Res.string.err_ai_busy,
+            AppError.Network.IntegrityFailed() to Res.string.err_ai_unverified,
+            AppError.Network.ServerError(503) to Res.string.err_ai_unavailable,
+            AppError.Ai.ApiError(502, "upstream") to Res.string.err_ai_unavailable,
+        )
+        val viewModel = viewModel()
+        viewModel.updatePrompt("anything")
+
+        for ((error, message) in expected) {
+            ai.result = Resource.Error(error)
+            viewModel.generateMix()
+            advanceUntilIdle()
+
+            assertEquals(message, (viewModel.uiState.value.userMessage as UiText.Resource).resId, "for $error")
+            viewModel.onMessageShown()
+        }
     }
 
     @Test

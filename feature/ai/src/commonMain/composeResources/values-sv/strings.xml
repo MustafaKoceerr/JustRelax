@@ -23,4 +23,8 @@
     <string name="ai_result_label">AI-mix</string>
     <string name="ai_action_new">Ny</string>
     <string name="ai_prompt_quote">”%1$s”</string>
+    <string name="err_ai_offline">Ingen anslutning till AI:n. Kontrollera internet och försök igen.</string>
+    <string name="err_ai_busy">För många förfrågningar. Vänta en minut och försök igen.</string>
+    <string name="err_ai_unverified">Den här kopian av appen kunde inte verifieras. Installera Just Relax från Google Play för att använda AI:n.</string>
+    <string name="err_ai_unavailable">AI:n svarar inte just nu. Försök igen senare.</string>
 </resources>

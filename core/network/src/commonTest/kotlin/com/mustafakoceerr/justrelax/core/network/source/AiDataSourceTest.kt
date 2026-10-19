@@ -35,10 +35,10 @@ class AiDataSourceTest {
     private fun FakeApi.dataSource() = ProxyAiDataSource(client, session, FakeApi.BASE_URL)
 
     @Test
-    fun theProxyGetsTheWordsAndTheInventory_andTheMixComesBack() = runTest {
+    fun theProxyGetsTheWordsTheInventoryAndTheLanguage_andTheMixComesBack() = runTest {
         val api = api()
 
-        val result = api.dataSource().generateMix("rainy night", listOf(rain))
+        val result = api.dataSource().generateMix("rainy night", listOf(rain), "Turkish")
 
         assertEquals(Resource.Success(NetworkAiMix("Rain", "d", listOf(NetworkAiMixSound("rain_light", 0.6f)))), result)
         val request = api.calls.single()
@@ -46,6 +46,7 @@ class AiDataSourceTest {
         assertEquals("Bearer s1", request.headers[HttpHeaders.Authorization])
         val body = Json.parseToJsonElement(sentBody).jsonObject
         assertEquals("rainy night", body["prompt"]?.jsonPrimitive?.content)
+        assertEquals("Turkish", body["language"]?.jsonPrimitive?.content)
         assertEquals("rain_light", body["sounds"]?.jsonArray?.single()?.jsonObject?.get("id")?.jsonPrimitive?.content)
     }
 
@@ -53,7 +54,7 @@ class AiDataSourceTest {
     fun withoutDownloadedSoundsNothingIsSent() = runTest {
         val api = api()
 
-        val result = api.dataSource().generateMix("rain", emptyList())
+        val result = api.dataSource().generateMix("rain", emptyList(), "English")
 
         assertIs<AppError.Ai.NoDownloadedSounds>((result as Resource.Error).error)
         assertTrue(api.calls.isEmpty())
@@ -61,8 +62,8 @@ class AiDataSourceTest {
 
     @Test
     fun aLimitIsRateLimitedAndAProxyFailureIsAnApiError() = runTest {
-        val limited = api(HttpStatusCode.TooManyRequests, "{}").dataSource().generateMix("rain", listOf(rain))
-        val failed = api(HttpStatusCode.BadGateway, "{}").dataSource().generateMix("rain", listOf(rain))
+        val limited = api(HttpStatusCode.TooManyRequests, "{}").dataSource().generateMix("rain", listOf(rain), "English")
+        val failed = api(HttpStatusCode.BadGateway, "{}").dataSource().generateMix("rain", listOf(rain), "English")
 
         assertIs<AppError.Network.RateLimited>((limited as Resource.Error).error)
         assertEquals(502, ((failed as Resource.Error).error as AppError.Ai.ApiError).code)

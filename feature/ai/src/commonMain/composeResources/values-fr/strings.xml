@@ -23,4 +23,8 @@
     <string name="ai_result_label">Mélange IA</string>
     <string name="ai_action_new">Nouveau</string>
     <string name="ai_prompt_quote">« %1$s »</string>
+    <string name="err_ai_offline">Impossible de joindre l’IA. Vérifie ta connexion internet et réessaie.</string>
+    <string name="err_ai_busy">Trop de demandes. Attends une minute et réessaie.</string>
+    <string name="err_ai_unverified">Cette copie de l’app n’a pas pu être vérifiée. Installe Just Relax depuis Google Play pour utiliser l’IA.</string>
+    <string name="err_ai_unavailable">L’IA ne répond pas pour le moment. Réessaie plus tard.</string>
 </resources>
