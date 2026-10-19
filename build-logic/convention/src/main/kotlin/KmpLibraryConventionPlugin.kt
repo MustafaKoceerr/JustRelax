@@ -16,7 +16,7 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
                 androidLibrary.configureAndroidLibrary(this@with)
 
                 if (isIosEnabled) {
-                    // No iosX64 (Intel simulator): Compose Multiplatform 1.12+ and its libraries no longer publish it.
+                    // No iosX64 (Intel simulator): development and CI run on Apple silicon Macs.
                     iosArm64()
                     iosSimulatorArm64()
                 }

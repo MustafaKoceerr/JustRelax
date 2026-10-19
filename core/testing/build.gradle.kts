@@ -10,7 +10,6 @@ kotlin {
             api(project(":core:media"))
             api(project(":core:analytics"))
             api(project(":core:playback"))
-            api(project(":core:ui"))
             api(project(":core:presentation"))
             api(libs.kotlinx.coroutines.test)
         }

@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.androidTest) apply false
     alias(libs.plugins.baselineprofile) apply false
-    alias(libs.plugins.composeMultiplatform) apply false
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.android.kotlin.multiplatform.library) apply false

@@ -8,7 +8,6 @@ dependencies {
     // Plugin APIs used by the convention plugins (compile only: the build already loads them).
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
-    compileOnly(libs.compose.gradlePlugin)
     compileOnly(libs.composeCompiler.gradlePlugin)
 }
 
@@ -18,17 +17,9 @@ gradlePlugin {
             id = "justrelax.kmp.library"
             implementationClass = "KmpLibraryConventionPlugin"
         }
-        register("kmpCompose") {
-            id = "justrelax.kmp.compose"
-            implementationClass = "KmpComposeConventionPlugin"
-        }
         register("kmpFeature") {
             id = "justrelax.kmp.feature"
             implementationClass = "KmpFeatureConventionPlugin"
-        }
-        register("kmpFeatureLegacy") {
-            id = "justrelax.kmp.feature.legacy"
-            implementationClass = "KmpFeatureLegacyConventionPlugin"
         }
         register("koin") {
             id = "justrelax.koin"

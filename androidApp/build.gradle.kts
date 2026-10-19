@@ -88,13 +88,6 @@ android {
         }
     }
 
-    packaging {
-        resources {
-            // Compose resources are read from assets first; the Java-resource copy is only a duplicate.
-            excludes += "composeResources/**"
-        }
-    }
-
 }
 
 // The benchmark builds get their own application id, so they install beside the Play app, which has a
