@@ -6,6 +6,7 @@ import com.mustafakoceerr.justrelax.core.common.di.commonModule
 import com.mustafakoceerr.justrelax.core.database.di.databaseModule
 import com.mustafakoceerr.justrelax.core.network.di.networkModule
 import com.mustafakoceerr.justrelax.core.ui.di.uiModule
+import com.mustafakoceerr.justrelax.core.presentation.di.presentationModule
 import com.mustafakoceerr.justrelax.core.data.di.dataModule
 import com.mustafakoceerr.justrelax.core.media.di.mediaModule
 import com.mustafakoceerr.justrelax.core.analytics.di.analyticsModule
@@ -42,6 +43,7 @@ val appModules: List<Module>
         mediaModule,
         analyticsModule,
         uiModule,
+        presentationModule,
 
         playbackModule,
 

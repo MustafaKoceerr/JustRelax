@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.library
 
-import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
+import com.mustafakoceerr.justrelax.core.presentation.SceneCards
 import com.mustafakoceerr.justrelax.core.analytics.Params
 import com.mustafakoceerr.justrelax.core.analytics.EventTypes
 import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent

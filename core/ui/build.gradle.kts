@@ -8,6 +8,7 @@ kotlin {
         commonMain.dependencies {
             api(project(":core:common"))
             api(project(":core:model"))
+            api(project(":core:presentation"))
 
             api(libs.compose.material3.adaptive)
         }

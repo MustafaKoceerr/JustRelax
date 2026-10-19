@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.library.components
 
-import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
+import com.mustafakoceerr.justrelax.core.presentation.testing.TestTags
 import androidx.compose.ui.platform.testTag
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

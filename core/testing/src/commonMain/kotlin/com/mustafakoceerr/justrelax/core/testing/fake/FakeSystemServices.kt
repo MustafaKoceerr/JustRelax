@@ -3,7 +3,7 @@ package com.mustafakoceerr.justrelax.core.testing.fake
 import com.mustafakoceerr.justrelax.core.data.repository.LegalRepository
 import com.mustafakoceerr.justrelax.core.data.language.LanguageController
 import com.mustafakoceerr.justrelax.core.data.language.LanguageStrategy
-import com.mustafakoceerr.justrelax.core.ui.system.SystemLauncher
+import com.mustafakoceerr.justrelax.core.presentation.system.SystemLauncher
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import kotlinx.coroutines.flow.MutableStateFlow
 

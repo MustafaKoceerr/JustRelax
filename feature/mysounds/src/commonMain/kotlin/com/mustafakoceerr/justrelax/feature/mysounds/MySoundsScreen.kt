@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.mysounds
 
-import com.mustafakoceerr.justrelax.core.ui.util.formatClipTime
+import com.mustafakoceerr.justrelax.core.presentation.util.formatClipTime
 import com.mustafakoceerr.justrelax.core.ui.extensions.readableWidth
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_delete
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_cancel

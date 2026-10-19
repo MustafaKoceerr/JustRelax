@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
+import com.mustafakoceerr.justrelax.core.presentation.SceneCards
 import com.mustafakoceerr.justrelax.core.ui.components.soundLayerItems
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_save
 import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.Res

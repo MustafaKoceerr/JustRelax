@@ -11,7 +11,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
+import com.mustafakoceerr.justrelax.core.presentation.SceneCards
+import com.mustafakoceerr.justrelax.core.presentation.testing.TestTags
 
 /** The grid of sound cards in the library, with an optional full-width [header] above the cards. */
 @Composable

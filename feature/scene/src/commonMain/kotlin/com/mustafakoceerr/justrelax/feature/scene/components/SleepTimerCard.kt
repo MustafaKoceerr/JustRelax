@@ -29,8 +29,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_cancel
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sleep_timer
-import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
-import com.mustafakoceerr.justrelax.core.ui.util.formatCountdown
+import com.mustafakoceerr.justrelax.core.presentation.testing.TestTags
+import com.mustafakoceerr.justrelax.core.presentation.util.formatCountdown
 import com.mustafakoceerr.justrelax.core.ui.util.formatDurationVerbose
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.scene_timer_change

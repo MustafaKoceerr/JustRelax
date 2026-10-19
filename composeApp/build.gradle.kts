@@ -22,6 +22,7 @@ kotlin {
             implementation(project(":core:common"))
             implementation(project(":core:model"))
             api(project(":core:ui"))
+            implementation(project(":core:presentation"))
             implementation(project(":core:network"))
             implementation(project(":core:database"))
             implementation(project(":core:playback"))

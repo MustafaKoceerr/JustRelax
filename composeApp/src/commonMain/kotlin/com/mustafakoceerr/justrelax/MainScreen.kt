@@ -54,7 +54,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxSnackbarHost
 import com.mustafakoceerr.justrelax.core.ui.components.SaveMixDialog
 import com.mustafakoceerr.justrelax.core.ui.components.rememberVolumeOf
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
-import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
+import com.mustafakoceerr.justrelax.core.presentation.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.scene.SceneViewModel
 import com.mustafakoceerr.justrelax.feature.scene.text
 import com.mustafakoceerr.justrelax.feature.freesound.FreesoundEditorRequest

@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxDetailScaffold
-import com.mustafakoceerr.justrelax.core.ui.util.label
+import com.mustafakoceerr.justrelax.core.presentation.util.label
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.credits_author
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.credits_empty

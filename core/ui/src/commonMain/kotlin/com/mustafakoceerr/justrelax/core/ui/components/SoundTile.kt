@@ -50,7 +50,7 @@ import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_state_play
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sound_state_stopped
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.volume_level
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
-import com.mustafakoceerr.justrelax.core.ui.util.volumeAfterDrag
+import com.mustafakoceerr.justrelax.core.presentation.util.volumeAfterDrag
 import org.jetbrains.compose.resources.stringResource
 
 private const val ANIM_DURATION = 300

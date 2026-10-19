@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_cancel
-import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
+import com.mustafakoceerr.justrelax.core.presentation.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_pause
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_action_resume

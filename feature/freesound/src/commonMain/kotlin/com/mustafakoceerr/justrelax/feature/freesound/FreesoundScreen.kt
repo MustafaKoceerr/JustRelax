@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.freesound
 
-import com.mustafakoceerr.justrelax.core.ui.util.formatClipLength
+import com.mustafakoceerr.justrelax.core.presentation.util.formatClipLength
 import com.mustafakoceerr.justrelax.core.ui.extensions.readableWidth
 import com.mustafakoceerr.justrelax.core.ui.components.EmptyHint
 import com.mustafakoceerr.justrelax.core.ui.components.CenteredLoading
@@ -75,7 +75,7 @@ import com.mustafakoceerr.justrelax.core.model.FreesoundSound
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxDetailScaffold
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTabScaffold
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
-import com.mustafakoceerr.justrelax.core.ui.util.label
+import com.mustafakoceerr.justrelax.core.presentation.util.label
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_add

@@ -17,6 +17,7 @@ class KmpFeatureLegacyConventionPlugin : Plugin<Project> {
                     implementation(project(":core:common"))
                     implementation(project(":core:model"))
                     implementation(project(":core:ui"))
+                    implementation(project(":core:presentation"))
                     implementation(project(":core:data"))
 
                     implementation(bundle("koin-compose"))

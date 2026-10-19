@@ -10,7 +10,7 @@ import java.util.regex.Pattern
 /** The benchmark builds' application id (androidApp adds `.benchmark`), so they install beside the Play app. */
 const val PACKAGE_NAME = "com.mustafakoceerr.justrelax.benchmark"
 
-/** A copy of core:ui's TestTags; the benchmark module does not depend on app code. */
+/** A copy of core:presentation's TestTags; the benchmark module does not depend on app code. */
 object Tags {
     const val CONSENT_DECLINE = "consent_decline"
     const val CATEGORY_TAB = "category_tab"

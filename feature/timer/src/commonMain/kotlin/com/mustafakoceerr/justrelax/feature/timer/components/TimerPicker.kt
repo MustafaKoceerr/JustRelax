@@ -38,7 +38,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
+import com.mustafakoceerr.justrelax.core.presentation.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_type_value
 import com.mustafakoceerr.justrelax.feature.timer.generated.resources.timer_unit_hour

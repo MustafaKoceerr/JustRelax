@@ -42,8 +42,8 @@ import com.mustafakoceerr.justrelax.core.ui.extensions.rememberThrottledOnClick
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_pause
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.sleep_timer
-import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
-import com.mustafakoceerr.justrelax.core.ui.util.formatCountdown
+import com.mustafakoceerr.justrelax.core.presentation.testing.TestTags
+import com.mustafakoceerr.justrelax.core.presentation.util.formatCountdown
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_stop_all
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.scene_timer_chip

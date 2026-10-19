@@ -11,7 +11,7 @@ import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.data.repository.TipRepository
 import com.mustafakoceerr.justrelax.core.data.language.LanguageController
 import com.mustafakoceerr.justrelax.core.data.language.LanguageStrategy
-import com.mustafakoceerr.justrelax.core.ui.system.SystemLauncher
+import com.mustafakoceerr.justrelax.core.presentation.system.SystemLauncher
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus

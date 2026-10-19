@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.ai
 
-import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
+import com.mustafakoceerr.justrelax.core.presentation.SceneCards
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 
 data class AiUiState(

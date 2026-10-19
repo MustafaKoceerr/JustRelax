@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.mysounds.editor
 
-import com.mustafakoceerr.justrelax.core.ui.util.formatClipTime
+import com.mustafakoceerr.justrelax.core.presentation.util.formatClipTime
 import com.mustafakoceerr.justrelax.core.ui.extensions.readableWidth
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mustafakoceerr.justrelax.core.data.repository.ConsentRepository
 import com.mustafakoceerr.justrelax.core.data.repository.LegalRepository
-import com.mustafakoceerr.justrelax.core.ui.system.SystemLauncher
+import com.mustafakoceerr.justrelax.core.presentation.system.SystemLauncher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxBackground
-import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
+import com.mustafakoceerr.justrelax.core.presentation.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.consent_accept
 import com.mustafakoceerr.justrelax.feature.settings.generated.resources.consent_decline
