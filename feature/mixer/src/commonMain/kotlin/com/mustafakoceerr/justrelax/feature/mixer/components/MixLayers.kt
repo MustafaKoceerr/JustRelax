@@ -2,8 +2,6 @@ package com.mustafakoceerr.justrelax.feature.mixer.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -18,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BookmarkAdd
@@ -39,10 +36,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import com.mustafakoceerr.justrelax.core.ui.components.LayerKindLabel
-import com.mustafakoceerr.justrelax.core.ui.components.LayerVolumeSlider
 import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
-import com.mustafakoceerr.justrelax.core.ui.components.SoundLayerRow
+import com.mustafakoceerr.justrelax.core.ui.components.soundLayerItems
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_save
 import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.mixer_current_mix
@@ -54,10 +49,7 @@ import com.mustafakoceerr.justrelax.feature.mixer.generated.resources.mixer_unlo
 import org.jetbrains.compose.resources.stringResource
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 
-/**
- * One row per sound of the mix. New rows fade in one after another and the rest slide to their
- * new places, so a shuffle reads as the mix changing rather than the screen being replaced.
- */
+/** Sound layers with a lock on each: a locked sound stays when the rest is shuffled again. */
 internal fun LazyGridScope.mixLayerItems(
     sounds: List<LocalizedSound>,
     cards: SceneCards,
@@ -67,37 +59,15 @@ internal fun LazyGridScope.mixLayerItems(
     onToggleLock: (soundId: String) -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
     onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
-) {
-    itemsIndexed(items = sounds, key = { _, sound -> sound.id }, contentType = { _, _ -> "layer" }) { index, sound ->
-        val isPlaying = cards.isPlaying(sound.id)
-        SoundLayerRow(
-            icon = sound.icon,
-            name = sound.name,
-            isPlaying = isPlaying,
-            onToggle = { onSoundClick(sound.id) },
-            supporting = {
-                LayerKindLabel(
-                    kind = sound.kind,
-                    frequency = cards.frequency(sound.id),
-                    onFrequencyChange = { onFrequencyChange(sound.id, it) },
-                )
-            },
-            trailing = { LockButton(isLocked = sound.id in lockedIds, onToggle = { onToggleLock(sound.id) }) },
-            bottom = {
-                LayerVolumeSlider(
-                    volume = { volumeOf(sound.id) },
-                    onVolumeChange = { onVolumeChange(sound.id, it) },
-                    enabled = isPlaying,
-                )
-            },
-            modifier = Modifier.animateItem(
-                fadeInSpec = tween(durationMillis = 250, delayMillis = index * STAGGER_MS),
-                placementSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                fadeOutSpec = tween(durationMillis = 150),
-            ),
-        )
-    }
-}
+) = soundLayerItems(
+    sounds = sounds,
+    cards = cards,
+    volumeOf = volumeOf,
+    onSoundClick = onSoundClick,
+    onVolumeChange = onVolumeChange,
+    onFrequencyChange = onFrequencyChange,
+    trailing = { sound -> LockButton(isLocked = sound.id in lockedIds, onToggle = { onToggleLock(sound.id) }) },
+)
 
 @Composable
 private fun LockButton(isLocked: Boolean, onToggle: () -> Unit) {
@@ -177,5 +147,3 @@ internal fun MixerEmptyState(modifier: Modifier = Modifier) {
         }
     }
 }
-
-private const val STAGGER_MS = 40

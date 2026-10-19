@@ -9,7 +9,6 @@
     <string name="err_ai_no_sounds">Geen gedownloade geluiden gevonden. De AI heeft geluiden nodig om een mix te maken.</string>
     <string name="err_ai_empty_response">De AI gaf een lege of ongeldige reactie terug. Probeer het opnieuw.</string>
     <string name="err_unknown">Er is een onverwachte fout opgetreden. Probeer het later opnieuw.</string>
-    <string name="action_clear">Wissen</string>
     <string name="ai_action_try_another_variation">Probeer een andere variant</string>
     <string name="ai_action_send">Verzenden</string>
     <string name="ai_data_notice_title">Je tekst gaat naar OpenAI</string>
@@ -18,4 +17,10 @@
     <string name="ai_data_notice_dismiss">Niet nu</string>
     <string name="ai_data_notice_privacy">Privacybeleid</string>
     <string name="ai_data_notice_short">Je tekst wordt naar OpenAI gestuurd en kan worden gebruikt om zijn modellen te verbeteren. Geen persoonsgegevens invullen.</string>
+    <string name="ai_greeting_title">Wat wil je horen?</string>
+    <string name="ai_greeting_body">Beschrijf een plek, een moment of een gevoel, en er ontstaat een scène met je gedownloade geluiden.</string>
+    <string name="ai_thinking">Je scène wordt gemaakt…</string>
+    <string name="ai_result_label">AI-mix</string>
+    <string name="ai_action_new">Nieuw</string>
+    <string name="ai_prompt_quote">‘%1$s’</string>
 </resources>

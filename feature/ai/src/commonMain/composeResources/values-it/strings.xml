@@ -9,7 +9,6 @@
     <string name="err_ai_no_sounds">Nessun suono scaricato trovato. L'IA ha bisogno di suoni per creare un mix.</string>
     <string name="err_ai_empty_response">L'IA ha restituito una risposta vuota o non valida. Riprova.</string>
     <string name="err_unknown">Si è verificato un errore imprevisto. Riprova più tardi.</string>
-    <string name="action_clear">Cancella</string>
     <string name="ai_action_try_another_variation">Prova un'altra variante</string>
     <string name="ai_action_send">Invia</string>
     <string name="ai_data_notice_title">Il tuo testo va a OpenAI</string>
@@ -18,4 +17,10 @@
     <string name="ai_data_notice_dismiss">Non ora</string>
     <string name="ai_data_notice_privacy">Informativa sulla privacy</string>
     <string name="ai_data_notice_short">Il tuo testo viene inviato a OpenAI e può essere usato per migliorare i suoi modelli. Non inserire informazioni personali.</string>
+    <string name="ai_greeting_title">Cosa vorresti ascoltare?</string>
+    <string name="ai_greeting_body">Descrivi un luogo, un momento o una sensazione: verrà creata una scena con i tuoi suoni scaricati.</string>
+    <string name="ai_thinking">Sto creando la tua scena…</string>
+    <string name="ai_result_label">Mix IA</string>
+    <string name="ai_action_new">Nuovo</string>
+    <string name="ai_prompt_quote">«%1$s»</string>
 </resources>

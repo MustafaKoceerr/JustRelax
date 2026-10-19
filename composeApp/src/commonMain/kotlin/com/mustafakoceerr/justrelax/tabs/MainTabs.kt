@@ -56,7 +56,7 @@ fun MainTabContent(
     when (tab) {
         MainTab.HOME -> LibraryRoute(onOpenSettings = onOpenSettings, onOpenMySounds = onOpenMySounds)
         MainTab.TIMER -> TimerRoute()
-        MainTab.AI -> AiRoute()
+        MainTab.AI -> AiRoute(onSaveScene = onSaveScene)
         MainTab.SAVED -> SavedRoute(onOpenMixer = { onSelectTab(MainTab.MIXER) })
         MainTab.MIXER -> MixerRoute(onSaveScene = { onSaveScene(null) })
     }

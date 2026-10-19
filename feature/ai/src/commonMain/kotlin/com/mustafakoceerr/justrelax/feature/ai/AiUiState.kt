@@ -9,6 +9,8 @@ data class AiUiState(
     val isLoading: Boolean = false,
     val mixName: String = "",
     val mixDescription: String = "",
+    /** The prompt that made the mix on screen, which [prompt] may since have moved on from. */
+    val lastPrompt: String = "",
     val mixSounds: List<LocalizedSound> = emptyList(),
     /** Which sounds play and how often, for the sound cards. Volumes come from the ViewModel's `volumes`. */
     val sceneCards: SceneCards = SceneCards(),
