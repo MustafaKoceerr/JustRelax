@@ -2,6 +2,7 @@ import Shared
 
 /// A screen pushed onto a tab's navigation stack.
 enum AppRoute: Hashable {
+    case mySounds
     case freesound
     case soundEditor(EditorRequest)
 }

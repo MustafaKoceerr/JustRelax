@@ -15,6 +15,8 @@ val exportedProjects = listOf(
     ":core:model",
     ":core:data",
     ":core:presentation",
+    // The sound editor's TrimRange and TrimProblem.
+    ":core:media",
     ":feature:library",
     ":feature:mixer",
     ":feature:saved",
@@ -62,7 +64,6 @@ kotlin {
             implementation(project(":core:network"))
             implementation(project(":core:database"))
             implementation(project(":core:playback"))
-            implementation(project(":core:media"))
             exportedProjects.forEach { api(project(it)) }
 
             implementation(libs.androidx.lifecycle.viewmodel)
