@@ -19,6 +19,7 @@ struct MainTabView: View {
                         switch tab {
                         case .home: LibraryScreen()
                         case .mixer: MixerScreen()
+                        case .ai: AiScreen()
                         default: TabPlaceholder(tab: tab)
                         }
                     }
