@@ -58,7 +58,9 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - name: iOS unit tests
-        run: ./gradlew iosSimulatorArm64Test -Pjustrelax.ios.enabled=true --continue
+        # Only the modules with iOS-only tests (AVFoundation); common tests already run on the
+        # Android host, and linking a test binary for every module takes over an hour here.
+        run: ./gradlew :core:playback:iosSimulatorArm64Test :core:media:iosSimulatorArm64Test -Pjustrelax.ios.enabled=true --continue
 
       - name: Simulator build
         run: >
