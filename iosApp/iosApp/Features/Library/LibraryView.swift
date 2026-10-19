@@ -25,6 +25,17 @@ struct LibraryView: View {
                         }
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        navigator?.push(.settings)
+                    } label: {
+                        Label {
+                            Text(.actionSettings)
+                        } icon: {
+                            Image(systemName: "gearshape")
+                        }
+                    }
+                }
             }
             .task { await model.followState(banners: banners) }
             .task { await model.followVolumes() }
