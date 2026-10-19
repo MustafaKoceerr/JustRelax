@@ -38,6 +38,42 @@ jobs:
           name: test-reports
           path: '**/build/reports/tests/'
 
+  ios:
+    # Kotlin/Native iOS tests and an unsigned simulator build of the Xcode app. Public repos get
+    # macOS runners for free.
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: iOS unit tests
+        # Only the modules with iOS-only tests (AVFoundation); common tests already run on the
+        # Android host, and linking a test binary for every module takes over an hour here.
+        run: ./gradlew :core:playback:iosSimulatorArm64Test :core:media:iosSimulatorArm64Test -Pjustrelax.ios.enabled=true --continue
+
+      - name: Simulator build
+        run: >
+          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator
+          -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-reports
+          path: '**/build/reports/tests/'
+
   api-proxy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
