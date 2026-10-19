@@ -3,16 +3,21 @@ import Shared
 
 @main
 struct iOSApp: App {
-    // Firebase and then Koin start before the first scene.
+    @State private var model: AppModel
+
+    // Firebase and then Koin start before the first scene; the model needs Koin.
     init() {
         let firebase = FirebaseReporting.configureIfAvailable()
         KoinHelperKt.doInitKoin(analytics: firebase?.0, crashReporter: firebase?.1)
+        _model = State(initialValue: AppModel())
     }
 
     // SwiftUI.Scene: the shared framework has a Scene too (the soundscape).
     var body: some SwiftUI.Scene {
         WindowGroup {
-            ContentView()
+            MainTabView()
+                .preferredColorScheme(model.theme.colorScheme)
+                .task { await model.observe() }
         }
     }
 }
