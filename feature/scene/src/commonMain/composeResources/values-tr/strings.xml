@@ -9,4 +9,9 @@
     <string name="scene_empty">Sahneni kurmak için kütüphanedeki seslere dokun.</string>
     <string name="action_stop_all">Hepsini durdur</string>
     <string name="action_save_scene">Kaydet</string>
+    <string name="scene_timer_custom">Özel…</string>
+    <string name="scene_timer_change">Değiştir</string>
+    <string name="scene_timer_ends_in">%1$s sonra kısılarak durur</string>
+    <string name="scene_timer_chip">Uyku</string>
+    <string name="scene_timer_hint">Süre dolunca sesler yavaşça kısılır</string>
 </resources>

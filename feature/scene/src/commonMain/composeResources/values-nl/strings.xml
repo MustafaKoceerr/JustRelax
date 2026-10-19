@@ -9,4 +9,9 @@
     <string name="scene_empty">Tik op geluiden in de bibliotheek om je scène te maken.</string>
     <string name="action_stop_all">Alles stoppen</string>
     <string name="action_save_scene">Opslaan</string>
+    <string name="scene_timer_custom">Anders…</string>
+    <string name="scene_timer_change">Wijzigen</string>
+    <string name="scene_timer_ends_in">Stopt over %1$s</string>
+    <string name="scene_timer_chip">Slaap</string>
+    <string name="scene_timer_hint">Aan het eind faden de geluiden zacht weg</string>
 </resources>

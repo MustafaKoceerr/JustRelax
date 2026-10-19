@@ -37,4 +37,7 @@
     <string name="frequency_title">कितनी बार</string>
     <string name="action_pause">रोकें</string>
     <string name="sleep_timer">स्लीप टाइमर</string>
+    <string name="duration_hour_short">घं</string>
+    <string name="duration_minute_short">मि</string>
+    <string name="duration_second_short">से</string>
 </resources>

@@ -12,4 +12,14 @@
     <string name="freesound_rate_limited">Zu viele Suchanfragen. Warte eine Minute und versuche es erneut.</string>
     <string name="freesound_failed">Die Suche hat nicht funktioniert. Versuche es erneut.</string>
     <string name="freesound_download_failed">Der Sound konnte nicht heruntergeladen werden. Versuche es erneut.</string>
+    <string name="freesound_discover_title">Sounds entdecken</string>
+    <string name="freesound_try">Probier zum Beispiel</string>
+    <string name="freesound_suggestion_rain">Regen</string>
+    <string name="freesound_suggestion_thunder">Gewitter</string>
+    <string name="freesound_suggestion_ocean">Meereswellen</string>
+    <string name="freesound_suggestion_birds">Waldvögel</string>
+    <string name="freesound_suggestion_fireplace">Kaminfeuer</string>
+    <string name="freesound_suggestion_cafe">Café</string>
+    <string name="freesound_suggestion_wind">Wind</string>
+    <string name="freesound_suggestion_white_noise">Weißes Rauschen</string>
 </resources>

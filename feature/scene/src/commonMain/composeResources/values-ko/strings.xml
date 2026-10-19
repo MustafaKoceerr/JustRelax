@@ -9,4 +9,9 @@
     <string name="scene_empty">라이브러리에서 소리를 눌러 장면을 만들어 보세요.</string>
     <string name="action_stop_all">모두 정지</string>
     <string name="action_save_scene">저장</string>
+    <string name="scene_timer_custom">직접 설정…</string>
+    <string name="scene_timer_change">변경</string>
+    <string name="scene_timer_ends_in">%1$s 후 서서히 꺼져요</string>
+    <string name="scene_timer_chip">수면</string>
+    <string name="scene_timer_hint">시간이 되면 소리가 부드럽게 줄어들어요</string>
 </resources>

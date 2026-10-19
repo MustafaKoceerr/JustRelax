@@ -56,6 +56,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.rememberVolumeOf
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.scene.SceneViewModel
+import com.mustafakoceerr.justrelax.feature.freesound.FreesoundEditorRequest
 import com.mustafakoceerr.justrelax.feature.scene.components.MiniPlayerBar
 import com.mustafakoceerr.justrelax.feature.scene.MiniPlayerUiState
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
@@ -86,7 +87,12 @@ import com.mustafakoceerr.justrelax.core.analytics.logScreenView
  * cleared when the user leaves Main.
  */
 @Composable
-fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit, onOpenTimer: () -> Unit) {
+fun MainRoute(
+    onOpenSettings: () -> Unit,
+    onOpenMySounds: () -> Unit,
+    onOpenTimer: () -> Unit,
+    onOpenSoundEditor: (FreesoundEditorRequest) -> Unit,
+) {
     val sceneViewModel = koinViewModel<SceneViewModel>()
     // Only what the mini player shows: a volume drag changes the scene many times a second, and
     // reading the whole scene here would redraw the shell for each step.
@@ -105,9 +111,12 @@ fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit, onOpenTime
         onStopAll = sceneViewModel::stopAll,
         onOpenTimer = onOpenTimer,
         onSaveScene = sceneViewModel::openSaveDialog,
-        scenePanel = { modifier, openTimer -> ScenePanelRoute(sceneViewModel, openTimer, modifier) },
+        scenePanel = { modifier, openTimer ->
+            ScenePanelRoute(sceneViewModel, timerRemaining = { timerRemaining.value }, openTimer, modifier)
+        },
         onOpenSettings = onOpenSettings,
         onOpenMySounds = onOpenMySounds,
+        onOpenSoundEditor = onOpenSoundEditor,
         snackbarHostState = snackbarController.hostState
     )
 }
@@ -132,7 +141,12 @@ private fun SceneMessagesAndDialog(sceneViewModel: SceneViewModel, snackbarContr
 
 /** Collects the scene itself, so its changes redraw only the panel; volume changes, only its sliders. */
 @Composable
-private fun ScenePanelRoute(sceneViewModel: SceneViewModel, onOpenTimer: () -> Unit, modifier: Modifier) {
+private fun ScenePanelRoute(
+    sceneViewModel: SceneViewModel,
+    timerRemaining: () -> Long?,
+    onOpenTimer: () -> Unit,
+    modifier: Modifier,
+) {
     val sceneState by sceneViewModel.uiState.collectAsStateWithLifecycle()
     val volumeOf = rememberVolumeOf(sceneViewModel.volumes.collectAsStateWithLifecycle())
     ScenePanel(
@@ -142,6 +156,9 @@ private fun ScenePanelRoute(sceneViewModel: SceneViewModel, onOpenTimer: () -> U
         onStopAll = sceneViewModel::stopAll,
         onSave = sceneViewModel::openSaveDialog,
         onOpenTimer = onOpenTimer,
+        timerRemaining = timerRemaining,
+        onStartTimer = sceneViewModel::startTimer,
+        onCancelTimer = sceneViewModel::cancelTimer,
         onVolumeChange = sceneViewModel::changeVolume,
         onFrequencyChange = sceneViewModel::changeFrequency,
         onRemove = sceneViewModel::remove,
@@ -163,6 +180,7 @@ private fun MainScreenLayout(
     scenePanel: @Composable (Modifier, onOpenTimer: () -> Unit) -> Unit,
     onOpenSettings: () -> Unit,
     onOpenMySounds: () -> Unit,
+    onOpenSoundEditor: (FreesoundEditorRequest) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
     val analytics = koinInject<AnalyticsHelper>()
@@ -246,6 +264,7 @@ private fun MainScreenLayout(
                                 onOpenMySounds = onOpenMySounds,
                                 onSelectTab = tabState::select,
                                 onSaveScene = onSaveScene,
+                                onOpenSoundEditor = onOpenSoundEditor,
                             )
                         }
                     }

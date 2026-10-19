@@ -12,4 +12,14 @@
     <string name="freesound_rate_limited">Demasiadas búsquedas. Espera un minuto y vuelve a intentarlo.</string>
     <string name="freesound_failed">La búsqueda no funcionó. Inténtalo de nuevo.</string>
     <string name="freesound_download_failed">No se pudo descargar el sonido. Inténtalo de nuevo.</string>
+    <string name="freesound_discover_title">Descubre sonidos</string>
+    <string name="freesound_try">Prueba con</string>
+    <string name="freesound_suggestion_rain">Lluvia</string>
+    <string name="freesound_suggestion_thunder">Tormenta</string>
+    <string name="freesound_suggestion_ocean">Olas del mar</string>
+    <string name="freesound_suggestion_birds">Pájaros del bosque</string>
+    <string name="freesound_suggestion_fireplace">Chimenea</string>
+    <string name="freesound_suggestion_cafe">Cafetería</string>
+    <string name="freesound_suggestion_wind">Viento</string>
+    <string name="freesound_suggestion_white_noise">Ruido blanco</string>
 </resources>

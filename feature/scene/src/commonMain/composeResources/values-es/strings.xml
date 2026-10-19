@@ -9,4 +9,9 @@
     <string name="scene_empty">Toca sonidos en la biblioteca para crear tu escena.</string>
     <string name="action_stop_all">Detener todo</string>
     <string name="action_save_scene">Guardar</string>
+    <string name="scene_timer_custom">Otro…</string>
+    <string name="scene_timer_change">Cambiar</string>
+    <string name="scene_timer_ends_in">Se apaga en %1$s</string>
+    <string name="scene_timer_chip">Dormir</string>
+    <string name="scene_timer_hint">Al terminar, los sonidos se apagan suavemente</string>
 </resources>

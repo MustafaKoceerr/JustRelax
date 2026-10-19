@@ -9,4 +9,9 @@
     <string name="scene_empty">Tryck på ljud i biblioteket för att bygga din scen.</string>
     <string name="action_stop_all">Stoppa alla</string>
     <string name="action_save_scene">Spara</string>
+    <string name="scene_timer_custom">Egen…</string>
+    <string name="scene_timer_change">Ändra</string>
+    <string name="scene_timer_ends_in">Tonas ut om %1$s</string>
+    <string name="scene_timer_chip">Sömn</string>
+    <string name="scene_timer_hint">När tiden är slut tonas ljuden ut mjukt</string>
 </resources>

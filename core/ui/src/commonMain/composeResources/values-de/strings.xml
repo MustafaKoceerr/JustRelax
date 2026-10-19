@@ -37,4 +37,7 @@
     <string name="frequency_title">Wie oft</string>
     <string name="action_pause">Pausieren</string>
     <string name="sleep_timer">Schlaf-Timer</string>
+    <string name="duration_hour_short">Std</string>
+    <string name="duration_minute_short">Min</string>
+    <string name="duration_second_short">Sek</string>
 </resources>

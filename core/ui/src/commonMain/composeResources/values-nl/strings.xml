@@ -37,4 +37,7 @@
     <string name="frequency_title">Hoe vaak</string>
     <string name="action_pause">Pauzeren</string>
     <string name="sleep_timer">Slaaptimer</string>
+    <string name="duration_hour_short">u</string>
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">s</string>
 </resources>

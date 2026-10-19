@@ -12,4 +12,14 @@
     <string name="freesound_rate_limited">Too many searches. Wait a minute and try again.</string>
     <string name="freesound_failed">The search did not work. Try again.</string>
     <string name="freesound_download_failed">The sound could not be downloaded. Try again.</string>
+    <string name="freesound_discover_title">Discover sounds</string>
+    <string name="freesound_try">Try one of these</string>
+    <string name="freesound_suggestion_rain">Rain</string>
+    <string name="freesound_suggestion_thunder">Thunder</string>
+    <string name="freesound_suggestion_ocean">Ocean waves</string>
+    <string name="freesound_suggestion_birds">Forest birds</string>
+    <string name="freesound_suggestion_fireplace">Fireplace</string>
+    <string name="freesound_suggestion_cafe">Café</string>
+    <string name="freesound_suggestion_wind">Wind</string>
+    <string name="freesound_suggestion_white_noise">White noise</string>
 </resources>

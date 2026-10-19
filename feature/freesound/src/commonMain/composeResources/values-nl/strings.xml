@@ -12,4 +12,14 @@
     <string name="freesound_rate_limited">Te veel zoekopdrachten. Wacht een minuut en probeer het opnieuw.</string>
     <string name="freesound_failed">Zoeken is mislukt. Probeer het opnieuw.</string>
     <string name="freesound_download_failed">Het geluid kon niet worden gedownload. Probeer het opnieuw.</string>
+    <string name="freesound_discover_title">Geluiden ontdekken</string>
+    <string name="freesound_try">Probeer bijvoorbeeld</string>
+    <string name="freesound_suggestion_rain">Regen</string>
+    <string name="freesound_suggestion_thunder">Onweer</string>
+    <string name="freesound_suggestion_ocean">Golven</string>
+    <string name="freesound_suggestion_birds">Bosvogels</string>
+    <string name="freesound_suggestion_fireplace">Haardvuur</string>
+    <string name="freesound_suggestion_cafe">Café</string>
+    <string name="freesound_suggestion_wind">Wind</string>
+    <string name="freesound_suggestion_white_noise">Witte ruis</string>
 </resources>

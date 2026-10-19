@@ -278,4 +278,38 @@ class SceneViewModelTest {
 
         assertEquals(listOf(AnalyticsEvent(EventTypes.MIX_SAVED, mapOf("layer_count" to "1"))), analytics.events)
     }
+
+    @Test
+    fun startTimer_startsTheSleepTimerForTheScene() = runMainTest {
+        val viewModel = viewModel()
+
+        viewModel.startTimer(30 * 60L)
+        advanceUntilIdle()
+
+        assertEquals(30 * 60L, viewModel.timerRemaining.value)
+        assertTrue(analytics.events.any { it.type == EventTypes.TIMER_STARTED })
+    }
+
+    @Test
+    fun startTimer_doesNothingWithoutAScene() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.stopAll()
+
+        viewModel.startTimer(15 * 60L)
+        advanceUntilIdle()
+
+        assertNull(viewModel.timerRemaining.value)
+    }
+
+    @Test
+    fun cancelTimer_stopsTheCountdown() = runMainTest {
+        val viewModel = viewModel()
+        viewModel.startTimer(60 * 60L)
+
+        viewModel.cancelTimer()
+        advanceUntilIdle()
+
+        assertNull(viewModel.timerRemaining.value)
+        assertEquals(1, sleepTimer.cancelCount)
+    }
 }

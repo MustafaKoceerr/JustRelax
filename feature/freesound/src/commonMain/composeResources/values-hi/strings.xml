@@ -12,4 +12,14 @@
     <string name="freesound_rate_limited">बहुत ज़्यादा खोजें। एक मिनट रुककर फिर कोशिश करें।</string>
     <string name="freesound_failed">खोज नहीं हो सकी। फिर से कोशिश करें।</string>
     <string name="freesound_download_failed">ध्वनि डाउनलोड नहीं हो सकी। फिर से कोशिश करें।</string>
+    <string name="freesound_discover_title">ध्वनियाँ खोजें</string>
+    <string name="freesound_try">इनमें से आज़माएँ</string>
+    <string name="freesound_suggestion_rain">बारिश</string>
+    <string name="freesound_suggestion_thunder">गरज</string>
+    <string name="freesound_suggestion_ocean">समुद्र की लहरें</string>
+    <string name="freesound_suggestion_birds">जंगल के पक्षी</string>
+    <string name="freesound_suggestion_fireplace">अलाव</string>
+    <string name="freesound_suggestion_cafe">कैफ़े</string>
+    <string name="freesound_suggestion_wind">हवा</string>
+    <string name="freesound_suggestion_white_noise">व्हाइट नॉइज़</string>
 </resources>

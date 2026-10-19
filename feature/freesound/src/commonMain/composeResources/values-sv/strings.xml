@@ -12,4 +12,14 @@
     <string name="freesound_rate_limited">För många sökningar. Vänta en minut och försök igen.</string>
     <string name="freesound_failed">Sökningen misslyckades. Försök igen.</string>
     <string name="freesound_download_failed">Ljudet kunde inte laddas ned. Försök igen.</string>
+    <string name="freesound_discover_title">Upptäck ljud</string>
+    <string name="freesound_try">Prova till exempel</string>
+    <string name="freesound_suggestion_rain">Regn</string>
+    <string name="freesound_suggestion_thunder">Åska</string>
+    <string name="freesound_suggestion_ocean">Havsvågor</string>
+    <string name="freesound_suggestion_birds">Skogsfåglar</string>
+    <string name="freesound_suggestion_fireplace">Brasa</string>
+    <string name="freesound_suggestion_cafe">Kafé</string>
+    <string name="freesound_suggestion_wind">Vind</string>
+    <string name="freesound_suggestion_white_noise">Vitt brus</string>
 </resources>

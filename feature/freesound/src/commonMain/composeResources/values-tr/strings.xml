@@ -12,4 +12,14 @@
     <string name="freesound_rate_limited">Çok fazla arama yapıldı. Bir dakika bekleyip tekrar dene.</string>
     <string name="freesound_failed">Arama yapılamadı. Tekrar dene.</string>
     <string name="freesound_download_failed">Ses indirilemedi. Tekrar dene.</string>
+    <string name="freesound_discover_title">Ses keşfet</string>
+    <string name="freesound_try">Şunları dene</string>
+    <string name="freesound_suggestion_rain">Yağmur</string>
+    <string name="freesound_suggestion_thunder">Gök gürültüsü</string>
+    <string name="freesound_suggestion_ocean">Okyanus dalgaları</string>
+    <string name="freesound_suggestion_birds">Orman kuşları</string>
+    <string name="freesound_suggestion_fireplace">Şömine</string>
+    <string name="freesound_suggestion_cafe">Kafe</string>
+    <string name="freesound_suggestion_wind">Rüzgâr</string>
+    <string name="freesound_suggestion_white_noise">Beyaz gürültü</string>
 </resources>

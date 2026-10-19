@@ -9,4 +9,9 @@
     <string name="scene_empty">Tocca i suoni nella libreria per creare la tua scena.</string>
     <string name="action_stop_all">Ferma tutto</string>
     <string name="action_save_scene">Salva</string>
+    <string name="scene_timer_custom">Altro…</string>
+    <string name="scene_timer_change">Modifica</string>
+    <string name="scene_timer_ends_in">Si spegne tra %1$s</string>
+    <string name="scene_timer_chip">Sonno</string>
+    <string name="scene_timer_hint">Alla fine i suoni sfumano dolcemente</string>
 </resources>

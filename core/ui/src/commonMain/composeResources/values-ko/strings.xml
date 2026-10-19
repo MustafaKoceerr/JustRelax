@@ -37,4 +37,7 @@
     <string name="frequency_title">빈도</string>
     <string name="action_pause">일시정지</string>
     <string name="sleep_timer">수면 타이머</string>
+    <string name="duration_hour_short">시간</string>
+    <string name="duration_minute_short">분</string>
+    <string name="duration_second_short">초</string>
 </resources>

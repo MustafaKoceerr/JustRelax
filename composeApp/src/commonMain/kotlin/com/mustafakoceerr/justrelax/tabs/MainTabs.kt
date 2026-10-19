@@ -1,5 +1,9 @@
 package com.mustafakoceerr.justrelax.tabs
 
+import androidx.compose.material.icons.rounded.TravelExplore
+import com.mustafakoceerr.justrelax.feature.freesound.FreesoundEditorRequest
+import com.mustafakoceerr.justrelax.feature.freesound.FreesoundRoute
+import com.mustafakoceerr.justrelax.composeapp.generated.resources.tab_discover
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Bookmark
@@ -24,6 +28,7 @@ val MainTab.icon: ImageVector
     get() = when (this) {
         MainTab.HOME -> Icons.Rounded.GraphicEq
         MainTab.MIXER -> Icons.Rounded.Casino
+        MainTab.DISCOVER -> Icons.Rounded.TravelExplore
         MainTab.AI -> Icons.Rounded.AutoAwesome
         MainTab.SAVED -> Icons.Rounded.Bookmark
     }
@@ -34,6 +39,7 @@ private val MainTab.titleRes: StringResource
         MainTab.AI -> Res.string.tab_ai
         MainTab.SAVED -> Res.string.tab_saved
         MainTab.MIXER -> Res.string.tab_mixer
+        MainTab.DISCOVER -> Res.string.tab_discover
     }
 
 @Composable
@@ -47,11 +53,13 @@ fun MainTabContent(
     onOpenMySounds: () -> Unit,
     onSelectTab: (MainTab) -> Unit,
     onSaveScene: (suggestedName: String?) -> Unit,
+    onOpenSoundEditor: (FreesoundEditorRequest) -> Unit,
 ) {
     when (tab) {
         MainTab.HOME -> LibraryRoute(onOpenSettings = onOpenSettings, onOpenMySounds = onOpenMySounds)
         MainTab.AI -> AiRoute(onSaveScene = onSaveScene)
         MainTab.SAVED -> SavedRoute(onOpenMixer = { onSelectTab(MainTab.MIXER) })
         MainTab.MIXER -> MixerRoute(onSaveScene = { onSaveScene(null) })
+        MainTab.DISCOVER -> FreesoundRoute(onOpenEditor = onOpenSoundEditor)
     }
 }

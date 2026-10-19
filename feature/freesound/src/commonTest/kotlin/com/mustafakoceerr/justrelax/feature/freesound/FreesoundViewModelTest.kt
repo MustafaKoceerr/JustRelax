@@ -191,4 +191,29 @@ class FreesoundViewModelTest {
 
         assertEquals(listOf(AnalyticsEvent(EventTypes.FREESOUND_SEARCH, mapOf("result_count" to "2"))), analytics.events)
     }
+
+    @Test
+    fun aSuggestionFillsTheQueryAndSearches() = runMainTest {
+        val viewModel = viewModel()
+
+        viewModel.searchFor("ocean waves")
+        advanceUntilIdle()
+
+        assertEquals("ocean waves", viewModel.uiState.value.query)
+        assertEquals(listOf("ocean waves" to 1), repository.searches)
+    }
+
+    /** The tab's ViewModel outlives the tab, so leaving it must silence the preview. */
+    @Test
+    fun stopPreviewSilencesIt() = runMainTest {
+        val viewModel = searched()
+        viewModel.togglePreview(sound(1))
+        advanceUntilIdle()
+
+        viewModel.stopPreview()
+        advanceUntilIdle()
+
+        assertFalse(previewer.isPlaying.value)
+        assertNull(viewModel.uiState.value.previewingId)
+    }
 }

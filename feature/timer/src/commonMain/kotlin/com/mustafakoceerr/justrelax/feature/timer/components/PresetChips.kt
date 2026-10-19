@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.feature.timer.util.formatDurationVerbose
+import com.mustafakoceerr.justrelax.core.ui.util.formatDurationVerbose
 
 /** Usual sleep lengths. A tap turns the wheels to it; the chip stays selected while they show it. */
 @Composable
