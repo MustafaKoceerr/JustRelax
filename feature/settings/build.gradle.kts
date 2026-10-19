@@ -1,4 +1,4 @@
 plugins {
-    id("justrelax.kmp.feature.legacy")
+    id("justrelax.kmp.feature")
 }
 

@@ -120,12 +120,12 @@ dependencies {
     implementation(projects.feature.mixer.ui)
     implementation(projects.feature.saved.ui)
     implementation(projects.feature.ai.ui)
-    implementation(projects.feature.timer)
-    implementation(projects.feature.settings)
+    implementation(projects.feature.timer.ui)
+    implementation(projects.feature.settings.ui)
     implementation(projects.feature.scene.ui)
     implementation(projects.feature.splash.ui)
-    implementation(projects.feature.mysounds)
-    implementation(projects.feature.freesound)
+    implementation(projects.feature.mysounds.ui)
+    implementation(projects.feature.freesound.ui)
 
     // Navigation: a back stack of serializable routes, ViewModels scoped to each destination.
     implementation(libs.androidx.navigation3.runtime)

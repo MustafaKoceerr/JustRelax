@@ -3,7 +3,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.kotlin
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 /**
@@ -41,7 +40,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                "testImplementation"(kotlin("test"))
+                "testImplementation"(library("kotlin-test-junit"))
                 "testImplementation"(library("kotlinx-coroutines-test"))
                 "testImplementation"(library("turbine"))
             }

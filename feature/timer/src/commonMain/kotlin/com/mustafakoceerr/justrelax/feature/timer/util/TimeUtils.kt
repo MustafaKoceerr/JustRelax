@@ -1,6 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.timer.util
 
-internal fun Long.toFormattedTime(): String {
+fun Long.toFormattedTime(): String {
     if (this < 0) return "00 : 00"
     val (hours, minutes, seconds) = HmsTime.fromSeconds(this)
     return if (hours > 0) {
