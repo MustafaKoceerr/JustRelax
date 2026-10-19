@@ -9,7 +9,10 @@ struct MainTabView: View {
             ForEach(AppTab.allCases, id: \.self) { tab in
                 Tab(value: tab) {
                     NavigationStack {
-                        TabPlaceholder(tab: tab)
+                        switch tab {
+                        case .home: LibraryScreen()
+                        default: TabPlaceholder(tab: tab)
+                        }
                     }
                     .bannerHost(isActive: selection == tab)
                 } label: {
