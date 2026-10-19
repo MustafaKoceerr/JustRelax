@@ -20,6 +20,7 @@ import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freeso
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_failed
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_offline
 import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_rate_limited
+import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_unverified
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -111,6 +112,7 @@ class FreesoundViewModelTest {
         for ((error, message) in listOf(
             AppError.Network.RateLimited() to Res.string.freesound_rate_limited,
             AppError.Network.NoInternet() to Res.string.freesound_offline,
+            AppError.Network.IntegrityFailed() to Res.string.freesound_unverified,
             AppError.Network.ServerError(500) to Res.string.freesound_failed,
         )) {
             repository.error = error

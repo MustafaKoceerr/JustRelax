@@ -114,7 +114,11 @@ async function freesoundSearch(request: Request, url: URL, env: Env, deps: Deps)
     headers: { authorization: `Token ${env.FREESOUND_API_KEY}` },
   });
   if (response.status === 429) return error(429, "rate_limited");
-  if (!response.ok) return error(502, "upstream_error");
+  if (!response.ok) {
+    // Only the status: the query is the user's words and is never logged.
+    console.error(`Freesound answered ${response.status}`);
+    return error(502, "upstream_error");
+  }
   const page: SearchPage | null = toSearchPage(await readJsonResponse(response));
   return page === null ? error(502, "upstream_error") : Response.json(page);
 }
