@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import platform.AVFAudio.AVAudioSession
-import platform.AVFAudio.AVAudioSessionCategoryPlayback
 import platform.AVFAudio.AVAudioSessionInterruptionNotification
 import platform.AVFAudio.AVAudioSessionInterruptionOptionKey
 import platform.AVFAudio.AVAudioSessionInterruptionOptionShouldResume
@@ -57,7 +56,7 @@ internal class IosAudioSession(
     }
 
     init {
-        audioSession.setCategory(AVAudioSessionCategoryPlayback, error = null)
+        // The playback category is set by AvAudioGraph, before its engine is built.
         observe(AVAudioSessionInterruptionNotification) { it.interruptionEvent()?.let(session::onAudioSessionEvent) }
         observe(AVAudioSessionRouteChangeNotification) { notification ->
             if (notification.number(AVAudioSessionRouteChangeReasonKey) == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {

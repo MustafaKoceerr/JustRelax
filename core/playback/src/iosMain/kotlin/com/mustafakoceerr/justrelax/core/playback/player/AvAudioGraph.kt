@@ -13,7 +13,10 @@ import platform.AVFAudio.AVAudioFile
 import platform.AVFAudio.AVAudioFormat
 import platform.AVFAudio.AVAudioPCMBuffer
 import platform.AVFAudio.AVAudioPlayerNode
+import platform.AVFAudio.AVAudioSession
+import platform.AVFAudio.AVAudioSessionCategoryPlayback
 import platform.AVFAudio.AVAudioSessionInterruptionNotification
+import platform.AVFAudio.setActive
 import platform.Foundation.NSError
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSOperationQueue
@@ -28,7 +31,17 @@ import platform.Foundation.NSURL
  * knows to schedule again; after an output change the playing beds are restarted at once.
  */
 @OptIn(ExperimentalForeignApi::class)
-internal class AvAudioGraph {
+internal class AvAudioGraph(
+    /** Makes the app's audio session active, before the engine starts its output. */
+    private val activateSession: () -> Boolean = { AVAudioSession.sharedInstance().setActive(true, error = null) },
+) {
+
+    init {
+        // Before the engine exists, as Apple advises: the engine's output is set up for the session
+        // it finds, so the session should already be the playback one the lock screen and other
+        // apps' interruptions are based on.
+        AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, error = null)
+    }
 
     val engine = AVAudioEngine()
 
@@ -68,13 +81,16 @@ internal class AvAudioGraph {
         engine.detachNode(node)
     }
 
-    /** Starts the engine if needed; false if the system does not let it run now (e.g. during a call). */
+    /**
+     * Starts the engine if needed; false if the system does not let it run now (e.g. during a call).
+     * The session is activated first, as Apple advises, rather than left to the engine to do implicitly.
+     */
     @OptIn(BetaInteropApi::class)
-    fun start(): Boolean = engine.running || memScoped {
+    fun start(): Boolean = engine.running || (activateSession() && memScoped {
         val error = alloc<ObjCObjectVar<NSError?>>()
         engine.prepare()
         engine.startAndReturnError(error.ptr)
-    }
+    })
 
     /** Releases the output while nothing plays; what is scheduled stays. */
     fun pause() = engine.pause()
