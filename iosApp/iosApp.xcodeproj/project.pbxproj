@@ -19,10 +19,18 @@
 			remoteGlobalIDString = 232E79A95A95F3596D75CC79;
 			remoteInfo = iosApp;
 		};
+		C1A2B3C4D5E6071829304C02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9FC7F32CDC090BB2A8A3BE3F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 232E79A95A95F3596D75CC79;
+			remoteInfo = iosApp;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		A1B2C3D4E5F6071829304A01 /* iosAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1A2B3C4D5E6071829304C01 /* iosAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E64695F014209A8A556C64B3 /* JustRelax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustRelax.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -59,6 +67,15 @@
 			path = iosAppUITests;
 			sourceTree = "<group>";
 		};
+		C1A2B3C4D5E6071829304C03 /* iosAppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = iosAppTests;
+			sourceTree = "<group>";
+		};
 		FEA4E34882576CDE5A6E18AD /* Configuration */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			explicitFileTypes = {
@@ -72,6 +89,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		A1B2C3D4E5F6071829304A04 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1A2B3C4D5E6071829304C04 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -95,6 +119,7 @@
 			children = (
 				E64695F014209A8A556C64B3 /* JustRelax.app */,
 				A1B2C3D4E5F6071829304A01 /* iosAppUITests.xctest */,
+				C1A2B3C4D5E6071829304C01 /* iosAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -105,6 +130,7 @@
 				FEA4E34882576CDE5A6E18AD /* Configuration */,
 				42477F8E40822E5006D55C36 /* iosApp */,
 				A1B2C3D4E5F6071829304A03 /* iosAppUITests */,
+				C1A2B3C4D5E6071829304C03 /* iosAppTests */,
 				172463CBE56799E5D3B4EB48 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -159,6 +185,27 @@
 			productReference = A1B2C3D4E5F6071829304A01 /* iosAppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		C1A2B3C4D5E6071829304C05 /* iosAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1A2B3C4D5E6071829304C06 /* Build configuration list for PBXNativeTarget "iosAppTests" */;
+			buildPhases = (
+				C1A2B3C4D5E6071829304C07 /* Sources */,
+				C1A2B3C4D5E6071829304C04 /* Frameworks */,
+				C1A2B3C4D5E6071829304C08 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C1A2B3C4D5E6071829304C09 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C1A2B3C4D5E6071829304C03 /* iosAppTests */,
+			);
+			name = iosAppTests;
+			productName = iosAppTests;
+			productReference = C1A2B3C4D5E6071829304C01 /* iosAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -173,6 +220,10 @@
 						CreatedOnToolsVersion = 16.2;
 					};
 					A1B2C3D4E5F6071829304A05 = {
+						CreatedOnToolsVersion = 27.1;
+						TestTargetID = 232E79A95A95F3596D75CC79;
+					};
+					C1A2B3C4D5E6071829304C05 = {
 						CreatedOnToolsVersion = 27.1;
 						TestTargetID = 232E79A95A95F3596D75CC79;
 					};
@@ -208,12 +259,20 @@
 			targets = (
 				232E79A95A95F3596D75CC79 /* iosApp */,
 				A1B2C3D4E5F6071829304A05 /* iosAppUITests */,
+				C1A2B3C4D5E6071829304C05 /* iosAppTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		A1B2C3D4E5F6071829304A08 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1A2B3C4D5E6071829304C08 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -289,6 +348,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C1A2B3C4D5E6071829304C07 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -296,6 +362,11 @@
 			isa = PBXTargetDependency;
 			target = 232E79A95A95F3596D75CC79 /* iosApp */;
 			targetProxy = A1B2C3D4E5F6071829304A02 /* PBXContainerItemProxy */;
+		};
+		C1A2B3C4D5E6071829304C09 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 232E79A95A95F3596D75CC79 /* iosApp */;
+			targetProxy = C1A2B3C4D5E6071829304C02 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -533,6 +604,46 @@
 			};
 			name = Release;
 		};
+		C1A2B3C4D5E6071829304C0A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mustafakoceerr.justrelax.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JustRelax.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JustRelax";
+			};
+			name = Debug;
+		};
+		C1A2B3C4D5E6071829304C0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mustafakoceerr.justrelax.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JustRelax.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JustRelax";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -550,6 +661,15 @@
 			buildConfigurations = (
 				A1B2C3D4E5F6071829304A0A /* Debug */,
 				A1B2C3D4E5F6071829304A0B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1A2B3C4D5E6071829304C06 /* Build configuration list for PBXNativeTarget "iosAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1A2B3C4D5E6071829304C0A /* Debug */,
+				C1A2B3C4D5E6071829304C0B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
