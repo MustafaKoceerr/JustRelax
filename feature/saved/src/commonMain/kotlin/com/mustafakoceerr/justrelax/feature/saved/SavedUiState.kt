@@ -2,7 +2,6 @@ package com.mustafakoceerr.justrelax.feature.saved
 
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import kotlin.time.Instant
 
 data class SavedMixItem(
@@ -30,11 +29,12 @@ data class SavedSoundItem(
     val frequency: EventFrequency?,
 )
 
-/** A one-off snackbar message, optionally with an action (e.g. undo). */
-data class SavedMessage(
-    val text: UiText,
-    val actionLabel: UiText? = null,
-)
+/** A one-off message for the Saved tab; each platform turns it into its own text. */
+sealed interface SavedMessage {
+    /** The mix [name] was deleted; the message offers to undo it. */
+    data class Deleted(val name: String) : SavedMessage
+    data object PlayFailed : SavedMessage
+}
 
 data class SavedUiState(
     val isLoading: Boolean = true,

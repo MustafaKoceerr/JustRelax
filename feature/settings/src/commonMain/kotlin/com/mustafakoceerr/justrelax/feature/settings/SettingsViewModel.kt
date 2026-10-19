@@ -11,13 +11,10 @@ import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.data.repository.TipRepository
 import com.mustafakoceerr.justrelax.core.data.language.LanguageController
 import com.mustafakoceerr.justrelax.core.data.language.LanguageStrategy
-import com.mustafakoceerr.justrelax.core.ui.system.SystemLauncher
+import com.mustafakoceerr.justrelax.core.presentation.system.SystemLauncher
 import com.mustafakoceerr.justrelax.core.model.AppLanguage
 import com.mustafakoceerr.justrelax.core.model.AppTheme
 import com.mustafakoceerr.justrelax.core.model.DownloadStatus
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.settings.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.settings.generated.resources.msg_all_sounds_downloaded
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +40,7 @@ class SettingsViewModel(
         val isLanguageSheetOpen: Boolean = false,
         val isDownloadingLibrary: Boolean = false,
         val downloadProgress: Float = 0f,
-        val userMessage: UiText? = null,
+        val userMessage: SettingsMessage? = null,
     )
 
     private val screenState = MutableStateFlow(ScreenState())
@@ -126,10 +123,10 @@ class SettingsViewModel(
                 when (status) {
                     is DownloadStatus.Progress -> screenState.update { it.copy(downloadProgress = status.percentage) }
                     is DownloadStatus.Completed -> screenState.update {
-                        it.copy(isDownloadingLibrary = false, userMessage = UiText.Resource(Res.string.msg_all_sounds_downloaded))
+                        it.copy(isDownloadingLibrary = false, userMessage = SettingsMessage.LibraryDownloaded)
                     }
                     is DownloadStatus.Error -> screenState.update {
-                        it.copy(isDownloadingLibrary = false, userMessage = UiText.DynamicString(status.message))
+                        it.copy(isDownloadingLibrary = false, userMessage = SettingsMessage.Text(status.message))
                     }
                 }
             }

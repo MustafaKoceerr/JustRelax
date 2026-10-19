@@ -17,7 +17,6 @@ import com.mustafakoceerr.justrelax.core.testing.fake.FakeUserPreferencesReposit
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -104,7 +103,7 @@ class SettingsViewModelTest {
         val state = viewModel.uiState.value
         assertTrue(state.isLibraryComplete)
         assertFalse(state.isDownloadingLibrary)
-        assertIs<UiText.Resource>(state.userMessage)
+        assertEquals(SettingsMessage.LibraryDownloaded, state.userMessage)
     }
 
     @Test
@@ -118,7 +117,7 @@ class SettingsViewModelTest {
         val state = viewModel.uiState.value
         assertFalse(state.isLibraryComplete)
         assertFalse(state.isDownloadingLibrary)
-        assertIs<UiText.DynamicString>(state.userMessage)
+        assertIs<SettingsMessage.Text>(state.userMessage)
 
         viewModel.onMessageShown()
         advanceUntilIdle()

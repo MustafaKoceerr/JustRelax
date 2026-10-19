@@ -1,9 +1,10 @@
 // Android entry point: Application, Activity, playback service and app resources.
-// Shared UI and logic come from :composeApp.
+// The Compose UI and navigation live here; shared logic comes from :shared and the feature modules.
 import java.util.Properties
 
 plugins {
     id("justrelax.android.application")
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.baselineprofile)
 }
 
@@ -87,13 +88,6 @@ android {
         }
     }
 
-    packaging {
-        resources {
-            // Compose resources are read from assets first; the Java-resource copy is only a duplicate.
-            excludes += "composeResources/**"
-        }
-    }
-
 }
 
 // The benchmark builds get their own application id, so they install beside the Play app, which has a
@@ -105,18 +99,40 @@ androidComponents {
 }
 
 dependencies {
-    implementation(projects.composeApp)
+    implementation(projects.shared)
+    implementation(projects.core.common)
+    implementation(projects.core.model)
+    implementation(projects.core.ui)
+    implementation(projects.core.presentation)
+    implementation(projects.core.analytics)
     implementation(projects.core.playback)
     implementation(projects.core.data)
     implementation(projects.core.network)
+
+    implementation(projects.feature.library.ui)
+    implementation(projects.feature.mixer.ui)
+    implementation(projects.feature.saved.ui)
+    implementation(projects.feature.ai.ui)
+    implementation(projects.feature.timer.ui)
+    implementation(projects.feature.settings.ui)
+    implementation(projects.feature.scene.ui)
+    implementation(projects.feature.splash.ui)
+    implementation(projects.feature.mysounds.ui)
+    implementation(projects.feature.freesound.ui)
+
+    // Navigation: a back stack of serializable routes, ViewModels scoped to each destination.
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.bundles.androidx.lifecycle.compose)
+    implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.koin.android)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
-    // MainActivity turns test tags into resource ids for the benchmarks.
-    implementation(libs.compose.ui)
-    implementation(libs.compose.foundation)
     // Installs the Baseline Profile on devices without Play's cloud profiles (sideloads, benchmarks).
     implementation(libs.androidx.profileinstaller)
     baselineProfile(projects.benchmark)
@@ -124,9 +140,6 @@ dependencies {
     // Playback service (Media3 session + notification)
     implementation(libs.androidx.media3.session)
     implementation(libs.androidx.media3.common)
-
-    // The debug sound pack's catalog is read from assets (BuildTypeModule).
-    debugImplementation(libs.kotlinx.serialization.json)
 
     testImplementation(projects.core.testing)
     // Types whitelisted in KoinGraphTest (created inside lambdas, not via constructors)

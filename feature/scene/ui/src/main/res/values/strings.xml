@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="msg_mix_saved_success">Mix \"%1$s\" saved successfully!</string>
+    <string name="err_mix_save_empty_name">Mix name cannot be empty.</string>
+    <string name="err_mix_save_name_exists">A mix with this name already exists.</string>
+    <string name="err_mix_save_no_sound">There are no sounds playing to save.</string>
+    <string name="err_mix_save_failed">An unexpected error occurred.</string>
+    <string name="scene_panel_title">Your scene</string>
+    <string name="scene_empty">Tap sounds in the library to build your scene.</string>
+    <string name="action_stop_all">Stop all</string>
+    <string name="action_save_scene">Save</string>
+    <string name="scene_timer_custom">Custom…</string>
+    <string name="scene_timer_change">Change</string>
+    <string name="scene_timer_ends_in">Fades out in %1$s</string>
+    <string name="scene_timer_chip">Sleep</string>
+    <string name="scene_timer_hint">The sounds fade out gently when time is up</string>
+</resources>

@@ -3,6 +3,11 @@
     <string name="app_name">JustRelax</string>
     <string name="notification_subtitle">Profitez de l’instant avec Just Relax</string>
     <string name="notification_title">Sons apaisants</string>
-    <string name="action_stop">Arrêter</string>
+    <string name="notification_action_stop">Arrêter</string>
     <string name="notification_channel_name">Commandes de lecture</string>
+    <string name="tab_ai">IA</string>
+    <string name="tab_home">Sons</string>
+    <string name="tab_mixer">Mixeur</string>
+    <string name="tab_saved">Enregistrés</string>
+    <string name="tab_discover">Découvrir</string>
 </resources>

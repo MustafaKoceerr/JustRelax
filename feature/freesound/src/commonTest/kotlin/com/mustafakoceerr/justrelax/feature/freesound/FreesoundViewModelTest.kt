@@ -14,13 +14,6 @@ import com.mustafakoceerr.justrelax.core.testing.fake.FakeClipPreviewer
 import com.mustafakoceerr.justrelax.core.testing.fake.FakeFreesoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_download_failed
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_failed
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_offline
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_rate_limited
-import com.mustafakoceerr.justrelax.feature.freesound.generated.resources.freesound_unverified
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -110,15 +103,15 @@ class FreesoundViewModelTest {
         viewModel.changeQuery("rain")
 
         for ((error, message) in listOf(
-            AppError.Network.RateLimited() to Res.string.freesound_rate_limited,
-            AppError.Network.NoInternet() to Res.string.freesound_offline,
-            AppError.Network.IntegrityFailed() to Res.string.freesound_unverified,
-            AppError.Network.ServerError(500) to Res.string.freesound_failed,
+            AppError.Network.RateLimited() to FreesoundMessage.RateLimited,
+            AppError.Network.NoInternet() to FreesoundMessage.Offline,
+            AppError.Network.IntegrityFailed() to FreesoundMessage.Unverified,
+            AppError.Network.ServerError(500) to FreesoundMessage.SearchFailed,
         )) {
             repository.error = error
             viewModel.search()
             advanceUntilIdle()
-            assertEquals(UiText.Resource(message), viewModel.uiState.value.userMessage)
+            assertEquals(message, viewModel.uiState.value.userMessage)
             assertFalse(viewModel.uiState.value.isSearching)
             viewModel.onMessageShown()
             advanceUntilIdle()
@@ -210,7 +203,7 @@ class FreesoundViewModelTest {
         advanceUntilIdle()
 
         assertNull(viewModel.uiState.value.editorToOpen)
-        assertEquals(UiText.Resource(Res.string.freesound_download_failed), viewModel.uiState.value.userMessage)
+        assertEquals(FreesoundMessage.DownloadFailed, viewModel.uiState.value.userMessage)
     }
 
     @Test

@@ -18,10 +18,6 @@ import com.mustafakoceerr.justrelax.core.testing.fake.FakeSoundRepository
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.scene.generated.resources.err_mix_save_name_exists
-import com.mustafakoceerr.justrelax.feature.scene.generated.resources.msg_mix_saved_success
 import app.cash.turbine.test
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -65,8 +61,6 @@ class SceneViewModelTest {
             observe(it.timerRemaining)
         }
     }
-
-    private fun SceneViewModel.messageRes() = (uiState.value.userMessage as UiText.Resource).resId
 
     @Test
     fun stateShowsTheSoundsCurrentlyPlaying() = runMainTest {
@@ -131,7 +125,7 @@ class SceneViewModelTest {
         advanceUntilIdle()
 
         assertFalse(viewModel.uiState.value.isSaveDialogVisible)
-        assertEquals(Res.string.msg_mix_saved_success, viewModel.messageRes())
+        assertEquals(SceneMessage.Saved("Night"), viewModel.uiState.value.userMessage)
         val saved = savedScenes.scenes.value.single()
         assertEquals("Night", saved.name)
         assertEquals(scene.scene.value, saved.scene)
@@ -147,7 +141,7 @@ class SceneViewModelTest {
         advanceUntilIdle()
 
         assertTrue(viewModel.uiState.value.isSaveDialogVisible)
-        assertEquals(Res.string.err_mix_save_name_exists, viewModel.messageRes())
+        assertEquals(SceneMessage.NameTaken, viewModel.uiState.value.userMessage)
     }
 
     @Test

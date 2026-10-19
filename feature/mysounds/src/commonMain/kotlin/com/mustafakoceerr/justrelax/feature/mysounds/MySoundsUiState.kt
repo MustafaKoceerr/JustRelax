@@ -3,7 +3,6 @@ package com.mustafakoceerr.justrelax.feature.mysounds
 import com.mustafakoceerr.justrelax.core.media.ImportedAudio
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 data class MySoundItem(
     val id: String,
@@ -21,5 +20,5 @@ data class MySoundsUiState(
     val editorToOpen: ImportedAudio? = null,
     /** Waiting for the user to confirm the deletion. */
     val soundToDelete: MySoundItem? = null,
-    val userMessage: UiText? = null,
+    val userMessage: MySoundsMessage? = null,
 )

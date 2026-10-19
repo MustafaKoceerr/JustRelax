@@ -9,8 +9,5 @@ kotlin {
             implementation(project(":core:media"))
         }
 
-        androidMain.dependencies {
-            implementation(libs.androidx.activity.compose)
-        }
     }
 }

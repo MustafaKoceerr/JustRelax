@@ -15,10 +15,7 @@ import com.mustafakoceerr.justrelax.core.testing.fake.FakeLanguageController
 import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testSound
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 import com.mustafakoceerr.justrelax.feature.library.domain.usecase.GetLocalizedCategorizedSoundsUseCase
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.download_failed
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -121,7 +118,7 @@ class LibraryViewModelTest {
 
         val state = viewModel.uiState.value
         assertFalse("storm" in state.sceneCards.playingIds)
-        assertEquals(Res.string.download_failed, (state.userMessage as UiText.Resource).resId)
+        assertEquals(LibraryMessage.DownloadFailed, state.userMessage)
     }
 
     @Test

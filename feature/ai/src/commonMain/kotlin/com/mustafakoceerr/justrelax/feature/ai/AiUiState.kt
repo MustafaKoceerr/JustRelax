@@ -1,8 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.ai
 
-import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
+import com.mustafakoceerr.justrelax.core.presentation.SceneCards
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 data class AiUiState(
     val prompt: String = "",
@@ -16,7 +15,7 @@ data class AiUiState(
     val sceneCards: SceneCards = SceneCards(),
     /** Asks once, before the first mix, whether the prompt may go to OpenAI. */
     val showAiDataNotice: Boolean = false,
-    val userMessage: UiText? = null,
+    val userMessage: AiMessage? = null,
 ) {
     val hasResult: Boolean get() = mixSounds.isNotEmpty()
 }

@@ -11,9 +11,6 @@ import com.mustafakoceerr.justrelax.core.testing.observe
 import com.mustafakoceerr.justrelax.core.testing.runMainTest
 import com.mustafakoceerr.justrelax.core.testing.testClip
 import com.mustafakoceerr.justrelax.core.testing.testSound
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_import_failed
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
@@ -79,7 +76,7 @@ class MySoundsViewModelTest {
         advanceUntilIdle()
 
         assertNull(viewModel.uiState.value.editorToOpen)
-        assertEquals(UiText.Resource(Res.string.mysounds_import_failed), viewModel.uiState.value.userMessage)
+        assertEquals(MySoundsMessage.ImportFailed, viewModel.uiState.value.userMessage)
     }
 
     @Test

@@ -1,8 +1,7 @@
 package com.mustafakoceerr.justrelax.feature.mixer
 
-import com.mustafakoceerr.justrelax.core.ui.components.SceneCards
+import com.mustafakoceerr.justrelax.core.presentation.SceneCards
 import com.mustafakoceerr.justrelax.core.model.LocalizedSound
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 data class MixerUiState(
     val selectedSoundCount: Int = MixerViewModel.DEFAULT_SOUND_COUNT,
@@ -12,7 +11,7 @@ data class MixerUiState(
     val sceneCards: SceneCards = SceneCards(),
     /** Sounds that stay when the rest of the mix is shuffled again. */
     val lockedIds: Set<String> = emptySet(),
-    val userMessage: UiText? = null,
+    val userMessage: MixerMessage? = null,
 ) {
     /** The mix can't be smaller than what is locked. */
     val minSelectableCount: Int get() = maxOf(RandomSceneGenerator.MIN_LAYERS, lockedIds.size)

@@ -161,7 +161,7 @@ class SavedViewModelTest {
 
         val state = viewModel.uiState.value
         assertTrue(state.mixes.isEmpty())
-        assertNotNull(state.message?.actionLabel)
+        assertEquals(SavedMessage.Deleted("Night"), state.message)
     }
 
     @Test

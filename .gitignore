@@ -332,6 +332,7 @@ Pods/
 
 # Sound pipeline: Python cache, downloaded sources and built packs
 tools/sound-pipeline/__pycache__/
+tools/strings/__pycache__/
 tools/sound-pipeline/.cache/
 tools/sound-pipeline/dist/
 

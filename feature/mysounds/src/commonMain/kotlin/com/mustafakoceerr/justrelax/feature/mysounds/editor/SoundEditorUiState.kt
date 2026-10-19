@@ -6,7 +6,6 @@ import com.mustafakoceerr.justrelax.core.media.TrimRules
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.model.soundscape.SoundKind
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 data class SoundEditorUiState(
     val isLoading: Boolean = true,
@@ -24,7 +23,7 @@ data class SoundEditorUiState(
     val isSaving: Boolean = false,
     /** The sound is in the library; the screen closes. */
     val isSaved: Boolean = false,
-    val userMessage: UiText? = null,
+    val userMessage: SoundEditorMessage? = null,
 ) {
     val trimProblem: TrimProblem?
         get() = if (isLoading || loadFailed) null else TrimRules.problem(range, kind, sourceMs)

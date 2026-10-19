@@ -1,26 +1,16 @@
 plugins {
-    id("justrelax.kmp.compose")
-    id("justrelax.koin")
+    id("justrelax.android.library")
+    id("justrelax.android.compose")
 }
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            api(project(":core:common"))
-            api(project(":core:model"))
+// The Android design system: theme, Compose components and their strings. iOS draws its own in SwiftUI.
+dependencies {
+    api(project(":core:common"))
+    api(project(":core:model"))
+    api(project(":core:presentation"))
+    api(libs.androidx.compose.material3.adaptive)
 
-            api(libs.compose.material3.adaptive)
-        }
-
-        androidMain.dependencies {
-            implementation(libs.androidx.core.ktx)
-            implementation(libs.androidx.activity.compose)
-        }
-    }
-}
-
-// Other modules use these strings, fonts and images.
-compose.resources {
-    publicResClass = true
-    generateResClass = always
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.koin.android)
 }

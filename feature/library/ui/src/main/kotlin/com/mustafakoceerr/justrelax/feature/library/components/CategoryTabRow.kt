@@ -1,0 +1,81 @@
+package com.mustafakoceerr.justrelax.feature.library.components
+
+import com.mustafakoceerr.justrelax.core.presentation.testing.TestTags
+import androidx.compose.ui.platform.testTag
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryScrollableTabRow
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import com.mustafakoceerr.justrelax.core.model.SoundCategory
+import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
+import com.mustafakoceerr.justrelax.core.ui.util.title
+import androidx.compose.ui.res.stringResource
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CategoryTabRow(
+    categories: List<SoundCategory>,
+    selectedCategory: SoundCategory,
+    onCategorySelected: (SoundCategory) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    PrimaryScrollableTabRow(
+        selectedTabIndex = categories.indexOf(selectedCategory),
+        modifier = modifier,
+        edgePadding = 16.dp,
+        containerColor = Color.Transparent,
+        indicator = {},
+        divider = {}
+    ) {
+        categories.forEach { category ->
+            val isSelected = category == selectedCategory
+
+            val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent
+            val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .testTag(TestTags.CATEGORY_TAB)
+                    .padding(vertical = 8.dp)
+                    .clip(CircleShape)
+                    .clickable { onCategorySelected(category) }
+                    .background(backgroundColor)
+                    .border(1.dp, if (isSelected) Color.Transparent else MaterialTheme.colorScheme.outlineVariant, CircleShape)
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+            ) {
+                Icon(
+                    imageVector = category.defaultIcon.imageVector,
+                    contentDescription = null,
+                    tint = contentColor,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = category.title(),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = contentColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}

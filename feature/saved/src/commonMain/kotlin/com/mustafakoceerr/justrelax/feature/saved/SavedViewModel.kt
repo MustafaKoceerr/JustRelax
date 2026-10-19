@@ -11,11 +11,6 @@ import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.soundscape.Layer
 import com.mustafakoceerr.justrelax.core.model.soundscape.Scene
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
-import com.mustafakoceerr.justrelax.feature.saved.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.saved.generated.resources.action_undo
-import com.mustafakoceerr.justrelax.feature.saved.generated.resources.err_play_mix_failed
-import com.mustafakoceerr.justrelax.feature.saved.generated.resources.msg_mix_deleted
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -79,7 +74,7 @@ class SavedViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                message.value = SavedMessage(UiText.Resource(Res.string.err_play_mix_failed))
+                message.value = SavedMessage.PlayFailed
             }
         }
     }
@@ -100,10 +95,7 @@ class SavedViewModel(
             val saved = findScene(mixId) ?: return@launch
             lastDeletedScene = saved
             savedSceneRepository.delete(saved.id)
-            message.value = SavedMessage(
-                text = UiText.Resource(Res.string.msg_mix_deleted, listOf(saved.name)),
-                actionLabel = UiText.Resource(Res.string.action_undo),
-            )
+            message.value = SavedMessage.Deleted(saved.name)
         }
     }
 

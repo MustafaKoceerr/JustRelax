@@ -19,4 +19,4 @@ data class HmsTime(val hours: Int, val minutes: Int, val seconds: Int) {
     }
 }
 
-internal fun Int.twoDigits(): String = toString().padStart(2, '0')
+fun Int.twoDigits(): String = toString().padStart(2, '0')

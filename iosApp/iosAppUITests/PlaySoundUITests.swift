@@ -2,8 +2,8 @@ import XCTest
 
 /**
  * The one iOS happy path: the app starts, the first-launch consent is answered and a sound from
- * the library plays, which brings up the mini player. Views are found by the Compose test tags
- * (core:ui TestTags), which iOS exposes as accessibility identifiers.
+ * the library plays, which brings up the mini player. Views are found by core:presentation's
+ * TestTags, used as accessibility identifiers.
  */
 final class PlaySoundUITests: XCTestCase {
 
@@ -13,7 +13,8 @@ final class PlaySoundUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func testPlayingASoundShowsTheMiniPlayer() {
+    @MainActor
+    func testPlayingASoundShowsTheMiniPlayer() throws {
         let app = XCUIApplication()
         app.launch()
 

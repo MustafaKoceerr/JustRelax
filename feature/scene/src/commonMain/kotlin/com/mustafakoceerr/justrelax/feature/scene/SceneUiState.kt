@@ -2,7 +2,6 @@ package com.mustafakoceerr.justrelax.feature.scene
 
 import com.mustafakoceerr.justrelax.core.model.SoundIcon
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
-import com.mustafakoceerr.justrelax.core.ui.util.UiText
 
 data class SceneUiState(
     val layers: List<SceneLayerItem> = emptyList(),
@@ -11,7 +10,7 @@ data class SceneUiState(
     /** What the save dialog's name field starts with, such as an AI mix's name. */
     val saveDialogName: String = "",
     val isSaving: Boolean = false,
-    val userMessage: UiText? = null,
+    val userMessage: SceneMessage? = null,
 ) {
     val isVisible: Boolean get() = layers.isNotEmpty()
 }
