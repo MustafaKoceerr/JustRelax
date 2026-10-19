@@ -62,10 +62,17 @@ jobs:
         # Android host, and linking a test binary for every module takes over an hour here.
         run: ./gradlew :core:playback:iosSimulatorArm64Test :core:media:iosSimulatorArm64Test -Pjustrelax.ios.enabled=true --continue
 
-      - name: Simulator build
-        run: >
-          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator
-          -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+      - name: Swift unit tests
+        # Builds the app and runs iosAppTests on the newest iPhone simulator the runner has. Ad-hoc
+        # signing, as without signing the keychain is unavailable.
+        run: |
+          udid=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          runtimes = json.load(sys.stdin)["devices"]
+          print(next(d["udid"] for r in sorted(runtimes, reverse=True) if "iOS" in r for d in runtimes[r] if d["name"].startswith("iPhone")))
+          ')
+          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -destination "id=$udid" \
+            -only-testing:iosAppTests CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM= test
 
       - name: Upload test reports
         if: failure()
