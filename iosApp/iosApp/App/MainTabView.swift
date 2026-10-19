@@ -11,6 +11,7 @@ struct MainTabView: View {
                     NavigationStack {
                         TabPlaceholder(tab: tab)
                     }
+                    .bannerHost(isActive: selection == tab)
                 } label: {
                     Label(tab.title, systemImage: tab.systemImage)
                         .accessibilityIdentifier(tab.accessibilityIdentifier)

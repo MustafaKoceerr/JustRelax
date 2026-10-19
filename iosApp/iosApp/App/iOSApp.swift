@@ -4,6 +4,7 @@ import Shared
 @main
 struct iOSApp: App {
     @State private var model: AppModel
+    @State private var banners = BannerCenter()
 
     // Firebase and then Koin start before the first scene; the model needs Koin.
     init() {
@@ -16,6 +17,9 @@ struct iOSApp: App {
     var body: some SwiftUI.Scene {
         WindowGroup {
             MainTabView()
+                // The rounded system font stands in for Android's Nunito.
+                .fontDesign(.rounded)
+                .environment(\.bannerCenter, banners)
                 .preferredColorScheme(model.theme.colorScheme)
                 .task { await model.observe() }
         }
