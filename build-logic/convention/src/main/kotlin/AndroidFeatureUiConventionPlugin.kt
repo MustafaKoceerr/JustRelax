@@ -15,7 +15,8 @@ class AndroidFeatureUiConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                "implementation"(project(path.removeSuffix(":ui")))
+                // Its routes take the shared ViewModels as parameters.
+                "api"(project(path.removeSuffix(":ui")))
                 "implementation"(project(":core:common"))
                 "implementation"(project(":core:model"))
                 "implementation"(project(":core:presentation"))

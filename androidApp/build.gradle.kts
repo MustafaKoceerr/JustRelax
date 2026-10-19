@@ -117,13 +117,13 @@ dependencies {
     implementation(projects.core.network)
 
     implementation(projects.feature.library.ui)
-    implementation(projects.feature.mixer)
-    implementation(projects.feature.saved)
-    implementation(projects.feature.ai)
+    implementation(projects.feature.mixer.ui)
+    implementation(projects.feature.saved.ui)
+    implementation(projects.feature.ai.ui)
     implementation(projects.feature.timer)
     implementation(projects.feature.settings)
-    implementation(projects.feature.scene)
-    implementation(projects.feature.splash)
+    implementation(projects.feature.scene.ui)
+    implementation(projects.feature.splash.ui)
     implementation(projects.feature.mysounds)
     implementation(projects.feature.freesound)
 

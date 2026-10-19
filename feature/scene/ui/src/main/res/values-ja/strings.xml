@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="msg_mix_saved_success">ミックス \"%1$s\" を保存しました！</string>
+    <string name="err_mix_save_empty_name">ミックス名は空にできません。</string>
+    <string name="err_mix_save_name_exists">この名前のミックスはすでに存在します。</string>
+    <string name="err_mix_save_no_sound">保存する再生中のサウンドがありません。</string>
+    <string name="err_unknown">予期しないエラーが発生しました。</string>
+    <string name="scene_panel_title">あなたのシーン</string>
+    <string name="scene_empty">ライブラリのサウンドをタップしてシーンを作りましょう。</string>
+    <string name="action_stop_all">すべて停止</string>
+    <string name="action_save_scene">保存</string>
+    <string name="scene_timer_custom">カスタム…</string>
+    <string name="scene_timer_change">変更</string>
+    <string name="scene_timer_ends_in">あと %1$s でフェードアウト</string>
+    <string name="scene_timer_chip">スリープ</string>
+    <string name="scene_timer_hint">時間になると音がゆっくり消えます</string>
+</resources>

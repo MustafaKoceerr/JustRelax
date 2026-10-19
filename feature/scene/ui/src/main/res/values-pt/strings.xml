@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="msg_mix_saved_success">Mix \"%1$s\" salvo com sucesso!</string>
+    <string name="err_mix_save_empty_name">O nome do mix não pode ficar vazio.</string>
+    <string name="err_mix_save_name_exists">Já existe um mix com esse nome.</string>
+    <string name="err_mix_save_no_sound">Não há sons tocando para salvar.</string>
+    <string name="err_unknown">Ocorreu um erro inesperado.</string>
+    <string name="scene_panel_title">Sua cena</string>
+    <string name="scene_empty">Toque nos sons da biblioteca para montar sua cena.</string>
+    <string name="action_stop_all">Parar tudo</string>
+    <string name="action_save_scene">Salvar</string>
+    <string name="scene_timer_custom">Outro…</string>
+    <string name="scene_timer_change">Alterar</string>
+    <string name="scene_timer_ends_in">Desliga em %1$s</string>
+    <string name="scene_timer_chip">Dormir</string>
+    <string name="scene_timer_hint">No fim, os sons diminuem suavemente</string>
+</resources>
