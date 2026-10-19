@@ -4,4 +4,5 @@
     <string name="tab_home">Sounds</string>
     <string name="tab_mixer">Mixer</string>
     <string name="tab_saved">Saved</string>
+    <string name="tab_discover">Discover</string>
 </resources>

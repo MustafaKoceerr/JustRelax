@@ -60,6 +60,12 @@ class FreesoundViewModel(
         searchJob = viewModelScope.launch { loadPage(1) }
     }
 
+    /** A suggestion chip: its words become the query and are searched at once. */
+    fun searchFor(query: String) {
+        changeQuery(query)
+        search()
+    }
+
     fun loadMore() {
         val current = state.value
         if (!current.hasMore || current.isSearching || current.isLoadingMore) return
@@ -74,6 +80,11 @@ class FreesoundViewModel(
         }
         previewer.play(sound.previewUrl, TrimRange(0, sound.durationMs), loop = false)
         state.update { it.copy(previewingId = sound.id) }
+    }
+
+    /** Leaving the screen; the ViewModel of the Discover tab lives on while the other tabs show. */
+    fun stopPreview() {
+        if (previewer.isPlaying.value) previewer.stop()
     }
 
     fun add(sound: FreesoundSound) {

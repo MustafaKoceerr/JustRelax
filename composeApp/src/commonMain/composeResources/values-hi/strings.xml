@@ -4,4 +4,5 @@
     <string name="tab_home">आवाज़ें</string>
     <string name="tab_mixer">मिक्सर</string>
     <string name="tab_saved">सेव्ड</string>
+    <string name="tab_discover">खोजें</string>
 </resources>

@@ -4,4 +4,5 @@
     <string name="tab_home">Geluiden</string>
     <string name="tab_mixer">Mixer</string>
     <string name="tab_saved">Opgeslagen</string>
+    <string name="tab_discover">Ontdekken</string>
 </resources>

@@ -22,9 +22,17 @@ class MainTabStateTest {
     }
 
     @Test
-    fun theBarHasFourTabs_inThisOrder() {
+    fun theBarHasFiveTabs_withDiscoverInTheMiddle() {
         // The sleep timer is opened from the player, not from a tab.
-        assertEquals(listOf(MainTab.HOME, MainTab.MIXER, MainTab.AI, MainTab.SAVED), MainTab.entries)
+        assertEquals(listOf(MainTab.HOME, MainTab.MIXER, MainTab.DISCOVER, MainTab.AI, MainTab.SAVED), MainTab.entries)
+    }
+
+    @Test
+    fun backOnDiscover_returnsToHome() {
+        val state = MainTabState(MainTab.DISCOVER)
+
+        assertTrue(state.onBack())
+        assertEquals(MainTab.HOME, state.selected)
     }
 
     @Test

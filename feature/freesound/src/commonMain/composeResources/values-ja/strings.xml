@@ -12,4 +12,14 @@
     <string name="freesound_rate_limited">検索回数が多すぎます。1分待ってからもう一度お試しください。</string>
     <string name="freesound_failed">検索できませんでした。もう一度お試しください。</string>
     <string name="freesound_download_failed">サウンドをダウンロードできませんでした。もう一度お試しください。</string>
+    <string name="freesound_discover_title">サウンドを探す</string>
+    <string name="freesound_try">たとえば</string>
+    <string name="freesound_suggestion_rain">雨</string>
+    <string name="freesound_suggestion_thunder">雷</string>
+    <string name="freesound_suggestion_ocean">波の音</string>
+    <string name="freesound_suggestion_birds">森の鳥</string>
+    <string name="freesound_suggestion_fireplace">暖炉</string>
+    <string name="freesound_suggestion_cafe">カフェ</string>
+    <string name="freesound_suggestion_wind">風</string>
+    <string name="freesound_suggestion_white_noise">ホワイトノイズ</string>
 </resources>

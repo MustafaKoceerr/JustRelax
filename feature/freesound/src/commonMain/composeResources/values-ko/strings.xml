@@ -12,4 +12,14 @@
     <string name="freesound_rate_limited">검색이 너무 많아요. 1분 후 다시 시도하세요.</string>
     <string name="freesound_failed">검색하지 못했어요. 다시 시도하세요.</string>
     <string name="freesound_download_failed">사운드를 다운로드하지 못했어요. 다시 시도하세요.</string>
+    <string name="freesound_discover_title">사운드 둘러보기</string>
+    <string name="freesound_try">이런 건 어때요</string>
+    <string name="freesound_suggestion_rain">비</string>
+    <string name="freesound_suggestion_thunder">천둥</string>
+    <string name="freesound_suggestion_ocean">파도</string>
+    <string name="freesound_suggestion_birds">숲속 새소리</string>
+    <string name="freesound_suggestion_fireplace">벽난로</string>
+    <string name="freesound_suggestion_cafe">카페</string>
+    <string name="freesound_suggestion_wind">바람</string>
+    <string name="freesound_suggestion_white_noise">백색 소음</string>
 </resources>

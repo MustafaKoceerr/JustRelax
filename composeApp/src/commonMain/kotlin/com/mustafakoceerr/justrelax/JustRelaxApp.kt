@@ -14,6 +14,7 @@ import com.mustafakoceerr.justrelax.feature.settings.credits.CreditsRoute
 import com.mustafakoceerr.justrelax.feature.settings.support.SupportRoute
 import com.mustafakoceerr.justrelax.feature.mysounds.MySoundsRoute
 import com.mustafakoceerr.justrelax.feature.mysounds.editor.SoundEditorRoute
+import com.mustafakoceerr.justrelax.feature.freesound.FreesoundEditorRequest
 import com.mustafakoceerr.justrelax.feature.freesound.FreesoundRoute
 import com.mustafakoceerr.justrelax.navigation.asEditorOrigin
 import com.mustafakoceerr.justrelax.navigation.Route
@@ -96,6 +97,7 @@ private fun JustRelaxNavDisplay() {
                     onOpenSettings = { backStack.navigate(Route.Settings) },
                     onOpenMySounds = { backStack.navigate(Route.MySounds) },
                     onOpenTimer = { backStack.navigate(Route.Timer) },
+                    onOpenSoundEditor = { backStack.navigate(it.toEditorRoute()) },
                 )
             }
             entry<Route.Timer> {
@@ -125,7 +127,7 @@ private fun JustRelaxNavDisplay() {
             entry<Route.Freesound> {
                 FreesoundRoute(
                     onBack = { backStack.goBack() },
-                    onOpenEditor = { backStack.navigate(Route.SoundEditor(it.path, it.name, it.origin.asEditorOrigin())) },
+                    onOpenEditor = { backStack.navigate(it.toEditorRoute()) },
                 )
             }
             entry<Route.SoundEditor> { route ->
@@ -139,3 +141,6 @@ private fun JustRelaxNavDisplay() {
         },
     )
 }
+
+/** The editor for a sound found on Freesound, with its credit. */
+private fun FreesoundEditorRequest.toEditorRoute() = Route.SoundEditor(path, name, origin.asEditorOrigin())

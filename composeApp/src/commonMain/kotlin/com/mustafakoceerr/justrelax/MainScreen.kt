@@ -56,6 +56,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.rememberVolumeOf
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.feature.scene.SceneViewModel
+import com.mustafakoceerr.justrelax.feature.freesound.FreesoundEditorRequest
 import com.mustafakoceerr.justrelax.feature.scene.components.MiniPlayerBar
 import com.mustafakoceerr.justrelax.feature.scene.MiniPlayerUiState
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
@@ -86,7 +87,12 @@ import com.mustafakoceerr.justrelax.core.analytics.logScreenView
  * cleared when the user leaves Main.
  */
 @Composable
-fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit, onOpenTimer: () -> Unit) {
+fun MainRoute(
+    onOpenSettings: () -> Unit,
+    onOpenMySounds: () -> Unit,
+    onOpenTimer: () -> Unit,
+    onOpenSoundEditor: (FreesoundEditorRequest) -> Unit,
+) {
     val sceneViewModel = koinViewModel<SceneViewModel>()
     // Only what the mini player shows: a volume drag changes the scene many times a second, and
     // reading the whole scene here would redraw the shell for each step.
@@ -110,6 +116,7 @@ fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit, onOpenTime
         },
         onOpenSettings = onOpenSettings,
         onOpenMySounds = onOpenMySounds,
+        onOpenSoundEditor = onOpenSoundEditor,
         snackbarHostState = snackbarController.hostState
     )
 }
@@ -173,6 +180,7 @@ private fun MainScreenLayout(
     scenePanel: @Composable (Modifier, onOpenTimer: () -> Unit) -> Unit,
     onOpenSettings: () -> Unit,
     onOpenMySounds: () -> Unit,
+    onOpenSoundEditor: (FreesoundEditorRequest) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
     val analytics = koinInject<AnalyticsHelper>()
@@ -256,6 +264,7 @@ private fun MainScreenLayout(
                                 onOpenMySounds = onOpenMySounds,
                                 onSelectTab = tabState::select,
                                 onSaveScene = onSaveScene,
+                                onOpenSoundEditor = onOpenSoundEditor,
                             )
                         }
                     }
