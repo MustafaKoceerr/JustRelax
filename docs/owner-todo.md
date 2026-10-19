@@ -55,6 +55,7 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 
 ## 6. Play Console ve gizlilik
 - [ ] Veri güvenliği formunu `docs/play-data-safety.md`'ye göre doldur. AI cümlesi satırında artık **Paylaşılıyor: Evet**.
+- [ ] *Uygulama içeriği → Reklam kimliği* sorusuna **Hayır** de. Manifestte artık `AD_ID` izni yok (#56); eski bir beyanda "Evet" varsa düzelt.
 - [x] Gizlilik politikası güncellendi ve 12 dilde yayında (2026-10-18). Kaynağı `docs/legal/`.
 - [x] Politika OpenAI'ın veri paylaşımına göre güncellendi; kullanım koşulları yeniden yazıldı. İkisi de 12 dilde yayında, kaynakları `docs/legal/` (2026-10-18).
 

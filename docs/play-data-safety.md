@@ -57,4 +57,5 @@ Proxy hiçbir şeyi saklamaz. İstek sınırları yalnızca 60 saniyelik sayaçl
   - Firebase Analytics ve Crashlytics'in yalnızca izinle çalıştığı, neyi topladığı ve iznin Ayarlar'dan geri alınabileceği.
   - Kullanıcının içe aktardığı seslerin cihazdan çıkmadığı.
 - **Mikrofon:** Uygulama mikrofon kullanmıyor; `RECORD_AUDIO` izni yok.
+- **Reklam kimliği:** *Uygulama içeriği → Reklam kimliği* sorusunun cevabı **Hayır**. Firebase Analytics'in eklediği `AD_ID` ve AdServices izinleri manifestten çıkarıldı (`tools:node="remove"`); `ManifestPermissionsTest` bunları geri gelirse yakalar.
 - **Play Integrity:** Formdaki "Cihaz veya diğer kimlikler" satırı bunu kapsıyor. Yayından önce Google'ın güncel rehberini bir kez kontrol et: <https://developer.android.com/google/play/integrity/overview>
