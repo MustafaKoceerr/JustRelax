@@ -123,7 +123,7 @@ Versions come from [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 | Area | Library |
 |---|---|
 | Language and build | Kotlin `2.4.20`, Android Gradle Plugin `9.4.1`, Gradle convention plugins in `build-logic` |
-| Platforms | Android (min SDK 29, target 36, compile 37); iOS 26+ (off by default, not released yet: its SwiftUI screens are being written) |
+| Platforms | Android (min SDK 29, target 36, compile 37); iOS 27+ (off by default, not released yet: its SwiftUI screens are being written) |
 | UI | Android: Jetpack Compose (BOM `2026.09.00`), Material 3, Material 3 Adaptive (bar, rail or drawer by window size). iOS: SwiftUI on the shared ViewModels, bridged with SKIE `0.10.15` |
 | Navigation | Android: Navigation 3 `1.2.0` |
 | State | ViewModel + `StateFlow`, Kotlin Coroutines `1.11.0` |
@@ -143,7 +143,7 @@ The app follows Google's [app architecture guide](https://developer.android.com/
 
 - **UI layer:** a screen observes one `UiState` from its ViewModel and sends it events (MVVM). The ViewModels and their state are shared Kotlin code; Android draws them with Compose and iOS with SwiftUI. A ViewModel reports one-off messages as its own type (for example `AiMessage.Offline`), and each platform picks the words.
 - **Data layer:** repositories are the single source of truth. The sound catalog is offline-first: it is cached in SQLDelight and refreshed from the CDN once a day.
-- **Playback:** one `SoundscapePlayer` (a Media3 `Player`) runs in a `MediaSessionService`. It mixes beds and schedules events, so playback keeps going in the background and shows in the system media controls. On iOS the same session runs in-process on one `AVAudioEngine` (`AvAudioGraph`); `IosAudioSession` follows iOS's default interruption and route-change behaviour and drives the lock screen controls. AVFoundation reads the pack's Ogg Opus clips from iOS 18.4; the app needs iOS 26 for its SwiftUI design.
+- **Playback:** one `SoundscapePlayer` (a Media3 `Player`) runs in a `MediaSessionService`. It mixes beds and schedules events, so playback keeps going in the background and shows in the system media controls. On iOS the same session runs in-process on one `AVAudioEngine` (`AvAudioGraph`); `IosAudioSession` follows iOS's default interruption and route-change behaviour and drives the lock screen controls. AVFoundation reads the pack's Ogg Opus clips from iOS 18.4; the app targets iOS 27 and is built with Xcode 27.1.
 - **API keys never ship in the app.** AI and Freesound calls go through a Cloudflare Worker. The Worker checks Play Integrity, issues a short session and rate-limits each install.
 
 ```text

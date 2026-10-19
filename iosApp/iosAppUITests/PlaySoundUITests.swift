@@ -13,6 +13,7 @@ final class PlaySoundUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    @MainActor
     func testPlayingASoundShowsTheMiniPlayer() throws {
         // The Compose UI is gone; this runs again once the SwiftUI library and mini player exist.
         try XCTSkipIf(true, "Waiting for the SwiftUI screens")
