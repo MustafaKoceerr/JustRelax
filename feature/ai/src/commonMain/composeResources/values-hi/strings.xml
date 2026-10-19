@@ -25,6 +25,6 @@
     <string name="ai_prompt_quote">“%1$s”</string>
     <string name="err_ai_offline">AI से कनेक्ट नहीं हो सका। अपना इंटरनेट जाँचें और फिर से कोशिश करें।</string>
     <string name="err_ai_busy">बहुत ज़्यादा अनुरोध। एक मिनट रुककर फिर से कोशिश करें।</string>
-    <string name="err_ai_unverified">ऐप की इस कॉपी को सत्यापित नहीं किया जा सका। AI इस्तेमाल करने के लिए Just Relax को Google Play से इंस्टॉल करें।</string>
+    <string name="err_ai_unverified">ऐप की इस कॉपी को सत्यापित नहीं किया जा सका। AI इस्तेमाल करने के लिए Just Relax को आधिकारिक ऐप स्टोर से इंस्टॉल करें।</string>
     <string name="err_ai_unavailable">AI अभी जवाब नहीं दे रहा है। कृपया बाद में फिर से कोशिश करें।</string>
 </resources>

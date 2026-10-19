@@ -11,7 +11,7 @@
     <string name="freesound_offline">İnternet bağlantısı yok.</string>
     <string name="freesound_rate_limited">Çok fazla arama yapıldı. Bir dakika bekleyip tekrar dene.</string>
     <string name="freesound_failed">Arama yapılamadı. Tekrar dene.</string>
-    <string name="freesound_unverified">Uygulamanın bu kopyası doğrulanamadı. Freesound’da aramak için Just Relax’i Google Play’den yükle.</string>
+    <string name="freesound_unverified">Uygulamanın bu kopyası doğrulanamadı. Freesound’da aramak için Just Relax’i resmi uygulama mağazasından yükle.</string>
     <string name="freesound_download_failed">Ses indirilemedi. Tekrar dene.</string>
     <string name="freesound_discover_title">Ses keşfet</string>
     <string name="freesound_try">Şunları dene</string>

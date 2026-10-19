@@ -1,11 +1,15 @@
+import type { AssertionResult, AttestationResult } from "./appattest";
 import { buildSearchUrl, toSearchPage, type SearchPage } from "./freesound";
 import { evaluateVerdict, sessionRequestHash, type VerdictResult } from "./integrity";
 import { OPENAI_CHAT_URL, buildMixChatRequest, describeUsage, parseMixCompletion, type Mix } from "./openai";
-import { SESSION_TTL_MS, issueSession, verifySession } from "./session";
+import { SESSION_TTL_MS, issueKeyToken, issueSession, verifyKeyToken, verifySession, type AttestedKey } from "./session";
 import {
+  APP_ATTEST_PREFIX,
+  parseAppAttestToken,
   parseMixRequest,
   parseSearchQuery,
   parseSessionRequest,
+  type AppAttestProof,
   type MixRequest,
   type SearchQuery,
   type SessionRequest,
@@ -18,6 +22,8 @@ export interface Env {
   SESSION_SECRET: string;
   GOOGLE_SERVICE_ACCOUNT_JSON: string;
   PACKAGE_NAME: string;
+  /** `<Team ID>.<bundle id>` of the iOS app; App Attest sessions are refused while it is empty. */
+  APPLE_APP_ID: string;
   /** "false" only for local development, where no Play Integrity token exists. */
   INTEGRITY_REQUIRED: string;
   SESSION_LIMITER: RateLimit;
@@ -33,6 +39,10 @@ export interface Deps {
   now: () => number;
   /** Decodes a Play Integrity token on Google's servers; null if it cannot be decoded. */
   decodeIntegrity: (integrityToken: string) => Promise<unknown>;
+  appAttest: {
+    verifyAttestation: (attestation: Uint8Array, clientData: Uint8Array, keyId: string, appId: string, nowMs: number) => Promise<AttestationResult>;
+    verifyAssertion: (assertion: Uint8Array, clientData: Uint8Array, publicKey: Uint8Array, appId: string) => Promise<AssertionResult>;
+  };
 }
 
 const INTEGRITY_MAX_AGE_MS: number = 10 * 60 * 1_000;
@@ -58,6 +68,10 @@ async function createSession(request: Request, env: Env, deps: Deps): Promise<Re
   const body: SessionRequest | null = parseSessionRequest(await readJson(request));
   if (body === null) return error(400, "bad_request");
 
+  if (env.INTEGRITY_REQUIRED !== "false" && body.integrityToken.startsWith(APP_ATTEST_PREFIX)) {
+    return appAttestSession(body, env, deps);
+  }
+
   if (env.INTEGRITY_REQUIRED !== "false") {
     const verdict: unknown = await deps.decodeIntegrity(body.integrityToken);
     if (verdict === null) return error(503, "integrity_unavailable");
@@ -70,6 +84,35 @@ async function createSession(request: Request, env: Env, deps: Deps): Promise<Re
 
   const now: number = deps.now();
   return Response.json({ token: await issueSession(body.installId, now, env.SESSION_SECRET), expiresAt: now + SESSION_TTL_MS });
+}
+
+/**
+ * The iOS app proves itself with App Attest: a new key's attestation once, then assertions by that
+ * key. Both sign `<session request hash>:<timestamp>`, so a proof only works for this install and
+ * for a few minutes.
+ */
+async function appAttestSession(body: SessionRequest, env: Env, deps: Deps): Promise<Response> {
+  if (env.APPLE_APP_ID === "") return error(503, "appattest_unavailable");
+  const proof: AppAttestProof | null = parseAppAttestToken(body.integrityToken);
+  if (proof === null) return error(403, "integrity_malformed");
+
+  const now: number = deps.now();
+  if (Math.abs(now - proof.timestampMs) > INTEGRITY_MAX_AGE_MS) return error(403, "integrity_stale");
+  const clientData: Uint8Array = new TextEncoder().encode(`${await sessionRequestHash(body.installId)}:${proof.timestampMs}`);
+
+  let keyToken: string | undefined;
+  if ("attestation" in proof) {
+    const result: AttestationResult = await deps.appAttest.verifyAttestation(proof.attestation, clientData, proof.keyId, env.APPLE_APP_ID, now);
+    if (!result.ok) return error(403, `integrity_${result.reason}`);
+    keyToken = await issueKeyToken({ installId: body.installId, keyId: proof.keyId, publicKey: result.publicKey }, env.SESSION_SECRET);
+  } else {
+    const key: AttestedKey | null = await verifyKeyToken(proof.keyToken, env.SESSION_SECRET);
+    if (key === null || key.installId !== body.installId || key.keyId !== proof.keyId) return error(403, "integrity_key_token");
+    const result: AssertionResult = await deps.appAttest.verifyAssertion(proof.assertion, clientData, key.publicKey, env.APPLE_APP_ID);
+    if (!result.ok) return error(403, `integrity_${result.reason}`);
+  }
+
+  return Response.json({ token: await issueSession(body.installId, now, env.SESSION_SECRET), expiresAt: now + SESSION_TTL_MS, keyToken });
 }
 
 async function aiMix(request: Request, env: Env, deps: Deps): Promise<Response> {

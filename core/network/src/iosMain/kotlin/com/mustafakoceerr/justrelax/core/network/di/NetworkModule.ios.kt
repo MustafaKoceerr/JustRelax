@@ -1,11 +1,14 @@
 package com.mustafakoceerr.justrelax.core.network.di
 
-import com.mustafakoceerr.justrelax.core.common.AppError
+import com.mustafakoceerr.justrelax.core.network.api.AppAttestTokenProvider
+import com.mustafakoceerr.justrelax.core.network.api.DeviceCheckAppAttestService
+import com.mustafakoceerr.justrelax.core.network.api.FileAppAttestKeyStore
 import com.mustafakoceerr.justrelax.core.network.api.IntegrityTokenProvider
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import kotlin.time.Clock
 
-// iOS needs App Attest before the API proxy accepts it; until then AI and Freesound report an error.
+/** App Attest proves to the API proxy that this is the genuine app on a genuine iPhone. */
 internal actual val platformNetworkModule: Module = module {
-    single<IntegrityTokenProvider> { IntegrityTokenProvider { throw AppError.Network.IntegrityFailed("App Attest is not set up yet") } }
+    single<IntegrityTokenProvider> { AppAttestTokenProvider(DeviceCheckAppAttestService(), FileAppAttestKeyStore(), Clock.System) }
 }

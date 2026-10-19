@@ -25,6 +25,6 @@
     <string name="ai_prompt_quote">“%1$s”</string>
     <string name="err_ai_offline">AI에 연결할 수 없습니다. 인터넷 연결을 확인하고 다시 시도하세요.</string>
     <string name="err_ai_busy">요청이 너무 많습니다. 1분 후에 다시 시도하세요.</string>
-    <string name="err_ai_unverified">이 앱을 확인할 수 없습니다. AI를 사용하려면 Google Play에서 Just Relax를 설치하세요.</string>
+    <string name="err_ai_unverified">이 앱을 확인할 수 없습니다. AI를 사용하려면 공식 스토어에서 Just Relax를 설치하세요.</string>
     <string name="err_ai_unavailable">AI가 지금 응답하지 않습니다. 나중에 다시 시도하세요.</string>
 </resources>

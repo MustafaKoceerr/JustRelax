@@ -11,7 +11,7 @@
     <string name="freesound_offline">Geen internetverbinding.</string>
     <string name="freesound_rate_limited">Te veel zoekopdrachten. Wacht een minuut en probeer het opnieuw.</string>
     <string name="freesound_failed">Zoeken is mislukt. Probeer het opnieuw.</string>
-    <string name="freesound_unverified">Deze kopie van de app kon niet worden geverifieerd. Installeer Just Relax via Google Play om op Freesound te zoeken.</string>
+    <string name="freesound_unverified">Deze kopie van de app kon niet worden geverifieerd. Installeer Just Relax via de officiële appwinkel om op Freesound te zoeken.</string>
     <string name="freesound_download_failed">Het geluid kon niet worden gedownload. Probeer het opnieuw.</string>
     <string name="freesound_discover_title">Geluiden ontdekken</string>
     <string name="freesound_try">Probeer bijvoorbeeld</string>
