@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.core.ui.util
 
+import androidx.compose.runtime.Composable
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.category_air
@@ -13,8 +14,13 @@ import com.mustafakoceerr.justrelax.core.ui.generated.resources.category_travel
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.category_water
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.category_zen
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
-val SoundCategory.titleRes: StringResource
+/** The category's name in the app's language. */
+@Composable
+fun SoundCategory.title(): String = stringResource(titleRes)
+
+private val SoundCategory.titleRes: StringResource
     get() = when (this) {
         SoundCategory.RAIN -> Res.string.category_rain
         SoundCategory.WATER -> Res.string.category_water

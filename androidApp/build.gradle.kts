@@ -116,7 +116,7 @@ dependencies {
     implementation(projects.core.data)
     implementation(projects.core.network)
 
-    implementation(projects.feature.library)
+    implementation(projects.feature.library.ui)
     implementation(projects.feature.mixer)
     implementation(projects.feature.saved)
     implementation(projects.feature.ai)

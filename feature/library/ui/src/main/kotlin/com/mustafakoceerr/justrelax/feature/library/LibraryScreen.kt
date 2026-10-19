@@ -20,11 +20,8 @@ import com.mustafakoceerr.justrelax.core.ui.components.JustRelaxTabScaffold
 import com.mustafakoceerr.justrelax.core.ui.components.rememberVolumeOf
 import com.mustafakoceerr.justrelax.core.ui.controller.GlobalSnackbarController
 import com.mustafakoceerr.justrelax.feature.library.components.LibraryContent
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_my_sounds
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_settings
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.download_failed
-import org.jetbrains.compose.resources.stringResource
+import com.mustafakoceerr.justrelax.feature.library.ui.R
+import androidx.compose.ui.res.stringResource
 import org.koin.compose.koinInject
 
 @Composable
@@ -71,13 +68,13 @@ fun LibraryScreen(
             IconButton(onClick = onOpenMySounds) {
                 Icon(
                     Icons.Outlined.LibraryMusic,
-                    stringResource(Res.string.action_my_sounds)
+                    stringResource(R.string.action_my_sounds)
                 )
             }
             IconButton(onClick = onOpenSettings) {
                 Icon(
                     Icons.Outlined.Settings,
-                    stringResource(Res.string.action_settings)
+                    stringResource(R.string.action_settings)
                 )
             }
         }
@@ -97,6 +94,6 @@ fun LibraryScreen(
 
 @Composable
 private fun LibraryMessage.text(): String = when (this) {
-    LibraryMessage.DownloadFailed -> stringResource(Res.string.download_failed)
+    LibraryMessage.DownloadFailed -> stringResource(R.string.download_failed)
     is LibraryMessage.Text -> value
 }

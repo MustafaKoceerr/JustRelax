@@ -57,7 +57,7 @@ import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_listen
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_stop
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
 import com.mustafakoceerr.justrelax.core.ui.util.UserMessageEffect
-import com.mustafakoceerr.justrelax.core.ui.util.titleRes
+import com.mustafakoceerr.justrelax.core.ui.util.title
 import com.mustafakoceerr.justrelax.feature.mysounds.components.WaveformTrimmer
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.mysounds.generated.resources.mysounds_category
@@ -239,7 +239,7 @@ private fun CategoryPicker(selected: SoundCategory?, onSelect: (SoundCategory) -
             FilterChip(
                 selected = category == selected,
                 onClick = { onSelect(category) },
-                label = { Text(stringResource(category.titleRes)) },
+                label = { Text(category.title()) },
             )
         }
     }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_mix_dialog_title">Spara mix</string>
+    <string name="save_mix_dialog_description">Ge den här mixen ett namn:</string>
+    <string name="save_mix_dialog_name_label">Mixnamn</string>
+    <string name="save_mix_dialog_name_placeholder">t.ex. Sovläge, Fokus...</string>
+    <string name="save_mix_dialog_name_error">Ange ett namn</string>
+    <string name="action_save">Spara</string>
+    <string name="action_cancel">Avbryt</string>
+    <string name="sound_action_download">Ladda ned</string>
+    <string name="action_dismiss">Stäng</string>
+    <string name="frequency_rare">Sällan</string>
+    <string name="frequency_normal">Normal</string>
+    <string name="frequency_often">Ofta</string>
+    <string name="sound_kind_event">Hörs då och då</string>
+    <string name="action_remove">Ta bort</string>
+    <string name="category_air">Vind &amp; atmosfär</string>
+    <string name="category_asmr">ASMR &amp; triggers</string>
+    <string name="category_city">Stad &amp; inomhus</string>
+    <string name="category_music">Musik &amp; melodier</string>
+    <string name="category_nature">Natur &amp; skog</string>
+    <string name="category_noise">Vitt brus &amp; mekaniskt</string>
+    <string name="category_rain">Regn &amp; storm</string>
+    <string name="category_travel">Resor &amp; transport</string>
+    <string name="category_water">Vatten &amp; hav</string>
+    <string name="category_zen">Zen &amp; meditation</string>
+    <string name="action_back">Tillbaka</string>
+    <string name="action_delete">Ta bort</string>
+    <string name="action_play">Spela</string>
+    <string name="action_stop">Stoppa</string>
+    <string name="action_listen">Lyssna</string>
+    <string name="sound_state_playing">Spelas</string>
+    <string name="sound_state_stopped">Stoppad</string>
+    <string name="volume_level">Volym</string>
+    <string name="loading">Läser in</string>
+    <string name="sound_kind_bed">Spelas hela tiden</string>
+    <string name="frequency_title">Hur ofta</string>
+    <string name="action_pause">Pausa</string>
+    <string name="sleep_timer">Sömntimer</string>
+    <string name="duration_hour_short">h</string>
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">s</string>
+</resources>

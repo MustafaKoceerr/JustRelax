@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_mix_dialog_title">Salva mix</string>
+    <string name="save_mix_dialog_description">Dai un nome a questo mix:</string>
+    <string name="save_mix_dialog_name_label">Nome del mix</string>
+    <string name="save_mix_dialog_name_placeholder">es. Modalità sonno, Focus...</string>
+    <string name="save_mix_dialog_name_error">Inserisci un nome</string>
+    <string name="action_save">Salva</string>
+    <string name="action_cancel">Annulla</string>
+    <string name="sound_action_download">Scarica</string>
+    <string name="action_dismiss">Chiudi</string>
+    <string name="frequency_rare">Raro</string>
+    <string name="frequency_normal">Normale</string>
+    <string name="frequency_often">Spesso</string>
+    <string name="sound_kind_event">Suona di tanto in tanto</string>
+    <string name="action_remove">Rimuovi</string>
+    <string name="category_air">Vento &amp; atmosfera</string>
+    <string name="category_asmr">ASMR &amp; trigger</string>
+    <string name="category_city">Città &amp; interni</string>
+    <string name="category_music">Musica &amp; melodie</string>
+    <string name="category_nature">Natura &amp; foresta</string>
+    <string name="category_noise">Rumore bianco &amp; meccanico</string>
+    <string name="category_rain">Pioggia &amp; tempesta</string>
+    <string name="category_travel">Viaggi &amp; trasporti</string>
+    <string name="category_water">Acqua &amp; oceano</string>
+    <string name="category_zen">Zen &amp; meditazione</string>
+    <string name="action_back">Indietro</string>
+    <string name="action_delete">Elimina</string>
+    <string name="action_play">Riproduci</string>
+    <string name="action_stop">Ferma</string>
+    <string name="action_listen">Ascolta</string>
+    <string name="sound_state_playing">In riproduzione</string>
+    <string name="sound_state_stopped">Fermo</string>
+    <string name="volume_level">Volume</string>
+    <string name="loading">Caricamento</string>
+    <string name="sound_kind_bed">Suona di continuo</string>
+    <string name="frequency_title">Frequenza</string>
+    <string name="action_pause">Pausa</string>
+    <string name="sleep_timer">Timer di spegnimento</string>
+    <string name="duration_hour_short">h</string>
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">s</string>
+</resources>

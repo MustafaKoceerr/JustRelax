@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_mix_dialog_title">Salvar mix</string>
+    <string name="save_mix_dialog_description">Dê um nome para este mix:</string>
+    <string name="save_mix_dialog_name_label">Nome do mix</string>
+    <string name="save_mix_dialog_name_placeholder">ex.: Modo Sono, Foco...</string>
+    <string name="save_mix_dialog_name_error">Por favor, insira um nome</string>
+    <string name="action_save">Salvar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="sound_action_download">Baixar</string>
+    <string name="action_dismiss">Dispensar</string>
+    <string name="frequency_rare">Raro</string>
+    <string name="frequency_normal">Normal</string>
+    <string name="frequency_often">Frequente</string>
+    <string name="sound_kind_event">Toca de vez em quando</string>
+    <string name="action_remove">Remover</string>
+    <string name="category_air">Vento &amp; atmosfera</string>
+    <string name="category_asmr">ASMR &amp; gatilhos</string>
+    <string name="category_city">Cidade &amp; interior</string>
+    <string name="category_music">Música &amp; melodias</string>
+    <string name="category_nature">Natureza &amp; floresta</string>
+    <string name="category_noise">Ruído branco &amp; mecânico</string>
+    <string name="category_rain">Chuva &amp; tempestade</string>
+    <string name="category_travel">Viagem &amp; transporte</string>
+    <string name="category_water">Água &amp; oceano</string>
+    <string name="category_zen">Zen &amp; meditação</string>
+    <string name="action_back">Voltar</string>
+    <string name="action_delete">Excluir</string>
+    <string name="action_play">Reproduzir</string>
+    <string name="action_stop">Parar</string>
+    <string name="action_listen">Ouvir</string>
+    <string name="sound_state_playing">Tocando</string>
+    <string name="sound_state_stopped">Parado</string>
+    <string name="volume_level">Volume</string>
+    <string name="loading">Carregando</string>
+    <string name="sound_kind_bed">Toca o tempo todo</string>
+    <string name="frequency_title">Frequência</string>
+    <string name="action_pause">Pausar</string>
+    <string name="sleep_timer">Timer de sono</string>
+    <string name="duration_hour_short">h</string>
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">s</string>
+</resources>

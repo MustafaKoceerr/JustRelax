@@ -2,12 +2,8 @@ package com.mustafakoceerr.justrelax.feature.library.components
 
 import com.mustafakoceerr.justrelax.core.ui.components.CenteredLoading
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCardGrid
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.library_empty_title
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.library_empty_message
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.library_hint
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_retry
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
-import org.jetbrains.compose.resources.stringResource
+import com.mustafakoceerr.justrelax.feature.library.ui.R
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
@@ -51,7 +47,7 @@ fun LibraryContent(
         if (categories.isNotEmpty() && selectedCategory != null) {
             // How the tiles work, in one line: the volume slide is not obvious otherwise.
             Text(
-                text = stringResource(Res.string.library_hint),
+                text = stringResource(R.string.library_hint),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -101,13 +97,13 @@ private fun EmptyLibrary(onRetry: () -> Unit, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
     ) {
-        Text(text = stringResource(Res.string.library_empty_title), style = MaterialTheme.typography.titleLarge)
+        Text(text = stringResource(R.string.library_empty_title), style = MaterialTheme.typography.titleLarge)
         Text(
-            text = stringResource(Res.string.library_empty_message),
+            text = stringResource(R.string.library_empty_message),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
-        Button(onClick = onRetry) { Text(stringResource(Res.string.action_retry)) }
+        Button(onClick = onRetry) { Text(stringResource(R.string.action_retry)) }
     }
 }

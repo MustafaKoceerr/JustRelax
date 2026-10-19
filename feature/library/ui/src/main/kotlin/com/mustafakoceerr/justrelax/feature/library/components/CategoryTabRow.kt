@@ -25,8 +25,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mustafakoceerr.justrelax.core.model.SoundCategory
 import com.mustafakoceerr.justrelax.core.ui.icon.imageVector
-import com.mustafakoceerr.justrelax.core.ui.util.titleRes
-import org.jetbrains.compose.resources.stringResource
+import com.mustafakoceerr.justrelax.core.ui.util.title
+import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +69,7 @@ fun CategoryTabRow(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = stringResource(category.titleRes),
+                    text = category.title(),
                     style = MaterialTheme.typography.labelLarge,
                     color = contentColor,
                     maxLines = 1,

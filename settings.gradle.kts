@@ -52,6 +52,7 @@ include(":core:analytics")
 include(":feature:settings")
 include(":feature:scene")
 include(":feature:library")
+include(":feature:library:ui")
 include(":feature:splash")
 
 include(":feature:ai")
