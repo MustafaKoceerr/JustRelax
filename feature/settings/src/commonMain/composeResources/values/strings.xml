@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">Language Selection</string>
     <string name="language_system_default">System Default</string>
-    <string name="section_content">Content</string>
-    <string name="section_support_legal">Support &amp; Legal</string>
     <string name="settings_language_title">Language</string>
     <string name="settings_title">Settings</string>
     <string name="theme_dark">Dark</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">The purchase did not go through. Please try again.</string>
     <string name="support_unavailable">Tips are not available right now.</string>
     <string name="support_note">A tip is a one-time payment through the store. It unlocks nothing; the app stays the same for everyone.</string>
+    <string name="section_sounds">Sounds</string>
+    <string name="section_privacy">Privacy</string>
+    <string name="section_support">Support</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_my_sounds_title">My sounds</string>
+    <string name="settings_my_sounds_subtitle">Your own files and Freesound finds</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_tagline">Sounds for rest and focus</string>
 </resources>

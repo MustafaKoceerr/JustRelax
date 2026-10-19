@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">Sprachauswahl</string>
     <string name="language_system_default">Systemstandard</string>
-    <string name="section_content">Inhalt</string>
-    <string name="section_support_legal">Support &amp; Rechtliches</string>
     <string name="settings_language_title">Sprache</string>
     <string name="settings_title">Einstellungen</string>
     <string name="theme_dark">Dunkel</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">Der Kauf hat nicht geklappt. Bitte versuch es noch einmal.</string>
     <string name="support_unavailable">Trinkgeld ist gerade nicht verfügbar.</string>
     <string name="support_note">Ein Trinkgeld ist eine einmalige Zahlung über den Store. Es schaltet nichts frei; die App bleibt für alle gleich.</string>
+    <string name="section_sounds">Klänge</string>
+    <string name="section_privacy">Datenschutz</string>
+    <string name="section_support">Unterstützung</string>
+    <string name="settings_theme_title">Design</string>
+    <string name="settings_my_sounds_title">Meine Klänge</string>
+    <string name="settings_my_sounds_subtitle">Eigene Dateien und Funde von Freesound</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_tagline">Klänge für Ruhe und Fokus</string>
 </resources>

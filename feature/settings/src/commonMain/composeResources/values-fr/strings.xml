@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">Sélection de la langue</string>
     <string name="language_system_default">Par défaut du système</string>
-    <string name="section_content">Contenu</string>
-    <string name="section_support_legal">Support &amp; Mentions légales</string>
     <string name="settings_language_title">Langue</string>
     <string name="settings_title">Paramètres</string>
     <string name="theme_dark">Sombre</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">L’achat n’a pas abouti. Veuillez réessayer.</string>
     <string name="support_unavailable">Les pourboires ne sont pas disponibles pour le moment.</string>
     <string name="support_note">Un pourboire est un paiement unique via la boutique. Il ne débloque rien ; l’app reste la même pour tous.</string>
+    <string name="section_sounds">Sons</string>
+    <string name="section_privacy">Confidentialité</string>
+    <string name="section_support">Assistance</string>
+    <string name="settings_theme_title">Thème</string>
+    <string name="settings_my_sounds_title">Mes sons</string>
+    <string name="settings_my_sounds_subtitle">Vos fichiers et trouvailles Freesound</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_tagline">Des sons pour se reposer et se concentrer</string>
 </resources>

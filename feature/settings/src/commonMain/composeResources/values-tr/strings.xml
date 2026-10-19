@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">Dil Seçimi</string>
     <string name="language_system_default">Sistem Varsayılanı</string>
-    <string name="section_content">İçerik</string>
-    <string name="section_support_legal">Destek &amp; Yasal</string>
     <string name="settings_language_title">Dil</string>
     <string name="settings_title">Ayarlar</string>
     <string name="theme_dark">Koyu</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">Satın alma tamamlanmadı. Lütfen tekrar dene.</string>
     <string name="support_unavailable">Bahşiş şu an kullanılamıyor.</string>
     <string name="support_note">Bahşiş, mağaza üzerinden tek seferlik bir ödemedir. Hiçbir şeyin kilidini açmaz; uygulama herkes için aynı kalır.</string>
+    <string name="section_sounds">Sesler</string>
+    <string name="section_privacy">Gizlilik</string>
+    <string name="section_support">Destek</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_my_sounds_title">Seslerim</string>
+    <string name="settings_my_sounds_subtitle">Kendi dosyaların ve Freesound’dan buldukların</string>
+    <string name="settings_version">Sürüm %1$s</string>
+    <string name="settings_tagline">Dinlenmek ve odaklanmak için sesler</string>
 </resources>

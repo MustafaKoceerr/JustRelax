@@ -27,6 +27,7 @@ fun SettingsRoute(
     onBack: () -> Unit,
     onOpenCredits: () -> Unit,
     onOpenSupport: () -> Unit,
+    onOpenMySounds: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -49,6 +50,7 @@ fun SettingsRoute(
         onOpenTermsAndConditions = viewModel::openTermsAndConditions,
         onOpenCredits = onOpenCredits,
         onOpenSupport = onOpenSupport,
+        onOpenMySounds = onOpenMySounds,
         onUsageDataChange = viewModel::setUsageDataEnabled,
     )
 }
@@ -70,6 +72,7 @@ fun SettingsScreen(
     onOpenTermsAndConditions: () -> Unit,
     onOpenCredits: () -> Unit,
     onOpenSupport: () -> Unit,
+    onOpenMySounds: () -> Unit,
     onUsageDataChange: (Boolean) -> Unit,
 ) {
     JustRelaxDetailScaffold(
@@ -84,6 +87,7 @@ fun SettingsScreen(
                 onThemeChange = onThemeChange,
                 onDownloadLibrary = onDownloadLibrary,
                 onOpenLanguageSelection = onOpenLanguageSelection,
+                onOpenMySounds = onOpenMySounds,
                 onRateApp = onRateApp,
                 onSendFeedback = onSendFeedback,
                 onOpenPrivacyPolicy = onOpenPrivacyPolicy,

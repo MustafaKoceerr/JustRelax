@@ -2,6 +2,7 @@ package com.mustafakoceerr.justrelax.feature.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mustafakoceerr.justrelax.core.common.AppInfo
 import com.mustafakoceerr.justrelax.core.data.repository.ConsentRepository
 import com.mustafakoceerr.justrelax.core.data.repository.UserPreferencesRepository
 import com.mustafakoceerr.justrelax.core.model.ConsentStatus
@@ -34,6 +35,7 @@ class SettingsViewModel(
     private val languageController: LanguageController,
     private val consentRepository: ConsentRepository,
     tipRepository: TipRepository,
+    private val appInfo: AppInfo,
 ) : ViewModel() {
 
     /** State that only exists while this screen is open; everything else comes from the data layer. */
@@ -71,6 +73,7 @@ class SettingsViewModel(
             isLibraryComplete = libraryComplete,
             isUsageDataEnabled = usageDataEnabled,
             canTip = canTip,
+            versionName = appInfo.versionName,
             userMessage = screen.userMessage,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SettingsUiState())

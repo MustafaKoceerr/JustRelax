@@ -106,6 +106,7 @@ private fun JustRelaxNavDisplay() {
                     onBack = { backStack.goBack() },
                     onOpenCredits = { backStack.navigate(Route.Credits) },
                     onOpenSupport = { backStack.navigate(Route.Support) },
+                    onOpenMySounds = { backStack.navigate(Route.MySounds) },
                 )
             }
             entry<Route.Credits> {

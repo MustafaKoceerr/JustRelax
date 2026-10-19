@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">भाषा चयन</string>
     <string name="language_system_default">सिस्टम डिफ़ॉल्ट</string>
-    <string name="section_content">सामग्री</string>
-    <string name="section_support_legal">सपोर्ट &amp; कानूनी</string>
     <string name="settings_language_title">भाषा</string>
     <string name="settings_title">सेटिंग्स</string>
     <string name="theme_dark">डार्क</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">खरीदारी पूरी नहीं हुई। कृपया फिर से कोशिश करें।</string>
     <string name="support_unavailable">टिप अभी उपलब्ध नहीं है।</string>
     <string name="support_note">टिप स्टोर के ज़रिए एक बार का भुगतान है। इससे कुछ भी अनलॉक नहीं होता; ऐप सबके लिए एक जैसा रहता है।</string>
+    <string name="section_sounds">आवाज़ें</string>
+    <string name="section_privacy">गोपनीयता</string>
+    <string name="section_support">सहायता</string>
+    <string name="settings_theme_title">थीम</string>
+    <string name="settings_my_sounds_title">मेरी आवाज़ें</string>
+    <string name="settings_my_sounds_subtitle">आपकी फ़ाइलें और Freesound से मिली आवाज़ें</string>
+    <string name="settings_version">संस्करण %1$s</string>
+    <string name="settings_tagline">आराम और एकाग्रता के लिए आवाज़ें</string>
 </resources>

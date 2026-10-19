@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">Taalkeuze</string>
     <string name="language_system_default">Systeemstandaard</string>
-    <string name="section_content">Inhoud</string>
-    <string name="section_support_legal">Support &amp; Juridisch</string>
     <string name="settings_language_title">Taal</string>
     <string name="settings_title">Instellingen</string>
     <string name="theme_dark">Donker</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">De aankoop is niet gelukt. Probeer het opnieuw.</string>
     <string name="support_unavailable">Fooien zijn nu niet beschikbaar.</string>
     <string name="support_note">Een fooi is een eenmalige betaling via de store. Er wordt niets mee ontgrendeld; de app blijft voor iedereen hetzelfde.</string>
+    <string name="section_sounds">Geluiden</string>
+    <string name="section_privacy">Privacy</string>
+    <string name="section_support">Ondersteuning</string>
+    <string name="settings_theme_title">Thema</string>
+    <string name="settings_my_sounds_title">Mijn geluiden</string>
+    <string name="settings_my_sounds_subtitle">Je eigen bestanden en vondsten van Freesound</string>
+    <string name="settings_version">Versie %1$s</string>
+    <string name="settings_tagline">Geluiden om te rusten en te focussen</string>
 </resources>

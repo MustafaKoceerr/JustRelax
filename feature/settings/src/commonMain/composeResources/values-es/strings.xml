@@ -2,8 +2,6 @@
 <resources>
     <string name="language_selection_title">Selección de idioma</string>
     <string name="language_system_default">Predeterminado del sistema</string>
-    <string name="section_content">Contenido</string>
-    <string name="section_support_legal">Soporte &amp; Legal</string>
     <string name="settings_language_title">Idioma</string>
     <string name="settings_title">Ajustes</string>
     <string name="theme_dark">Oscuro</string>
@@ -46,4 +44,12 @@
     <string name="support_failed">La compra no se completó. Inténtalo de nuevo.</string>
     <string name="support_unavailable">Las propinas no están disponibles ahora.</string>
     <string name="support_note">Una propina es un pago único a través de la tienda. No desbloquea nada; la app es igual para todos.</string>
+    <string name="section_sounds">Sonidos</string>
+    <string name="section_privacy">Privacidad</string>
+    <string name="section_support">Ayuda</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_my_sounds_title">Mis sonidos</string>
+    <string name="settings_my_sounds_subtitle">Tus archivos y hallazgos de Freesound</string>
+    <string name="settings_version">Versión %1$s</string>
+    <string name="settings_tagline">Sonidos para descansar y concentrarse</string>
 </resources>
