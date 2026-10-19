@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BookmarkAdd
-import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -32,7 +31,6 @@ import com.mustafakoceerr.justrelax.core.ui.components.SoundLayerRow
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_pause
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_play
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.action_remove
-import com.mustafakoceerr.justrelax.core.ui.generated.resources.sleep_timer
 import com.mustafakoceerr.justrelax.feature.scene.SceneLayerItem
 import com.mustafakoceerr.justrelax.feature.scene.SceneUiState
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
@@ -55,6 +53,10 @@ fun ScenePanel(
     onStopAll: () -> Unit,
     onSave: () -> Unit,
     onOpenTimer: () -> Unit,
+    /** Seconds left on the sleep timer, or null; read only by the timer card's countdown. */
+    timerRemaining: () -> Long?,
+    onStartTimer: (seconds: Long) -> Unit,
+    onCancelTimer: () -> Unit,
     onVolumeChange: (soundId: String, volume: Float) -> Unit,
     onFrequencyChange: (soundId: String, frequency: EventFrequency) -> Unit,
     onRemove: (soundId: String) -> Unit,
@@ -67,9 +69,6 @@ fun ScenePanel(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.weight(1f),
             )
-            IconButton(onClick = onOpenTimer, enabled = state.isVisible) {
-                Icon(Icons.Rounded.Bedtime, contentDescription = stringResource(CoreRes.string.sleep_timer))
-            }
             IconButton(onClick = onSave, enabled = state.isVisible) {
                 Icon(Icons.Outlined.BookmarkAdd, contentDescription = stringResource(Res.string.action_save_scene))
             }
@@ -83,6 +82,15 @@ fun ScenePanel(
             IconButton(onClick = onStopAll, enabled = state.isVisible) {
                 Icon(Icons.Rounded.Stop, contentDescription = stringResource(Res.string.action_stop_all))
             }
+        }
+
+        if (state.isVisible) {
+            SleepTimerCard(
+                timerRemaining = timerRemaining,
+                onStart = onStartTimer,
+                onCancel = onCancelTimer,
+                onOpenTimer = onOpenTimer,
+            )
         }
 
         if (state.layers.isEmpty()) {

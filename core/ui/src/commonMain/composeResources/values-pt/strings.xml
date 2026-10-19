@@ -37,4 +37,7 @@
     <string name="frequency_title">Frequência</string>
     <string name="action_pause">Pausar</string>
     <string name="sleep_timer">Timer de sono</string>
+    <string name="duration_hour_short">h</string>
+    <string name="duration_minute_short">min</string>
+    <string name="duration_second_short">s</string>
 </resources>

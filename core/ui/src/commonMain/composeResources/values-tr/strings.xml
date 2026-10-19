@@ -37,4 +37,7 @@
     <string name="frequency_title">Sıklık</string>
     <string name="action_pause">Duraklat</string>
     <string name="sleep_timer">Uyku zamanlayıcısı</string>
+    <string name="duration_hour_short">sa</string>
+    <string name="duration_minute_short">dk</string>
+    <string name="duration_second_short">sn</string>
 </resources>

@@ -105,7 +105,9 @@ fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit, onOpenTime
         onStopAll = sceneViewModel::stopAll,
         onOpenTimer = onOpenTimer,
         onSaveScene = sceneViewModel::openSaveDialog,
-        scenePanel = { modifier, openTimer -> ScenePanelRoute(sceneViewModel, openTimer, modifier) },
+        scenePanel = { modifier, openTimer ->
+            ScenePanelRoute(sceneViewModel, timerRemaining = { timerRemaining.value }, openTimer, modifier)
+        },
         onOpenSettings = onOpenSettings,
         onOpenMySounds = onOpenMySounds,
         snackbarHostState = snackbarController.hostState
@@ -132,7 +134,12 @@ private fun SceneMessagesAndDialog(sceneViewModel: SceneViewModel, snackbarContr
 
 /** Collects the scene itself, so its changes redraw only the panel; volume changes, only its sliders. */
 @Composable
-private fun ScenePanelRoute(sceneViewModel: SceneViewModel, onOpenTimer: () -> Unit, modifier: Modifier) {
+private fun ScenePanelRoute(
+    sceneViewModel: SceneViewModel,
+    timerRemaining: () -> Long?,
+    onOpenTimer: () -> Unit,
+    modifier: Modifier,
+) {
     val sceneState by sceneViewModel.uiState.collectAsStateWithLifecycle()
     val volumeOf = rememberVolumeOf(sceneViewModel.volumes.collectAsStateWithLifecycle())
     ScenePanel(
@@ -142,6 +149,9 @@ private fun ScenePanelRoute(sceneViewModel: SceneViewModel, onOpenTimer: () -> U
         onStopAll = sceneViewModel::stopAll,
         onSave = sceneViewModel::openSaveDialog,
         onOpenTimer = onOpenTimer,
+        timerRemaining = timerRemaining,
+        onStartTimer = sceneViewModel::startTimer,
+        onCancelTimer = sceneViewModel::cancelTimer,
         onVolumeChange = sceneViewModel::changeVolume,
         onFrequencyChange = sceneViewModel::changeFrequency,
         onRemove = sceneViewModel::remove,

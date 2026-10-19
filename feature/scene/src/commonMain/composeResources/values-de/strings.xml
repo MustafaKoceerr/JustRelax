@@ -9,4 +9,9 @@
     <string name="scene_empty">Tippe auf Klänge in der Bibliothek, um deine Szene zu bauen.</string>
     <string name="action_stop_all">Alle stoppen</string>
     <string name="action_save_scene">Speichern</string>
+    <string name="scene_timer_custom">Eigene…</string>
+    <string name="scene_timer_change">Ändern</string>
+    <string name="scene_timer_ends_in">Wird in %1$s ausgeblendet</string>
+    <string name="scene_timer_chip">Schlaf</string>
+    <string name="scene_timer_hint">Zum Schluss werden die Sounds sanft ausgeblendet</string>
 </resources>

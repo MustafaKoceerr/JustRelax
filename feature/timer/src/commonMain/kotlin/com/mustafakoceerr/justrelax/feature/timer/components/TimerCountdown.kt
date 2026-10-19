@@ -35,7 +35,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.mustafakoceerr.justrelax.feature.timer.util.formatDurationVerbose
+import com.mustafakoceerr.justrelax.core.ui.util.formatDurationVerbose
 import com.mustafakoceerr.justrelax.feature.timer.util.rememberClockTimeFormatter
 import com.mustafakoceerr.justrelax.feature.timer.util.toFormattedTime
 import kotlin.time.Instant

@@ -13,6 +13,7 @@ import com.mustafakoceerr.justrelax.core.data.repository.SavedSceneRepository
 import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.playback.PlaybackController
 import com.mustafakoceerr.justrelax.core.playback.timer.SleepTimer
+import com.mustafakoceerr.justrelax.core.analytics.logTimerStarted
 import com.mustafakoceerr.justrelax.core.playback.timer.TimerStatus
 import com.mustafakoceerr.justrelax.core.data.repository.SoundRepository
 import com.mustafakoceerr.justrelax.core.model.soundscape.EventFrequency
@@ -42,7 +43,7 @@ class SceneViewModel(
     private val savedSceneRepository: SavedSceneRepository,
     languageController: LanguageController,
     private val analytics: AnalyticsHelper,
-    sleepTimer: SleepTimer,
+    private val sleepTimer: SleepTimer,
 ) : ViewModel() {
 
     private data class ScreenState(
@@ -120,6 +121,15 @@ class SceneViewModel(
     fun stopAll() {
         sceneRepository.clear()
     }
+
+    /** A preset from the scene panel; the timer only makes sense while there is something to fade out. */
+    fun startTimer(seconds: Long) {
+        if (sceneRepository.scene.value.layers.isEmpty()) return
+        sleepTimer.start(seconds)
+        analytics.logTimerStarted(seconds)
+    }
+
+    fun cancelTimer() = sleepTimer.cancel()
 
     /** [suggestedName] fills the name field, such as the name the AI gave its mix. */
     fun openSaveDialog(suggestedName: String? = null) =

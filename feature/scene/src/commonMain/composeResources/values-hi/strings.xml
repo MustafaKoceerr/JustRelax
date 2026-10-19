@@ -9,4 +9,9 @@
     <string name="scene_empty">अपना दृश्य बनाने के लिए लाइब्रेरी में ध्वनियों पर टैप करें।</string>
     <string name="action_stop_all">सब बंद करें</string>
     <string name="action_save_scene">सहेजें</string>
+    <string name="scene_timer_custom">कस्टम…</string>
+    <string name="scene_timer_change">बदलें</string>
+    <string name="scene_timer_ends_in">%1$s में धीरे-धीरे बंद होगा</string>
+    <string name="scene_timer_chip">नींद</string>
+    <string name="scene_timer_hint">समय पूरा होने पर ध्वनियाँ धीरे-धीरे बंद हो जाती हैं</string>
 </resources>

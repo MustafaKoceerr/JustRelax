@@ -31,6 +31,19 @@ object NoOpCrashReporter : CrashReporter {
 fun AnalyticsHelper.logScreenView(screenName: String) =
     logEvent(AnalyticsEvent(EventTypes.SCREEN_VIEW, mapOf(Params.SCREEN_NAME to screenName)))
 
+/** The sleep timer was started, from its screen or the scene panel, with a rough length of [seconds]. */
+fun AnalyticsHelper.logTimerStarted(seconds: Long) =
+    logEvent(AnalyticsEvent(EventTypes.TIMER_STARTED, mapOf(Params.DURATION_BUCKET to timerDurationBucket(seconds))))
+
+/** A rough length, enough to see how people use the timer. */
+private fun timerDurationBucket(seconds: Long): String = when {
+    seconds < 15 * 60 -> "under_15m"
+    seconds < 30 * 60 -> "15_30m"
+    seconds <= 60 * 60 -> "30_60m"
+    seconds <= 2 * 60 * 60 -> "1_2h"
+    else -> "over_2h"
+}
+
 /** Event and parameter names, kept in one place so the dashboards stay consistent. */
 object EventTypes {
     const val SCREEN_VIEW = "screen_view"

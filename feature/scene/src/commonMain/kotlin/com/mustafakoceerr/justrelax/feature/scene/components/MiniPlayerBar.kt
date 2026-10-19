@@ -1,19 +1,16 @@
 package com.mustafakoceerr.justrelax.feature.scene.components
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,10 +28,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -48,6 +46,7 @@ import com.mustafakoceerr.justrelax.core.ui.testing.TestTags
 import com.mustafakoceerr.justrelax.core.ui.util.formatCountdown
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.scene.generated.resources.action_stop_all
+import com.mustafakoceerr.justrelax.feature.scene.generated.resources.scene_timer_chip
 import org.jetbrains.compose.resources.stringResource
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res as CoreRes
 
@@ -88,19 +87,17 @@ fun MiniPlayerBar(
         ) {
             IconStack(icons = activeIcons)
             Spacer(modifier = Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text(
-                    text = names.joinToString(", "),
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                TimerLeft(timerRemaining)
-            }
-            IconButton(onClick = onOpenTimer, modifier = Modifier.testTag(TestTags.MINI_PLAYER_TIMER)) {
-                Icon(Icons.Rounded.Bedtime, contentDescription = stringResource(CoreRes.string.sleep_timer))
-            }
+            Text(
+                text = names.joinToString(", "),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            TimerChip(timerRemaining = timerRemaining, onClick = onOpenTimer)
+            Spacer(modifier = Modifier.width(4.dp))
             FilledIconButton(
                 onClick = throttledPlayPause,
                 modifier = Modifier.size(48.dp),
@@ -154,22 +151,39 @@ private fun IconStack(icons: List<SoundIcon>) {
 }
 
 /** The sleep timer's countdown; the only part of the bar redrawn each second. */
+/** The sleep timer, labelled so it is seen: "Sleep" when off, the time left while it runs. */
 @Composable
-private fun TimerLeft(timerRemaining: () -> Long?) {
-    val remaining = timerRemaining()
-    // The last time shown stays while the line fades out, instead of jumping to 0:00.
-    val lastShown = remember { longArrayOf(0L) }
-    if (remaining != null) lastShown[0] = remaining
-    AnimatedVisibility(visible = remaining != null, enter = fadeIn() + expandVertically(), exit = fadeOut() + shrinkVertically()) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Rounded.Bedtime, contentDescription = null, modifier = Modifier.size(14.dp))
+private fun TimerChip(timerRemaining: () -> Long?, onClick: () -> Unit) {
+    val timerDescription = stringResource(CoreRes.string.sleep_timer)
+    Surface(
+        onClick = onClick,
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.12f),
+        modifier = Modifier
+            .heightIn(min = 36.dp)
+            .testTag(TestTags.MINI_PLAYER_TIMER)
+            .semantics { contentDescription = timerDescription },
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(Icons.Rounded.Bedtime, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = formatCountdown(lastShown[0]),
-                style = MaterialTheme.typography.labelMedium,
-            )
+            TimerChipText(timerRemaining)
         }
     }
+}
+
+/** Reads the time left on its own, so the tick each second redraws only this text. */
+@Composable
+private fun TimerChipText(timerRemaining: () -> Long?) {
+    val remaining = timerRemaining()
+    Text(
+        text = if (remaining != null) formatCountdown(remaining) else stringResource(Res.string.scene_timer_chip),
+        style = MaterialTheme.typography.labelLarge,
+        maxLines = 1,
+    )
 }
 
 private const val MAX_ICONS = 3

@@ -1,8 +1,6 @@
 package com.mustafakoceerr.justrelax.feature.timer
 
-import com.mustafakoceerr.justrelax.core.analytics.Params
-import com.mustafakoceerr.justrelax.core.analytics.EventTypes
-import com.mustafakoceerr.justrelax.core.analytics.AnalyticsEvent
+import com.mustafakoceerr.justrelax.core.analytics.logTimerStarted
 import com.mustafakoceerr.justrelax.core.analytics.AnalyticsHelper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,16 +40,7 @@ class TimerViewModel(
 
     fun startTimer(seconds: Long) {
         sleepTimer.start(seconds)
-        analytics.logEvent(AnalyticsEvent(EventTypes.TIMER_STARTED, mapOf(Params.DURATION_BUCKET to durationBucket(seconds))))
-    }
-
-    /** A rough length, enough to see how people use the timer. */
-    private fun durationBucket(seconds: Long): String = when {
-        seconds < 15 * 60 -> "under_15m"
-        seconds < 30 * 60 -> "15_30m"
-        seconds <= 60 * 60 -> "30_60m"
-        seconds <= 2 * 60 * 60 -> "1_2h"
-        else -> "over_2h"
+        analytics.logTimerStarted(seconds)
     }
 
     fun toggleTimer() {
