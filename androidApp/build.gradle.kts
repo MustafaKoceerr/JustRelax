@@ -1,9 +1,10 @@
 // Android entry point: Application, Activity, playback service and app resources.
-// Shared UI and logic come from :composeApp.
+// The Compose UI and navigation live here; shared logic comes from :shared and the feature modules.
 import java.util.Properties
 
 plugins {
     id("justrelax.android.application")
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.baselineprofile)
 }
 
@@ -105,10 +106,35 @@ androidComponents {
 }
 
 dependencies {
-    implementation(projects.composeApp)
+    implementation(projects.shared)
+    implementation(projects.core.common)
+    implementation(projects.core.model)
+    implementation(projects.core.ui)
+    implementation(projects.core.presentation)
+    implementation(projects.core.analytics)
     implementation(projects.core.playback)
     implementation(projects.core.data)
     implementation(projects.core.network)
+
+    implementation(projects.feature.library)
+    implementation(projects.feature.mixer)
+    implementation(projects.feature.saved)
+    implementation(projects.feature.ai)
+    implementation(projects.feature.timer)
+    implementation(projects.feature.settings)
+    implementation(projects.feature.scene)
+    implementation(projects.feature.splash)
+    implementation(projects.feature.mysounds)
+    implementation(projects.feature.freesound)
+
+    // Navigation: a back stack of serializable routes, ViewModels scoped to each destination.
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.bundles.androidx.lifecycle.compose)
+    implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.koin.android)
     implementation(libs.androidx.core.ktx)
@@ -121,9 +147,6 @@ dependencies {
     // Playback service (Media3 session + notification)
     implementation(libs.androidx.media3.session)
     implementation(libs.androidx.media3.common)
-
-    // The debug sound pack's catalog is read from assets (BuildTypeModule).
-    debugImplementation(libs.kotlinx.serialization.json)
 
     testImplementation(projects.core.testing)
     // Types whitelisted in KoinGraphTest (created inside lambdas, not via constructors)

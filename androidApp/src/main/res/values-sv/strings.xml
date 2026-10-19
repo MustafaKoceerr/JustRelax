@@ -5,4 +5,9 @@
     <string name="notification_title">Avslappnande ljud</string>
     <string name="action_stop">Stoppa</string>
     <string name="notification_channel_name">Uppspelningskontroller</string>
+    <string name="tab_ai">AI</string>
+    <string name="tab_home">Ljud</string>
+    <string name="tab_mixer">Mixer</string>
+    <string name="tab_saved">Sparat</string>
+    <string name="tab_discover">Upptäck</string>
 </resources>

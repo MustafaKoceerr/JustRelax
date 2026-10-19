@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="tab_ai">IA</string>
-    <string name="tab_home">Suoni</string>
-    <string name="tab_mixer">Mixer</string>
-    <string name="tab_saved">Salvati</string>
-    <string name="tab_discover">Scopri</string>
-</resources>

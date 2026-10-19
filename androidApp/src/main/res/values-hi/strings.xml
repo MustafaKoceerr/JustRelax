@@ -5,4 +5,9 @@
     <string name="notification_title">सुकून देने वाली ध्वनियाँ</string>
     <string name="action_stop">बंद करें</string>
     <string name="notification_channel_name">प्लेबैक नियंत्रण</string>
+    <string name="tab_ai">AI</string>
+    <string name="tab_home">आवाज़ें</string>
+    <string name="tab_mixer">मिक्सर</string>
+    <string name="tab_saved">सेव्ड</string>
+    <string name="tab_discover">खोजें</string>
 </resources>

@@ -34,7 +34,7 @@ dependencyResolutionManagement {
 
 include(":androidApp")
 include(":benchmark")
-include(":composeApp")
+include(":shared")
 
 include(":core:common")
 include(":core:model")

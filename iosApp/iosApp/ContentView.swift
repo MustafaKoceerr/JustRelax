@@ -1,21 +1,12 @@
-import UIKit
 import SwiftUI
-import ComposeApp
 
-struct ComposeView: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.MainViewController()
-    }
-
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
-}
-
+/// A placeholder while the screens are rebuilt in SwiftUI, one by one, on the shared ViewModels.
 struct ContentView: View {
     var body: some View {
-        ComposeView()
-            .ignoresSafeArea()
+        ContentUnavailableView(
+            "JustRelax",
+            systemImage: "waveform",
+            description: Text(verbatim: "The iOS screens are being rebuilt in SwiftUI.")
+        )
     }
 }
-
-
-

@@ -5,4 +5,9 @@
     <string name="notification_title">Beruhigende Sounds</string>
     <string name="action_stop">Stopp</string>
     <string name="notification_channel_name">Wiedergabesteuerung</string>
+    <string name="tab_ai">KI</string>
+    <string name="tab_home">Klänge</string>
+    <string name="tab_mixer">Mixer</string>
+    <string name="tab_saved">Gespeichert</string>
+    <string name="tab_discover">Entdecken</string>
 </resources>

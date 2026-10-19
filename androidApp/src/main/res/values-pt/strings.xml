@@ -5,4 +5,9 @@
     <string name="notification_title">Sons relaxantes</string>
     <string name="action_stop">Parar</string>
     <string name="notification_channel_name">Controles de reprodução</string>
+    <string name="tab_ai">IA</string>
+    <string name="tab_home">Sons</string>
+    <string name="tab_mixer">Mixer</string>
+    <string name="tab_saved">Salvos</string>
+    <string name="tab_discover">Explorar</string>
 </resources>

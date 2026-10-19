@@ -5,4 +5,9 @@
     <string name="notification_title">편안한 사운드</string>
     <string name="action_stop">정지</string>
     <string name="notification_channel_name">재생 컨트롤</string>
+    <string name="tab_ai">AI</string>
+    <string name="tab_home">사운드</string>
+    <string name="tab_mixer">믹서</string>
+    <string name="tab_saved">저장됨</string>
+    <string name="tab_discover">둘러보기</string>
 </resources>
