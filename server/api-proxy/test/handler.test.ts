@@ -32,7 +32,7 @@ let decoded: unknown;
 let deps: Deps;
 let attestation: AttestationResult;
 let assertion: AssertionResult;
-let appAttestCalls: { kind: string; clientData: string; keyId?: string; publicKey?: number[]; appId: string }[];
+let appAttestCalls: { kind: string; clientData: string; keyId?: string; publicKey?: number[]; appId: string; allowDevelopment?: boolean }[];
 
 function fakeEnv(): Env {
   return {
@@ -42,6 +42,7 @@ function fakeEnv(): Env {
     GOOGLE_SERVICE_ACCOUNT_JSON: "{}",
     PACKAGE_NAME,
     APPLE_APP_ID: APP_ID,
+    APP_ATTEST_ALLOW_DEVELOPMENT: "false",
     INTEGRITY_REQUIRED: "true",
     SESSION_LIMITER: new FakeLimiter(),
     AI_LIMITER: new FakeLimiter(),
@@ -64,8 +65,15 @@ beforeEach((): void => {
     },
     decodeIntegrity: async (): Promise<unknown> => decoded,
     appAttest: {
-      verifyAttestation: async (_: Uint8Array, clientData: Uint8Array, keyId: string, appId: string): Promise<AttestationResult> => {
-        appAttestCalls.push({ kind: "attestation", clientData: new TextDecoder().decode(clientData), keyId, appId });
+      verifyAttestation: async (
+        _: Uint8Array,
+        clientData: Uint8Array,
+        keyId: string,
+        appId: string,
+        __: number,
+        allowDevelopment: boolean,
+      ): Promise<AttestationResult> => {
+        appAttestCalls.push({ kind: "attestation", clientData: new TextDecoder().decode(clientData), keyId, appId, allowDevelopment });
         return attestation;
       },
       verifyAssertion: async (_: Uint8Array, clientData: Uint8Array, publicKey: Uint8Array, appId: string): Promise<AssertionResult> => {
@@ -194,7 +202,9 @@ describe("POST /v1/session from iOS (App Attest)", () => {
     const body = (await json(response)) as { token: string; expiresAt: number; keyToken: string };
     expect(body.expiresAt).toBe(NOW + 3_600_000);
     expect(typeof body.keyToken).toBe("string");
-    expect(appAttestCalls).toEqual([{ kind: "attestation", clientData: `${SESSION_HASH}:${NOW - 5_000}`, keyId, appId: APP_ID }]);
+    expect(appAttestCalls).toEqual([
+      { kind: "attestation", clientData: `${SESSION_HASH}:${NOW - 5_000}`, keyId, appId: APP_ID, allowDevelopment: false },
+    ]);
   });
 
   it("later accepts an assertion signed by the attested key", async () => {
@@ -222,9 +232,20 @@ describe("POST /v1/session from iOS (App Attest)", () => {
     const stale: Response = await createSession({ keyId, timestampMs: NOW - 11 * 60_000, attestation: btoa("attestation") });
     expect(await json(stale)).toEqual({ error: "integrity_stale" });
 
+    const fromTheFuture: Response = await createSession({ keyId, timestampMs: NOW + 2 * 60_000, attestation: btoa("attestation") });
+    expect(await json(fromTheFuture)).toEqual({ error: "integrity_stale" });
+
     const malformed: Response = await createSession({ keyId });
     expect(await json(malformed)).toEqual({ error: "integrity_malformed" });
     expect(appAttestCalls.length).toBe(1);
+  });
+
+  it("passes development keys through only where the environment allows them", async () => {
+    env.APP_ATTEST_ALLOW_DEVELOPMENT = "true";
+
+    await createSession({ keyId, timestampMs: NOW, attestation: btoa("attestation") });
+
+    expect(appAttestCalls[0]?.allowDevelopment).toBe(true);
   });
 
   it("is unavailable until the App ID is configured", async () => {

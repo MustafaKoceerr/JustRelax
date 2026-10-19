@@ -24,6 +24,8 @@ export interface Env {
   PACKAGE_NAME: string;
   /** `<Team ID>.<bundle id>` of the iOS app; App Attest sessions are refused while it is empty. */
   APPLE_APP_ID: string;
+  /** "true" also accepts App Attest keys from builds run from Xcode; production accepts TestFlight and App Store keys only. */
+  APP_ATTEST_ALLOW_DEVELOPMENT: string;
   /** "false" only for local development, where no Play Integrity token exists. */
   INTEGRITY_REQUIRED: string;
   SESSION_LIMITER: RateLimit;
@@ -40,12 +42,22 @@ export interface Deps {
   /** Decodes a Play Integrity token on Google's servers; null if it cannot be decoded. */
   decodeIntegrity: (integrityToken: string) => Promise<unknown>;
   appAttest: {
-    verifyAttestation: (attestation: Uint8Array, clientData: Uint8Array, keyId: string, appId: string, nowMs: number) => Promise<AttestationResult>;
+    verifyAttestation: (
+      attestation: Uint8Array,
+      clientData: Uint8Array,
+      keyId: string,
+      appId: string,
+      nowMs: number,
+      allowDevelopment: boolean,
+    ) => Promise<AttestationResult>;
     verifyAssertion: (assertion: Uint8Array, clientData: Uint8Array, publicKey: Uint8Array, appId: string) => Promise<AssertionResult>;
   };
 }
 
 const INTEGRITY_MAX_AGE_MS: number = 10 * 60 * 1_000;
+
+/** How far ahead of the proxy's clock an App Attest timestamp may be (the phone's clock drifting). */
+const CLOCK_SKEW_MS: number = 60 * 1_000;
 
 export async function handle(request: Request, env: Env, deps: Deps): Promise<Response> {
   const url: URL = new URL(request.url);
@@ -90,6 +102,10 @@ async function createSession(request: Request, env: Env, deps: Deps): Promise<Re
  * The iOS app proves itself with App Attest: a new key's attestation once, then assertions by that
  * key. Both sign `<session request hash>:<timestamp>`, so a proof only works for this install and
  * for a few minutes.
+ *
+ * The proxy keeps no state, so it does not track each key's assertion counter. A proof copied off
+ * the device could be replayed within those minutes, but only to open a session for the same
+ * install, which is what a Play Integrity token allows within its own age limit too.
  */
 async function appAttestSession(body: SessionRequest, env: Env, deps: Deps): Promise<Response> {
   if (env.APPLE_APP_ID === "") return error(503, "appattest_unavailable");
@@ -97,12 +113,20 @@ async function appAttestSession(body: SessionRequest, env: Env, deps: Deps): Pro
   if (proof === null) return error(403, "integrity_malformed");
 
   const now: number = deps.now();
-  if (Math.abs(now - proof.timestampMs) > INTEGRITY_MAX_AGE_MS) return error(403, "integrity_stale");
+  const age: number = now - proof.timestampMs;
+  if (age > INTEGRITY_MAX_AGE_MS || age < -CLOCK_SKEW_MS) return error(403, "integrity_stale");
   const clientData: Uint8Array = new TextEncoder().encode(`${await sessionRequestHash(body.installId)}:${proof.timestampMs}`);
 
   let keyToken: string | undefined;
   if ("attestation" in proof) {
-    const result: AttestationResult = await deps.appAttest.verifyAttestation(proof.attestation, clientData, proof.keyId, env.APPLE_APP_ID, now);
+    const result: AttestationResult = await deps.appAttest.verifyAttestation(
+      proof.attestation,
+      clientData,
+      proof.keyId,
+      env.APPLE_APP_ID,
+      now,
+      env.APP_ATTEST_ALLOW_DEVELOPMENT === "true",
+    );
     if (!result.ok) return error(403, `integrity_${result.reason}`);
     keyToken = await issueKeyToken({ installId: body.installId, keyId: proof.keyId, publicKey: result.publicKey }, env.SESSION_SECRET);
   } else {

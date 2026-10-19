@@ -31,12 +31,16 @@ const SIGNATURE_HASHES: Record<string, string> = {
   "1.2.840.10045.4.3.3": "SHA-384",
 };
 
-/** `appattestdevelop` for builds run from Xcode, `appattest` and seven zero bytes for TestFlight and the App Store. */
-const AAGUIDS: string[] = ["appattestdevelop", "appattest\0\0\0\0\0\0\0"];
+/** TestFlight and the App Store: `appattest` and seven zero bytes. */
+const PRODUCTION_AAGUID: string = "appattest\0\0\0\0\0\0\0";
+
+/** Builds run from Xcode. */
+const DEVELOPMENT_AAGUID: string = "appattestdevelop";
 
 /**
  * Checks an attestation object for [clientData] and the key [keyId] (base64, as the app gets it
- * from `DCAppAttestService.generateKey`). [appId] is `<Team ID>.<bundle id>`.
+ * from `DCAppAttestService.generateKey`). [appId] is `<Team ID>.<bundle id>`. Keys from Apple's
+ * development environment pass only with [allowDevelopment].
  */
 export async function verifyAttestation(
   attestation: Uint8Array,
@@ -44,6 +48,7 @@ export async function verifyAttestation(
   keyId: string,
   appId: string,
   nowMs: number,
+  allowDevelopment: boolean,
 ): Promise<AttestationResult> {
   const decoded: unknown = decodeCbor(attestation);
   if (!isRecord(decoded) || decoded.fmt !== "apple-appattest" || !isRecord(decoded.attStmt)) return { ok: false, reason: "malformed" };
@@ -87,9 +92,9 @@ export async function verifyAttestation(
   // 7. A new key has never signed anything.
   if (readCounter(authData) !== 0) return { ok: false, reason: "counter" };
 
-  // 8. The key comes from App Attest's development or production environment.
+  // 8. The key comes from App Attest's production environment, or development where allowed.
   const aaguid: string = new TextDecoder().decode(authData.subarray(37, 53));
-  if (!AAGUIDS.includes(aaguid)) return { ok: false, reason: "environment" };
+  if (aaguid !== PRODUCTION_AAGUID && !(allowDevelopment && aaguid === DEVELOPMENT_AAGUID)) return { ok: false, reason: "environment" };
 
   // 9. The credential id is the key id.
   const idLength: number = (authData[53]! << 8) | authData[54]!;

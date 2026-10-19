@@ -14,7 +14,7 @@ function utf8(text: string): Uint8Array {
 
 async function attest(
   vector: typeof DEVELOPMENT,
-  overrides: { appId?: string; clientData?: string; keyId?: string; now?: number; attestation?: Uint8Array } = {},
+  overrides: { appId?: string; clientData?: string; keyId?: string; now?: number; attestation?: Uint8Array; allowDevelopment?: boolean } = {},
 ): Promise<AttestationResult> {
   return verifyAttestation(
     overrides.attestation ?? base64(vector.attestation),
@@ -22,6 +22,7 @@ async function attest(
     overrides.keyId ?? vector.keyId,
     overrides.appId ?? APP_ID,
     overrides.now ?? VALID_AT,
+    overrides.allowDevelopment ?? true,
   );
 }
 
@@ -42,6 +43,11 @@ describe("verifyAttestation", (): void => {
     expect(development.ok).toBe(true);
     expect(production.ok).toBe(true);
     if (development.ok) expect(development.publicKey.length).toBe(65);
+  });
+
+  it("refuses a development key unless development is allowed", async (): Promise<void> => {
+    expect(await attest(DEVELOPMENT, { allowDevelopment: false })).toEqual({ ok: false, reason: "environment" });
+    expect((await attest(PRODUCTION, { allowDevelopment: false })).ok).toBe(true);
   });
 
   it("refuses another app's id", async (): Promise<void> => {

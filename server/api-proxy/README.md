@@ -26,7 +26,11 @@ Servis hesabı, Play Console'da *App integrity → Play Integrity API* altında 
 1. **Yeni anahtar:** Uygulama anahtar üretir ve `<sessionRequestHash>:<zaman>` için attestation ister. Worker zinciri gömülü Apple kök sertifikasına kadar doğrular, nonce, anahtar kimliği, App ID ve sayaç kontrollerini yapar. Oturumla birlikte, anahtarın açık anahtarını taşıyan imzalı bir `keyToken` döner.
 2. **Sonraki oturumlar:** Uygulama aynı veri için assertion imzalar ve `keyToken`'ı gönderir. Worker imzayı bu anahtarla doğrular; Apple'a gidilmez.
 
-Zaman damgası en fazla 10 dakika eski olabilir. Testler gerçek Apple nesneleriyle koşar (`test/appattest-vectors.ts`).
+Zaman damgası en fazla 10 dakika eski, en fazla 1 dakika ileri olabilir. Sunucu durum tutmadığı için anahtar sayacını takip etmez; kopyalanan bir kanıt bu süre içinde yalnızca aynı kurulum için oturum açabilir (Play Integrity belirteci de öyle).
+
+`APP_ATTEST_ALLOW_DEVELOPMENT` yayında `"false"`: yalnızca TestFlight ve App Store anahtarları geçer. Xcode'dan cihaza kurulan bir build'i yayındaki Worker'la denemek için geçici olarak `"true"` yapılabilir.
+
+Testler gerçek Apple nesneleriyle koşar (`test/appattest-vectors.ts`).
 
 ## Komutlar
 
