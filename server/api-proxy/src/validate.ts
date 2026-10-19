@@ -16,6 +16,8 @@ export interface InventorySound {
 export interface MixRequest {
   prompt: string;
   sounds: InventorySound[];
+  /** The English name of the app's language, such as "Turkish"; English when missing. */
+  language?: string;
 }
 
 export interface SearchQuery {
@@ -25,6 +27,7 @@ export interface SearchQuery {
 
 const INSTALL_ID: RegExp = /^[A-Za-z0-9-]{8,64}$/;
 const SOUND_ID: RegExp = /^[a-z0-9_-]{1,64}$/;
+const LANGUAGE: RegExp = /^[A-Za-z]{2,30}$/;
 const MAX_PROMPT: number = 500;
 const MAX_SOUNDS: number = 200;
 const MAX_SEARCH_PAGE: number = 50;
@@ -49,7 +52,10 @@ export function parseMixRequest(body: unknown): MixRequest | null {
     if (sound === null) return null;
     sounds.push(sound);
   }
-  return { prompt, sounds };
+  const language: unknown = body.language;
+  if (language === undefined) return { prompt, sounds };
+  if (typeof language !== "string" || !LANGUAGE.test(language)) return null;
+  return { prompt, sounds, language };
 }
 
 export function parseSearchQuery(url: URL): SearchQuery | null {
