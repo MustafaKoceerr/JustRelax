@@ -6,15 +6,27 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		A1B2C3D4E5F6071829304A02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9FC7F32CDC090BB2A8A3BE3F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 232E79A95A95F3596D75CC79;
+			remoteInfo = iosApp;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		A1B2C3D4E5F6071829304A01 /* iosAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E64695F014209A8A556C64B3 /* JustRelax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustRelax.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		55A2AD9959B9636CCFC477C9 /* Exceptions for "iosApp" folder in "iosApp" target */ = {
+		55A2AD9959B9636CCFC477C9 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				iosApp.entitlements,
 			);
 			target = 232E79A95A95F3596D75CC79 /* iosApp */;
 		};
@@ -24,19 +36,43 @@
 		42477F8E40822E5006D55C36 /* iosApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				55A2AD9959B9636CCFC477C9 /* Exceptions for "iosApp" folder in "iosApp" target */,
+				55A2AD9959B9636CCFC477C9 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
 			);
 			path = iosApp;
 			sourceTree = "<group>";
 		};
+		A1B2C3D4E5F6071829304A03 /* iosAppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = iosAppUITests;
+			sourceTree = "<group>";
+		};
 		FEA4E34882576CDE5A6E18AD /* Configuration */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
 			path = Configuration;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		A1B2C3D4E5F6071829304A04 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D388E4DD6F552D2AC18C2DAC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -51,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				E64695F014209A8A556C64B3 /* JustRelax.app */,
+				A1B2C3D4E5F6071829304A01 /* iosAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -60,6 +97,7 @@
 			children = (
 				FEA4E34882576CDE5A6E18AD /* Configuration */,
 				42477F8E40822E5006D55C36 /* iosApp */,
+				A1B2C3D4E5F6071829304A03 /* iosAppUITests */,
 				172463CBE56799E5D3B4EB48 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +126,27 @@
 			productReference = E64695F014209A8A556C64B3 /* JustRelax.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A1B2C3D4E5F6071829304A05 /* iosAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1B2C3D4E5F6071829304A06 /* Build configuration list for PBXNativeTarget "iosAppUITests" */;
+			buildPhases = (
+				A1B2C3D4E5F6071829304A07 /* Sources */,
+				A1B2C3D4E5F6071829304A04 /* Frameworks */,
+				A1B2C3D4E5F6071829304A08 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1B2C3D4E5F6071829304A09 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A1B2C3D4E5F6071829304A03 /* iosAppUITests */,
+			);
+			name = iosAppUITests;
+			productName = iosAppUITests;
+			productReference = A1B2C3D4E5F6071829304A01 /* iosAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -100,6 +159,10 @@
 				TargetAttributes = {
 					232E79A95A95F3596D75CC79 = {
 						CreatedOnToolsVersion = 16.2;
+					};
+					A1B2C3D4E5F6071829304A05 = {
+						CreatedOnToolsVersion = 27.1;
+						TestTargetID = 232E79A95A95F3596D75CC79;
 					};
 				};
 			};
@@ -119,11 +182,19 @@
 			projectRoot = "";
 			targets = (
 				232E79A95A95F3596D75CC79 /* iosApp */,
+				A1B2C3D4E5F6071829304A05 /* iosAppUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A1B2C3D4E5F6071829304A08 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E85623CD13DB38A537E706CD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -151,7 +222,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :composeApp:embedAndSignAppleFrameworkForXcode\n";
+			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :composeApp:embedAndSignAppleFrameworkForXcode -Pjustrelax.ios.enabled=true\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -163,7 +234,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A1B2C3D4E5F6071829304A07 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A1B2C3D4E5F6071829304A09 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 232E79A95A95F3596D75CC79 /* iosApp */;
+			targetProxy = A1B2C3D4E5F6071829304A02 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1F28ED9ADB5D734566E567C5 /* Debug */ = {
@@ -172,6 +258,7 @@
 				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = iosApp/iosApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
@@ -210,6 +297,7 @@
 				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = iosApp/iosApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
@@ -365,6 +453,36 @@
 			};
 			name = Debug;
 		};
+		A1B2C3D4E5F6071829304A0A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mustafakoceerr.justrelax.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = iosApp;
+			};
+			name = Debug;
+		};
+		A1B2C3D4E5F6071829304A0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mustafakoceerr.justrelax.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = iosApp;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -373,6 +491,15 @@
 			buildConfigurations = (
 				8C07FEEF41D913C84A07DD13 /* Debug */,
 				79B4EDB896626883BF7E2AA6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1B2C3D4E5F6071829304A06 /* Build configuration list for PBXNativeTarget "iosAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B2C3D4E5F6071829304A0A /* Debug */,
+				A1B2C3D4E5F6071829304A0B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

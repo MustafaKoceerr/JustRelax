@@ -13,7 +13,6 @@ Claude'un tek başına yapamadığı işler, öncelik sırasıyla. Biten maddeyi
 ## Tasarım 2. tur: tema, gezinme, ana sayfa, ayarlar, açılış (yığılı PR'lar, #59'un üstünde)
 - [ ] PR'ları sırayla birleştir: theme-shell → home → settings → launch.
 - [ ] Telefonda bir kez benchmark çalıştır: zamanlayıcı artık mini oynatıcıdan açılıyor, ses düzeyi de kartın üzerinde kaydırılarak ayarlanıyor. Benchmark adımları buna göre güncellendi ama henüz cihazda koşmadı.
-- [ ] iOS uygulama simgesi hâlâ KMP şablonunun mavi küpü (`iosApp/iosApp/Assets.xcassets/AppIcon.appiconset/app-icon-1024.png`). Android'deki yaprak simgesinin 1024 px sürümünü oraya koyman gerekiyor.
 
 ## Performans ölçümü
 Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ayrı bir paket adıyla (`com.mustafakoceerr.justrelax.benchmark`) kuruluyor ve Play sürümüyle yan yana durabiliyor.
@@ -79,7 +78,12 @@ Ekran ve mimari hazır; debug sürümünde örnek fiyatlarla görünüyor, yayı
 - [ ] App Store Connect'te aynı id'lerle üç *Consumable* ürün (iOS yayınına doğru).
 - [ ] Hazır olunca söyle: Play Billing ve StoreKit'i `TipRepository`'nin arkasına bağlarım; satır o zaman yayında da görünür.
 
+## iOS yayını
+Xcode projesi hazır (bundle id `com.mustafakoceerr.justrelax`, sürüm 1.3.0); simülatörde UI testi geçiyor.
+- [ ] Xcode → *Settings → Accounts*'ta Apple ID'nle giriş yap. Team ID'yi (developer.apple.com → *Membership*) bana söyle ya da `iosApp/Configuration/Config.xcconfig`'teki `TEAM_ID=` satırına yaz. Sunucunun App Attest kontrolü de bunu bekliyor.
+- [ ] App Store Connect'te *My Apps → +* ile `com.mustafakoceerr.justrelax` bundle id'li uygulamayı aç. App ID'de **App Attest** yeteneği açık olmalı; Xcode otomatik imzalamada kendisi açar.
+- [ ] Simge şimdilik Play simgesinden (512 px) 1024'e büyütüldü. Daha net bir 1024 px kaynak varsa `iosApp/iosApp/Assets.xcassets/AppIcon.appiconset/app-icon-1024.png` dosyasını değiştir (köşeler kare, saydamlık yok).
+
 ## 8. İsteğe bağlı / sonra
-- [ ] iOS: App Attest (AI ve Freesound için) ve Firebase iOS, iOS yayınına doğru.
 - [x] Main'e birleşmiş eski dallar GitHub'dan ve yerelden silindi (2026-10-19).
 - [ ] İstersen GitHub → *Settings → General → Automatically delete head branches*'i aç; birleşen PR dalları kendiliğinden silinir.

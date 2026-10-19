@@ -1,15 +1,18 @@
 package com.mustafakoceerr.justrelax.di
 
+import com.mustafakoceerr.justrelax.core.network.NETWORK_LOGGING_PROPERTY
+import com.mustafakoceerr.justrelax.core.network.di.API_BASE_URL_PROPERTY
+import com.mustafakoceerr.justrelax.core.network.di.PRODUCTION_API_BASE_URL
 import com.mustafakoceerr.justrelax.di.initKoin as initCommonKoin
 
-/**
- * Entry point for Koin initialization on iOS.
- *
- * This function is intended to be called from the iOS App Delegate (Swift).
- * It acts as a wrapper around the common [initCommonKoin] function to ensure
- * compatibility with Swift/Objective-C, which may struggle with Kotlin's
- * default arguments and lambda syntax.
- */
+/** Starts Koin; called once from `iOSApp.init` in Swift. */
 fun initKoin() {
-    initCommonKoin(platformModules = listOf(iosPlatformModule))
+    initCommonKoin(platformModules = listOf(iosPlatformModule)) {
+        properties(
+            mapOf(
+                NETWORK_LOGGING_PROPERTY to isDebugBuild,
+                API_BASE_URL_PROPERTY to if (isDebugBuild) DEBUG_API_BASE_URL else PRODUCTION_API_BASE_URL,
+            ),
+        )
+    }
 }
