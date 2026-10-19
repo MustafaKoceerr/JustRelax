@@ -130,8 +130,14 @@ class FreesoundViewModel(
                 )
             }
         } catch (e: AppError) {
+            // A failed first page found nothing either way; the welcome screen shows, not "nothing found".
             state.update {
-                it.copy(isSearching = false, isLoadingMore = false, userMessage = UiText.Resource(e.message()))
+                it.copy(
+                    hasSearched = it.hasSearched && number > 1,
+                    isSearching = false,
+                    isLoadingMore = false,
+                    userMessage = UiText.Resource(e.message()),
+                )
             }
         }
     }
