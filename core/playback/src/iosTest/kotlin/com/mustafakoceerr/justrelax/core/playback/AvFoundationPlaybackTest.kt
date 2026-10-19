@@ -7,23 +7,33 @@ import com.mustafakoceerr.justrelax.core.playback.soundscape.AvEventPlayer
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.get
+import kotlinx.cinterop.set
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import platform.AVFAudio.AVAudioEngineManualRenderingModeOffline
 import platform.AVFAudio.AVAudioEngineManualRenderingStatusSuccess
 import platform.AVFAudio.AVAudioFormat
+import platform.AVFAudio.AVAudioFile
 import platform.AVFAudio.AVAudioPCMBuffer
+import platform.AVFAudio.AVAudioPCMFormatFloat32
+import platform.AVFAudio.AVFormatIDKey
+import platform.AVFAudio.AVNumberOfChannelsKey
+import platform.AVFAudio.AVSampleRateKey
+import platform.CoreAudioTypes.kAudioFormatMPEG4AAC
 import platform.Foundation.NSData
 import platform.Foundation.NSDataBase64DecodingIgnoreUnknownCharacters
 import platform.Foundation.NSDate
 import platform.Foundation.NSRunLoop
 import platform.Foundation.NSTemporaryDirectory
+import platform.Foundation.NSURL
 import platform.Foundation.create
 import platform.Foundation.dateWithTimeIntervalSinceNow
 import platform.Foundation.runUntilDate
 import platform.Foundation.writeToFile
+import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.sin
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -113,6 +123,113 @@ class AvFoundationPlaybackTest {
         val peak = renderPeak(seconds = 0.5)
         assertTrue(peak > 0.05f, "peak $peak")
         player.release()
+    }
+
+    /** [minutes] of a stereo 440 Hz tone as AAC in an M4A, like a long sound the user imported. */
+    private fun longStereoM4a(name: String, minutes: Int): String = stereoM4a(name, seconds = minutes * 60)
+
+    private fun stereoM4a(name: String, seconds: Int): String {
+        val path = NSTemporaryDirectory() + name
+        val settings = mapOf<Any?, Any?>(AVFormatIDKey to kAudioFormatMPEG4AAC, AVSampleRateKey to 44_100.0, AVNumberOfChannelsKey to 2)
+        val file = checkNotNull(
+            AVAudioFile(forWriting = NSURL.fileURLWithPath(path), settings = settings, commonFormat = AVAudioPCMFormatFloat32, interleaved = false, error = null),
+        )
+        val chunk = AVAudioPCMBuffer(file.processingFormat, 44_100u)
+        val channels = checkNotNull(chunk.floatChannelData)
+        for (frame in 0 until 44_100) {
+            val sample = (0.5 * sin(2 * PI * 440 * frame / 44_100.0)).toFloat()
+            channels[0]!![frame] = sample
+            channels[1]!![frame] = sample
+        }
+        chunk.frameLength = 44_100u
+        repeat(seconds) { check(file.writeFromBuffer(chunk, error = null)) }
+        file.close()
+        return path
+    }
+
+    @Test
+    fun aTenMinuteImportedBed_isHeard() {
+        val path = longStereoM4a("long-bed.m4a", minutes = 10)
+        val player = AvSoundPlayer(graph)
+        runOnMainLoop {
+            player.prepare(path, volume = 1f)
+            player.play(fadeInDurationMs = 0, startAtFraction = 0.5f)
+        }
+
+        val peak = renderPeak(seconds = 2.0)
+        assertTrue(peak > 0.05f, "peak $peak")
+        runOnMainLoop { player.release() }
+    }
+
+    /**
+     * The loudest sample in each [windows] slice of [seconds], to see that a loop never goes quiet.
+     * The main run loop turns between slices, as it does in the app, so queued passes get scheduled.
+     */
+    private fun renderWindowPeaks(seconds: Double, windows: Int): List<Float> =
+        List(windows) { renderPeak(seconds / windows).also { waitOnMainLoop(0.01) } }
+
+    @Test
+    fun aLongBed_streamsFromItsFile_andLoopsRoundWithoutGoingQuiet() {
+        // Three seconds counts as long here, so the test can hear the loop come round twice.
+        val path = stereoM4a("streamed-bed.m4a", seconds = 3)
+        val player = AvSoundPlayer(graph, streamLongerThanSeconds = 1.0)
+        runOnMainLoop {
+            player.prepare(path, volume = 1f)
+            player.play(fadeInDurationMs = 0, startAtFraction = 0.5f)
+        }
+
+        val peaks = renderWindowPeaks(seconds = 7.0, windows = 14)
+
+        assertTrue(player.isStreaming, "the bed was decoded into memory")
+        assertTrue(peaks.all { it > 0.05f }, "quiet windows: $peaks")
+        runOnMainLoop { player.release() }
+    }
+
+    @Test
+    fun aStreamedBed_pausesAndResumes() {
+        val path = stereoM4a("paused-bed.m4a", seconds = 3)
+        val player = AvSoundPlayer(graph, streamLongerThanSeconds = 1.0)
+        runOnMainLoop {
+            player.prepare(path, volume = 1f)
+            player.play(fadeInDurationMs = 0, startAtFraction = 0f)
+        }
+        renderPeak(seconds = 0.5)
+
+        runOnMainLoop { player.pause() }
+        // A node playing from a file finishes what it has already read ahead before it falls silent.
+        renderPeak(seconds = 0.3)
+        val paused = renderPeak(seconds = 0.5)
+        runOnMainLoop { player.resume() }
+        val resumed = renderPeak(seconds = 0.5)
+
+        assertTrue(paused < 0.01f, "still heard while paused: $paused")
+        assertTrue(resumed > 0.05f, "not heard after resuming: $resumed")
+        runOnMainLoop { player.release() }
+    }
+
+    @Test
+    fun aBedInMemory_pausesAndResumes() {
+        val player = AvSoundPlayer(graph)
+        runOnMainLoop {
+            player.prepare(clip("bed.ogg", BED_OGG_BASE64), volume = 1f)
+            player.play(fadeInDurationMs = 0, startAtFraction = 0f)
+        }
+        renderPeak(seconds = 0.5)
+
+        runOnMainLoop { player.pause() }
+        val paused = renderPeak(seconds = 0.5)
+
+        assertTrue(paused < 0.01f, "still heard while paused: $paused")
+        runOnMainLoop { player.release() }
+    }
+
+    @Test
+    fun aShortBed_staysInMemory() {
+        val player = AvSoundPlayer(graph)
+        runOnMainLoop { player.prepare(clip("short-bed.ogg", BED_OGG_BASE64), volume = 1f) }
+
+        assertTrue(!player.isStreaming)
+        runOnMainLoop { player.release() }
     }
 
     @Test

@@ -10,6 +10,7 @@ import kotlinx.cinterop.value
 import platform.AVFAudio.AVAudioEngine
 import platform.AVFAudio.AVAudioEngineConfigurationChangeNotification
 import platform.AVFAudio.AVAudioFile
+import platform.AVFAudio.AVAudioFormat
 import platform.AVFAudio.AVAudioPCMBuffer
 import platform.AVFAudio.AVAudioPlayerNode
 import platform.AVFAudio.AVAudioSessionInterruptionNotification
@@ -55,9 +56,11 @@ internal class AvAudioGraph {
         restartListeners -= listener
     }
 
-    fun attach(buffer: AVAudioPCMBuffer): AVAudioPlayerNode = AVAudioPlayerNode().also { node ->
+    fun attach(buffer: AVAudioPCMBuffer): AVAudioPlayerNode = attach(buffer.format)
+
+    fun attach(format: AVAudioFormat): AVAudioPlayerNode = AVAudioPlayerNode().also { node ->
         engine.attachNode(node)
-        engine.connect(node, to = engine.mainMixerNode, format = buffer.format)
+        engine.connect(node, to = engine.mainMixerNode, format = format)
     }
 
     fun detach(node: AVAudioPlayerNode) {
@@ -83,13 +86,22 @@ internal class AvAudioGraph {
     }
 }
 
-/** Reads a whole local clip into memory; throws if AVFoundation cannot decode it. */
+/** Opens a local clip for reading; throws if AVFoundation cannot open it or it is empty. */
 @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
-internal fun decode(path: String): AVAudioPCMBuffer = memScoped {
+internal fun openClip(path: String): AVAudioFile = memScoped {
     val error = alloc<ObjCObjectVar<NSError?>>()
-    val file = runCatching { AVAudioFile(forReading = NSURL.fileURLWithPath(path), error = error.ptr) }.getOrNull()
+    runCatching { AVAudioFile(forReading = NSURL.fileURLWithPath(path), error = error.ptr) }.getOrNull()
         ?.takeIf { error.value == null && it.length > 0 }
         ?: error("Cannot open $path: ${error.value?.localizedDescription}")
+}
+
+/** Reads a whole local clip into memory; throws if AVFoundation cannot decode it. */
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
+internal fun decode(path: String): AVAudioPCMBuffer = decode(openClip(path), path)
+
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
+internal fun decode(file: AVAudioFile, path: String): AVAudioPCMBuffer = memScoped {
+    val error = alloc<ObjCObjectVar<NSError?>>()
     val buffer = AVAudioPCMBuffer(file.processingFormat, file.length.toUInt())
     check(file.readIntoBuffer(buffer, error.ptr) && buffer.frameLength > 0u) {
         "Cannot decode $path: ${error.value?.localizedDescription}"
