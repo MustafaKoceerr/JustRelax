@@ -5,6 +5,7 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.mustafakoceerr.justrelax.core.common.Resource
 import com.mustafakoceerr.justrelax.core.common.dispatcher.DispatcherProvider
 import com.mustafakoceerr.justrelax.core.data.download.SoundDownloader
+import com.mustafakoceerr.justrelax.core.data.download.SoundFileStorage
 import com.mustafakoceerr.justrelax.core.data.mapper.asSounds
 import com.mustafakoceerr.justrelax.core.data.sync.SoundCatalogSync
 import com.mustafakoceerr.justrelax.core.data.sync.SyncTimestampStore
@@ -25,6 +26,7 @@ internal class OfflineFirstSoundRepository(
     private val catalogSync: SoundCatalogSync,
     private val syncTimestamps: SyncTimestampStore,
     private val downloader: SoundDownloader,
+    private val storage: SoundFileStorage,
     private val clock: Clock,
     private val dispatchers: DispatcherProvider,
 ) : SoundRepository {
@@ -33,7 +35,7 @@ internal class OfflineFirstSoundRepository(
         soundQueries.selectSoundsWithClips()
             .asFlow()
             .mapToList(dispatchers.io)
-            .map { it.asSounds() }
+            .map { it.asSounds(storage::resolveStoredPath) }
 
     override fun getSound(id: String): Flow<Sound?> =
         getSounds().map { sounds -> sounds.find { it.id == id } }
@@ -82,7 +84,7 @@ internal class OfflineFirstSoundRepository(
         withContext(dispatchers.io) {
             soundQueries.transaction {
                 paths.forEachIndexed { index, path ->
-                    soundQueries.updateClipLocalPath(local_path = path, sound_id = soundId, idx = index.toLong())
+                    soundQueries.updateClipLocalPath(local_path = storage.toStoredPath(path), sound_id = soundId, idx = index.toLong())
                 }
             }
         }

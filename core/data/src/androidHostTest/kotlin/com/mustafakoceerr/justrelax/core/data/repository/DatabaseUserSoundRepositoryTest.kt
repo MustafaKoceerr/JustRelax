@@ -49,7 +49,7 @@ class DatabaseUserSoundRepositoryTest {
     @AfterTest
     fun tearDown() = driver.close()
 
-    private fun TestScope.repository() = DatabaseUserSoundRepository(
+    private fun TestScope.repository(storage: FakeSoundFileStorage = this@DatabaseUserSoundRepositoryTest.storage) = DatabaseUserSoundRepository(
         soundQueries = database.soundQueries,
         storage = storage,
         trimmer = trimmer,
@@ -73,6 +73,23 @@ class DatabaseUserSoundRepositoryTest {
         assertEquals(SoundIcon.CAFE, sound.icon)
         assertEquals(listOf(SoundClip(remoteUrl = null, localPath = "/user/user-1.m4a", durationMs = 3_000, sizeBytes = 30_000)), sound.clips)
         assertEquals(listOf(sound), repository.getUserSounds().first())
+    }
+
+    @Test
+    fun aUserSound_isStoredRelativeToTheAppFiles_andDeletedWhereItIsToday() = runTest {
+        val storage = FakeSoundFileStorage(appFilesDirectory = "/app/NEW", userDirectory = "/app/NEW/audio/user")
+        trimmer.onTrim = { storage.files += it }
+        val repository = repository(storage)
+
+        val sound = repository.create(draft)
+
+        assertEquals("audio/user/user-1.m4a", database.soundQueries.selectClipsForSound("user-1").executeAsList().single().local_path)
+        assertEquals("/app/NEW/audio/user/user-1.m4a", sound.clips.single().localPath)
+        assertEquals("/app/NEW/audio/user/user-1.m4a", repository.getUserSounds().first().single().clips.single().localPath)
+
+        repository.delete("user-1")
+
+        assertTrue(storage.files.isEmpty())
     }
 
     @Test

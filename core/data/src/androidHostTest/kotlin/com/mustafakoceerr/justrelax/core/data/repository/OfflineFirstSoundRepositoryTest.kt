@@ -43,13 +43,23 @@ class OfflineFirstSoundRepositoryTest {
     @AfterTest
     fun tearDown() = driver.close()
 
-    private fun TestScope.repository() = OfflineFirstSoundRepository(
+    private fun TestScope.repository(
+        storage: FakeSoundFileStorage = this@OfflineFirstSoundRepositoryTest.storage,
+        fileDownloader: FakeFileDownloader = this@OfflineFirstSoundRepositoryTest.fileDownloader,
+    ) = OfflineFirstSoundRepository(
         soundQueries = database.soundQueries,
         catalogSync = catalogSync,
         syncTimestamps = syncTimestamps,
         downloader = SoundDownloader(storage, fileDownloader),
+        storage = storage,
         clock = clock,
         dispatchers = testDispatchers(),
+    )
+
+    /** Storage whose app files are at /app/NEW, as after iOS moved the app to a new container. */
+    private fun movedStorage() = FakeSoundFileStorage(
+        appFilesDirectory = "/app/NEW",
+        catalogDirectory = "/app/NEW/audio/catalog",
     )
 
     private fun insert(vararg sounds: Sound) = sounds.forEach(database.soundQueries::insert)
@@ -118,6 +128,27 @@ class OfflineFirstSoundRepositoryTest {
         val sound = repository.getSound("birds").first()!!
         assertTrue(sound.isDownloaded)
         assertEquals(listOf("/sounds/birds_0.ogg", "/sounds/birds_1.ogg"), sound.clips.map { it.localPath })
+    }
+
+    @Test
+    fun aDownloadedClip_isStoredRelativeToTheAppFiles() = runTest {
+        val storage = movedStorage()
+        insert(testSound("birds", clips = listOf(testClip("https://cdn.test/birds_0.ogg"))))
+
+        repository(storage, FakeFileDownloader(storage)).download("birds")
+
+        assertEquals("audio/catalog/birds_0.ogg", database.soundQueries.selectClipsForSound("birds").executeAsList().single().local_path)
+        val sound = repository(storage).getSound("birds").first()!!
+        assertEquals("/app/NEW/audio/catalog/birds_0.ogg", sound.clips.single().localPath)
+    }
+
+    @Test
+    fun aClipSavedUnderAnEarlierAppContainer_isFoundUnderTodaysOne() = runTest {
+        insert(testSound("rain", localPath = "/app/OLD/audio/catalog/rain_0.ogg"))
+
+        val sound = repository(movedStorage()).getSound("rain").first()!!
+
+        assertEquals("/app/NEW/audio/catalog/rain_0.ogg", sound.clips.single().localPath)
     }
 
     @Test
