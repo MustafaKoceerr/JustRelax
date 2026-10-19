@@ -3,7 +3,7 @@
 <!--
   What the app sends off the device, as in docs/play-data-safety.md: the AI sentence (to OpenAI
   through api.mustafakoceerr.com), Freesound searches and the random install id the proxy limits
-  requests by. Required-reason APIs: stat/fstat/lstat and attributesOfItemAtPath read timestamps
+  requests by; with the user's consent, Firebase usage events, crash reports and its instance id. Required-reason APIs: stat/fstat/lstat and attributesOfItemAtPath read timestamps
   of files in the app's own container (downloaded sounds, the database).
 -->
 <plist version="1.0">
@@ -48,6 +48,31 @@
 			<key>NSPrivacyCollectedDataTypePurposes</key>
 			<array>
 				<string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string>
+				<string>NSPrivacyCollectedDataTypePurposeAnalytics</string>
+			</array>
+		</dict>
+		<dict>
+			<key>NSPrivacyCollectedDataType</key>
+			<string>NSPrivacyCollectedDataTypeProductInteraction</string>
+			<key>NSPrivacyCollectedDataTypeLinked</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypeTracking</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypePurposes</key>
+			<array>
+				<string>NSPrivacyCollectedDataTypePurposeAnalytics</string>
+			</array>
+		</dict>
+		<dict>
+			<key>NSPrivacyCollectedDataType</key>
+			<string>NSPrivacyCollectedDataTypeCrashData</string>
+			<key>NSPrivacyCollectedDataTypeLinked</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypeTracking</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypePurposes</key>
+			<array>
+				<string>NSPrivacyCollectedDataTypePurposeAnalytics</string>
 			</array>
 		</dict>
 	</array>
