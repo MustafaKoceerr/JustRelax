@@ -6,6 +6,7 @@ struct MainTabView: View {
     @State private var scene: SceneModel?
     @State private var showsScene = false
     @State private var timer: TimerModel?
+    @State private var saveName = ""
     @Environment(\.bannerCenter) private var banners
 
     private var sceneID: ObjectIdentifier? { scene.map(ObjectIdentifier.init) }
@@ -17,6 +18,7 @@ struct MainTabView: View {
                     NavigationStack {
                         switch tab {
                         case .home: LibraryScreen()
+                        case .mixer: MixerScreen()
                         default: TabPlaceholder(tab: tab)
                         }
                     }
@@ -41,6 +43,19 @@ struct MainTabView: View {
         }
         .sheet(item: $timer) { model in
             TimerView(model: model)
+        }
+        .environment(\.scene, scene)
+        .saveMixAlert(
+            isPresented: Binding(
+                get: { scene?.isSaveQuestionShown == true && !showsScene },
+                set: { scene?.isSaveQuestionShown = $0 }
+            ),
+            name: $saveName,
+            onSave: { scene?.save(name: $0) },
+            onCancel: {}
+        )
+        .onChange(of: scene?.state.isSaveDialogVisible) { _, isShown in
+            if isShown == true, let scene { saveName = scene.state.saveDialogName }
         }
         .onChange(of: scene?.state.isVisible) { _, isVisible in
             if isVisible == false { showsScene = false }

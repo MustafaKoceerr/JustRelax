@@ -1,5 +1,6 @@
 import Observation
 import Shared
+import SwiftUI
 
 /// The sounds playing now, backed by the shared SceneViewModel: the mini player, the scene sheet
 /// and the save question all read it.
@@ -102,4 +103,9 @@ final class SceneModel {
     isolated deinit {
         host.clear()
     }
+}
+
+extension EnvironmentValues {
+    /// The app's scene, for screens that save what plays; nil until the tabs create it.
+    @Entry var scene: SceneModel?
 }
