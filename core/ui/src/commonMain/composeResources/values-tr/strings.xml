@@ -33,4 +33,6 @@
     <string name="sound_state_stopped">Durduruldu</string>
     <string name="volume_level">Ses düzeyi</string>
     <string name="loading">Yükleniyor</string>
+    <string name="sound_kind_bed">Sürekli çalar</string>
+    <string name="frequency_title">Sıklık</string>
 </resources>

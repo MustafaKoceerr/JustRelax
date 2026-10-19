@@ -32,7 +32,6 @@ okio = "3.18.2"
 buildConfig = "6.1.2"
 datastore = "1.2.1"
 
-compottie = "2.3.3"
 turbine = "1.2.1"
 navigation3 = "1.1.2"
 androidx-lifecycle = "2.11.0"
@@ -135,11 +134,6 @@ composeCompiler-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler
 # datastore
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
-
-# Lottie animations (Compottie)
-compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
-compottie-resources = { module = "io.github.alexzhirkevich:compottie-resources", version.ref = "compottie" }
-compottie-dot = { module = "io.github.alexzhirkevich:compottie-dot", version.ref = "compottie" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 

@@ -31,8 +31,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.mustafakoceerr.justrelax.core.ui.generated.resources.Res
@@ -51,10 +53,13 @@ fun SaveMixDialog(
     isOpen: Boolean,
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    /** A suggested name, selected so typing replaces it. */
+    initialName: String = "",
 ) {
     if (isOpen) {
-        var mixName by remember { mutableStateOf("") }
+        var nameField by remember { mutableStateOf(TextFieldValue(initialName, TextRange(0, initialName.length))) }
+        val mixName = nameField.text
         var isError by remember { mutableStateOf(false) }
         val focusRequester = remember { FocusRequester() }
 
@@ -104,9 +109,9 @@ fun SaveMixDialog(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     OutlinedTextField(
-                        value = mixName,
+                        value = nameField,
                         onValueChange = {
-                            mixName = it
+                            nameField = it
                             if (isError) isError = false
                         },
                         label = { Text(stringResource(Res.string.save_mix_dialog_name_label)) },

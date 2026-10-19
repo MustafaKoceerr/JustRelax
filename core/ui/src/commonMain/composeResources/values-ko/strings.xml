@@ -33,4 +33,6 @@
     <string name="sound_state_stopped">정지됨</string>
     <string name="volume_level">볼륨</string>
     <string name="loading">로드 중</string>
+    <string name="sound_kind_bed">계속 재생돼요</string>
+    <string name="frequency_title">빈도</string>
 </resources>

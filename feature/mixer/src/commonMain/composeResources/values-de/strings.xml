@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mix_count_selector_title">Wie viele Sounds möchtest du mischen?</string>
-    <string name="mixer_empty_state_message">Wähle eine Anzahl und starte das Mischen!</string>
     <string name="mixer_screen_title">Mixer</string>
-    <string name="action_create_mix">Mix erstellen</string>
     <string name="err_mixer_generate_failed">Mix konnte nicht erstellt werden. Stelle sicher, dass du Sounds heruntergeladen hast.</string>
+    <string name="mixer_count_title">Wie viele Klänge?</string>
+    <string name="action_shuffle">Mischen</string>
+    <string name="mixer_empty_title">Lass den Zufall wählen</string>
+    <string name="mixer_empty_body">Wähle die Anzahl der Klänge und mische. Sperre die, die dir gefallen – sie bleiben beim nächsten Mischen.</string>
+    <string name="mixer_current_mix">Dieser Mix</string>
+    <string name="mixer_lock">Beim Mischen behalten</string>
+    <string name="mixer_unlock">Mitmischen lassen</string>
+    <string name="mixer_lock_hint">Gesperrte Klänge bleiben beim erneuten Mischen.</string>
 </resources>

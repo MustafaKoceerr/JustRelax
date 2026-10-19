@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mix_count_selector_title">Hur många ljud vill du mixa?</string>
-    <string name="mixer_empty_state_message">Välj ett antal och börja mixa!</string>
     <string name="mixer_screen_title">Mixer</string>
-    <string name="action_create_mix">Skapa mix</string>
     <string name="err_mixer_generate_failed">Det gick inte att skapa mixen. Se till att du har laddat ned ljud.</string>
+    <string name="mixer_count_title">Hur många ljud?</string>
+    <string name="action_shuffle">Blanda</string>
+    <string name="mixer_empty_title">Låt slumpen välja</string>
+    <string name="mixer_empty_body">Välj hur många ljud och blanda. Lås de du gillar så stannar de när du blandar igen.</string>
+    <string name="mixer_current_mix">Den här mixen</string>
+    <string name="mixer_lock">Behåll vid blandning</string>
+    <string name="mixer_unlock">Låt den blandas</string>
+    <string name="mixer_lock_hint">Låsta ljud stannar när du blandar igen.</string>
 </resources>

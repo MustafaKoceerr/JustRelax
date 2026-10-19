@@ -22,7 +22,8 @@ import kotlin.math.roundToInt
 fun VolumeSlider(
     value: Float,
     onValueChange: (Float) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     val percentage = (value * 100).roundToInt()
     val label = stringResource(Res.string.volume_level)
@@ -30,6 +31,7 @@ fun VolumeSlider(
     Slider(
         value = value,
         onValueChange = onValueChange,
+        enabled = enabled,
         valueRange = 0f..1f,
         modifier = modifier
             .height(24.dp)

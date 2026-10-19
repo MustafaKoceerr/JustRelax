@@ -124,7 +124,7 @@ Versions come from [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 |---|---|
 | Language and build | Kotlin `2.4.20`, Android Gradle Plugin `9.4.1`, Gradle convention plugins in `build-logic` |
 | Platforms | Android (min SDK 29, target 36, compile 37); iOS 18.4+ (off by default, not released yet: no file import or analytics) |
-| UI | Compose Multiplatform `1.12.1`, Material 3, Material 3 Adaptive (bar, rail or drawer by window size), Compottie (Lottie) |
+| UI | Compose Multiplatform `1.12.1`, Material 3, Material 3 Adaptive (bar, rail or drawer by window size) |
 | Navigation | Navigation 3 `1.1.2` |
 | State | ViewModel + `StateFlow`, Kotlin Coroutines `1.11.0` |
 | DI | Koin `4.2.2` |

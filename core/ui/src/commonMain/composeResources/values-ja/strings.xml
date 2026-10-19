@@ -33,4 +33,6 @@
     <string name="sound_state_stopped">停止中</string>
     <string name="volume_level">音量</string>
     <string name="loading">読み込み中</string>
+    <string name="sound_kind_bed">ずっと流れる</string>
+    <string name="frequency_title">頻度</string>
 </resources>

@@ -51,12 +51,13 @@ fun MainTabContent(
     onOpenSettings: () -> Unit,
     onOpenMySounds: () -> Unit,
     onSelectTab: (MainTab) -> Unit,
+    onSaveScene: (suggestedName: String?) -> Unit,
 ) {
     when (tab) {
         MainTab.HOME -> LibraryRoute(onOpenSettings = onOpenSettings, onOpenMySounds = onOpenMySounds)
         MainTab.TIMER -> TimerRoute()
         MainTab.AI -> AiRoute()
         MainTab.SAVED -> SavedRoute(onOpenMixer = { onSelectTab(MainTab.MIXER) })
-        MainTab.MIXER -> MixerRoute()
+        MainTab.MIXER -> MixerRoute(onSaveScene = { onSaveScene(null) })
     }
 }

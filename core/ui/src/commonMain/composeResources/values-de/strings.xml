@@ -33,4 +33,6 @@
     <string name="sound_state_stopped">Gestoppt</string>
     <string name="volume_level">Lautstärke</string>
     <string name="loading">Wird geladen</string>
+    <string name="sound_kind_bed">Spielt durchgehend</string>
+    <string name="frequency_title">Wie oft</string>
 </resources>

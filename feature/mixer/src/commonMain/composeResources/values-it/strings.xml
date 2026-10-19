@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mix_count_selector_title">Quanti suoni vuoi mixare?</string>
-    <string name="mixer_empty_state_message">Scegli un numero e inizia a mixare!</string>
     <string name="mixer_screen_title">Mixer</string>
-    <string name="action_create_mix">Crea mix</string>
     <string name="err_mixer_generate_failed">Impossibile generare il mix. Assicurati di aver scaricato i suoni.</string>
+    <string name="mixer_count_title">Quanti suoni?</string>
+    <string name="action_shuffle">Mescola</string>
+    <string name="mixer_empty_title">Lascia scegliere al caso</string>
+    <string name="mixer_empty_body">Scegli quanti suoni e mescola. Blocca quelli che ti piacciono: restano quando mescoli di nuovo.</string>
+    <string name="mixer_current_mix">Questo mix</string>
+    <string name="mixer_lock">Tieni quando mescoli</string>
+    <string name="mixer_unlock">Lascia mescolare</string>
+    <string name="mixer_lock_hint">I suoni bloccati restano quando mescoli di nuovo.</string>
 </resources>

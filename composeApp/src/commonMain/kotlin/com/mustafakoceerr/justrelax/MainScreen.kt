@@ -101,6 +101,7 @@ fun MainRoute(onOpenSettings: () -> Unit, onOpenMySounds: () -> Unit) {
         onPlayPause = sceneViewModel::togglePlayPause,
         onStopAll = sceneViewModel::stopAll,
         onSaveMix = sceneViewModel::openSaveDialog,
+        onSaveScene = sceneViewModel::openSaveDialog,
         scenePanel = { modifier -> ScenePanelRoute(sceneViewModel, modifier) },
         onOpenSettings = onOpenSettings,
         onOpenMySounds = onOpenMySounds,
@@ -121,6 +122,7 @@ private fun SceneMessagesAndDialog(sceneViewModel: SceneViewModel, snackbarContr
             isOpen = true,
             onDismiss = sceneViewModel::dismissSaveDialog,
             onConfirm = sceneViewModel::saveMix,
+            initialName = sceneState.saveDialogName,
         )
     }
 }
@@ -151,6 +153,8 @@ private fun MainScreenLayout(
     onPlayPause: () -> Unit,
     onStopAll: () -> Unit,
     onSaveMix: () -> Unit,
+    /** Opens the save dialog from a tab, optionally with a suggested name. */
+    onSaveScene: (suggestedName: String?) -> Unit,
     scenePanel: @Composable (Modifier) -> Unit,
     onOpenSettings: () -> Unit,
     onOpenMySounds: () -> Unit,
@@ -230,6 +234,7 @@ private fun MainScreenLayout(
                                 onOpenSettings = onOpenSettings,
                                 onOpenMySounds = onOpenMySounds,
                                 onSelectTab = tabState::select,
+                                onSaveScene = onSaveScene,
                             )
                         }
                     }

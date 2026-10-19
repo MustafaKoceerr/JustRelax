@@ -135,6 +135,20 @@ class SceneViewModelTest {
     }
 
     @Test
+    fun theSaveDialog_canStartWithASuggestedName() = runMainTest {
+        val viewModel = viewModel()
+
+        viewModel.openSaveDialog("Rainy cafe")
+        advanceUntilIdle()
+        assertEquals("Rainy cafe", viewModel.uiState.value.saveDialogName)
+
+        viewModel.dismissSaveDialog()
+        viewModel.openSaveDialog()
+        advanceUntilIdle()
+        assertEquals("", viewModel.uiState.value.saveDialogName)
+    }
+
+    @Test
     fun shownMessage_isCleared() = runMainTest {
         val viewModel = viewModel()
         viewModel.saveMix("Night")
