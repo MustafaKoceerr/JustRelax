@@ -6,8 +6,11 @@ import com.mustafakoceerr.justrelax.core.model.Attribution
 import com.mustafakoceerr.justrelax.core.model.Sound
 import com.mustafakoceerr.justrelax.core.model.SoundClip
 
-/** Rows of `selectSoundsWithClips` (one per clip, ordered) as sounds, in library order. */
-internal fun List<SelectSoundsWithClips>.asSounds(): List<Sound> =
+/**
+ * Rows of `selectSoundsWithClips` (one per clip, ordered) as sounds, in library order. Stored clip
+ * paths go through [resolvePath] (SoundFileStorage.resolveStoredPath) to become files on the device.
+ */
+internal fun List<SelectSoundsWithClips>.asSounds(resolvePath: (String) -> String = { it }): List<Sound> =
     groupBy { it.id }.values.map { rows ->
         val sound = rows.first()
         Sound(
@@ -20,7 +23,7 @@ internal fun List<SelectSoundsWithClips>.asSounds(): List<Sound> =
             clips = rows.mapNotNull { row ->
                 SoundClip(
                     remoteUrl = row.remote_url,
-                    localPath = row.local_path,
+                    localPath = row.local_path?.let(resolvePath),
                     durationMs = row.duration_ms ?: return@mapNotNull null,
                     sizeBytes = row.size_bytes ?: return@mapNotNull null,
                 )
@@ -37,8 +40,8 @@ internal fun List<SelectSoundsWithClips>.asSounds(): List<Sound> =
         )
     }
 
-/** Inserts a sound and its clips; call inside a transaction. */
-internal fun SoundQueries.insert(sound: Sound) {
+/** Inserts a sound and its clips; call inside a transaction. [storePath] is SoundFileStorage.toStoredPath. */
+internal fun SoundQueries.insert(sound: Sound, storePath: (String) -> String = { it }) {
     insertSound(
         id = sound.id,
         source = sound.source,
@@ -56,7 +59,7 @@ internal fun SoundQueries.insert(sound: Sound) {
         is_initial = sound.isInitial,
     )
     sound.clips.forEachIndexed { index, clip ->
-        insertClip(sound.id, index.toLong(), clip.remoteUrl, clip.localPath, clip.durationMs, clip.sizeBytes)
+        insertClip(sound.id, index.toLong(), clip.remoteUrl, clip.localPath?.let(storePath), clip.durationMs, clip.sizeBytes)
     }
 }
 

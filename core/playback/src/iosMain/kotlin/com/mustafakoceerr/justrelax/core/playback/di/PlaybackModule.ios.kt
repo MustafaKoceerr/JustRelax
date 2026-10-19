@@ -26,6 +26,6 @@ internal actual val platformPlaybackModule: Module = module {
             sleepTimer = get(),
             context = Dispatchers.Main,
         )
-        InProcessPlaybackController(session, MainScope()).also { IosAudioSession(session, it, graph, MainScope()) }
+        InProcessPlaybackController(session, MainScope()).also { IosAudioSession(session, it, get(), graph, MainScope()) }
     }
 }

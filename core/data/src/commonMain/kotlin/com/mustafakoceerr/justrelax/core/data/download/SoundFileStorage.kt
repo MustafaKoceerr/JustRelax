@@ -22,6 +22,12 @@ internal interface SoundFileStorage {
     /** Where files wait before they become sounds, e.g. a Freesound preview being edited. */
     suspend fun getIncomingDirectoryPath(): String
     suspend fun moveFile(sourcePath: String, destinationPath: String)
+
+    /** [path] as the database keeps it; see [StoredPaths]. */
+    fun toStoredPath(path: String): String
+
+    /** A path from the database, as a file on this device today; see [StoredPaths]. */
+    fun resolveStoredPath(stored: String): String
 }
 
 /**
@@ -37,6 +43,7 @@ internal class FileSystemSoundFileStorage(
     private val catalogDirectory = appFilesDirectory / AUDIO_DIRECTORY / CATALOG_DIRECTORY
     private val userDirectory = appFilesDirectory / AUDIO_DIRECTORY / USER_DIRECTORY
     private val incomingDirectory = appFilesDirectory / AUDIO_DIRECTORY / INCOMING_DIRECTORY
+    private val storedPaths = StoredPaths(appFilesDirectory.toString())
     private val setupLock = Mutex()
     private var isSetUp = false
 
@@ -72,6 +79,10 @@ internal class FileSystemSoundFileStorage(
     override suspend fun moveFile(sourcePath: String, destinationPath: String) = withContext(dispatchers.io) {
         fileSystem.atomicMove(sourcePath.toPath(), destinationPath.toPath())
     }
+
+    override fun toStoredPath(path: String): String = storedPaths.toStored(path)
+
+    override fun resolveStoredPath(stored: String): String = storedPaths.resolve(stored)
 
     private companion object {
         const val AUDIO_DIRECTORY = "audio"

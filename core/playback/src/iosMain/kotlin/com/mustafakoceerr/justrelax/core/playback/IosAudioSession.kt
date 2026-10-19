@@ -1,5 +1,6 @@
 package com.mustafakoceerr.justrelax.core.playback
 
+import com.mustafakoceerr.justrelax.core.data.repository.SceneRepository
 import com.mustafakoceerr.justrelax.core.playback.player.AvAudioGraph
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.CoroutineScope
@@ -8,7 +9,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import platform.AVFAudio.AVAudioSession
-import platform.AVFAudio.AVAudioSessionCategoryPlayback
 import platform.AVFAudio.AVAudioSessionInterruptionNotification
 import platform.AVFAudio.AVAudioSessionInterruptionOptionKey
 import platform.AVFAudio.AVAudioSessionInterruptionOptionShouldResume
@@ -24,11 +24,11 @@ import platform.Foundation.NSNotification
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSNumber
 import platform.Foundation.NSOperationQueue
-import platform.MediaPlayer.MPMediaItemPropertyTitle
+import platform.MediaPlayer.MPMediaItemArtwork
 import platform.MediaPlayer.MPNowPlayingInfoCenter
-import platform.MediaPlayer.MPNowPlayingInfoPropertyPlaybackRate
 import platform.MediaPlayer.MPRemoteCommandCenter
 import platform.MediaPlayer.MPRemoteCommandHandlerStatusSuccess
+import platform.UIKit.UIImage
 
 /**
  * The soundscape's place in iOS: the playback audio session (keeps playing in the background,
@@ -39,13 +39,24 @@ import platform.MediaPlayer.MPRemoteCommandHandlerStatusSuccess
 internal class IosAudioSession(
     private val session: SoundscapeSession,
     private val controller: PlaybackController,
+    private val sceneRepository: SceneRepository,
     private val graph: AvAudioGraph,
     scope: CoroutineScope,
 ) {
     private val audioSession = AVAudioSession.sharedInstance()
 
+    private val nowPlayingTexts = NowPlayingTexts(
+        title = localized("now_playing_title", "Calming Sounds"),
+        subtitle = localized("now_playing_subtitle", "Enjoy the moment with Just Relax"),
+    )
+
+    /** The Android notification's artwork, from the app's asset catalog. */
+    private val artwork: MPMediaItemArtwork? = UIImage.imageNamed(ARTWORK_ASSET)?.let { image ->
+        MPMediaItemArtwork(boundsSize = image.size) { _ -> image }
+    }
+
     init {
-        audioSession.setCategory(AVAudioSessionCategoryPlayback, error = null)
+        // The playback category is set by AvAudioGraph, before its engine is built.
         observe(AVAudioSessionInterruptionNotification) { it.interruptionEvent()?.let(session::onAudioSessionEvent) }
         observe(AVAudioSessionRouteChangeNotification) { notification ->
             if (notification.number(AVAudioSessionRouteChangeReasonKey) == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
@@ -73,6 +84,7 @@ internal class IosAudioSession(
         }
     }
 
+    /** Play, pause and Stop, as on the Android notification; a soundscape has no tracks to skip or seek. */
     private fun registerRemoteCommands() {
         val commands = MPRemoteCommandCenter.sharedCommandCenter()
         commands.playCommand.addTargetWithHandler { controller.play(); MPRemoteCommandHandlerStatusSuccess }
@@ -81,13 +93,20 @@ internal class IosAudioSession(
             if (controller.isPlaying.value) controller.pause() else controller.play()
             MPRemoteCommandHandlerStatusSuccess
         }
+        commands.stopCommand.addTargetWithHandler { sceneRepository.clear(); MPRemoteCommandHandlerStatusSuccess }
+        listOf(
+            commands.nextTrackCommand,
+            commands.previousTrackCommand,
+            commands.skipForwardCommand,
+            commands.skipBackwardCommand,
+            commands.seekForwardCommand,
+            commands.seekBackwardCommand,
+            commands.changePlaybackPositionCommand,
+        ).forEach { it.enabled = false }
     }
 
     private fun showNowPlaying(hasContent: Boolean, playing: Boolean) {
-        MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = if (!hasContent) null else mapOf<Any?, Any>(
-            MPMediaItemPropertyTitle to appName(),
-            MPNowPlayingInfoPropertyPlaybackRate to if (playing) 1.0 else 0.0,
-        )
+        MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nowPlayingInfo(hasContent, playing, nowPlayingTexts, artwork)
     }
 
     private fun observe(name: String?, onNotification: (NSNotification) -> Unit) {
@@ -111,8 +130,11 @@ internal class IosAudioSession(
         else -> null
     }
 
-    private fun appName(): String =
-        NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName") as? String
-            ?: NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleName") as? String
-            ?: "JustRelax"
+    /** From the app's Localizable.strings, in the language iOS picked for the app. */
+    private fun localized(key: String, english: String): String =
+        NSBundle.mainBundle.localizedStringForKey(key, value = english, table = null)
+
+    private companion object {
+        const val ARTWORK_ASSET = "NowPlayingArtwork"
+    }
 }

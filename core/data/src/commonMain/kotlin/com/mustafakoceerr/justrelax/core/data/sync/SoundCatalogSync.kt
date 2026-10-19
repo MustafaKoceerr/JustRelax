@@ -40,7 +40,7 @@ internal class DatabaseSoundCatalogSync(
         try {
             val catalog = remoteDataSource.getSounds().mapNotNull { it.asSoundOrNull() }
             val obsoleteFiles = database.transactionWithResult { apply(catalog) }
-            obsoleteFiles.forEach { deleteQuietly(it) }
+            obsoleteFiles.forEach { deleteQuietly(storage.resolveStoredPath(it)) }
             Resource.Success(Unit)
         } catch (e: CancellationException) {
             throw e

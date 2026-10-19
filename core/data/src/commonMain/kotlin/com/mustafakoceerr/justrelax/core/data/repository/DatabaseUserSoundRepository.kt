@@ -29,7 +29,7 @@ internal class DatabaseUserSoundRepository(
         soundQueries.selectSoundsWithClips()
             .asFlow()
             .mapToList(dispatchers.io)
-            .map { rows -> rows.asSounds().filter { it.source != SoundSource.BUILT_IN }.asReversed() }
+            .map { rows -> rows.asSounds(storage::resolveStoredPath).filter { it.source != SoundSource.BUILT_IN }.asReversed() }
 
     override suspend fun create(draft: UserSoundDraft): Sound {
         val id = newId()
@@ -55,7 +55,7 @@ internal class DatabaseUserSoundRepository(
             remoteId = draft.origin?.remoteId,
         )
         withContext(dispatchers.io) {
-            soundQueries.transaction { soundQueries.insert(sound) }
+            soundQueries.transaction { soundQueries.insert(sound, storage::toStoredPath) }
         }
         return sound
     }
@@ -71,7 +71,7 @@ internal class DatabaseUserSoundRepository(
                 paths
             }
         }
-        paths.forEach { storage.deleteFile(it) }
+        paths.forEach { storage.deleteFile(storage.resolveStoredPath(it)) }
     }
 
     private companion object {

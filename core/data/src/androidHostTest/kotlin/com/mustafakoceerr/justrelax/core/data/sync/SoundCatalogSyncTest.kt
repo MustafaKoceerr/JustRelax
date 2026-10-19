@@ -120,6 +120,20 @@ class SoundCatalogSyncTest {
     }
 
     @Test
+    fun aRemovedSoundsFile_isDeletedWhereItIsToday_evenIfStoredRelativeOrUnderAnOldContainer() = runTest {
+        val storage = FakeSoundFileStorage(appFilesDirectory = "/app/NEW", catalogDirectory = "/app/NEW/audio/catalog")
+        DatabaseSoundCatalogSync(remote, database, storage, testDispatchers()).syncWithServer()
+        database.soundQueries.updateClipLocalPath("audio/catalog/rain_0.ogg", "rain", 0)
+        database.soundQueries.updateClipLocalPath("/app/OLD/audio/catalog/birds_0.ogg", "birds", 0)
+        storage.files += setOf("/app/NEW/audio/catalog/rain_0.ogg", "/app/NEW/audio/catalog/birds_0.ogg")
+
+        remote.sounds = emptyList()
+        DatabaseSoundCatalogSync(remote, database, storage, testDispatchers()).syncWithServer()
+
+        assertTrue(storage.files.isEmpty(), "left ${storage.files}")
+    }
+
+    @Test
     fun aSoundRemovedOnTheServer_isDeleted_withItsFiles_andDropsOutOfSavedScenes() = runTest {
         sync()
         download("rain")
