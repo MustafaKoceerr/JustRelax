@@ -12,6 +12,8 @@ kotlin {
         binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            // Swift implements AnalyticsHelper and CrashReporter with the Firebase iOS SDK.
+            export(project(":core:analytics"))
         }
     }
 
@@ -25,7 +27,7 @@ kotlin {
             implementation(project(":core:playback"))
             implementation(project(":core:data"))
             implementation(project(":core:media"))
-            implementation(project(":core:analytics"))
+            api(project(":core:analytics"))
 
             implementation(project(":feature:library"))
             implementation(project(":feature:mixer"))

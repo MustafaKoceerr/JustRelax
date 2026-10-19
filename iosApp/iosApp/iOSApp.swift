@@ -3,9 +3,10 @@ import ComposeApp
 
 @main
 struct iOSApp: App {
-    // Koin starts before the first scene.
+    // Firebase and then Koin start before the first scene.
     init() {
-        KoinHelperKt.doInitKoin()
+        let firebase = FirebaseReporting.configureIfAvailable()
+        KoinHelperKt.doInitKoin(analytics: firebase?.0, crashReporter: firebase?.1)
     }
 
     var body: some Scene {
