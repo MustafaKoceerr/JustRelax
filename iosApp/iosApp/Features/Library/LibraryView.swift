@@ -5,6 +5,7 @@ import SwiftUI
 struct LibraryView: View {
     let model: LibraryModel
     @Environment(\.bannerCenter) private var banners
+    @Environment(\.navigator) private var navigator
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -12,6 +13,30 @@ struct LibraryView: View {
             .navigationTitle(Text(LibraryText.greeting(hour: Calendar.current.component(.hour, from: .now))))
             .navigationSubtitle(model.state.isEmpty ? Text(verbatim: "") : Text(.libraryHint))
             .background { AppBackground() }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        navigator?.push(.mySounds)
+                    } label: {
+                        Label {
+                            Text(.actionMySounds)
+                        } icon: {
+                            Image(systemName: "music.note.list")
+                        }
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        navigator?.push(.settings)
+                    } label: {
+                        Label {
+                            Text(.actionSettings)
+                        } icon: {
+                            Image(systemName: "gearshape")
+                        }
+                    }
+                }
+            }
             .task { await model.followState(banners: banners) }
             .task { await model.followVolumes() }
     }
