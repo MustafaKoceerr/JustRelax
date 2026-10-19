@@ -126,6 +126,32 @@ class FreesoundViewModelTest {
     }
 
     @Test
+    fun aFailedSearchDoesNotClaimNothingWasFound() = runMainTest {
+        val viewModel = searched()
+
+        repository.error = AppError.Network.NoInternet()
+        viewModel.changeQuery("forest")
+        viewModel.search()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.hasSearched)
+        assertEquals(emptyList(), viewModel.uiState.value.results)
+    }
+
+    @Test
+    fun aFailedLoadMoreKeepsTheResultsShown() = runMainTest {
+        val viewModel = searched()
+
+        repository.error = AppError.Network.NoInternet()
+        viewModel.loadMore()
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.hasSearched)
+        assertEquals(listOf(1L, 2L), viewModel.uiState.value.results.map { it.id })
+        assertTrue(viewModel.uiState.value.hasMore)
+    }
+
+    @Test
     fun listeningPlaysThePreviewOnceAndAgainStopsIt() = runMainTest {
         val viewModel = searched()
 
