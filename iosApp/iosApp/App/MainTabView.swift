@@ -20,6 +20,7 @@ struct MainTabView: View {
                         case .home: LibraryScreen()
                         case .mixer: MixerScreen()
                         case .ai: AiScreen()
+                        case .saved: SavedScreen { selection = .mixer }
                         default: TabPlaceholder(tab: tab)
                         }
                     }
