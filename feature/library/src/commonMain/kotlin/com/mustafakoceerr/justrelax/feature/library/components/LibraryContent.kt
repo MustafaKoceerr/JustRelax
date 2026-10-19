@@ -4,6 +4,7 @@ import com.mustafakoceerr.justrelax.core.ui.components.CenteredLoading
 import com.mustafakoceerr.justrelax.core.ui.components.SoundCardGrid
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.library_empty_title
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.library_empty_message
+import com.mustafakoceerr.justrelax.feature.library.generated.resources.library_hint
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_retry
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
@@ -48,6 +49,13 @@ fun LibraryContent(
 
     Column(modifier = modifier.fillMaxSize()) {
         if (categories.isNotEmpty() && selectedCategory != null) {
+            // How the tiles work, in one line: the volume slide is not obvious otherwise.
+            Text(
+                text = stringResource(Res.string.library_hint),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
             CategoryTabRow(
                 categories = categories,
                 selectedCategory = selectedCategory,

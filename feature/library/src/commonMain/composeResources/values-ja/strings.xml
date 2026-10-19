@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="download_failed">ダウンロードに失敗しました</string>
-    <string name="home_screen_title">Just Relax</string>
     <string name="action_settings">設定</string>
     <string name="library_empty_title">まだサウンドがありません</string>
     <string name="library_empty_message">サウンドライブラリをダウンロードするにはインターネットに接続してください。</string>
     <string name="action_retry">再試行</string>
     <string name="action_my_sounds">マイサウンド</string>
+    <string name="greeting_morning">おはようございます</string>
+    <string name="greeting_afternoon">こんにちは</string>
+    <string name="greeting_evening">こんばんは</string>
+    <string name="greeting_night">静かな夜に</string>
+    <string name="library_hint">音をタップして再生。横になぞると音量を調整できます。</string>
 </resources>

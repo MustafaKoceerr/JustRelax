@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="download_failed">Download mislukt</string>
-    <string name="home_screen_title">Just Relax</string>
     <string name="action_settings">INSTELLINGEN</string>
     <string name="library_empty_title">Nog geen geluiden</string>
     <string name="library_empty_message">Maak verbinding met internet om de geluidsbibliotheek te downloaden.</string>
     <string name="action_retry">Opnieuw proberen</string>
     <string name="action_my_sounds">Mijn geluiden</string>
+    <string name="greeting_morning">Goedemorgen</string>
+    <string name="greeting_afternoon">Goedemiddag</string>
+    <string name="greeting_evening">Goedenavond</string>
+    <string name="greeting_night">Een rustige nacht</string>
+    <string name="library_hint">Tik op een geluid om het af te spelen. Schuif eroverheen om het volume te regelen.</string>
 </resources>

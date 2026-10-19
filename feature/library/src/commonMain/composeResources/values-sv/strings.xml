@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="download_failed">Nedladdning misslyckades</string>
-    <string name="home_screen_title">Just Relax</string>
     <string name="action_settings">INSTÄLLNINGAR</string>
     <string name="library_empty_title">Inga ljud än</string>
     <string name="library_empty_message">Anslut till internet för att ladda ner ljudbiblioteket.</string>
     <string name="action_retry">Försök igen</string>
     <string name="action_my_sounds">Mina ljud</string>
+    <string name="greeting_morning">God morgon</string>
+    <string name="greeting_afternoon">God eftermiddag</string>
+    <string name="greeting_evening">God kväll</string>
+    <string name="greeting_night">En lugn natt</string>
+    <string name="library_hint">Tryck på ett ljud för att spela det. Dra över det för att ändra volymen.</string>
 </resources>

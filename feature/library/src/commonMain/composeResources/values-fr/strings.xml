@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="download_failed">Échec du téléchargement</string>
-    <string name="home_screen_title">Just Relax</string>
     <string name="action_settings">PARAMÈTRES</string>
     <string name="library_empty_title">Pas encore de sons</string>
     <string name="library_empty_message">Connecte-toi à Internet pour télécharger la bibliothèque de sons.</string>
     <string name="action_retry">Réessayer</string>
     <string name="action_my_sounds">Mes sons</string>
+    <string name="greeting_morning">Bonjour</string>
+    <string name="greeting_afternoon">Bon après-midi</string>
+    <string name="greeting_evening">Bonsoir</string>
+    <string name="greeting_night">Une nuit paisible</string>
+    <string name="library_hint">Touchez un son pour le lancer. Glissez dessus pour régler le volume.</string>
 </resources>

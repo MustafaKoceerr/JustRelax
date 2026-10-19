@@ -28,11 +28,11 @@ fun SoundCardGrid(
     header: (@Composable () -> Unit)? = null,
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 96.dp),
+        columns = GridCells.Adaptive(minSize = 112.dp),
         modifier = modifier.testTag(TestTags.SOUND_GRID),
         contentPadding = contentPadding,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         if (header != null) {
             item(key = HEADER_KEY, span = { GridItemSpan(maxLineSpan) }, contentType = HEADER_KEY) { header() }

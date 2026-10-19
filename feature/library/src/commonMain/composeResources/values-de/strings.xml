@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="download_failed">Download fehlgeschlagen</string>
-    <string name="home_screen_title">Just Relax</string>
     <string name="action_settings">EINSTELLUNGEN</string>
     <string name="library_empty_title">Noch keine Klänge</string>
     <string name="library_empty_message">Verbinde dich mit dem Internet, um die Klangbibliothek herunterzuladen.</string>
     <string name="action_retry">Erneut versuchen</string>
     <string name="action_my_sounds">Meine Sounds</string>
+    <string name="greeting_morning">Guten Morgen</string>
+    <string name="greeting_afternoon">Guten Tag</string>
+    <string name="greeting_evening">Guten Abend</string>
+    <string name="greeting_night">Eine ruhige Nacht</string>
+    <string name="library_hint">Tippe auf einen Klang, um ihn abzuspielen. Wische darüber, um die Lautstärke zu ändern.</string>
 </resources>

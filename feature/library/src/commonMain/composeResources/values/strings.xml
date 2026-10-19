@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="download_failed">Download failed</string>
-    <string name="home_screen_title">Just Relax</string>
     <string name="action_settings">SETTINGS</string>
     <string name="library_empty_title">No sounds yet</string>
     <string name="library_empty_message">Connect to the internet to download the sound library.</string>
     <string name="action_retry">Try again</string>
     <string name="action_my_sounds">My sounds</string>
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="greeting_night">A quiet night</string>
+    <string name="library_hint">Tap a sound to play it. Slide across it to set its volume.</string>
 </resources>

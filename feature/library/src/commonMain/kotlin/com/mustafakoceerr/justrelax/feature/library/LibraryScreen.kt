@@ -23,7 +23,6 @@ import com.mustafakoceerr.justrelax.feature.library.components.LibraryContent
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.Res
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_my_sounds
 import com.mustafakoceerr.justrelax.feature.library.generated.resources.action_settings
-import com.mustafakoceerr.justrelax.feature.library.generated.resources.home_screen_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -66,7 +65,7 @@ fun LibraryScreen(
     onRetry: () -> Unit,
 ) {
     JustRelaxTabScaffold(
-        title = stringResource(Res.string.home_screen_title),
+        title = rememberGreeting(),
         actions = {
             IconButton(onClick = onOpenMySounds) {
                 Icon(

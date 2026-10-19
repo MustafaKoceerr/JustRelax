@@ -42,10 +42,10 @@ class LibraryBenchmark {
         setupBlock = {
             startApp()
             waitFor(Tags.SOUND_CARD).click()
-            waitFor(Tags.VOLUME_SLIDER)
         },
     ) {
-        dragAcross(waitFor(Tags.VOLUME_SLIDER))
+        // A playing tile sets its volume when slid across.
+        dragAcross(waitFor(Tags.SOUND_CARD))
         // Stops the sound so the next iteration starts the same way.
         waitFor(Tags.SOUND_CARD).click()
         device.waitForIdle()

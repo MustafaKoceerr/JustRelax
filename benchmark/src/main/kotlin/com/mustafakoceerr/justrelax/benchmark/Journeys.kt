@@ -107,11 +107,11 @@ private fun MacrobenchmarkScope.selectVisibleCategory(last: Boolean) {
 
 private const val CATEGORY_HOPS = 3
 
-/** Drags [slider] from one end to the other and back. */
-fun MacrobenchmarkScope.dragAcross(slider: UiObject2) {
-    val bounds = slider.visibleBounds
+/** Drags across [view] (a slider or a playing sound tile) from one end to the other and back. */
+fun MacrobenchmarkScope.dragAcross(view: UiObject2) {
+    val bounds = view.visibleBounds
     val y = bounds.centerY()
-    slider.drag(Point(bounds.left + bounds.width() / 10, y), 600)
-    slider.drag(Point(bounds.right - bounds.width() / 10, y), 600)
+    view.drag(Point(bounds.left + bounds.width() / 10, y), 600)
+    view.drag(Point(bounds.right - bounds.width() / 10, y), 600)
     device.waitForIdle()
 }

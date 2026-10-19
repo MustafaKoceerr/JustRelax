@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="download_failed">다운로드 실패</string>
-    <string name="home_screen_title">Just Relax</string>
     <string name="action_settings">설정</string>
     <string name="library_empty_title">아직 소리가 없어요</string>
     <string name="library_empty_message">소리 라이브러리를 다운로드하려면 인터넷에 연결하세요.</string>
     <string name="action_retry">다시 시도</string>
     <string name="action_my_sounds">내 사운드</string>
+    <string name="greeting_morning">좋은 아침이에요</string>
+    <string name="greeting_afternoon">좋은 오후예요</string>
+    <string name="greeting_evening">좋은 저녁이에요</string>
+    <string name="greeting_night">고요한 밤이에요</string>
+    <string name="library_hint">소리를 탭하면 재생돼요. 옆으로 밀어 볼륨을 조절하세요.</string>
 </resources>
