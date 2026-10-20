@@ -16,11 +16,13 @@ import platform.AVFAudio.AVLinearPCMIsFloatKey
 import platform.AVFAudio.AVNumberOfChannelsKey
 import platform.AVFAudio.AVSampleRateKey
 import platform.CoreAudioTypes.kAudioFormatLinearPCM
+import platform.Foundation.NSData
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSString
 import platform.Foundation.NSTemporaryDirectory
 import platform.Foundation.NSURL
 import platform.Foundation.NSUTF8StringEncoding
+import platform.Foundation.create
 import platform.Foundation.writeToFile
 import kotlin.math.PI
 import kotlin.math.abs
@@ -84,6 +86,14 @@ class AvMediaTest {
         return path
     }
 
+    /** The Freesound preview fixture ([FREESOUND_MP3_PREVIEW_BASE64]), half a second of rain. */
+    private fun freesoundPreview(name: String): String {
+        val path = directory + name
+        val data = checkNotNull(NSData.create(base64EncodedString = FREESOUND_MP3_PREVIEW_BASE64, options = 0u))
+        check(data.writeToFile(path, atomically = true))
+        return path
+    }
+
     private fun notAudio(name: String): String {
         val path = directory + name
         @Suppress("CAST_NEVER_SUCCEEDS")
@@ -101,6 +111,25 @@ class AvMediaTest {
         assertTrue(abs(waveform.durationMs - 2_000) <= 5, "duration ${waveform.durationMs}")
         assertTrue(waveform.peaks.take(5).all { it > 0.9f }, "loud half ${waveform.peaks}")
         assertTrue(waveform.peaks.drop(5).all { it == 0f }, "silent half ${waveform.peaks}")
+    }
+
+    @Test
+    fun aFreesoundPreview_hasAWaveform() = runBlocking {
+        val path = freesoundPreview("freesound-1.mp3")
+
+        val waveform = AvWaveformReader(dispatchers).read(path, bucketCount = 10)
+
+        assertTrue(abs(waveform.durationMs - 510) <= 30, "duration ${waveform.durationMs}")
+        assertTrue(waveform.peaks.any { it > 0f }, "peaks ${waveform.peaks}")
+    }
+
+    @Test
+    fun aFreesoundPreview_canBeTrimmed() = runBlocking {
+        val output = directory + "rain.m4a"
+
+        val trimmed = AvAudioTrimmer(dispatchers).trim(freesoundPreview("freesound-2.mp3"), TrimRange(startMs = 100, endMs = 400), output)
+
+        assertTrue(abs(trimmed.durationMs - 300) <= 30, "duration ${trimmed.durationMs}")
     }
 
     @Test

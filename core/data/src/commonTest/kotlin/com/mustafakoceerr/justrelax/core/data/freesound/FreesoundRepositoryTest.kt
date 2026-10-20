@@ -89,6 +89,33 @@ class FreesoundRepositoryTest {
     }
 
     @Test
+    fun anMp3FirstOrder_picksTheMp3Preview_andFallsBackToOgg() = runTest {
+        val mp3First = NetworkFreesoundRepository(dataSource, downloader, storage, listOf(FreesoundPreview.MP3, FreesoundPreview.OGG))
+        dataSource.page = FreesoundSearchPage(
+            listOf(
+                network(1, "http://creativecommons.org/publicdomain/zero/1.0/"),
+                network(2, "http://creativecommons.org/publicdomain/zero/1.0/", mapOf("preview-hq-ogg" to "https://cdn.freesound.org/2-hq.ogg")),
+            ),
+            false,
+        )
+
+        assertEquals(
+            listOf("https://cdn.freesound.org/1-hq.mp3", "https://cdn.freesound.org/2-hq.ogg"),
+            mp3First.search("rain", page = 1).sounds.map { it.previewUrl },
+        )
+    }
+
+    @Test
+    fun aDownloadedPreview_keepsItsFormatsExtension() = runTest {
+        val mp3First = NetworkFreesoundRepository(dataSource, downloader, storage, listOf(FreesoundPreview.MP3, FreesoundPreview.OGG))
+        dataSource.page = FreesoundSearchPage(listOf(network(7, "http://creativecommons.org/publicdomain/zero/1.0/")), false)
+
+        val path = mp3First.downloadPreview(mp3First.search("rain", page = 1).sounds.single())
+
+        assertEquals("/incoming/freesound-7.mp3", path)
+    }
+
+    @Test
     fun aFailedDownloadGivesNoPath() = runTest {
         dataSource.page = FreesoundSearchPage(listOf(network(7, "http://creativecommons.org/publicdomain/zero/1.0/")), false)
         val sound = repository.search("rain", page = 1).sounds.single()

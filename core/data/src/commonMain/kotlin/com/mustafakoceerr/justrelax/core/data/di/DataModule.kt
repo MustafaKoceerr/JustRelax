@@ -3,6 +3,7 @@ package com.mustafakoceerr.justrelax.core.data.di
 import com.mustafakoceerr.justrelax.core.data.download.SoundDownloader
 import com.mustafakoceerr.justrelax.core.data.freesound.FreesoundRepository
 import com.mustafakoceerr.justrelax.core.data.freesound.NetworkFreesoundRepository
+import com.mustafakoceerr.justrelax.core.data.freesound.preferredFreesoundPreviews
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepository
 import com.mustafakoceerr.justrelax.core.data.repository.AiMixRepositoryImpl
 import com.mustafakoceerr.justrelax.core.data.repository.AppSetupRepository
@@ -65,7 +66,7 @@ val dataModule = module {
     singleOf(::AiMixRepositoryImpl) { bind<AiMixRepository>() }
     singleOf(::InMemorySceneRepository) { bind<SceneRepository>() }
     single<InstallIdProvider> { DataStoreInstallIdProvider(get(named(DataConstants.STATE)), newId = { Uuid.random().toString() }) }
-    single<FreesoundRepository> { NetworkFreesoundRepository(get(), get(), get()) }
+    single<FreesoundRepository> { NetworkFreesoundRepository(get(), get(), get(), preferredFreesoundPreviews) }
     // No store products yet; debug builds swap in PreviewTipRepository.
     single<TipRepository> { UnavailableTipRepository() }
     single<UserSoundRepository> {
