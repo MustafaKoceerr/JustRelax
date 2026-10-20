@@ -8,6 +8,7 @@ Claude'un tek başına yapamadığı işler, öncelik sırasıyla. Biten maddeyi
 ## Yeni tasarım: Mixer, AI ve Saved (PR #57 → #58 → #59)
 - [ ] PR'lara göz at ve sırayla birleştir (#57, sonra #58, sonra #59).
 - [x] AI sonuç ekranı telefonda yerel Worker'la görüldü (2026-10-19). Debug sürüm `localhost:8787`'ye gider: `npm run dev` + `adb reverse tcp:8787 tcp:8787`, `.dev.vars`'ta `OPENAI_API_KEY` dolu olmalı.
+- [x] AI ve Freesound (ara → dinle → ekle → editör → kaydet → My sounds) yerel Worker'la Android emülatörde ve iOS simülatörde uçtan uca denendi (2026-10-20). iOS'taki iki hata düzeltildi: Ogg Vorbis önizlemesi açılmıyordu, editörde kategori seçilmiyordu.
 - [ ] İsteğe bağlı: telefon bağlıyken bana "profil" de. Baseline Profile'ı yeniden üretirim; eskisinde kaldırılan Lottie ekranının satırları var (zararsız, sadece eski).
 
 ## Tasarım 2. tur: tema, gezinme, ana sayfa, ayarlar, açılış (yığılı PR'lar, #59'un üstünde)
