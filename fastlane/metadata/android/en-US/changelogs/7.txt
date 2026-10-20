@@ -1,0 +1,9 @@
+A new JustRelax, rebuilt from the ground up.
+• Layer sounds into one scene and set each volume
+• Steady sounds keep going; choose how often the rest drift in
+• Describe a moment and AI builds a scene from your sounds
+• Discover free sounds on Freesound.org
+• Import your own sounds, then trim and loop them
+• Sleep timer that fades out gently
+• Keeps playing with the screen off
+• A new look and a new icon
