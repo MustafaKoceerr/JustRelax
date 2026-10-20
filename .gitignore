@@ -339,3 +339,6 @@ tools/sound-pipeline/dist/
 # Firebase config for the Android app; kept out of git, see docs/owner-todo.md
 androidApp/google-services.json
 iosApp/iosApp/GoogleService-Info.plist
+
+# Raw app captures the Play screenshots are built from (tools/store-assets/README.md).
+!/tools/store-assets/captures/
