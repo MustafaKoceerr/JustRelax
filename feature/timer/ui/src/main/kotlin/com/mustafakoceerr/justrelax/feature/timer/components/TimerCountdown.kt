@@ -32,6 +32,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -47,6 +48,8 @@ private const val WARNING_SECONDS = 5
  * The countdown: a ring that empties smoothly, the total length, the time left and the time it
  * ends. Each tick recomposes only the time left; the ring moves in the draw phase.
  */
+internal const val TIMER_RING_TAG = "timer_ring"
+
 @Composable
 internal fun TimerCountdown(
     totalSeconds: Long,
@@ -111,6 +114,7 @@ private fun TimerRing(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .aspectRatio(1f)
+            .testTag(TIMER_RING_TAG)
             .drawBehind {
                 val stroke = strokeWidth.toPx()
                 val topLeft = Offset(stroke / 2, stroke / 2)
