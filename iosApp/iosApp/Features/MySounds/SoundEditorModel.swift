@@ -11,6 +11,12 @@ final class SoundEditorModel {
     var name: String {
         didSet { viewModel.changeName(name: name) }
     }
+    /// Kept here too: the category picker opens a page of its own, which ends the view's
+    /// `followState`, so the ViewModel's echo would come too late for the picker to see the choice.
+    /// Only the user changes it.
+    var category: SoundCategory? {
+        didSet { if let category, category != oldValue { viewModel.selectCategory(category: category) } }
+    }
 
     @ObservationIgnored private let host = ViewModelHost()
     @ObservationIgnored private let viewModel: SoundEditorViewModel
@@ -22,11 +28,7 @@ final class SoundEditorModel {
         )
         state = viewModel.uiState.value
         name = viewModel.uiState.value.name
-    }
-
-    var category: SoundCategory? {
-        get { state.category }
-        set { if let newValue { viewModel.selectCategory(category: newValue) } }
+        category = viewModel.uiState.value.category
     }
 
     var kind: SoundKind {
