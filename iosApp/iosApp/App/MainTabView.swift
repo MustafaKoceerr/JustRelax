@@ -63,8 +63,9 @@ extension MainTabView {
                     TabRoot(tab: tab, navigator: navigator)
                 } label: {
                     Label(tab.title, systemImage: tab.systemImage)
-                        .accessibilityIdentifier(tab.accessibilityIdentifier)
                 }
+                // On the Tab: set on its Label, the id reached the tab bar button only sometimes.
+                .accessibilityIdentifier(tab.accessibilityIdentifier)
             }
         }
     }
