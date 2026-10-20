@@ -19,27 +19,42 @@ interface FreesoundRepository {
     suspend fun downloadPreview(sound: FreesoundSound): String?
 }
 
+/** The preview files Freesound serves for each sound. */
+internal enum class FreesoundPreview(val key: String) {
+    OGG("preview-hq-ogg"),
+    MP3("preview-hq-mp3"),
+}
+
+/**
+ * Which preview to use, best first, on this platform. Android prefers Ogg: it loops without a gap
+ * and SoundPool plays it. iOS cannot open Ogg Vorbis (AVFoundation reads only Ogg Opus), so it
+ * takes the MP3.
+ */
+internal expect val preferredFreesoundPreviews: List<FreesoundPreview>
+
 internal class NetworkFreesoundRepository(
     private val dataSource: FreesoundDataSource,
     private val downloader: FileDownloader,
     private val storage: SoundFileStorage,
+    private val previews: List<FreesoundPreview> = listOf(FreesoundPreview.OGG, FreesoundPreview.MP3),
 ) : FreesoundRepository {
 
     override suspend fun search(query: String, page: Int): FreesoundResults {
         val result = dataSource.search(query, page)
-        return FreesoundResults(result.sounds.mapNotNull { it.asFreesoundSoundOrNull() }, result.hasMore)
+        return FreesoundResults(result.sounds.mapNotNull { it.asFreesoundSoundOrNull(previews) }, result.hasMore)
     }
 
     override suspend fun downloadPreview(sound: FreesoundSound): String? {
-        val path = "${storage.getIncomingDirectoryPath()}/freesound-${sound.id}.ogg"
+        val extension = sound.previewUrl.substringAfterLast('/').substringAfterLast('.', missingDelimiterValue = "audio")
+        val path = "${storage.getIncomingDirectoryPath()}/freesound-${sound.id}.$extension"
         return path.takeIf { downloader.downloadFile(sound.previewUrl, path) }
     }
 }
 
 /** Null for licenses the app cannot use (non-commercial, sampling+) and for sounds without a preview. */
-internal fun NetworkFreesoundSound.asFreesoundSoundOrNull(): FreesoundSound? {
+internal fun NetworkFreesoundSound.asFreesoundSoundOrNull(order: List<FreesoundPreview>): FreesoundSound? {
     val license = creativeCommonsLicense(license) ?: return null
-    val preview = previews[OGG_PREVIEW] ?: previews[MP3_PREVIEW] ?: return null
+    val preview = order.firstNotNullOfOrNull { previews[it.key] } ?: return null
     return FreesoundSound(
         id = id,
         name = name,
@@ -61,7 +76,3 @@ private fun creativeCommonsLicense(url: String): License? {
         else -> null
     }
 }
-
-// Ogg previews loop without a gap and SoundPool plays them; MP3 is the fallback.
-private const val OGG_PREVIEW = "preview-hq-ogg"
-private const val MP3_PREVIEW = "preview-hq-mp3"
