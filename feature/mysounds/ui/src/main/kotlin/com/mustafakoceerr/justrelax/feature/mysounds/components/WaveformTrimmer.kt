@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,6 +40,9 @@ fun WaveformTrimmer(
         modifier = modifier
             .fillMaxWidth()
             .height(140.dp)
+            // The handles reach the screen edges, where gesture navigation's back swipe starts; keep
+            // those drags for trimming. 140dp stays under the 200dp the system allows per edge.
+            .systemGestureExclusion()
             .pointerInput(sourceMs) {
                 if (sourceMs <= 0) return@pointerInput
                 var movesStart = true
