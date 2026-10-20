@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +42,9 @@ internal fun TimerRunningLayout(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                TimerCountdown(uiState, dimensions, Modifier.fillMaxWidth(0.85f).widthIn(max = 450.dp))
+                // wrapContentWidth frees the fixed width again, so the cap and the square can shrink the
+                // ring to fit a wide, short window (a tablet held sideways).
+                TimerCountdown(uiState, dimensions, Modifier.fillMaxWidth(0.85f).wrapContentWidth().widthIn(max = 450.dp))
             }
             TimerControlButtons(isPaused = uiState.isPaused, onToggleClick = onToggleClick, onCancelClick = onCancelClick)
             Spacer(modifier = Modifier.height(32.dp))

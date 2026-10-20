@@ -54,6 +54,16 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 - [ ] Yeni bir bilgisayarda ya da CI'da Firebase'li build gerekirse `google-services.json`'u konsoldan indir (*Project settings → Your apps*).
 - [x] iOS uygulaması (`com.mustafakoceerr.justrelax`, "JustRelax iOS") aynı projeye eklendi (2026-10-19). `iosApp/iosApp/GoogleService-Info.plist` yerinde ve git'e girmiyor; yeni bir bilgisayarda konsoldan indir. Simülatörde denendi: reddedince ölçüm veritabanı hiç oluşmuyor, izin verilince olaylar gönderiliyor.
 
+## Play mağaza sayfası (görseller hazır)
+Yeni ikon ve İngilizce görseller `fastlane/metadata/android/en-US/images/` altında. Nasıl üretildikleri `tools/store-assets/README.md`'de.
+- [ ] Play Console → *Grow users → Store presence → Main store listing → Graphics* (İngilizce):
+  - **App icon:** `icon.png`
+  - **Feature graphic:** `featureGraphic.png`
+  - **Phone screenshots:** `phoneScreenshots/` içindeki 8 dosya, 1'den 8'e sırayla.
+  - **7-inch tablet screenshots:** `sevenInchScreenshots/` içindeki 8 dosya.
+  - **10-inch tablet screenshots:** `tenInchScreenshots/` içindeki 8 dosya.
+- [ ] Uygulama adı Play'de nasıl yazılıyor? Görsellerde ve uygulamada "JustRelax"; bildirim ve açılış ekranında "Just Relax". Hangisini istediğini söyle, hepsini ona çeviririm.
+
 ## 6. Play Console ve gizlilik
 - [ ] Veri güvenliği formunu `docs/play-data-safety.md`'ye göre doldur. AI cümlesi satırında artık **Paylaşılıyor: Evet**.
 - [ ] *Uygulama içeriği → Reklam kimliği* sorusuna **Hayır** de. Manifestte artık `AD_ID` izni yok (#56); eski bir beyanda "Evet" varsa düzelt.
@@ -95,7 +105,6 @@ Xcode projesi hazır (bundle id `com.mustafakoceerr.justrelax`, sürüm 1.3.0). 
 - [ ] App Store Connect'te *My Apps → +* ile `com.mustafakoceerr.justrelax` bundle id'li uygulamayı aç. App ID'de **App Attest** yeteneği açık olmalı; Xcode otomatik imzalamada kendisi açar.
 - [ ] App Store Connect → *App Privacy* anketini `iosApp/iosApp/PrivacyInfo.xcprivacy`'deki listeye göre doldur: kullanıcı içeriği (AI cümlesi), arama geçmişi, cihaz kimliği, ürün etkileşimi ve çökme verisi; hiçbiri kimliğe bağlı değil, takip yok.
 - [ ] Crashlytics iOS'ta henüz gerçek bir çökmeyle denenmedi; ilk TestFlight sürümünde Ayarlar'da izin verip konsolda raporların geldiğine bak.
-- [ ] Simge şimdilik Play simgesinden (512 px) 1024'e büyütüldü. Daha net bir 1024 px kaynak varsa `iosApp/iosApp/Assets.xcassets/AppIcon.appiconset/app-icon-1024.png` dosyasını değiştir (köşeler kare, saydamlık yok).
 
 ## 8. İsteğe bağlı / sonra
 - [x] Main'e birleşmiş eski dallar GitHub'dan ve yerelden silindi (2026-10-19).

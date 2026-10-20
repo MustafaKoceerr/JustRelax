@@ -1,0 +1,14 @@
+{
+  "name": "justrelax-store-assets",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "icons": "./render.sh icons",
+    "screens": "./render.sh screens",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
+  }
+}

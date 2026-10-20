@@ -1,0 +1,46 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Icon preview</title>
+<style>
+  body{margin:0;font:14px/1.3 system-ui;background:#ddd;color:#222;display:flex;flex-wrap:wrap;gap:0}
+  .panel{padding:24px;display:flex;flex-direction:column;gap:16px}
+  .dark{background:#202124;color:#eee}
+  .wall{background:linear-gradient(160deg,#4b6c8f,#9fb6c9 60%,#d9c9b0)}
+  .row{display:flex;gap:22px;align-items:flex-end}
+  .ic{position:relative;overflow:hidden}
+  .ic img{position:absolute;inset:-25%;width:150%;height:150%}
+  .circle{border-radius:50%}.squircle{border-radius:32%}.rr{border-radius:22%}
+  .themed{background:#d7e3f7}.themed img{filter:brightness(0) saturate(100%) invert(19%) sepia(30%) saturate(1200%) hue-rotate(190deg)}
+  .themedd{background:#2c3a4f}.themedd img{filter:brightness(0) invert(88%) sepia(15%) saturate(500%) hue-rotate(180deg)}
+  .bar{background:#111;height:32px;display:flex;align-items:center;gap:8px;padding:0 12px;color:#fff}
+  .lbar{background:#f3f3f3;height:32px;display:flex;align-items:center;gap:8px;padding:0 12px}
+  .lbar img{filter:invert(1)}
+  label{font-size:11px;opacity:.7}
+</style></head><body>
+<div class="panel wall">
+  <label>Home screen 48dp ×2.6 (≈ xxhdpi px)</label>
+  <div class="row">
+    <div class="ic circle" style="width:126px;height:126px"><img src="out/adaptive-background.svg"><img src="out/adaptive-foreground.svg"></div>
+    <div class="ic squircle" style="width:126px;height:126px"><img src="out/adaptive-background.svg"><img src="out/adaptive-foreground.svg"></div>
+    <div class="ic rr" style="width:126px;height:126px"><img src="out/adaptive-background.svg"><img src="out/adaptive-foreground.svg"></div>
+  </div>
+  <label>Real 48 / 36 / 24 css px</label>
+  <div class="row">
+    <div class="ic circle" style="width:48px;height:48px"><img src="out/adaptive-background.svg"><img src="out/adaptive-foreground.svg"></div>
+    <div class="ic circle" style="width:36px;height:36px"><img src="out/adaptive-background.svg"><img src="out/adaptive-foreground.svg"></div>
+    <div class="ic circle" style="width:24px;height:24px"><img src="out/adaptive-background.svg"><img src="out/adaptive-foreground.svg"></div>
+    <div class="ic themed circle" style="width:48px;height:48px"><img src="out/adaptive-foreground.svg"></div>
+    <div class="ic themedd circle" style="width:48px;height:48px"><img src="out/adaptive-foreground.svg"></div>
+  </div>
+</div>
+<div class="panel">
+  <label>Play 512 with Play's rounded mask (shown at 256)</label>
+  <img src="out/icon.svg" style="width:256px;height:256px;border-radius:20%;box-shadow:0 2px 8px #0004">
+</div>
+<div class="panel dark">
+  <label>Status bar 24dp (shown ×1 and ×3)</label>
+  <div class="bar"><img src="out/notification.svg" width="16"><img src="out/notification.svg" width="16" style="opacity:.6"><span style="font-size:12px">9:41</span></div>
+  <div class="lbar"><img src="out/notification.svg" width="16"><span style="font-size:12px;color:#222">9:41</span></div>
+  <img src="out/notification.svg" width="72" style="background:#333">
+  <img src="out/mark-mono.svg" width="72" style="background:#333">
+</div>
+</body></html>
