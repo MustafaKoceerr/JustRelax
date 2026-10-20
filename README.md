@@ -1,203 +1,117 @@
-# 🌿 Just Relax – Sound Mixing & Relaxation App
+<img src="fastlane/metadata/android/en-US/images/featureGraphic.png" alt="JustRelax: layer sounds into your own calm" width="100%">
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.4.20-blue.svg)](https://kotlinlang.org)
-[![Kotlin%20Multiplatform](https://img.shields.io/badge/Kotlin%20Multiplatform-KMP-7f52ff.svg)](https://kotlinlang.org/docs/multiplatform.html)
-[![Jetpack%20Compose](https://img.shields.io/badge/Jetpack%20Compose-BOM%202026.09.00-3ddc84.svg)](https://developer.android.com/compose)
-[![Architecture](https://img.shields.io/badge/Architecture-MVVM%20%C2%B7%20NiA-orange.svg)](https://developer.android.com/topic/architecture)
+# JustRelax
 
-> A **Kotlin Multiplatform** relaxation app: layer ambient sounds into a living soundscape, let AI suggest a mix, and fall asleep with a timer.
+A relaxing-sounds app where you layer rain, waves, fire and birds into one living scene, let AI build a scene from a sentence, and fall asleep to a timer that fades out gently.
 
-**▶️ Google Play:** https://play.google.com/store/apps/details?id=com.mustafakoceerr.justrelax
+[![Get it on Google Play](https://img.shields.io/badge/Google%20Play-JustRelax-3ddc84?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.mustafakoceerr.justrelax)
+[![CI](https://github.com/MustafaKoceerr/JustRelax/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/MustafaKoceerr/JustRelax/actions/workflows/ci.yml)
+![Kotlin Multiplatform](https://img.shields.io/badge/Kotlin%20Multiplatform-2.4.20-7f52ff?logo=kotlin&logoColor=white)
+![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-4285f4?logo=jetpackcompose&logoColor=white)
+![SwiftUI](https://img.shields.io/badge/SwiftUI-iOS%2027-f05138?logo=swift&logoColor=white)
 
----
-
-## ✨ Highlights
-
-- 🎧 **Soundscapes, not loops:** each sound is either a seamless *bed* (rain, wind) or *events* (an owl, thunder) that play at random times, volumes and positions, at a frequency you choose.
-- 🎚️ **Mixer:** a random mix of 2–5 sounds in one tap.
-- 🧠 **AI mixes:** describe a mood and get a mix of the sounds you have.
-- 📂 **My sounds:** import your own audio file, trim it and use it like any other sound.
-- 🔎 **Freesound:** search and import CC0 / CC-BY sounds from [Freesound](https://freesound.org).
-- ⏱️ **Sleep timer:** the sound fades out when it ends.
-- 💾 **Saved mixes**, background playback with media controls, light and dark themes, 12 languages.
-- ☕ **Tip jar** in Settings: consumable in-app purchases behind `TipRepository` (shown only while the store offers tips).
-
-Screenshots below are from version 1.
-
-📽️ Feature Demos
-<details> <summary><b>🏠 Home & 🧠 AI Suggestions (Click to expand)</b></summary> <p align="center"> <img src="assets/home_demo.gif" width="190" /> <img src="assets/ai_demo.gif" width="190" />
-
-
-<em>Explore ambient sounds and generate AI-driven mixes.</em> </p> </details>
-
-<details> <summary><b>🎚️ Mixer & ⏱️ Timer (Click to expand)</b></summary> <p align="center"> <img src="assets/mixer_demo.gif" width="190" /> <img src="assets/timer_demo.gif" width="190" />
-
-
-<em>Fine-tune your layers and set a sleep timer for your session.</em> </p> </details>
-
-<details> <summary><b>💾 Saved Mixes & ⚙️ Settings (Click to expand)</b></summary> <p align="center"> <img src="assets/saved_demo.gif" width="190" /> <img src="assets/settings_demo.gif" width="190" />
-
-
-<em>Manage your favorite soundscapes and customize your app experience.</em> </p> </details>
-
-
-
-## 🖼️ App Gallery
-
-### 📱 Light Theme (8)
+## What it does
 
 <table>
   <tr>
-    <th>Splash</th>
-    <th>Home</th>
-    <th>AI</th>
-    <th>AI (Alt)</th>
+    <td><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_layers.png" width="200" alt="Your calm, layer by layer"></td>
+    <td><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2_now_and_then.png" width="200" alt="Rain all night, thunder now and then"></td>
+    <td><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3_ai.png" width="200" alt="Describe a moment, hear it"></td>
+    <td><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4_sleep.png" width="200" alt="Sleep timer"></td>
   </tr>
   <tr>
-    <td><img src="assets/JR_light_splash_1.png" height="380"/></td>
-    <td><img src="assets/JR_light_home_1.png" height="380"/></td>
-    <td><img src="assets/JR_light_ai_1.png" height="380"/></td>
-    <td><img src="assets/JR_light_ai_2.png" height="380"/></td>
+    <td><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5_discover.png" width="200" alt="Discover free sounds"></td>
+    <td><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6_shuffle.png" width="200" alt="Shuffle a mix"></td>
+    <td><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7_your_sounds.png" width="200" alt="Bring your own sounds"></td>
+    <td><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8_saved.png" width="200" alt="Saved mixes"></td>
   </tr>
 </table>
 
-<br/>
+- **Scenes, not loops.** Steady sounds (rain, a fan) loop seamlessly. Others (thunder, an owl) drift in now and then, at a frequency you choose.
+- **AI scenes.** Describe a place or a feeling, and a scene is built from the sounds you have.
+- **Discover and import.** Search free sounds on Freesound.org, or import your own file, then trim it and loop it.
+- **Sleep timer, saved mixes and a random mixer.** Playback continues in the background, with lock-screen controls.
+- 12 languages, light and dark themes, phone and tablet layouts. No ads and no subscription.
 
-<table>
-  <tr>
-    <th>Mixer</th>
-    <th>Timer</th>
-    <th>Saved</th>
-    <th>Settings</th>
-  </tr>
-  <tr>
-    <td><img src="assets/JR_light_mixer_2.png" height="380"/></td>
-    <td><img src="assets/JR_light_timer_2.png" height="380"/></td>
-    <td><img src="assets/JR_light_saved_2.png" height="380"/></td>
-    <td><img src="assets/JR_light_settings_1.png" height="380"/></td>
-  </tr>
-</table>
+## Why I built it
 
----
+I started JustRelax in November 2025 as my first app on Google Play. Version 1 worked, but it was a plain sound player and it didn't stand out.
 
-### 🌙 Dark Theme (8)
+In October 2026 I rebuilt it from the ground up. I had two goals: make it something I want to fall asleep to, and use it to practise modern mobile development the way the platforms intend it:
+- one real media player instead of workarounds;
+- Google's architecture guidance;
+- adaptive layouts;
+- a shared Kotlin core with a native UI on each platform.
 
-<table>
-  <tr>
-    <th>Onboarding</th>
-    <th>Home</th>
-    <th>AI</th>
-    <th>AI (Alt)</th>
-  </tr>
-  <tr>
-    <td><img src="assets/JR_dark_onboarding_1.png" height="380"/></td>
-    <td><img src="assets/JR_dark_home_1.png" height="380"/></td>
-    <td><img src="assets/JR_dark_ai_1.png" height="380"/></td>
-    <td><img src="assets/JR_dark_ai_2.png" height="380"/></td>
-  </tr>
-</table>
+I measured instead of guessing, with Macrobenchmark and Perfetto traces on a real phone. I shipped it as 2.0.0.
 
-<br/>
+## How it works
 
-<table>
-  <tr>
-    <th>Mixer</th>
-    <th>Timer</th>
-    <th>Saved</th>
-    <th>Settings</th>
-  </tr>
-  <tr>
-    <td><img src="assets/JR_dark_mixer_2.png" height="380"/></td>
-    <td><img src="assets/JR_dark_timer_2.png" height="380"/></td>
-    <td><img src="assets/JR_dark_saved_2.png" height="380"/></td>
-    <td><img src="assets/JR_dark_settings_1.png" height="380"/></td>
-  </tr>
-</table>
-
----
-
-## 🛠 Tech Stack
-
-Versions come from [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
-
-| Area | Library |
-|---|---|
-| Language and build | Kotlin `2.4.20`, Android Gradle Plugin `9.4.1`, Gradle convention plugins in `build-logic` |
-| Platforms | Android (min SDK 29, target 36, compile 37); iOS 27+ (off by default, not released yet) |
-| UI | Android: Jetpack Compose (BOM `2026.09.00`), Material 3, Material 3 Adaptive (bar, rail or drawer by window size). iOS: SwiftUI on the shared ViewModels, bridged with SKIE `0.10.15` |
-| Navigation | Android: Navigation 3 `1.2.0` |
-| State | ViewModel + `StateFlow`, Kotlin Coroutines `1.11.0` |
-| DI | Koin `4.2.2` |
-| Network | Ktor `3.6.0`, kotlinx.serialization `1.11.0` |
-| Storage | SQLDelight `2.4.0`, DataStore `1.2.1`, Okio `3.18.2` |
-| Audio | Android: Media3 `1.11.1` (ExoPlayer, MediaSession, Transformer for trimming). iOS: AVAudioEngine, AVAudioSession, MediaPlayer |
-| Analytics | Firebase Analytics and Crashlytics, only after the user agrees |
-| Backend | Cloudflare Workers (API proxy) and R2 (sound CDN), free plan |
-| Tests | kotlin.test, Turbine, Robolectric, Ktor MockEngine, vitest, Python unittest |
-
----
-
-## 🧩 Architecture
-
-The app follows Google's [app architecture guide](https://developer.android.com/topic/architecture) and the layout of [Now in Android](https://github.com/android/nowinandroid):
-
-- **UI layer:** a screen observes one `UiState` from its ViewModel and sends it events (MVVM). The ViewModels and their state are shared Kotlin code; Android draws them with Compose and iOS with SwiftUI. A ViewModel reports one-off messages as its own type (for example `AiMessage.Offline`), and each platform picks the words.
-- **Data layer:** repositories are the single source of truth. The sound catalog is offline-first: it is cached in SQLDelight and refreshed from the CDN once a day.
-- **Playback:** one `SoundscapePlayer` (a Media3 `Player`) runs in a `MediaSessionService`. It mixes beds and schedules events, so playback keeps going in the background and shows in the system media controls. On iOS the same session runs in-process on one `AVAudioEngine` (`AvAudioGraph`); `IosAudioSession` follows iOS's default interruption and route-change behaviour and drives the lock screen controls. AVFoundation reads the pack's Ogg Opus clips from iOS 18.4; the app targets iOS 27 and is built with Xcode 27.1.
-- **API keys never ship in the app.** AI and Freesound calls go through a Cloudflare Worker. The Worker checks Play Integrity, issues a short session and rate-limits each install.
-
-```text
-.
-├── androidApp/          Android application: activity, PlaybackService, Firebase
-├── shared/              Koin graph and app-wide state; the iOS "Shared" framework
-├── iosApp/              Xcode project
-├── core/
-│   ├── common/          Result types, errors, dispatchers
-│   ├── model/           Domain models
-│   ├── database/        SQLDelight schema and migrations
-│   ├── network/         Ktor clients for the CDN and the API proxy
-│   ├── data/            Repositories, catalog sync, downloads, DataStore
-│   ├── media/           Audio import, trimming and preview
-│   ├── playback/        Soundscape engine, MediaSession player, sleep timer
-│   ├── analytics/       Analytics and crash-reporting interfaces
-│   ├── presentation/    UI models, formatters, test tags and system actions for both UIs
-│   ├── ui/              Android design system: theme, Compose components and strings
-│   └── testing/         Fakes and test helpers
-├── feature/             library, scene, mixer, ai, timer, saved, mysounds, freesound, settings, splash:
-│                        each x/ has the shared ViewModels, x/ui/ the Android Compose screens
-├── build-logic/         Convention plugins (KMP library and feature, Android library, Compose and feature UI, Koin, Android app)
-├── server/api-proxy/    Cloudflare Worker for AI, Freesound and sessions
-├── tools/sound-pipeline/ Builds the sound pack (sounds-v2.json + Opus clips)
-├── tools/strings/       Writes the iOS String Catalog from the Android strings
-└── docs/                Play data safety notes and the owner's to-do list
+```mermaid
+flowchart LR
+  UI["Compose (Android)<br/>SwiftUI (iOS)"] --> VM["Shared Kotlin ViewModels"]
+  VM --> Repo["Repositories"]
+  VM --> Player["Soundscape player<br/>Media3 / AVAudioEngine"]
+  Repo --> DB[("SQLDelight")]
+  Repo --> CDN["Cloudflare R2 CDN<br/>sound pack"]
+  Repo --> Worker["Cloudflare Worker"]
+  Worker --> AI["OpenAI"]
+  Worker --> FS["Freesound"]
 ```
 
-Each feature module depends only on `core` modules, never on another feature; `:feature:x:ui` also depends on its own `:feature:x`.
+- **Kotlin Multiplatform, native UI.**
+  - ViewModels, repositories and the audio engine's logic are shared Kotlin.
+  - Android draws them with Jetpack Compose and iOS with SwiftUI; SKIE turns Flows into Swift async sequences.
+- **One real player.**
+  - On Android, the mixer is a single Media3 `Player` inside a `MediaSessionService`. Audio focus, headphone unplugging, background playback and system media controls all come from the platform.
+  - On iOS, the same scene plays on one `AVAudioEngine`.
+- **Offline-first data.**
+  - The sound catalog is cached in SQLDelight and synced from a Cloudflare R2 CDN, so downloaded sounds play without a connection.
+  - The architecture follows [Now in Android](https://github.com/android/nowinandroid): UI → data layers, with unidirectional `StateFlow` state.
+- **No API keys in the app.**
+  - AI and Freesound requests go through a Cloudflare Worker (TypeScript).
+  - The Worker opens short sessions only for apps that pass Play Integrity (App Attest on iOS), and it rate-limits each install.
+- **Assets from code.**
+  - The icon family and these store graphics are generated by a TypeScript script and rendered with headless Chrome ([`tools/store-assets`](tools/store-assets/README.md)).
+  - The sound pack is built by a Python pipeline ([`tools/sound-pipeline`](tools/sound-pipeline/README.md)).
 
----
+## Tech stack
 
-## ▶️ Building and testing
+| Area | Technology |
+|---|---|
+| Language and build | Kotlin 2.4.20, Kotlin Multiplatform, Gradle convention plugins (`build-logic`), AGP 9 |
+| Android UI | Jetpack Compose (BOM 2026.09.00), Material 3, Material 3 Adaptive, Navigation 3 |
+| iOS UI | SwiftUI (iOS 27, Swift 6), SKIE |
+| State and DI | ViewModel + `StateFlow`, Kotlin Coroutines, Koin |
+| Data | SQLDelight, DataStore, Ktor, kotlinx.serialization, Okio |
+| Audio | Media3 (ExoPlayer, MediaSession, Transformer), SoundPool, AVAudioEngine |
+| Backend | Cloudflare Workers (TypeScript), Cloudflare R2, OpenAI API, Freesound API |
+| Security | Play Integrity, App Attest; secrets only on the server |
+| Observability | Firebase Analytics and Crashlytics, only after the user agrees |
+| Performance | Macrobenchmark, Baseline Profiles, Perfetto |
+| Tests and CI | kotlin.test, Turbine, Robolectric, Compose UI tests, Ktor MockEngine, Swift Testing, vitest, Python unittest, GitHub Actions |
+
+## Quality
+
+- **Tests:** 468 Kotlin unit tests, plus Swift, Worker (vitest) and sound-pipeline tests. All of them run in CI on every pull request, together with the iOS build and the database migration check.
+- **Startup:** a Baseline Profile brought cold start from 764 ms to 571 ms on a Samsung Galaxy A52 ([results](docs/perf/results.md)).
+- **Privacy:** no ads, no tracking, and analytics only with consent ([privacy policy and terms](docs/legal)).
+
+## Build
 
 ```sh
-./gradlew :androidApp:installDebug                            # run on a device or emulator
-./gradlew testAndroidHostTest testDebugUnitTest               # all Kotlin unit tests
-./gradlew :core:database:verifySqlDelightMigration            # database migrations
+./gradlew :androidApp:installDebug                  # run on a device or emulator
+./gradlew testAndroidHostTest testDebugUnitTest     # Kotlin unit tests
+./gradlew :core:database:verifySqlDelightMigration  # database migrations
 ```
 
-- **Firebase:** Analytics and Crashlytics are added only when `androidApp/google-services.json` exists. Without it the app builds and runs normally.
-- **iOS:** set `justrelax.ios.enabled=true` in `gradle.properties` (or pass `-Pjustrelax.ios.enabled=true`) and open `iosApp/` in Xcode. Kotlin iOS tests run on the simulator with `./gradlew iosSimulatorArm64Test -Pjustrelax.ios.enabled=true`, Swift tests with `xcodebuild test -project iosApp/iosApp.xcodeproj -scheme iosApp -destination 'platform=iOS Simulator,name=iPhone 18 Pro' -only-testing:iosAppTests` (Xcode must be the selected developer directory, not only the command line tools). A SwiftUI screen keeps its shared ViewModel in a `ViewModelHost`, inside an `@Observable` model that follows the ViewModel's `StateFlow`s with `for await`. Screens live under `iosApp/iosApp/Features/<feature>/`, shared pieces (colours, banners, sound cards) under `DesignSystem/`, and `AppNavigator` holds each tab's pushed screens. One UI test (`PlaySoundUITests`) walks the happy path: consent, play a sound, mini player.
-- **Strings:** Android's `res/values*/strings.xml` are the source. After changing them, run `python3 tools/strings/strings.py xcstrings` to update iOS's `Localizable.xcstrings`; CI fails if it is out of date.
-- **API proxy:** see [`server/api-proxy/README.md`](server/api-proxy/README.md) (`npm test`, `npm run deploy`).
-- **Sound pack:** see [`tools/sound-pipeline/README.md`](tools/sound-pipeline/README.md) (`python3 -m unittest discover -s tools/sound-pipeline`).
+- **iOS:** pass `-Pjustrelax.ios.enabled=true` (or set it in `gradle.properties`) and open `iosApp/` in Xcode 27.
+- **Strings:** Android's `strings.xml` files are the source. Run `python3 tools/strings/strings.py xcstrings` to update the iOS String Catalog.
+- **More docs:**
+  - the API Worker: [`server/api-proxy`](server/api-proxy/README.md);
+  - the sound pack: [`tools/sound-pipeline`](tools/sound-pipeline/README.md);
+  - the store graphics: [`tools/store-assets`](tools/store-assets/README.md).
 
-CI runs all of the above on every pull request.
+## License
 
----
-
-## 📄 License
-
-Licensed under the **Apache License, Version 2.0**. See the [LICENSE](LICENSE) file for details.
-
-## 🔔 Notice
-
-See the [NOTICE](NOTICE) file for attribution and additional information.
+[Apache License 2.0](LICENSE)
