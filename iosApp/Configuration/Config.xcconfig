@@ -5,7 +5,7 @@ PRODUCT_NAME=JustRelax
 PRODUCT_BUNDLE_IDENTIFIER=com.mustafakoceerr.justrelax
 
 // Keep in step with the Android versionName.
-MARKETING_VERSION=1.3.0
+MARKETING_VERSION=2.0.0
 CURRENT_PROJECT_VERSION=1
 
 // App Attest: builds run from Xcode use Apple's development environment; TestFlight and the
