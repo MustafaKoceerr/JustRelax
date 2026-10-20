@@ -20,10 +20,12 @@ final class PlaySoundUITests: XCTestCase {
 
         // The splash decides between the consent screen (first launch) and the main screen.
         let decline = app.descendants(matching: .any)["consent_decline"]
-        let homeTab = app.descendants(matching: .any)["tab_home"]
-        XCTAssertTrue(decline.waitForExistence(timeout: timeout) || homeTab.exists, "Neither consent nor home appeared")
+        // The main screen is found by its tab bar, not by the tab ids: on iOS 27 SwiftUI sometimes
+        // leaves the tab bar buttons without their accessibility identifiers for a whole launch.
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(decline.waitForExistence(timeout: timeout) || tabBar.exists, "Neither consent nor the main screen appeared")
         if decline.exists { decline.tap() }
-        XCTAssertTrue(homeTab.waitForExistence(timeout: timeout), "The home tab did not appear")
+        XCTAssertTrue(tabBar.waitForExistence(timeout: timeout), "The main screen did not appear")
 
         // The starter pack downloads in the background, so the first sound may take a moment.
         let sound = app.descendants(matching: .any).matching(identifier: "sound_card").firstMatch
