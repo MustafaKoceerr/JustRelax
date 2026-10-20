@@ -34,7 +34,7 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
 
 ## 4. Yayın (sen yapacaksın)
 - [x] **Yükleme anahtarı:** yeni anahtar oluşturuldu, `.pem` Play Console'a gönderildi (2026-10-18). Sıfırlama Play'in onayından sonra geçerli olur (yaklaşık 2 gün).
-- [x] `versionCode` 7, `versionName` 2.0.0 (2026-10-20, etiket `v2.0.0`). Önceki: 6 / 1.3.0.
+- [x] `versionCode` 8, `versionName` 3.0.0 (2026-10-21, etiket `v3.0.0`). Önceki: 7 / 2.0.0.
 - [x] API Worker `main` ile aynı sürüme yayınlandı (2026-10-20); oturumsuz istekleri hâlâ reddediyor.
 - [ ] **İmzalı AAB'yi komutla al.** Şifreleri sen yaz; `local.properties` git'e girmez:
   ```
@@ -46,7 +46,7 @@ Telefonda yapıldı; sonuçlar `docs/perf/results.md`'de. Benchmark sürümü ay
   ```
   Sonra `./gradlew :androidApp:bundleRelease` çalıştır. Çıktı: `androidApp/build/outputs/bundle/release/androidApp-release.aab`. Bu satırlar yoksa release imzasız çıkar; Android Studio'daki *Generate Signed App Bundle* sihirbazı da çalışmaya devam eder.
   İmzayı kontrol et: `keytool -printcert -jarfile androidApp/build/outputs/bundle/release/androidApp-release.aab` çıktısındaki SHA-256, Play Console → *Uygulama bütünlüğü → Play Uygulama İmzalama* sayfasındaki **yükleme anahtarı sertifikasının** SHA-256'sıyla aynı olmalı.
-- [ ] Internal testing kanalına imzalı AAB yükle. *Release notes* kutusuna `fastlane/metadata/android/en-US/changelogs/7.txt`'yi yapıştır. Play'den kurulan sürümde AI karışımını ve Freesound aramasını dene. Integrity yalnızca Play'den kurulan uygulamada geçer.
+- [ ] Internal testing kanalına imzalı AAB yükle. *Release notes* kutusuna `fastlane/metadata/android/en-US/changelogs/8.txt`'yi yapıştır. Play'den kurulan sürümde AI karışımını ve Freesound aramasını dene. Integrity yalnızca Play'den kurulan uygulamada geçer.
 - [ ] Sorun yoksa aynı sürümü **Production**'a terfi ettir (*Promote release*). Önce aşağıdaki veri güvenliği formu ve reklam kimliği sorusu tamam olmalı.
 
 ## 5. Firebase (Crashlytics ve Analytics)

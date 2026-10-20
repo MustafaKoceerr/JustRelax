@@ -43,7 +43,7 @@ In October 2026 I rebuilt it from the ground up. I had two goals: make it someth
 - adaptive layouts;
 - a shared Kotlin core with a native UI on each platform.
 
-I measured instead of guessing, with Macrobenchmark and Perfetto traces on a real phone. I shipped it as 2.0.0.
+I measured instead of guessing, with Macrobenchmark and Perfetto traces on a real phone. I shipped it as 3.0.0.
 
 ## How it works
 
